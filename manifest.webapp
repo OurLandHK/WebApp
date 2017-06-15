@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "name": "Our Land",
+  "launch_path": "/index.html",
+  "description": "Hong Kong Open Geo Data",
+  "developer": {
+    "name": "Our Land",
+    "url": ""
+  },
+  "installs_allowed_from": [
+    "*"
+  ],
+  "default_locale": "en",
+  "permissions": {
+  },
+  "locales": {
+    "en": {
+      "name": "Our Land",
+      "description": "Hong Kong Open Geo Data"
+    }
+  }
+}
