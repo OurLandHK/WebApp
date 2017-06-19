@@ -29,7 +29,7 @@ function OurLand() {
   this.submitImageButton.setAttribute('disabled', 'true');
 
   // Saves message on form submit.
-  this.messageForm.addEventListener('location', this.getLocation.bind(this));
+  this.locationButton.addEventListener('click', this.getLocation.bind(this));
   this.signOutButton.addEventListener('click', this.signOut.bind(this));
   this.signInButton.addEventListener('click', this.signIn.bind(this));
 
@@ -46,7 +46,7 @@ function OurLand() {
   this.mediaCapture.addEventListener('change', this.saveImageMessage.bind(this));
 
   this.initFirebase();
-  this.getLocation(null);
+  //this.getLocation(null);
 }
 
 // Sets up shortcuts to Firebase features and initiate firebase auth.
@@ -77,6 +77,7 @@ OurLand.prototype.loadMessages = function() {
 
 // getLocation
 OurLand.prototype.getLocation = function(e) {
+  this.longitude.value = 10000;
   console.log('Your current position is:');
     if(navigator.geolocation) {
      var options = {
@@ -84,7 +85,13 @@ OurLand.prototype.getLocation = function(e) {
         timeout: 5000,
         maximumAge: 0
       }; 
+      var count = 0
       navigator.geolocation.getCurrentPosition(this.getGeoSuccess, this.getGeoError, options);
+      while(this.longitude.value == 10000 && count < 50)
+      {
+        setTimeout(function(){console.log("Wait for Geo Update.");}, 100);
+        count++;
+      }
     } else {
       console.error('There was an error no geo location');
       this.locationButton.setAttribute('disabled', 'true');
@@ -97,7 +104,7 @@ OurLand.prototype.getGeoSuccess = function(pos) {
   console.log('Longitude: ' + pos.coords.longitude);
   console.log('More or less ' + pos.coords.accuracy + 'meters.');  
   document.getElementById('latitude').value = pos.coords.latitude;
-  document.getElementById('longitude').value = pos.coords.longitude;     
+  document.getElementById('longitude').value = pos.coords.longitude;   
 };
 
 OurLand.prototype.getGeoError = function(err) {
@@ -115,6 +122,7 @@ OurLand.prototype.setImageUrl = function(imageUri, imgElement) {
   } else {
     imgElement.src = imageUri;
   }
+  this.updateGeo = true;
 };
 
 // Saves a new message containing an image URI in Firebase.
@@ -143,6 +151,7 @@ OurLand.prototype.saveImageMessage = function(event) {
         timeout: 5000,
         maximumAge: 0
       }; 
+      this.getLocation(null);
       // We add a message with a loading icon that will get updated with the shared image.
         var currentUser = this.auth.currentUser;
         this.messagesRef.push({
@@ -173,8 +182,25 @@ OurLand.prototype.saveImageMessage = function(event) {
 // Signs-in Our Land.
 OurLand.prototype.signIn = function() {
   // Sign in Firebase using popup auth and Google as the identity provider.
-  var provider = new firebase.auth.GoogleAuthProvider();
-  this.auth.signInWithPopup(provider);
+  // var provider = new firebase.auth.GoogleAuthProvider();
+  // Sign in Firebase using popup auth and Facebook as the identity provider.  
+  var provider = new firebase.auth.FacebookAuthProvider();
+  this.auth.signInWithPopup(provider).then(function(result) {
+    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+    var token = result.credential.accessToken;
+    // The signed-in user info.
+    var user = result.user;
+    // ...
+  }).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // The email of the user's account used.
+    var email = error.email;
+    // The firebase.auth.AuthCredential type that was used.
+    var credential = error.credential;
+    // ...
+  });;
 };
 
 // Signs-out of Our Land.
