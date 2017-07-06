@@ -46,7 +46,8 @@ function OurLand() {
   this.mediaCapture.addEventListener('change', this.saveImageMessage.bind(this));
 
   this.initFirebase();
-  //this.getLocation(null);
+  this.getLocation(null);
+  setInterval(this.getLocation(null), 10000);
 }
 
 // Sets up shortcuts to Firebase features and initiate firebase auth.
@@ -77,7 +78,6 @@ OurLand.prototype.loadMessages = function() {
 
 // getLocation
 OurLand.prototype.getLocation = function(e) {
-  this.longitude.value = 10000;
   console.log('Your current position is:');
     if(navigator.geolocation) {
      var options = {
@@ -87,11 +87,6 @@ OurLand.prototype.getLocation = function(e) {
       }; 
       var count = 0
       navigator.geolocation.getCurrentPosition(this.getGeoSuccess, this.getGeoError, options);
-      while(this.longitude.value == 10000 && count < 50)
-      {
-        setTimeout(function(){console.log("Wait for Geo Update.");}, 100);
-        count++;
-      }
     } else {
       console.error('There was an error no geo location');
       this.locationButton.setAttribute('disabled', 'true');
@@ -146,14 +141,72 @@ OurLand.prototype.saveImageMessage = function(event) {
 
   // Check if the user is signed-in
   if (this.checkSignedInWithMessage() && this.messageInput.value) {
-     var options = {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 0
-      }; 
-      this.getLocation(null);
+    var fbpost = null;   //"https://www.facebook.com/groups/OurLandHK/permalink/FeedID";
+    var currentUser = this.auth.currentUser;    
+//   Post Image   
+/*      FB.api(
+          "/244493866025075/photos",
+          "POST",
+          {
+              "source": file,
+              "message": this.messageInput.value + "\nGeo ("+ this.latitude.value + "," + this.longitude.value + ")\n #Testing"
+          },
+          function (response) {
+            if (response && !response.error) {
+              console.log('Post ID: ' + response.post_id);
+            } else {
+              console.log('Error:' + response.error.message + ' code ' + response.error.code);
+            }
+          }    
+      );
+*/
+      // Post Text
+      var fbpostmessage = this.messageInput.value + "\nGeo ("+ this.longitude.value + "," + this.latitude.value + ")\n#Testing";
+      FB.login(function(){
+        // Note: The call will only work if you accept the permission request
+        FB.api(
+          '/244493866025075/feed', 
+       //   '/244493866025075/photos',
+          'post', 
+          {
+       //       "source": file,
+              message: fbpostmessage
+          },
+          function (response) {
+            if (response && !response.error) {
+              console.log('Post ID: ' + response.id);
+              fbpost = "https://www.facebook.com/groups/OurLandHK/permalink/" + response.id.split("-")[1];
+              console.log('URL: ' + fbpost);
+            } else {
+              console.log('Error:' + response.error.message + ' code ' + response.error.code);
+              console.log(fbpostmessage);
+            }
+          }           
+          );
+      }, {scope: 'publish_actions,user_managed_groups'});
+/*
+      FB.api(
+          "/244493866025075/feed",
+ //         "/me/feed",
+          "POST",
+          {
+              "message": fbpostmessage
+          },
+          function (response) {
+            if (response && !response.error) {
+              console.log('Post ID: ' + response.post_id);
+              fbpost = "https://www.facebook.com/groups/OurLandHK/permalink/" + response.post_id.split("-")[1];
+              console.log('URL: ' + fbpost);
+            } else {
+              console.log('Error:' + response.error.message + ' code ' + response.error.code);
+              console.log(fbpostmessage);
+            }
+          }    
+      );
+*/      
+
       // We add a message with a loading icon that will get updated with the shared image.
-        var currentUser = this.auth.currentUser;
+      if(null != fbpost){
         this.messagesRef.push({
           name: currentUser.displayName,
           imageUrl: OurLand.LOADING_IMAGE_URL,
@@ -175,6 +228,7 @@ OurLand.prototype.saveImageMessage = function(event) {
         }.bind(this)).catch(function(error) {
           console.error('There was an error uploading a file to Firebase Storage:', error);
         });
+      }
   }
 };
 
@@ -185,6 +239,9 @@ OurLand.prototype.signIn = function() {
   // var provider = new firebase.auth.GoogleAuthProvider();
   // Sign in Firebase using popup auth and Facebook as the identity provider.  
   var provider = new firebase.auth.FacebookAuthProvider();
+  //provider.addScope('email');
+  provider.addScope('publish_actions');
+  //provider.addScope('user_managed_groups')
   this.auth.signInWithPopup(provider).then(function(result) {
     // This gives you a Facebook Access Token. You can use it to access the Facebook API.
     var token = result.credential.accessToken;
@@ -383,5 +440,6 @@ OurLand.prototype.checkSetup = function() {
 };
 
 window.onload = function() {
+
   window.ourLand = new OurLand();
 };

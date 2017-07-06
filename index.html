@@ -108,9 +108,27 @@
 
 <!-- Import and configure the Firebase SDK -->
 <!-- These scripts are made available when the app is served or deployed on Firebase Hosting -->
-<!-- If you do not want to serve/host your project using Firebase Hosting see https://firebase.google.com/docs/web/setup -->
-<script src="/__/firebase/3.8.0/firebase.js"></script>
+<!-- If you do not serve/host your project using Firebase Hosting see https://firebase.google.com/docs/web/setup -->
+<script src="/__/firebase/4.1.3/firebase.js"></script>
 <script src="/__/firebase/init.js"></script>
+  <!-- Facebook -->
+  <!-- [START facebookconfig] -->
+  <script src="//connect.facebook.net/en_US/sdk.js"></script>
+  <script>
+    FB.init({
+    appId            : '640276812834634',
+    autoLogAppEvents : true,
+    xfbml            : true,
+    version          : 'v2.9'
+    });
+    // [START_EXCLUDE silent]
+    // Observe the change in Facebook login status
+    // [START facebookauthlistener]
+    // FB.Event.subscribe('auth.authResponseChange', checkLoginState);
+    // [END facebookauthlistener]
+    // [END_EXCLUDE]
+  </script>
+  <!-- [END facebookconfig] -->
 
 <script src="scripts/main.js"></script>
 </body>
