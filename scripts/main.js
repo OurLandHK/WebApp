@@ -120,6 +120,7 @@ OurLand.prototype.setImageUrl = function(imageUri, imgElement) {
   this.updateGeo = true;
 };
 
+
 // Saves a new message containing an image URI in Firebase.
 // This first saves the image in Firebase storage.
 OurLand.prototype.saveImageMessage = function(event) {
@@ -141,94 +142,63 @@ OurLand.prototype.saveImageMessage = function(event) {
 
   // Check if the user is signed-in
   if (this.checkSignedInWithMessage() && this.messageInput.value) {
-    var fbpost = null;   //"https://www.facebook.com/groups/OurLandHK/permalink/FeedID";
-    var currentUser = this.auth.currentUser;    
-//   Post Image   
-/*      FB.api(
-          "/244493866025075/photos",
-          "POST",
-          {
-              "source": file,
-              "message": this.messageInput.value + "\nGeo ("+ this.latitude.value + "," + this.longitude.value + ")\n #Testing"
-          },
-          function (response) {
-            if (response && !response.error) {
-              console.log('Post ID: ' + response.post_id);
-            } else {
-              console.log('Error:' + response.error.message + ' code ' + response.error.code);
-            }
-          }    
-      );
-*/
-      // Post Text
-      var fbpostmessage = this.messageInput.value + "\nGeo ("+ this.longitude.value + "," + this.latitude.value + ")\n#Testing";
-      FB.login(function(){
-        // Note: The call will only work if you accept the permission request
-        FB.api(
-          '/244493866025075/feed', 
-       //   '/244493866025075/photos',
-          'post', 
-          {
-       //       "source": file,
-              message: fbpostmessage
-          },
-          function (response) {
-            if (response && !response.error) {
-              console.log('Post ID: ' + response.id);
-              fbpost = "https://www.facebook.com/groups/OurLandHK/permalink/" + response.id.split("-")[1];
-              console.log('URL: ' + fbpost);
-            } else {
-              console.log('Error:' + response.error.message + ' code ' + response.error.code);
-              console.log(fbpostmessage);
-            }
-          }           
-          );
-      }, {scope: 'publish_actions,user_managed_groups'});
-/*
-      FB.api(
-          "/244493866025075/feed",
- //         "/me/feed",
-          "POST",
-          {
-              "message": fbpostmessage
-          },
-          function (response) {
-            if (response && !response.error) {
-              console.log('Post ID: ' + response.post_id);
-              fbpost = "https://www.facebook.com/groups/OurLandHK/permalink/" + response.post_id.split("-")[1];
-              console.log('URL: ' + fbpost);
-            } else {
-              console.log('Error:' + response.error.message + ' code ' + response.error.code);
-              console.log(fbpostmessage);
-            }
-          }    
-      );
-*/      
+    var fbpost = "https://www.facebook.com/groups/OurLandHK/permalink/FeedID";
+    var currentUser = this.auth.currentUser;       
+    this.messagesRef.push({
+      name: currentUser.displayName,
+      imageUrl: OurLand.LOADING_IMAGE_URL,
+      text: this.messageInput.value,
+      photoUrl: currentUser.photoURL || '/images/profile_placeholder.png',
+      latitude: this.latitude.value,
+      longitude: this.longitude.value,
+      fbpost: 'fbpost'
+    }).then(function(data) {
 
-      // We add a message with a loading icon that will get updated with the shared image.
-      if(null != fbpost){
-        this.messagesRef.push({
-          name: currentUser.displayName,
-          imageUrl: OurLand.LOADING_IMAGE_URL,
-          text: this.messageInput.value,
-          photoUrl: currentUser.photoURL || '/images/profile_placeholder.png',
-          latitude: this.latitude.value,
-          longitude: this.longitude.value
-        }).then(function(data) {
+      // Upload the image to Firebase Storage.
+      var filePath = currentUser.uid + '/' + data.key + '/' + file.name;
+      return this.storage.ref(filePath).put(file).then(function(snapshot) {
 
-          // Upload the image to Firebase Storage.
-          var filePath = currentUser.uid + '/' + data.key + '/' + file.name;
-          return this.storage.ref(filePath).put(file).then(function(snapshot) {
-
-            // Get the file's Storage URI and update the chat message placeholder.
-            var fullPath = snapshot.metadata.fullPath;
-            this.messageInput.value = null;
-            return data.update({imageUrl: this.storage.ref(fullPath).toString()});
-          }.bind(this));
-        }.bind(this)).catch(function(error) {
-          console.error('There was an error uploading a file to Firebase Storage:', error);
-        });
-      }
+        // Get the file's Storage URI and update the chat message placeholder.
+        var fullPath = snapshot.metadata.fullPath;
+        return data.update({imageUrl: this.storage.ref(fullPath).toString()}).then(function() {
+          // Post Image
+          var fbpostmessage = this.messageInput.value + "\nGeo ("+ this.longitude.value + "," + this.latitude.value + ")\n#Testing";
+          var imagePublicURL = "no update"
+          this.storage.ref(fullPath).getDownloadURL().then(function(url) {
+            imagePublicURL = url;
+            console.log('imagePublicURL: ' + imagePublicURL);
+            FB.login(function(){
+              // Note: The call will only work if you accept the permission request
+              FB.api(
+             //   '/244493866025075/feed', 
+                '/244493866025075/photos',
+                'post', 
+                {
+                    url: imagePublicURL,
+                    message: fbpostmessage
+                },
+                function (response) {
+                  if (response && !response.error) {
+                    console.log('Post ID: ' + response.id);
+                    var fbfeedpost = "https://www.facebook.com/groups/OurLandHK/permalink/" + response.id.split("_")[1];
+                    var fbphotopost = "https://www.facebook.com/photo.php?fbid=" + response.id;
+                    fbpost = fbphotopost;
+                    console.log('URL: ' + fbpost);
+                  } else {
+                    console.log('Error:' + response.error.message + ' code ' + response.error.code);
+                    console.log(fbpostmessage);
+                  }
+                  return data.update({fbpost: fbpost});
+                }           
+              );
+            }, {scope: 'publish_actions,user_managed_groups'});
+          });
+        }.bind(this));
+      }.bind(this));
+    }.bind(this)).catch(function(error) {
+      console.error('There was an error uploading a file to Firebase Storage:', error);
+    });
+    this.messageInput.value = null;
   }
 };
 
