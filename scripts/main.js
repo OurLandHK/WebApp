@@ -167,6 +167,13 @@ OurLand.prototype.saveImageMessage = function(event) {
           this.storage.ref(fullPath).getDownloadURL().then(function(url) {
             imagePublicURL = url;
             console.log('imagePublicURL: ' + imagePublicURL);
+/*            var fbpostURL = this.facebookPost(imagePublicURL, fbpostmessage);
+            if(null != fbpostURL)
+            {
+              return data.update({fbpost: fbpost});
+            }
+*/            
+            
             FB.login(function(){
               // Note: The call will only work if you accept the permission request
               FB.api(
@@ -190,7 +197,7 @@ OurLand.prototype.saveImageMessage = function(event) {
                   }
                   return data.update({fbpost: fbpost});
                 }           
-              );
+              );              
             }, {scope: 'publish_actions,user_managed_groups'});
           });
         }.bind(this));
@@ -199,10 +206,68 @@ OurLand.prototype.saveImageMessage = function(event) {
       console.error('There was an error uploading a file to Firebase Storage:', error);
     });
     this.messageInput.value = null;
+/*
+    })
+    .then(function(){
+      this.messageInput.value = null;
+    }
+    );
+*/  
   }
 };
-
-
+/*
+OurLand.prototype.facebookPost = function(imageUrl, fbpostmessage) {
+  var fbpost = ""; 
+  if(imageUrl != null) {
+    console.log('imagePublicURL: ' + imageUrl);
+    FB.login(function(){
+    // Note: The call will only work if you accept the permission request
+      FB.api(
+        '/244493866025075/photos',
+        'post',         
+        {
+            url: imageUrl,
+            message: fbpostmessage
+        },
+        function (response) {
+          if (response && !response.error) {
+            console.log('Post ID: ' + response.id);
+            fbpost = fbphotopost = "https://www.facebook.com/photo.php?fbid=" + response.id;
+            console.log('URL: ' + fbpost);
+          } else {
+            console.log('Error:' + response.error.message + ' code ' + response.error.code);
+          }
+          return fbpost;
+        }           
+      );
+    }, {scope: 'publish_actions,user_managed_groups'});
+  } else  {
+    FB.login(function(){
+    // Note: The call will only work if you accept the permission request
+      FB.api(
+      '/244493866025075/feed', 
+      'post', 
+      {
+          message: fbpostmessage
+      },
+      function (response) {
+        if (response && !response.error) {
+          console.log('Post ID: ' + response.id);
+          var fbfeedpost = "https://www.facebook.com/groups/OurLandHK/permalink/" + response.id.split("_")[1];
+          var fbphotopost = "https://www.facebook.com/photo.php?fbid=" + response.id;
+          fbpost = fbphotopost;
+          console.log('URL: ' + fbpost);
+        } else {
+          console.log('Error:' + response.error.message + ' code ' + response.error.code);
+        }
+        return fbpost;
+      }           
+    );
+  }, {scope: 'publish_actions,user_managed_groups'});
+  return fbpost;
+  }
+}
+*/
 // Signs-in Our Land.
 OurLand.prototype.signIn = function() {
   // Sign in Firebase using popup auth and Google as the identity provider.

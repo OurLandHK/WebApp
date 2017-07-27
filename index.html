@@ -114,23 +114,25 @@
   <!-- Facebook -->
   <!-- [START facebookconfig] -->
 
- <script src="//connect.facebook.net/en_US/sdk.js"></script>
-  <script>
+<script>
+  window.fbAsyncInit = function() {
     FB.init({
-    appId            : '640276812834634',
-    autoLogAppEvents : true,
-    xfbml            : true,
-    version          : 'v2.9'
+      appId      : '640276812834634',
+      autoLogAppEvents : true,
+      xfbml      : true,
+      version    : 'v2.10'
     });
-    // [START_EXCLUDE silent]
-    // Observe the change in Facebook login status
-    // [START facebookauthlistener]
-    // FB.Event.subscribe('auth.authResponseChange', checkLoginState);
-    // [END facebookauthlistener]
-    // [END_EXCLUDE]
-  </script>
+    FB.AppEvents.logPageView();
+  };
 
-  <!-- [END facebookconfig] -->
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
 
 <script src="scripts/main.js"></script>
 </body>
