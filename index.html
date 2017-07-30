@@ -114,14 +114,10 @@
   <!-- Facebook -->
   <!-- [START facebookconfig] -->
 
+<script src="scripts/config.js"></script>
 <script>
   window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '640276812834634',
-      //autoLogAppEvents : true,
-      xfbml      : true,
-      version    : 'v2.10'
-    });
+    FB.init(FBConfig());
     FB.AppEvents.logPageView();
   };
 
