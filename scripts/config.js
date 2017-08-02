@@ -1,6 +1,6 @@
 function FBConfig() {
   return {
-      appId      : '640276812834634',
+      appId      : '934205243385250',
       //autoLogAppEvents : true,
       xfbml      : true,
       version    : 'v2.10'

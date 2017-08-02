@@ -173,7 +173,7 @@ OurLand.prototype.saveImageMessage = function(event) {
               return data.update({fbpost: fbpost});
             }
 */            
-            
+            if (false)
             FB.login(function(){
               // Note: The call will only work if you accept the permission request
               FB.api(
