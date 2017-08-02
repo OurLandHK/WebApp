@@ -15,13 +15,21 @@ This folder contains the final prototype code
 2. Install the Firebase Command Line Interface
     * Install Node.js https://nodejs.org/en/
     * Install Firebase `npm -g install firebase-tools`
+    * Install create-react-app `npm install -g create-react-app`
     * Checkout the source code and run the following commands
 		```bash
 		firebase login
 		cd WebApp
+        npm install
 		firebase use -add
+		npm run generate_config
+		npm run start
+	    ```
+	* Deployment
+	   ```bash
+        npm run build
 		(cd functions; npm install)
 		firebase deploy #Deployment
-		```
+	   ```
 3. Test your WebApp
 	*   Go to https://`<project-id>`.firebaseapp.com

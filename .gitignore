@@ -1,0 +1,6 @@
+src/config/firebase.js
+build
+**.DS_Store
+functions/node_modules
+node_modules
+.firebaserc

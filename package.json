@@ -1,0 +1,30 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "^4.0.0-alpha.6",
+    "bootstrap-social": "^5.1.1",
+    "firebase": "^4.2.0",
+    "firebase-tools": "^3.9.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-fb-like": "^0.4.4",
+    "react-github-fork-ribbon": "^0.5.0",
+    "react-mdl": "^1.10.3",
+    "react-router-dom": "^4.1.1",
+    "react-social-icons": "^2.7.0",
+    "react-transition-group": "^1.2.0",
+    "reactstrap": "^4.6.2"
+  },
+  "devDependencies": {
+    "react-scripts": "1.0.7"
+  },
+  "scripts": {
+    "start": "BROWSER=none react-scripts start",
+    "generate_firebase_config": "node bin/generate_config.js", 
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
