@@ -5,7 +5,9 @@ import getLocation from './Location';
 class LocationButton extends Component {
   constructor(props) {
     super(props);
+    this.geolocation = null
     this.disabled = false;
+    this.successCallBack = this.successCallBack.bind(this);
   }
 
   notSupportedCallBack() {
@@ -18,6 +20,7 @@ class LocationButton extends Component {
     console.log('Latitude : ' + pos.coords.latitude);
     console.log('Longitude: ' + pos.coords.longitude);
     console.log('More or less ' + pos.coords.accuracy + 'meters.');  
+    this.geolocation = pos.coords;
   }
 
   errorCallBack(error) {

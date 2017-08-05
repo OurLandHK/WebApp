@@ -39,19 +39,25 @@ class MessageView extends Component {
     var distanceSpan = (<span />);
     if (m.latitude) {
       locationSpan = (<span>{m.latitude}, {m.longitude}</span>);
-    }
-    if (this.state.lat) {
-      var dis = distance(m.longitude,m.latitude,this.state.lon,this.state.lat);
-      distanceSpan = (<span>, {dis + "km"}</span>);
+      if (this.state.lat) {
+        var dis = distance(m.longitude,m.latitude,this.state.lon,this.state.lat);
+        var dist;
+        if (dis > 1)
+          dist = Math.round(dis) + "km";
+        else
+          dist = (dis * 1000) + "m";
+        locationSpan = (<span>{m.latitude}, {m.longitude}. {dist}</span>)
+      }
     }
     var photoUrl = '/images/profile_placeholder.png';
+    var date = new Date(m.createdAt);
     if (m.photoUrl) {
       photoUrl = m.photoUrl;
     }
     return (<div>
               <Card>
                 <CardBlock>
-                  <CardSubtitle>Geo: {locationSpan}{distanceSpan}</CardSubtitle>
+                  <CardSubtitle>Geo: {locationSpan}<br/>Created At: {date.toGMTString()}</CardSubtitle>
                   <CardText>Summary: {m.text}</CardText>
                 </CardBlock>
                 <ProgressiveCardImg top gs_src={m.imageUrl}/>

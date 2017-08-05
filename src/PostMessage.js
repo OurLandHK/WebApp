@@ -1,12 +1,17 @@
 /*global FB*/
 import * as firebase from 'firebase';
 import config from './config/default';
+import uuid from 'js-uuid';
 
-function postFbMessage(message, file, geolocation, snapshot, data){
+function postFbMessage(message, geolocation, snapshot, data){
   var fbpost = "https://www.facebook.com/groups/OurLandHK/permalink/FeedID";
   var fbpostmessage = message + "\nGeo ("+ geolocation.longitude + "," + geolocation.latitude + ")\n#Testing";
   var imagePublicURL = "no update";
-  var fullPath = snapshot.metadata.fullPath;
+  var fullPath = NaN
+  if(snapshot != NaN)
+  {
+    fullPath = snapshot.metadata.fullPath;
+  }
   return firebase.storage().ref(fullPath).getDownloadURL().then((url) => {
     imagePublicURL = url;
     console.log('imagePublicURL: ' + imagePublicURL);
@@ -15,29 +20,52 @@ function postFbMessage(message, file, geolocation, snapshot, data){
     FB.login((response)=>{
     // Note: The call will only work if you accept the permission request
  		console.log(response);
- 		console.log(imagePublicURL);
-    FB.api(
-    //   '/244493866025075/feed', 
-      '/' + config.fbGroupId + '/photos',
-      'post', 
+     console.log(imagePublicURL);
+     if(fullPath != NaN)
+     {
+        FB.api(
+          '/' + config.fbGroupId + '/photos',
+          'post', 
+          {
+            url: imagePublicURL,
+            message: fbpostmessage
+          },
+          (response) => {
+            console.log(response);
+            if (response && !response.error) {
+              console.log('Post ID: ' + response.id);
+              var fbphotopost = "https://www.facebook.com/photo.php?fbid=" + response.id;
+              fbpost = fbphotopost;
+              console.log('URL: ' + fbpost);
+            } else {
+              console.log('Error:' + response.error.message + ' code ' + response.error.code);
+              console.log(fbpostmessage);
+            }
+          });
+      }  
+      else 
       {
-        url: imagePublicURL,
-        message: fbpostmessage
-      },
-      (response) => {
-				console.log(response);
-        if (response && !response.error) {
-          console.log('Post ID: ' + response.id);
-          var fbfeedpost = "https://www.facebook.com/groups/OurLandHK/permalink/" + response.id.split("_")[1];
-          var fbphotopost = "https://www.facebook.com/photo.php?fbid=" + response.id;
-          fbpost = fbphotopost;
-          console.log('URL: ' + fbpost);
-        } else {
-          console.log('Error:' + response.error.message + ' code ' + response.error.code);
-          console.log(fbpostmessage);
-        }
-      });              
+        FB.api(
+          '/' + config.fbGroupId + '/feed',
+          'post', 
+          {
+            message: fbpostmessage
+          },
+          (response) => {
+            console.log(response);
+            if (response && !response.error) {
+              console.log('Post ID: ' + response.id);
+              var fbfeedpost = 'https://www.facebook.com/groups/' + config.fbGroupId + '/permalink/' + response.id.split("_")[1];
+              fbpost = fbfeedpost;
+              console.log('URL: ' + fbpost);
+            } else {
+              console.log('Error:' + response.error.message + ' code ' + response.error.code);
+              console.log(fbpostmessage);
+            }
+          });
+      }           
    }, {scope: 'publish_actions,user_managed_groups'});
+    
  }).then(() => {return data.update({fbpost: fbpost});});
 };
 
@@ -70,10 +98,7 @@ function updateData(data, snapshot) {
 
 function postMessage(message, file, geolocation) {
   // Check if the file is an image.
-  if (! validateFile(file)) {
-    console.log("Invalid file.");
-    return;
-  }
+
   var loadingImageUrl = "https://www.google.com/images/spin-32.gif";
   var fbpost = "https://www.facebook.com/groups/OurLandHK/permalink/FeedID";
   var auth = firebase.auth();
@@ -86,24 +111,32 @@ function postMessage(message, file, geolocation) {
     photoUrl: currentUser.photoURL || '/images/profile_placeholder.png',
     latitude: geolocation.latitude,
     longitude: geolocation.longitude,
+    createdAt: Date.now(),
+    key: uuid.v4(),    
     fbpost: 'fbpost'
   }).then((data) => {
-    uploadImage(data, file).then(
-      (snapshot) =>  {
-        return updateData(data, snapshot).then(() =>
-          {
-						console.log("call fb");
-						console.log(message);
-						console.log(file);
-						console.log(geolocation);
-						console.log(snapshot);
-						console.log(data);
-            return postFbMessage(message, file, geolocation, snapshot, data);
-          });
-      });
-    });
-      
-   this.messageInput.value = null;
+    if (! validateFile(file)) {
+      console.log("Invalid file.");
+      postFbMessage(message, geolocation, NaN, data);
+    }
+    else
+    {    
+      uploadImage(data, file).then(
+        (snapshot) =>  {
+          return updateData(data, snapshot).then(() =>
+            {
+              console.log("call fb");
+              console.log(message);
+              console.log(file);
+              console.log(geolocation);
+              console.log(snapshot);
+              console.log(data);
+              return postFbMessage(message, geolocation, snapshot, data);
+            });
+        });
+    }
+  });  
+  this.messageInput.value = null;
 };
 
 export default postMessage;

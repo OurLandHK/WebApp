@@ -7,7 +7,7 @@ function distance(lon1, lat1, lon2, lat2) {
             Math.sin(dLon/2) * Math.sin(dLon/2); 
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
     var d = R * c; // Distance in km
-    return Math.round(d);
+    return d;
 }
 
 if (typeof(Number.prototype.toRad) === "undefined") {
