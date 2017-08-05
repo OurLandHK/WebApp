@@ -56,7 +56,7 @@ function postFbMessage(message, geolocation, snapshot, data){
             if (response && !response.error) {
               console.log('Post ID: ' + response.id);
               var fbfeedpost = 'https://www.facebook.com/groups/' + config.fbGroupId + '/permalink/' + response.id.split("_")[1];
-              fbpost = fbphotopost;
+              fbpost = fbfeedpost;
               console.log('URL: ' + fbpost);
             } else {
               console.log('Error:' + response.error.message + ' code ' + response.error.code);
@@ -117,7 +117,7 @@ function postMessage(message, file, geolocation) {
   }).then((data) => {
     if (! validateFile(file)) {
       console.log("Invalid file.");
-      postFbMessage(message, geolocation, Nan, data);
+      postFbMessage(message, geolocation, NaN, data);
     }
     else
     {    

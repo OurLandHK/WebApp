@@ -18,6 +18,7 @@ This folder contains the final prototype code
     * Install create-react-app `npm install -g create-react-app`
     * Install the following peer Dependencies
         * `npm install react-tap-event-plugin`
+		* `npm install --save react-tag-input`
     * Checkout the source code and run the following commands
 		```bash
 		firebase login
