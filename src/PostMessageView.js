@@ -46,8 +46,12 @@ class PostMessageView extends Component {
     console.log(this.file.files);
     console.log(this.file);
     console.log(this.file.files[0]);
-    var geolocation = {latitude: 22.0, longitude: 140};
-    postMessage(this.messageInput.value, this.file.files[0], geolocation);
+    console.log(this.locationButton.geolocation);
+    if (this.locationButton.geolocation == null) {
+      console.log('Unknown Location'); 
+    } else {
+      postMessage(this.messageInput.value, this.file.files[0], this.locationButton.geolocation);
+    }
   }
 
   render() {
@@ -71,7 +75,7 @@ class PostMessageView extends Component {
               </FormGroup>
             </Form>
             </div>
-            <LocationButton/>&nbsp;&nbsp;&nbsp;<Button color="info" onClick={() => this.onSubmit()}>Submit</Button>
+            <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}}/>&nbsp;&nbsp;&nbsp;<Button color="info" onClick={() => this.onSubmit()}>Submit</Button>
           </PopoverContent>
         </Popover>
       </span>

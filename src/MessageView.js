@@ -16,13 +16,14 @@ class MessageView extends Component {
       locationSpan = (<span>{m.latitude}, {m.longitude}</span>);
     }
     var photoUrl = '/images/profile_placeholder.png';
+    var date = new Date(m.createdAt);
     if (m.photoUrl) {
       photoUrl = m.photoUrl;
     }
     return (<div>
               <Card>
                 <CardBlock>
-                  <CardSubtitle>Geo: {locationSpan}</CardSubtitle>
+                  <CardSubtitle>Geo: {locationSpan}<br/>Created At: {date.toGMTString()}</CardSubtitle>
                   <CardText>Summary: {m.text}</CardText>
           
                 </CardBlock>

@@ -1,6 +1,7 @@
 /*global FB*/
 import * as firebase from 'firebase';
 import config from './config/default';
+import uuid from 'js-uuid';
 
 function postFbMessage(message, file, geolocation, snapshot, data){
   var fbpost = "https://www.facebook.com/groups/OurLandHK/permalink/FeedID";
@@ -86,6 +87,8 @@ function postMessage(message, file, geolocation) {
     photoUrl: currentUser.photoURL || '/images/profile_placeholder.png',
     latitude: geolocation.latitude,
     longitude: geolocation.longitude,
+    createdAt: Date.now(),
+    key: uuid.v4(),    
     fbpost: 'fbpost'
   }).then((data) => {
     uploadImage(data, file).then(
