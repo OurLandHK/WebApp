@@ -19,11 +19,19 @@ class PostMessageView extends Component {
     this.messageInput = null;
   }
 
-  toggle() {
+  handleRequestOpen(evt) {
+    evt.preventDefault();
     this.setState({
-      popoverOpen: !this.state.popoverOpen
+      popoverOpen: true,
+      anchorEl: evt.currentTarget
     });
   }
+
+  handleRequestClose() {
+    this.setState({
+      popoverOpen: false,
+    });
+  };
 
   loadFBLoginApi() {
     window.fbAsyncInit = function() {
@@ -62,9 +70,9 @@ class PostMessageView extends Component {
     return (
       <span>
         <FloatingActionButton style={{marginRight:20}} mini={true}>
-          <ContentAdd id="Popover1" onTouchTap={() => this.toggle()}/>
+          <ContentAdd id="Popover1" onClick={(evt) => this.handleRequestOpen(evt)}/>
         </FloatingActionButton>
-        <Popover placement="bottom" open={this.state.popoverOpen} target="Popover1" toggle={() => this.toggle()}>
+        <Popover style={{marginRight:120, padding:20}} anchorOrigin={{horizontal: 'left', vertical: 'bottom'}} anchorEl={this.state.anchorEl} open={this.state.popoverOpen} onRequestClose={() => this.handleRequestClose()}>
             <div>
             <Form>
               <FormGroup>
