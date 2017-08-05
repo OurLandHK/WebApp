@@ -27,7 +27,7 @@ class MessageView extends Component {
                   <CardText>Summary: {m.text}</CardText>
           
                 </CardBlock>
-                <ProgressiveCardImg top gs_src={m.imageUrl}/>
+                <ProgressiveCardImg top height="200" gs_src={m.imageUrl}/>
                 <CardBlock>
                   <CardSubtitle><img src={photoUrl}/>{m.name}</CardSubtitle>
                 </CardBlock>

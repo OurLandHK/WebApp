@@ -6,6 +6,7 @@ class ProgressiveCardImg extends Component {
   constructor(props) {
     super(props);
     this.src = props.gs_src;
+    this.height = props.height;
     this.state = {url :'https://www.google.com/images/spin-32.gif'};
   }
 
@@ -22,7 +23,7 @@ class ProgressiveCardImg extends Component {
   }
 
   render() {
-    return (<CardImg src={this.state.url}/>)
+    return (<CardImg height={this.height} src={this.state.url}/>)
   }
 }
 
