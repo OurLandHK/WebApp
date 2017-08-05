@@ -7,6 +7,8 @@
     "bootstrap-social": "^5.1.1",
     "firebase": "^4.2.0",
     "firebase-tools": "^3.9.1",
+    "js-uuid": "0.0.6",
+    "material-ui": "^0.18.7",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-fb-like": "^0.4.4",
@@ -20,9 +22,12 @@
   "devDependencies": {
     "react-scripts": "1.0.7"
   },
+  "peerDependencies": {
+    "react-tap-event-plugin": "^2.0.1"   
+  },
   "scripts": {
     "start": "BROWSER=none react-scripts start",
-    "generate_firebase_config": "node bin/generate_config.js", 
+    "generate_firebase_config": "node bin/generate_config.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

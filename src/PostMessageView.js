@@ -2,11 +2,15 @@
 import {Button} from 'reactstrap';
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
-import { Popover, PopoverTitle, PopoverContent } from 'reactstrap';
 import { Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import LocationButton from './LocationButton';
 import postMessage from './PostMessage';
 import config from './config/default';
+import RaisedButton from 'material-ui/RaisedButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import Popover from 'material-ui/Popover';
+
 
 class PostMessageView extends Component {
   constructor(props) {
@@ -46,18 +50,21 @@ class PostMessageView extends Component {
     console.log(this.file.files);
     console.log(this.file);
     console.log(this.file.files[0]);
-    postMessage(this.messageInput.value, this.file.files[0], geolocation);
+    console.log(this.locationButton.geolocation);
+    if (this.locationButton.geolocation == null) {
+      console.log('Unknown Location'); 
+    } else {
+      postMessage(this.messageInput.value, this.file.files[0], this.locationButton.geolocation);
+    }
   }
 
   render() {
     return (
       <span>
-        <Button color="danger" id="Popover1" onClick={() => this.toggle()}>
-          Post
-        </Button>
-        <Popover placement="bottom" isOpen={this.state.popoverOpen} target="Popover1" toggle={() => this.toggle()}>
-          <PopoverTitle>Submit</PopoverTitle>
-          <PopoverContent>
+        <FloatingActionButton style={{marginRight:20}} mini={true}>
+          <ContentAdd id="Popover1" onTouchTap={() => this.toggle()}/>
+        </FloatingActionButton>
+        <Popover placement="bottom" open={this.state.popoverOpen} target="Popover1" toggle={() => this.toggle()}>
             <div>
             <Form>
               <FormGroup>
@@ -70,8 +77,7 @@ class PostMessageView extends Component {
               </FormGroup>
             </Form>
             </div>
-            <LocationButton/>&nbsp;&nbsp;&nbsp;<Button color="info" onClick={() => this.onSubmit()}>Submit</Button>
-          </PopoverContent>
+            <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}}/>&nbsp;&nbsp;&nbsp;<Button color="info" onClick={() => this.onSubmit()}>Submit</Button>
         </Popover>
       </span>
     )

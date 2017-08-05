@@ -4,4 +4,6 @@ build
 functions/node_modules
 node_modules
 .firebaserc
+**.swp
+**.swo
 *.log

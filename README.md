@@ -16,6 +16,8 @@ This folder contains the final prototype code
     * Install Node.js https://nodejs.org/en/
     * Install Firebase `npm -g install firebase-tools`
     * Install create-react-app `npm install -g create-react-app`
+    * Install the following peer Dependencies
+        * `npm install react-tap-event-plugin`
     * Checkout the source code and run the following commands
 		```bash
 		firebase login
