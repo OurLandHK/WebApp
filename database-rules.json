@@ -4,6 +4,18 @@
       ".read": "auth !== null",
       ".write": "auth !== null"
     },
+    "userProfile": {
+      ".read": "auth !== null",
+      ".write": "auth !== null"
+    },     
+    "messageTest": {
+      ".read": "auth !== null",
+      ".write": "auth !== null"
+    },    
+    "userProfileTest": {
+      ".read": "auth !== null",
+      ".write": "auth !== null"
+    },     
     "fcmTokens": {
       "$token": {
         ".read": "data.val() === auth.uid", // Users can only read their own device tokens

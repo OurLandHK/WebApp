@@ -23,8 +23,8 @@ This folder contains the final prototype code
 		firebase login
 		cd WebApp
         npm install
-		firebase use -add
-		npm run generate_config
+		firebase use --add
+		npm run generate_firebase_config
 		npm run start
 	    ```
 	* Deployment

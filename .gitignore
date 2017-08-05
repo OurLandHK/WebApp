@@ -6,3 +6,4 @@ node_modules
 .firebaserc
 **.swp
 **.swo
+*.log
