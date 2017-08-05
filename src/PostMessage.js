@@ -78,7 +78,7 @@ function postMessage(message, file, geolocation) {
   var fbpost = "https://www.facebook.com/groups/OurLandHK/permalink/FeedID";
   var auth = firebase.auth();
   var currentUser = auth.currentUser;       
-  var messagesRef = firebase.database().ref('messages');
+  var messagesRef = firebase.database().ref(config.messageDB);
   return messagesRef.push({
     name: currentUser.displayName,
     imageUrl: loadingImageUrl,

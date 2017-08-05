@@ -1,0 +1,88 @@
+[debug] [2017-08-05T08:26:57.754Z] ----------------------------------------------------------------------
+[debug] [2017-08-05T08:26:57.757Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy --except functions
+[debug] [2017-08-05T08:26:57.758Z] CLI Version:   3.9.2
+[debug] [2017-08-05T08:26:57.762Z] Platform:      darwin
+[debug] [2017-08-05T08:26:57.762Z] Node Version:  v6.11.0
+[debug] [2017-08-05T08:26:57.762Z] Time:          Sat Aug 05 2017 16:26:57 GMT+0800 (HKT)
+[debug] [2017-08-05T08:26:57.762Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-08-05T08:26:57.784Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-08-05T08:26:57.784Z] > authorizing via signed-in user
+[debug] [2017-08-05T08:26:57.787Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/ourland-a0d62  
+ Sat Aug 05 2017 16:26:57 GMT+0800 (HKT)
+[debug] [2017-08-05T08:27:01.327Z] <<< HTTP RESPONSE 200
+[debug] [2017-08-05T08:27:01.328Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/ourland-a0d62/tokens  
+ Sat Aug 05 2017 16:27:01 GMT+0800 (HKT)
+[debug] [2017-08-05T08:27:02.390Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'ourland-a0d62'...
+[info] 
+[info] i  deploying database, storage, hosting
+[info] ✔  database: rules ready to deploy.
+[info] i  storage: checking rules for compilation errors...
+[debug] [2017-08-05T08:27:06.392Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/ourland-a0d62:test { source: { files: [ [Object] ] } } 
+ Sat Aug 05 2017 16:27:06 GMT+0800 (HKT)
+[debug] [2017-08-05T08:27:08.698Z] <<< HTTP RESPONSE 200
+[info] ✔  storage: rules file compiled successfully
+[info] i  hosting: preparing ./build directory for upload...
+[debug] [2017-08-05T08:27:09.103Z] >>> HTTP REQUEST PUT https://deploy.firebase.com/v1/hosting/ourland-a0d62/uploads/-KqlVK69zjTmDWaPdNiN?fileCount=9&message=  
+ Sat Aug 05 2017 16:27:09 GMT+0800 (HKT)
+[debug] [2017-08-05T08:27:22.098Z] <<< HTTP RESPONSE 200
+[debug] [2017-08-05T08:27:22.098Z] [hosting] .tgz uploaded successfully, waiting for extraction
+[info] ✔  hosting: 9 files uploaded successfully
+[info] i  starting release process (may take several minutes)...
+[debug] [2017-08-05T08:27:40.656Z] >>> HTTP REQUEST POST https://deploy.firebase.com/v1/projects/ourland-a0d62/releases { database: { rulesString: '{\n  "rules": {\n    "messages": {\n      ".read": "auth !== null",\n      ".write": "auth !== null"\n    },\n    "fcmTokens": {\n      "$token": {\n        ".read": "data.val() === auth.uid", // Users can only read their own device tokens\n        ".write": "!data.exists() || data.val() === auth.uid", // Users can only write to their own device tokens\n        ".validate": "newData.val() === auth.uid" // value has to be the UID of the user\n      }\n    }\n  }\n}\n' },
+  storage: { rules: [ [Object] ] },
+  hosting: 
+   { public: './build',
+     ignore: 
+      [ 'firebase.json',
+        'database-rules.json',
+        'storage.rules',
+        'functions' ],
+     headers: [ [Object] ],
+     version: '-KqlVK69zjTmDWaPdNiN',
+     prefix: '-KqlVK69zjTmDWaPdNiN/',
+     manifest: [] } } 
+ Sat Aug 05 2017 16:27:40 GMT+0800 (HKT)
+[debug] [2017-08-05T08:28:41.746Z] Error: socket hang up
+    at TLSSocket.onHangUp (_tls_wrap.js:1124:19)
+    at TLSSocket.g (events.js:292:16)
+    at emitNone (events.js:91:20)
+    at TLSSocket.emit (events.js:185:7)
+    at endReadableNT (_stream_readable.js:974:12)
+    at _combinedTickCallback (internal/process/next_tick.js:80:11)
+    at process._tickCallback (internal/process/next_tick.js:104:9)
+[error] 
+[error] Error: Server Error. socket hang up
+[debug] [2017-08-05T08:28:50.388Z] ----------------------------------------------------------------------
+[debug] [2017-08-05T08:28:50.391Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy --except functions
+[debug] [2017-08-05T08:28:50.392Z] CLI Version:   3.9.2
+[debug] [2017-08-05T08:28:50.396Z] Platform:      darwin
+[debug] [2017-08-05T08:28:50.396Z] Node Version:  v6.11.0
+[debug] [2017-08-05T08:28:50.397Z] Time:          Sat Aug 05 2017 16:28:50 GMT+0800 (HKT)
+[debug] [2017-08-05T08:28:50.397Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-08-05T08:28:50.419Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-08-05T08:28:50.419Z] > authorizing via signed-in user
+[debug] [2017-08-05T08:28:50.421Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/ourland-a0d62  
+ Sat Aug 05 2017 16:28:50 GMT+0800 (HKT)
+[debug] [2017-08-05T08:28:53.764Z] <<< HTTP RESPONSE 200
+[debug] [2017-08-05T08:28:53.766Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/ourland-a0d62/tokens  
+ Sat Aug 05 2017 16:28:53 GMT+0800 (HKT)
+[debug] [2017-08-05T08:28:56.214Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'ourland-a0d62'...
+[info] 
+[info] i  deploying database, storage, hosting
+[info] ✔  database: rules ready to deploy.
+[info] i  storage: checking rules for compilation errors...
+[debug] [2017-08-05T08:29:00.419Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/ourland-a0d62:test { source: { files: [ [Object] ] } } 
+ Sat Aug 05 2017 16:29:00 GMT+0800 (HKT)
+[debug] [2017-08-05T08:29:02.993Z] <<< HTTP RESPONSE 200
+[info] ✔  storage: rules file compiled successfully
+[info] i  hosting: preparing ./build directory for upload...
+[debug] [2017-08-05T08:29:03.351Z] >>> HTTP REQUEST PUT https://deploy.firebase.com/v1/hosting/ourland-a0d62/uploads/-KqlVl0-NRiXjIBBTtgU?fileCount=9&message=  
+ Sat Aug 05 2017 16:29:03 GMT+0800 (HKT)
+[debug] [2017-08-05T08:29:16.499Z] <<< HTTP RESPONSE 200
+[debug] [2017-08-05T08:29:16.500Z] [hosting] .tgz uploaded successfully, waiting for extraction

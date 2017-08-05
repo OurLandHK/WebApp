@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
+import config from './config/default';
 import MessageView from './MessageView';
 
 class MessageList extends Component {
@@ -21,7 +22,7 @@ class MessageList extends Component {
   
   fetchMessages() {
      var database = firebase.database();  
-     this.messagesRef = database.ref('messages');
+     this.messagesRef = database.ref(config.messageDB);
   // Make sure we remove all previous listeners.
      this.messagesRef.off();
 
