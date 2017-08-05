@@ -46,7 +46,6 @@ class PostMessageView extends Component {
     console.log(this.file.files);
     console.log(this.file);
     console.log(this.file.files[0]);
-    var geolocation = {latitude: 22.0, longitude: 140};
     postMessage(this.messageInput.value, this.file.files[0], geolocation);
   }
 
