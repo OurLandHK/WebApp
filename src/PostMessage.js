@@ -62,7 +62,8 @@ function postFbMessage(message, geolocation, snapshot, data){
             console.log(fbpostmessage);
           }
         });        
-    }, {scope: 'publish_actions,user_managed_groups'}).then(() => {return data.update({fbpost: fbpost});})
+    }, {scope: 'publish_actions,user_managed_groups'});
+    return data.update({fbpost: fbpost});
   }
 };
 
@@ -96,13 +97,13 @@ function updateData(data, snapshot) {
 function postMessage(message, file, geolocation) {
   // Check if the file is an image.
 
-  var loadingImageUrl = "https://www.google.com/images/spin-32.gif";
+  //var loadingImageUrl = "https://www.google.com/images/spin-32.gif";
   var auth = firebase.auth();
   var currentUser = auth.currentUser;       
   var messagesRef = firebase.database().ref(config.messageDB);
   return messagesRef.push({
     name: currentUser.displayName,
-    imageUrl: loadingImageUrl,
+    //imageUrl: loadingImageUrl,
     text: message,
     photoUrl: currentUser.photoURL || '/images/profile_placeholder.png',
     latitude: geolocation.latitude,

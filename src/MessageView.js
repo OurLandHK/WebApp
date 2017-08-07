@@ -54,19 +54,35 @@ class MessageView extends Component {
     if (m.photoUrl) {
       photoUrl = m.photoUrl;
     }
-    return (<div>
-              <Card>
-                <CardBlock>
-                  <CardSubtitle>Geo: {locationSpan}<br/>Created At: {date.toGMTString()}</CardSubtitle>
-                  <CardText>Summary: {m.text}</CardText>
-                </CardBlock>
-                <ProgressiveCardImg top height="200" gs_src={m.imageUrl}/>
-                <CardBlock>
-                  <CardSubtitle><img src={photoUrl}/>{m.name}</CardSubtitle>
-                </CardBlock>
-              </Card>
-              <br/>
-            </div>);
+    if(m.imageUrl)
+    {
+      return (<div>
+                <Card>
+                  <CardBlock>
+                    <CardSubtitle>Geo: {locationSpan}<br/>Created At: {date.toGMTString()}</CardSubtitle>
+                    <CardText>Summary: {m.text}</CardText>
+                  </CardBlock>
+                  <ProgressiveCardImg top height="100" gs_src={m.imageUrl}/>
+                  <CardBlock>
+                    <CardSubtitle><img src={photoUrl}/>{m.name}</CardSubtitle>
+                  </CardBlock>
+                </Card>
+                <br/>
+              </div>);
+    } else {
+      return (<div>
+                <Card>
+                  <CardBlock>
+                    <CardSubtitle>Geo: {locationSpan}<br/>Created At: {date.toGMTString()}</CardSubtitle>
+                    <CardText>Summary: {m.text}</CardText>
+                  </CardBlock>
+                  <CardBlock>
+                    <CardSubtitle><img src={photoUrl}/>{m.name}</CardSubtitle>
+                  </CardBlock>
+                </Card>
+                <br/>
+              </div>);              
+    }
   }
 }
 
