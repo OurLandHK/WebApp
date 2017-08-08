@@ -4,10 +4,11 @@ import {Footer, Row, Col, Button, Container} from 'reactstrap';
 import { SocialIcon } from 'react-social-icons';
 import Header from './Header';
 import MessageList from './MessageList';
+import DrawerMenu from './Drawer';
 
 class App extends Component {
   render() {
-    return (<div><Header/><br/><br/><Container><MessageList/></Container></div>)
+    return (<div><Header/><Container><MessageList/></Container></div>)
   }
 }
 
