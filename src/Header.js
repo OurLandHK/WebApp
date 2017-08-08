@@ -26,11 +26,8 @@ class Header extends  Component {
     var style = {marginRight: 20};
     return (<div>
               <AppBar
-                onLeftIconButtonTouchTap={this.handleLeftTouchTap}
                 title={<span style={this.styles.title}>Ourland HK</span>}
-//                onTitleTouchTap={this.handleLeftTouchTap}
-//                iconElementLeft={<DrawerMenu/ >}
-                >
+                iconElementLeft={<DrawerMenu/ >}>
                 <div style={{alignItems: "center", display: "flex"}}>
  									<SignInButton/>
                 </div>
