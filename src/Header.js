@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import SignInButton from './SignInButton';
 import DrawerMenu from './Drawer';
 import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
 
 class Header extends  Component {
   constructor(props) {
@@ -25,13 +27,15 @@ class Header extends  Component {
   render() {
     var style = {marginRight: 20};
     return (<div>
-              <AppBar
-                title={<span style={this.styles.title}>Ourland HK</span>}
-                iconElementLeft={<DrawerMenu/ >}>
-                <div style={{alignItems: "center", display: "flex"}}>
- 									<SignInButton/>
-                </div>
-              </AppBar>
+              <AppBar position="static">
+                <Toolbar>
+                  <DrawerMenu/ >
+                  <Typography type="title" color="inherit" flex="1">
+                    Ourland HK
+                  </Typography>
+                  <SignInButton/>
+                </Toolbar>
+              </AppBar>      
             </div>);
   }
 }

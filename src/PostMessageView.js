@@ -1,15 +1,13 @@
 /*global FB*/
-import {Button} from 'reactstrap';
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import { Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 import LocationButton from './LocationButton';
 import postMessage from './PostMessage';
 import config from './config/default';
-import RaisedButton from 'material-ui/RaisedButton';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import Popover from 'material-ui/Popover';
+import Button from 'material-ui/Button';
+import AddIcon from 'material-ui-icons/Add';
+import Dialog, { DialogTitle } from 'material-ui/Dialog';
 
 
 class PostMessageView extends Component {
@@ -69,10 +67,10 @@ class PostMessageView extends Component {
   render() {
     return (
       <span>
-        <FloatingActionButton style={{marginRight:20}} mini={true}>
-          <ContentAdd id="Popover1" onClick={(evt) => this.handleRequestOpen(evt)}/>
-        </FloatingActionButton>
-        <Popover style={{marginRight:120, padding:20}} anchorOrigin={{horizontal: 'left', vertical: 'bottom'}} anchorEl={this.state.anchorEl} open={this.state.popoverOpen} onRequestClose={() => this.handleRequestClose()}>
+        <Button fab style={{marginRight:20}} mini={true} onClick={(evt) => this.handleRequestOpen(evt)}>
+          <AddIcon />
+        </Button>
+        <Dialog open={this.state.popoverOpen} onRequestClose={() => this.handleRequestClose()}>
             <div>
             <Form>
               <FormGroup>
@@ -86,7 +84,7 @@ class PostMessageView extends Component {
             </Form>
             </div>
             <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}}/>&nbsp;&nbsp;&nbsp;<Button color="info" onClick={() => this.onSubmit()}>Submit</Button>
-        </Popover>
+       </Dialog>     
       </span>
     )
   }
