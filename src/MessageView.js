@@ -70,7 +70,6 @@ class MessageView extends Component {
   render() {
     const classes = this.props.classes;
     var m = this.props.message;
-    console.log(m);
     var locationSpan = "";
     var distanceSpan = "Distance: ";
     if (m.latitude) {
