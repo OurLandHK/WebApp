@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { NavLink} from 'reactstrap';
 import * as firebase from 'firebase';
-import { Button } from 'reactstrap';
 import PostMessageView from './PostMessageView';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from 'material-ui/Button';
 
 
 class SignInButton extends  Component {
@@ -35,18 +35,24 @@ class SignInButton extends  Component {
   }
  
   render() {
+    const classes = this.props.classes;
     if (this.state == null) {
       return (<div></div>);
     }
     if (this.state.user) {
       var imgURL = (this.state.user.photoURL || '/images/profile_placeholder.png');
-      return (<div style={{alignItems: "center", display: "flex"}}><PostMessageView/>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{this.state.user.displayName}&nbsp;&nbsp;<RaisedButton secondary={true} onClick={() => this.handleSignOut()}>Sign-out</RaisedButton></div>);
+      return (<div style={{alignItems: "center", display: "flex"}}><PostMessageView/>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{this.state.user.displayName}&nbsp;&nbsp;<Button raised secondary={true} onClick={() => this.handleSignOut()}>Sign-out</Button></div>);
     }
     else
     {
-      return (<RaisedButton onClick={() => this.handleSignIn()} primary={true} label="Sign-in with Facebook"/>);
+      return (<Button raised onClick={() => this.handleSignIn()} primary={true} label="Sign-in with Facebook"/>);
     }
   }
 }
+
+SignInButton.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
 
 export default SignInButton;

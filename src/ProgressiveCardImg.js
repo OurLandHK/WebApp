@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {CardImg} from 'reactstrap';
+import CardMedia from 'material-ui/Card';
 import * as firebase from 'firebase';
 
 class ProgressiveCardImg extends Component {
@@ -23,7 +23,10 @@ class ProgressiveCardImg extends Component {
   }
 
   render() {
-    return (<CardImg height={this.height} src={this.state.url}/>)
+      return (<CardMedia >
+                    <img src={this.state.url} />
+            </CardMedia>)
+//    return (<CardImg height={this.height} src={this.state.url}/>)
   }
 }
 

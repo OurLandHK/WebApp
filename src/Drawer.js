@@ -1,9 +1,11 @@
 
 import React, { Component } from 'react';
 import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
-import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
+import InboxIcon from 'material-ui-icons/Inbox';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import Icon from 'material-ui/Icon';
 
 class DrawerMenu extends Component {
 
@@ -16,25 +18,55 @@ class DrawerMenu extends Component {
     console.log('Toggle Drawer: ' + this.state.open);
     this.setState({open: !this.state.open});
   }
-  handleClose = () => this.setState({open: false});
+  handleClose(){
+    this.setState({open: false});
+  }
 
   render() {
     return (
       <div>
         <IconButton onClick={() => this.handleToggle()}>
-          <FontIcon className="material-icons" >menu</FontIcon>
+          <Icon>menu</Icon>
         </IconButton>
         <Drawer
-          docked={false}
-          width={200}
           open={this.state.open}
-          onRequestChange={(open) => this.setState({open})}
+          onRequestClose={() => this.handleClose()}
+          onClick={() => this.handleClose()}
         >
-          <MenuItem onClick={this.handleClose}>Current</MenuItem>
-          <MenuItem onClick={this.handleClose}>Home</MenuItem>
-          <MenuItem onClick={this.handleClose}>Work</MenuItem>
-          <MenuItem onClick={this.handleClose}>Ladder</MenuItem>  
-          <MenuItem onClick={this.handleClose}>User Profile</MenuItem>                     
+          <div>
+            <List disablePadding>
+              <ListItem button>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="Current" />
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="Work" />
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="Ladder" />
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="User Profile" />
+              </ListItem>                                                        
+            </List>
+          </div>                  
         </Drawer>
       </div>
     );
