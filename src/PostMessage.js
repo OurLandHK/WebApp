@@ -1,7 +1,7 @@
 /*global FB*/
 import * as firebase from 'firebase';
 import config from './config/default';
-import postFbMessage, {postFbPhotoMessage} from './FacebookPost';
+import postFbMessage from './FacebookPost';
 import uuid from 'js-uuid';
 
 
@@ -33,7 +33,7 @@ function updateData(data, snapshot) {
 };
 
 
-function postMessage(message, file, geolocation) {
+function postMessage(message, file, tags, geolocation) {
   // Check if the file is an image.
 
   //var loadingImageUrl = "https://www.google.com/images/spin-32.gif";
@@ -47,14 +47,20 @@ function postMessage(message, file, geolocation) {
     photoUrl: currentUser.photoURL || '/images/profile_placeholder.png',
     latitude: geolocation.latitude,
     longitude: geolocation.longitude,
+    tag: tags,
     createdAt: Date.now(),
     key: uuid.v4(),    
     fbpost: 'fbpost'
   }).then((data) => {
-    var fbpostmessage = message + "\nGeo ("+ geolocation.longitude + "," + geolocation.latitude + ")\n#Testing";
+    var tagsLength = tags.length;
+    var tagString = '';
+    for (var i = 0; i < tagsLength; i++) {
+        tagString += "\n#"+tags[i];
+    }
+    var fbpostmessage = message + "\nGeo ("+ geolocation.longitude + "," + geolocation.latitude + ")" + tagString;
     if (! validateFile(file)) {
       console.log("Invalid file.");
-      postFbMessage(fbpostmessage, geolocation, data);
+      postFbMessage(fbpostmessage, geolocation, '', tags, data);
     }
     else
     {    
@@ -62,12 +68,11 @@ function postMessage(message, file, geolocation) {
         (snapshot) =>  {
           return updateData(data, snapshot).then(() =>
             {
-              postFbPhotoMessage(fbpostmessage, geolocation, snapshot, data);
+              postFbMessage(fbpostmessage, geolocation, snapshot, tags,data);
             });
         });
     }
   });  
-  this.messageInput.value = null;
 };
 
 export default postMessage;

@@ -2,7 +2,17 @@
 import * as firebase from 'firebase';
 import config from './config/default';
 
-export function postFbMessage(fbpostmessage, geolocation, data){
+
+function postFbMessage(fbpostmessage, geolocation, snapshot, tags, data){
+    if(snapshot == '') {
+        postFbTextMessage(fbpostmessage, geolocation, tags, data);
+    }else{
+        postFbPhotoMessage(fbpostmessage, geolocation, snapshot, tags, data);
+    }
+
+}
+
+function postFbTextMessage(fbpostmessage, geolocation, tags, data){
   var fbpost = "https://www.facebook.com/groups/OurLandHK/permalink/FeedID";
   FB.login((response)=>{
   // Note: The call will only work if you accept the permission request
@@ -28,7 +38,7 @@ export function postFbMessage(fbpostmessage, geolocation, data){
   }, {scope: 'publish_actions,user_managed_groups'});
 };
 
-export function postFbPhotoMessage(fbpostmessage, geolocation, snapshot, data){
+function postFbPhotoMessage(fbpostmessage, geolocation, snapshot, tags, data){
   var fbpost = "https://www.facebook.com/groups/OurLandHK/permalink/FeedID";
   var imagePublicURL = "no update";
   var fullPath = NaN
@@ -65,4 +75,4 @@ export function postFbPhotoMessage(fbpostmessage, geolocation, snapshot, data){
     });
 };
 
-export default postMessage;
+export default postFbMessage;

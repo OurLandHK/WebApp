@@ -60,7 +60,8 @@ class PostMessageView extends Component {
     if (this.locationButton.geolocation == null) {
       console.log('Unknown Location'); 
     } else {
-      postMessage(this.messageInput.value, this.file.files[0], this.locationButton.geolocation);
+      var tags = ['Testing', 'Tags'];
+      postMessage(this.messageInput.value, this.file.files[0], tags, this.locationButton.geolocation);
     }
   }
 
