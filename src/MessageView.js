@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Card, { CardActions, CardContent, CardMedia , CardHeader, CardText, CardTitle} from 'material-ui/Card';
 import ProgressiveCardImg from './ProgressiveCardImg';
+import getLocation from './Location';
 import distance from './Distance.js';
 import IconButton from 'material-ui/IconButton';
 import Collapse from 'material-ui/transitions/Collapse';
