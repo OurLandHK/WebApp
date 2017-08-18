@@ -11,7 +11,7 @@ const style = {
 export class EventMap extends Component {
   static defaultProps = {
     center: {lat: 22, lng: 114},
-    zoom: 17,
+    zoom: 15,
 }
 
 render() {

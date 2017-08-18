@@ -9,6 +9,7 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ForumIcon from 'material-ui-icons/Forum';
 import Grid from 'material-ui/Grid';
 import EventMap from './REventMap';
+import ChipArray from './ChipArray';
 
 class MessageDetailView extends Component {
   constructor(props) {
@@ -24,9 +25,18 @@ class MessageDetailView extends Component {
   render() {
     const classes = this.props.classes;
     var m = this.props.message;
+    var tag = m.tag;
+    var chips = [];
+    if(Array.isArray(tag))
+    {
+        for (var i = 0; i < tag.length; i++) { 
+            var chip = {key:i, label:tag[i]};
+            chips.push(chip);
+        }
+    }
     var facebookURL = "https://facebook.com/" + m.fbpost;
     console.log('facebookURL: '+facebookURL);
-    var zoom=17;
+    var zoom=15;
     var photoUrl = '/images/profile_placeholder.png';
     var geolocation = {lat: m.latitude, lng: m.longitude};
     if (m.photoUrl) {
@@ -44,20 +54,23 @@ class MessageDetailView extends Component {
         <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>
             <Grid container>
                 <Grid item>                  
-                <CardContent>
-                    <IconButton href={facebookURL} data-scheme="fb://profile/10000">
-                        <ForumIcon />
-                    </IconButton>                         
-                </CardContent>  
+                    <CardContent>
+                        <IconButton href={facebookURL} data-scheme="fb://profile/10000">
+                            <ForumIcon />
+                        </IconButton>                         
+                    </CardContent>  
                 </Grid>  
                 <Grid item>
-                <CardMedia
-                overlay={m.name}>
-                <img src={photoUrl} />
-                <Typography component="p">
-                    {m.name}
-                </Typography>
-                </CardMedia>
+                    <CardMedia
+                    overlay={m.name}>
+                    <img src={photoUrl} />
+                    <Typography component="p">
+                        {m.name}
+                    </Typography>
+                    </CardMedia>
+                </Grid>
+                <Grid item>
+                    <ChipArray chipData={chips} />
                 </Grid>
             </Grid>
             <Grid container>  
@@ -83,20 +96,22 @@ class MessageDetailView extends Component {
             <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>
             <Grid container>
                 <Grid item>                  
-                <CardContent>
-                    <IconButton href={facebookURL} data-scheme="fb://profile/10000">
-                        <ForumIcon />
-                    </IconButton>                         
-                </CardContent>  
+                    <CardContent>
+                        <IconButton href={facebookURL} data-scheme="fb://profile/10000">
+                            <ForumIcon />
+                        </IconButton>                         
+                    </CardContent>  
                 </Grid>  
                 <Grid item>
-                <CardMedia
-                overlay={m.name}>
-                <img src={photoUrl} />
-                <Typography component="p">
-                    {m.name}
-                </Typography>
-                </CardMedia>
+                    <CardMedia overlay={m.name}>
+                        <img src={photoUrl} />
+                        <Typography component="p">
+                            {m.name}
+                        </Typography>
+                    </CardMedia>
+                </Grid>
+                <Grid item>
+                    <ChipArray chipData={chips} />
                 </Grid>
             </Grid>  
             <Grid container>  
