@@ -13,7 +13,7 @@ function postFbMessage(fbpostmessage, geolocation, snapshot, tags, data){
 }
 
 function postFbTextMessage(fbpostmessage, geolocation, tags, data){
-  var fbpost = "https://www.facebook.com/groups/OurLandHK/permalink/FeedID";
+  var fbpost = "";
   FB.login((response)=>{
   // Note: The call will only work if you accept the permission request
     console.log(response);
@@ -27,7 +27,7 @@ function postFbTextMessage(fbpostmessage, geolocation, tags, data){
         console.log(response);
         if (response && !response.error) {
           console.log('Post ID: ' + response.id);
-          fbpost = 'https://www.facebook.com/groups/' + config.fbGroupId + '/permalink/' + response.id.split("_")[1];
+          fbpost = '/groups/' + config.fbGroupId + '/permalink/' + response.id.split("_")[1];
           console.log('URL: ' + fbpost);
           data.update({fbpost: fbpost});
         } else {
@@ -39,7 +39,7 @@ function postFbTextMessage(fbpostmessage, geolocation, tags, data){
 };
 
 function postFbPhotoMessage(fbpostmessage, geolocation, snapshot, tags, data){
-  var fbpost = "https://www.facebook.com/groups/OurLandHK/permalink/FeedID";
+  var fbpost = "";
   var imagePublicURL = "no update";
   var fullPath = NaN
     fullPath = snapshot.metadata.fullPath;  
@@ -63,7 +63,7 @@ function postFbPhotoMessage(fbpostmessage, geolocation, snapshot, tags, data){
             console.log(response);
             if (response && !response.error) {
               console.log('Post ID: ' + response.id);
-              fbpost = "https://www.facebook.com/photo.php?fbid=" + response.id;
+              fbpost = "/photo.php?fbid=" + response.id;
               console.log('URL: ' + fbpost);
               data.update({fbpost: fbpost});
             } else {

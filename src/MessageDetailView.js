@@ -6,6 +6,7 @@ import IconButton from 'material-ui/IconButton';
 import Collapse from 'material-ui/transitions/Collapse';
 import Typography from 'material-ui/Typography';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import ForumIcon from 'material-ui-icons/Forum';
 import Grid from 'material-ui/Grid';
 import EventMap from './REventMap';
 
@@ -23,7 +24,9 @@ class MessageDetailView extends Component {
   render() {
     const classes = this.props.classes;
     var m = this.props.message;
-    var zoom=16;
+    var facebookURL = "https://facebook.com/" + m.fbpost;
+    console.log('facebookURL: '+facebookURL);
+    var zoom=17;
     var photoUrl = '/images/profile_placeholder.png';
     var geolocation = {lat: m.latitude, lng: m.longitude};
     if (m.photoUrl) {
@@ -42,9 +45,9 @@ class MessageDetailView extends Component {
             <Grid container>
                 <Grid item>                  
                 <CardContent>
-                    <Typography component="p">
-                    {m.fbpost}
-                    </Typography>                      
+                    <IconButton href={facebookURL} data-scheme="fb://profile/10000">
+                        <ForumIcon />
+                    </IconButton>                         
                 </CardContent>  
                 </Grid>  
                 <Grid item>
@@ -81,9 +84,9 @@ class MessageDetailView extends Component {
             <Grid container>
                 <Grid item>                  
                 <CardContent>
-                    <Typography component="p">
-                    {m.fbpost}
-                    </Typography>                      
+                    <IconButton href={facebookURL} data-scheme="fb://profile/10000">
+                        <ForumIcon />
+                    </IconButton>                         
                 </CardContent>  
                 </Grid>  
                 <Grid item>
