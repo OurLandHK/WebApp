@@ -31,7 +31,7 @@ const styleSheet = createStyleSheet(theme => ({
 class MessageView extends Component {
   constructor(props) {
     super(props);
-    this.state = {lat: 0, lon: 0};
+    this.state = {lat: 0, lon: 0, expanded: false};
     this.successCallBack = this.successCallBack.bind(this);
   }
 
@@ -55,6 +55,10 @@ class MessageView extends Component {
     console.warn('ERROR(${err.code}): ${err.message}');
   }
 
+    handleExpandClick() {
+    this.setState({ expanded: !this.state.expanded });
+  };
+
 
   render() {
     const classes = this.props.classes;
@@ -74,12 +78,12 @@ class MessageView extends Component {
     var date = new Date(m.createdAt);
     var subtitle = '張貼於： ' + date.toGMTString() + ' ' + distanceSpan;
     return (<div>
-              <Card >                   
+              <Card  onClick={() => this.handleExpandClick()}>                   
                 <CardHeader
                   title={m.text}
-                  subheader={subtitle}                >
+                  subheader={subtitle}>
                 </CardHeader>
-                <MessageDetailView message={m} key={m.key}/>                    
+                <MessageDetailView message={m} key={m.key} expanded={this.state.expanded}/>                    
               </Card>
               <br/>
             </div>);
