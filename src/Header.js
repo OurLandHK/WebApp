@@ -1,10 +1,23 @@
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
+
 import React, { Component } from 'react';
 import SignInButton from './SignInButton';
 import DrawerMenu from './Drawer';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+
+const styles = {
+  root: {
+    marginTop: 30,
+    width: '100%',
+  },
+  flex: {
+    flex: 1,
+  },
+};
+
 
 class Header extends  Component {
   constructor(props) {
@@ -18,19 +31,13 @@ class Header extends  Component {
     this.drawerMenu.handleToggle();
   }
 
-  styles = {
-    title: {
-      cursor: 'pointer',
-    },
-  };
-
   render() {
-    var style = {marginRight: 20};
-    return (<div>
+    const classes = this.props.classes;
+    return (<div className={classes.root}>
               <AppBar position="static">
                 <Toolbar>
                   <DrawerMenu/ >
-                  <Typography type="title" color="inherit" flex="1">
+                  <Typography type="title" color="inherit" className={classes.flex}>
                     Ourland HK
                   </Typography>
                   <SignInButton/>
@@ -40,4 +47,8 @@ class Header extends  Component {
   }
 }
 
-export default Header;
+Header.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Header);

@@ -4,7 +4,6 @@ import Drawer from 'material-ui/Drawer';
 import IconButton from 'material-ui/IconButton';
 import InboxIcon from 'material-ui-icons/Inbox';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
 import Icon from 'material-ui/Icon';
 
 class DrawerMenu extends Component {
@@ -41,6 +40,12 @@ class DrawerMenu extends Component {
                 </ListItemIcon>
                 <ListItemText primary="Current" />
               </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="關注" />
+              </ListItem>              
               <ListItem button>
                 <ListItemIcon>
                   <InboxIcon />

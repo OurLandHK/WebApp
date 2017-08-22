@@ -8,7 +8,19 @@ import config from './config/default';
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
+import { withStyles } from 'material-ui/styles';
+import classnames from 'classnames';
 
+const styles = theme => ({
+  fab: {
+    margin: 0,
+    top: 'auto',
+    right: 20,
+    bottom: 20,
+    left: 'auto',
+    position: 'fixed',
+  },
+});
 
 class PostMessageView extends Component {
   constructor(props) {
@@ -16,6 +28,8 @@ class PostMessageView extends Component {
     this.state = {popoverOpen: false};
     this.messageInput = null;
   }
+
+  
 
   handleRequestOpen(evt) {
     evt.preventDefault();
@@ -66,9 +80,10 @@ class PostMessageView extends Component {
   }
 
   render() {
+    const classes = this.props.classes;
     return (
       <span>
-        <Button fab style={{marginRight:20}} mini={true} onClick={(evt) => this.handleRequestOpen(evt)}>
+        <Button fab className={classes.fab} mini={true} onClick={(evt) => this.handleRequestOpen(evt)}>
           <AddIcon />
         </Button>
         <Dialog open={this.state.popoverOpen} onRequestClose={() => this.handleRequestClose()}>
@@ -91,4 +106,4 @@ class PostMessageView extends Component {
   }
 };
 
-export default PostMessageView;
+export default withStyles(styles) (PostMessageView);

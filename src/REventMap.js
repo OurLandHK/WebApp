@@ -4,7 +4,7 @@ import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 // Using Map https://github.com/fullstackreact/google-maps-react
 
 const style = {
-  width: '100%',
+  width: '95%',
   height: '30%'
 }
 
