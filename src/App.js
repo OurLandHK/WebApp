@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import {Footer, Row, Col, Button, Container} from 'reactstrap';
-import { SocialIcon } from 'react-social-icons';
+import {Container} from 'reactstrap';
 import Header from './Header';
 import MessageList from './MessageList';
-import DrawerMenu from './Drawer';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
 

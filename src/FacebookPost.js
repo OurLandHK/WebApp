@@ -4,7 +4,7 @@ import config from './config/default';
 
 
 function postFbMessage(fbpostmessage, geolocation, snapshot, tags, data){
-    if(snapshot == '') {
+    if(snapshot === '') {
         postFbTextMessage(fbpostmessage, geolocation, tags, data);
     }else{
         postFbPhotoMessage(fbpostmessage, geolocation, snapshot, tags, data);

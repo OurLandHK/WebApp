@@ -1,22 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Card, { CardActions, CardContent, CardMedia , CardHeader, CardText, CardTitle} from 'material-ui/Card';
-import ProgressiveCardImg from './ProgressiveCardImg';
+import Card, { CardHeader} from 'material-ui/Card';
 import getLocation from './Location';
 import distance from './Distance.js';
-import IconButton from 'material-ui/IconButton';
-import Collapse from 'material-ui/transitions/Collapse';
-import Icon from 'material-ui/Icon';
-import classnames from 'classnames';
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import red from 'material-ui/colors/red';
-import Typography from 'material-ui/Typography';
-import Grid from 'material-ui/Grid';
-import EventMap from './REventMap';
 import MessageDetailView from './MessageDetailView';
 
 
-const styleSheet = createStyleSheet(theme => ({
+const styles = theme => ({
   card: {
     maxWidth: 400,
   },
@@ -26,7 +18,7 @@ const styleSheet = createStyleSheet(theme => ({
   flexGrow: {
     flex: '1 1 auto',
   },
-}));
+});
 
 class MessageView extends Component {
   constructor(props) {
@@ -94,5 +86,5 @@ MessageView.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styleSheet)(MessageView);
+export default withStyles(styles)(MessageView);
 //export default MessageView;

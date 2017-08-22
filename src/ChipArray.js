@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles, createStyleSheet } from 'material-ui/styles';
+import { withStyles } from 'material-ui/styles';
 import Chip from 'material-ui/Chip';
 
-const styleSheet = createStyleSheet(theme => ({
+const styles = theme => ({
   chip: {
     margin: theme.spacing.unit / 2,
   },
@@ -12,7 +12,7 @@ const styleSheet = createStyleSheet(theme => ({
     justifyContent: 'center',
     flexWrap: 'wrap',
   },
-}));
+});
 
 class ChipArray extends Component {
   state = {
@@ -78,4 +78,5 @@ ChipArray.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styleSheet)(ChipArray);
+
+export default withStyles(styles)(ChipArray);

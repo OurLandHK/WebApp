@@ -1,4 +1,3 @@
-/*global FB*/
 import * as firebase from 'firebase';
 import config from './config/default';
 import postFbMessage from './FacebookPost';

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { NavLink} from 'reactstrap';
 import * as firebase from 'firebase';
 import PostMessageView from './PostMessageView';
 import Button from 'material-ui/Button';
