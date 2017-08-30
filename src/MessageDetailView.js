@@ -50,11 +50,7 @@ class MessageDetailView extends Component {
 
   handleExpandClick() {
     this.setState({ expanded: !this.state.expanded });
-/*    if(this.state.expanded) {
-        this.setState({ rotate: 'rotate(180deg)' });
-    } else {
-        this.setState({ rotate: 'rotate(0deg)' });
-    }*/
+
   };
 
 
