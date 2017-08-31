@@ -12,10 +12,11 @@ This folder contains the final prototype code
 		* In the Firebase Console open the Authentication section > SIGN IN METHOD tab (click here to go there) you need to enable the Facebook Sign-in Provider and click SAVE. This will allow users to sign-in the Web app with their Facebook accounts
 
 
-2. Install the Firebase Command Line Interface
+2. Install the Firebase Command Line Interface (For windows, please use powershell with administrator right)
     * Install Node.js https://nodejs.org/en/
     * Install Firebase `npm -g install firebase-tools`
     * Install create-react-app `npm install -g create-react-app`
+	* Install windows-build-tools on windows envirnoment `npm install --global --production windows-build-tools`
     * Install the following peer Dependencies
         * `npm install react-tap-event-plugin`
 		* `npm install --save react-tag-input`

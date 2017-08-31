@@ -32,13 +32,22 @@ function updateData(data, snapshot) {
 };
 
 
-function postMessage(message, file, tags, geolocation) {
+function postMessage(message, file, tags, geolocation, start, end, interval, link) {
   // Check if the file is an image.
 
   //var loadingImageUrl = "https://www.google.com/images/spin-32.gif";
   var auth = firebase.auth();
   var currentUser = auth.currentUser;       
   var messagesRef = firebase.database().ref(config.messageDB);
+  var now = Date.now();
+  if(start == "")
+  {
+    start = now;
+  }
+  if(end == "")
+  {
+      end = now;
+  }  
   return messagesRef.push({
     name: currentUser.displayName,
     //imageUrl: loadingImageUrl,
@@ -47,9 +56,13 @@ function postMessage(message, file, tags, geolocation) {
     latitude: geolocation.latitude,
     longitude: geolocation.longitude,
     tag: tags,
-    createdAt: Date.now(),
+    createdAt: now,
     key: uuid.v4(),    
-    fbpost: 'fbpost'
+    fbpost: 'fbpost',    
+    start: start,
+    end: end,
+    interval: interval,
+    link: link
   }).then((data) => {
     var tagsLength = tags.length;
     var tagString = '';

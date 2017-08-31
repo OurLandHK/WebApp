@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as firebase from 'firebase';
-import PostMessageView from './PostMessageView';
 import Button from 'material-ui/Button';
 
 
@@ -40,7 +39,7 @@ class SignInButton extends  Component {
     }
     if (this.state.user) {
       var imgURL = (this.state.user.photoURL || '/images/profile_placeholder.png');
-      return (<div style={{alignItems: "center", display: "flex"}}><PostMessageView/>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{this.state.user.displayName}&nbsp;&nbsp;<Button raised secondary={true} onClick={() => this.handleSignOut()}>Sign-out</Button></div>);
+      return (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{this.state.user.displayName}&nbsp;&nbsp;<Button raised secondary={true} onClick={() => this.handleSignOut()}>Sign-out</Button></div>);
     }
     else
     {
