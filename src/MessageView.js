@@ -63,7 +63,7 @@ class MessageView extends Component {
         if (dis > 1)
           dist = Math.round(dis) + "km";
         else
-          dist = (dis * 1000) + "m";
+          dist = Math.round(dis * 1000) + "m";
         distanceSpan += dist;
       }
     }
