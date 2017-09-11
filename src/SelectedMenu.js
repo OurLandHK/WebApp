@@ -4,20 +4,17 @@ import { withStyles } from 'material-ui/styles';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import Menu, { MenuItem } from 'material-ui/Menu';
 
-const styles = theme => ({
-  root: {
-    width: '100%',
-    maxWidth: 360,
-    background: theme.palette.background.paper,
-  },
-});
 
 class SelectedMenu extends Component {
-  state = {
-    anchorEl: undefined,
-    open: false,
-    selectedIndex: 1,
-  };
+  constructor(props) {
+    super(props);
+    this.selectedValue = null;
+    this.state = {
+      anchorEl: undefined,
+      open: false,
+      selectedIndex: 0,
+    };    
+  }
 
   static defaultProps = {
     options : [
@@ -26,10 +23,7 @@ class SelectedMenu extends Component {
         'Hide all notification content',
       ],
     label: "Testing",
-    zoom: 15,
   }
-
-  button = undefined;
 
   handleClickListItem = event => {
     this.setState({ open: true, anchorEl: event.currentTarget });
@@ -37,16 +31,18 @@ class SelectedMenu extends Component {
 
   handleMenuItemClick = (event, index) => {
     this.setState({ selectedIndex: index, open: false });
+    this.selectedValue = this.props.options[index];
+    console.log(this);
   };
 
   handleRequestClose = () => {
     this.setState({ open: false });
+    console.log(this);    
   };
 
   render() {
-    const classes = this.props.classes;
     return (
-      <div className={classes.root}>
+      <div>
         <List>
           <ListItem
             button
@@ -86,4 +82,4 @@ SelectedMenu.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SelectedMenu);
+export default SelectedMenu;

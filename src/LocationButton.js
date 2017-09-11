@@ -1,5 +1,5 @@
-import { Button } from 'reactstrap';
 import React, { Component } from 'react';
+import Button  from 'material-ui/Button';
 import getLocation from './Location';
 
 class LocationButton extends Component {
@@ -38,7 +38,7 @@ class LocationButton extends Component {
 
 
   render() {
-    return (<Button color="primary" onClick={() => this.handleGetLocation()}>Location</Button>);
+    return (<Button raised primary={true} onClick={() => this.handleGetLocation()}>Location</Button>);
   }
 }
 

@@ -40,6 +40,7 @@ function postMessage(message, file, tags, geolocation, start, end, interval, lin
   var currentUser = auth.currentUser;       
   var messagesRef = firebase.database().ref(config.messageDB);
   var now = Date.now();
+  console.log("Start: " + start + " End: " + end + " Interval: " + interval + " Link: " + link);
   if(start == "")
   {
     start = now;
@@ -69,7 +70,7 @@ function postMessage(message, file, tags, geolocation, start, end, interval, lin
     for (var i = 0; i < tagsLength; i++) {
         tagString += "\n#"+tags[i];
     }
-    var fbpostmessage = message + "\nGeo ("+ geolocation.longitude + "," + geolocation.latitude + ")" + tagString;
+    var fbpostmessage = message + "\nhttps://www.google.com.hk/maps/@" + geolocation.latitude + "," + geolocation.longitude + ",20z\n" + tagString;
     if (! validateFile(file)) {
       console.log("Invalid file.");
       postFbMessage(fbpostmessage, geolocation, '', tags, data);
