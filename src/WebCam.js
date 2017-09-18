@@ -37,3 +37,5 @@ class WebcamCapture extends React.Component {
       );
     }
   }
+
+  export default WebcamCapture;

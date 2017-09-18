@@ -32,7 +32,7 @@ function updateData(data, snapshot) {
 };
 
 
-function postMessage(message, file, tags, geolocation, start, end, interval, link) {
+function postMessage(message, file, tags, geolocation, start, duration, interval, link) {
   // Check if the file is an image.
 
   //var loadingImageUrl = "https://www.google.com/images/spin-32.gif";
@@ -40,15 +40,13 @@ function postMessage(message, file, tags, geolocation, start, end, interval, lin
   var currentUser = auth.currentUser;       
   var messagesRef = firebase.database().ref(config.messageDB);
   var now = Date.now();
-  console.log("Start: " + start + " End: " + end + " Interval: " + interval + " Link: " + link);
-  if(start == "")
+  console.log("Start: " + start + " Duration: " + duration + " Interval: " + interval + " Link: " + link);
+  if(start === "")
   {
-    start = now;
+    start = null;
+    duration = null;
+    interval = null;
   }
-  if(end == "")
-  {
-      end = now;
-  }  
   return messagesRef.push({
     name: currentUser.displayName,
     //imageUrl: loadingImageUrl,
@@ -61,16 +59,11 @@ function postMessage(message, file, tags, geolocation, start, end, interval, lin
     key: uuid.v4(),    
     fbpost: 'fbpost',    
     start: start,
-    end: end,
+    duration: duration,
     interval: interval,
     link: link
   }).then((data) => {
-    var tagsLength = tags.length;
-    var tagString = '';
-    for (var i = 0; i < tagsLength; i++) {
-        tagString += "\n#"+tags[i];
-    }
-    var fbpostmessage = message + "\nhttps://www.google.com.hk/maps/@" + geolocation.latitude + "," + geolocation.longitude + ",20z\n" + tagString;
+    var fbpostmessage = message;
     if (! validateFile(file)) {
       console.log("Invalid file.");
       postFbMessage(fbpostmessage, geolocation, '', tags, data);

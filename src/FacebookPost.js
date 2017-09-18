@@ -1,13 +1,20 @@
 /*global FB*/
 import * as firebase from 'firebase';
 import config from './config/default';
+import geoString from './GeoLocationString';
 
 
 function postFbMessage(fbpostmessage, geolocation, snapshot, tags, data){
+    var tagsLength = tags.length;
+    var tagString = '';
+    for (var i = 0; i < tagsLength; i++) {
+      tagString += "\n#"+tags[i];
+    }
+    var mapString = "\nhttps://www.google.com.hk/maps/place/"+ geoString(geolocation.latitude, geolocation.longitude) + "/@" + geolocation.latitude + "," + geolocation.longitude + ",18z/"
     if(snapshot === '') {
-        postFbTextMessage(fbpostmessage, geolocation, tags, data);
+        postFbTextMessage(fbpostmessage + mapString + tagString, geolocation, tags, data);
     }else{
-        postFbPhotoMessage(fbpostmessage, geolocation, snapshot, tags, data);
+        postFbPhotoMessage(fbpostmessage + mapString + tagString, geolocation, snapshot, tags, data);
     }
 
 }

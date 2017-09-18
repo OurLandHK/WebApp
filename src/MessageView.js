@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Card, { CardHeader} from 'material-ui/Card';
 import getLocation from './Location';
 import distance from './Distance.js';
+import timeOffsetStringInChinese from './TimeString.js';
 import { withStyles } from 'material-ui/styles';
 import red from 'material-ui/colors/red';
 import MessageDetailView from './MessageDetailView';
@@ -67,8 +68,9 @@ class MessageView extends Component {
         distanceSpan += dist;
       }
     }
-    var date = new Date(m.createdAt);
-    var subtitle = '張貼於： ' + date.toGMTString() + ' ' + distanceSpan;
+    var timeOffset = Date.now() - m.createdAt;
+    var timeOffsetString = timeOffsetStringInChinese(timeOffset);
+    var subtitle = '張貼於： ' + timeOffsetString + '前 ' + distanceSpan;
     return (<div>
               <Card  onClick={() => this.handleExpandClick()}>                   
                 <CardHeader

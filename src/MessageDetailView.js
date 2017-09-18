@@ -59,6 +59,11 @@ class MessageDetailView extends Component {
     var m = this.props.message;
     var tag = m.tag;
     var chips = [];
+    var date = new Date(m.start);
+    var gmtString = date.toGMTString();
+    var interval = m.interval;
+    var duration = m.duration;
+    var link = m.link;
     if(Array.isArray(tag))
     {
         for (var i = 0; i < tag.length; i++) { 
@@ -175,7 +180,37 @@ class MessageDetailView extends Component {
                     <Grid item>
                         <ChipArray chipData={chips} />
                     </Grid>
-                </Grid>  
+                </Grid>
+                <Grid container>
+                    <Grid item>                  
+                        <CardContent>
+                            <Typography component="p">
+                                {gmtString}
+                            </Typography>
+                        </CardContent>  
+                    </Grid>  
+                    <Grid item>
+                        <CardContent>
+                            <Typography component="p">
+                                {duration}
+                            </Typography>
+                        </CardContent>  
+                    </Grid>
+                    <Grid item>
+                        <CardContent>
+                            <Typography component="p">
+                                {interval}
+                            </Typography>
+                        </CardContent>  
+                    </Grid>
+                    <Grid item>
+                        <CardContent>
+                            <Typography component="p">
+                                {link}
+                            </Typography>
+                        </CardContent>  
+                    </Grid>                    
+                </Grid>                  
                 <Grid container>  
                     <Grid item align='center'>
                         <CardContent>
@@ -190,3 +225,4 @@ class MessageDetailView extends Component {
 }
 
 export default withStyles(styles) (MessageDetailView);
+//export default MessageDetailView;
