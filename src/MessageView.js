@@ -37,10 +37,10 @@ class MessageView extends Component {
   }
 
   successCallBack(pos) {
-    console.log('Your current position is:');
-    console.log('Latitude : ' + pos.coords.latitude);
-    console.log('Longitude: ' + pos.coords.longitude);
-    console.log('More or less ' + pos.coords.accuracy + 'meters.'); 
+//    console.log('Your current position is:');
+//    console.log('Latitude : ' + pos.coords.latitude);
+//    console.log('Longitude: ' + pos.coords.longitude);
+//    console.log('More or less ' + pos.coords.accuracy + 'meters.'); 
     this.setState({ lat: pos.coords.latitude, lon: pos.coords.longitude}); 
   }
 

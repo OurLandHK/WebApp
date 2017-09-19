@@ -10,7 +10,7 @@ import { withStyles } from 'material-ui/styles';
 
 const styles = {
   root: {
-    marginTop: 30,
+    marginTop: 1,
     width: '100%',
   },
   flex: {

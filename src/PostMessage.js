@@ -6,7 +6,13 @@ import uuid from 'js-uuid';
 
 
 function validateFile(file) {
-  if (! file || !file.type.match('image.*')) {
+  if (! file) {
+    console.log("file not exist: " + file); 
+    return false;    
+  }
+
+  if(!file.type.match('image.*')) {
+    console.log("File is not image:" + file);
     var data = {
       message: 'You can only share images',
       timeout: 2000

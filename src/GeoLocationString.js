@@ -1,4 +1,4 @@
-function geoString(lon1, lat1) {
+function geoString(lat1, lon1) {
     var d = convertDDToDMS(lat1, false)+ "+" + convertDDToDMS(lon1, true); 
     return d;
 }
@@ -21,7 +21,7 @@ function convertDDToDMS(deg, lng){
     }
 
     var rv = "";
-    var direction = deg<0?lng?'W':'S':lng?'E':'N';;
+    var direction = deg<0?lng?'W':'S':lng?'E':'N';
     rv += d.toString() + "°" + m.toString() + "'" + s.toString() + '"' + direction;
     return rv;
 }

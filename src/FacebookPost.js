@@ -10,17 +10,18 @@ function postFbMessage(fbpostmessage, geolocation, snapshot, tags, data){
     for (var i = 0; i < tagsLength; i++) {
       tagString += "\n#"+tags[i];
     }
-    var mapString = "\nhttps://www.google.com.hk/maps/place/"+ geoString(geolocation.latitude, geolocation.longitude) + "/@" + geolocation.latitude + "," + geolocation.longitude + ",18z/"
     if(snapshot === '') {
-        postFbTextMessage(fbpostmessage + mapString + tagString, geolocation, tags, data);
+        postFbTextMessage(fbpostmessage + tagString, geolocation, tags, data);
     }else{
-        postFbPhotoMessage(fbpostmessage + mapString + tagString, geolocation, snapshot, tags, data);
+        postFbPhotoMessage(fbpostmessage + tagString, geolocation, snapshot, tags, data);
     }
 
 }
 
 function postFbTextMessage(fbpostmessage, geolocation, tags, data){
   var fbpost = "";
+  var mapString = "https://www.google.com.hk/maps/place/"+ geoString(geolocation.latitude, geolocation.longitude) + "/@" + geolocation.latitude + "," + geolocation.longitude + ",18z/"
+  
   FB.login((response)=>{
   // Note: The call will only work if you accept the permission request
     console.log(response);
@@ -28,7 +29,8 @@ function postFbTextMessage(fbpostmessage, geolocation, tags, data){
       '/' + config.fbGroupId + '/feed',
       'post', 
       {
-        message: fbpostmessage
+        message: fbpostmessage,
+        link: mapString
       },
       (response) => {
         console.log(response);
@@ -47,6 +49,7 @@ function postFbTextMessage(fbpostmessage, geolocation, tags, data){
 
 function postFbPhotoMessage(fbpostmessage, geolocation, snapshot, tags, data){
   var fbpost = "";
+  var mapString = "\nhttps://www.google.com.hk/maps/place/"+ geoString(geolocation.latitude, geolocation.longitude) + "/@" + geolocation.latitude + "," + geolocation.longitude + ",18z/"  
   var imagePublicURL = "no update";
   var fullPath = NaN
     fullPath = snapshot.metadata.fullPath;  
@@ -64,7 +67,7 @@ function postFbPhotoMessage(fbpostmessage, geolocation, snapshot, tags, data){
           'post', 
           {
             url: imagePublicURL,
-            message: fbpostmessage
+            message: fbpostmessage + mapString,
           },
           (response) => {
             console.log(response);

@@ -110,15 +110,23 @@ class PostMessageView extends Component {
   }
 
   onSubmit() {
-    var interval = this.intervalSelection.selectedValue;
-    var duration = this.durationSelection.selectedValue;
+    var interval = "";
+    if(this.intervalSelection != null)
+    {
+      interval = this.intervalSelection.selectedValue;
+    }
+    var duration = "";
+    if(this.durationSelection != null)
+    {
+      duration = this.durationSelection.selectedValue;
+    }
     var startTimeInMs = "";
     if(this.state.start !== "") {
       startTimeInMs = Date.parse(this.state.start);
     }
     console.log(startTimeInMs);
     console.log(this.state.summary);
-    console.log(this.file);              
+    console.log(this.file.files[0]);              
     if (this.locationButton.geolocation == null) {
       console.log('Unknown Location'); 
     } else {
@@ -126,7 +134,7 @@ class PostMessageView extends Component {
         console.log('Unknown Input');         
       } else {
         var tags = ['Testing', 'Tags'];
-        postMessage(this.state.summary, this.file, tags, this.locationButton.geolocation, startTimeInMs, duration, interval, this.state.link);
+        postMessage(this.state.summary, this.file.files[0], tags, this.locationButton.geolocation, startTimeInMs, duration, interval, this.state.link);
         this.setState({popoverOpen: false});
       }
     }
