@@ -1,8 +1,8 @@
 function timeOffsetStringInChinese(timeInMS) {
-    var second = timeInMS/1000;
-    var minutes = second/60;
-    var hour = minutes/60;
-    var day = hour/24;
+    var second = Math.floor(timeInMS/1000);
+    var minutes = Math.floor(second/60);
+    var hour = Math.floor(minutes/60);
+    var day = Math.floor(hour/24);
     var rv = day + "日";
     if(day === 0) {
         if(hour === 0) {

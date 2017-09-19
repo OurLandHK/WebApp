@@ -32,8 +32,8 @@ class MessageList extends Component {
        this.state.data.push(val);
        this.setState({data:this.state.data});
      };
-     this.messagesRef.limitToLast(12).on('child_added', setMessage);
-     this.messagesRef.limitToLast(12).on('child_changed', setMessage);
+     this.messagesRef.limitToLast(20).on('child_added', setMessage);
+     this.messagesRef.limitToLast(20).on('child_changed', setMessage);
 
   }
 

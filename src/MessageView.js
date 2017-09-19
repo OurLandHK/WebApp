@@ -6,7 +6,7 @@ import distance from './Distance.js';
 import timeOffsetStringInChinese from './TimeString.js';
 import { withStyles } from 'material-ui/styles';
 import red from 'material-ui/colors/red';
-import MessageDetailView from './MessageDetailView';
+import MessageExpandView from './MessageExpandView';
 
 
 const styles = theme => ({
@@ -77,7 +77,7 @@ class MessageView extends Component {
                   title={m.text}
                   subheader={subtitle}>
                 </CardHeader>
-                <MessageDetailView message={m} key={m.key} expanded={this.state.expanded}/>                    
+                <MessageExpandView message={m} key={m.key} expanded={this.state.expanded}/>                    
               </Card>
               <br/>
             </div>);

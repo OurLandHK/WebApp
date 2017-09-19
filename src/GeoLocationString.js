@@ -20,8 +20,9 @@ function convertDDToDMS(deg, lng){
         m=0;
     }
 
-    var rv = d.toString() + "°" + m.toString() + "'" + s.toString() + '"' + deg<0?lng?'W':'S':lng?'E':'N';
-    console.log("DMS: " + rv + " d " + d);
+    var rv = "";
+    var direction = deg<0?lng?'W':'S':lng?'E':'N';;
+    rv += d.toString() + "°" + m.toString() + "'" + s.toString() + '"' + direction;
     return rv;
 }
 export default geoString;
