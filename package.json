@@ -9,7 +9,7 @@
     "firebase-tools": "^3.9.1",
     "google-maps-react": "^1.1.0",
     "js-uuid": "0.0.6",
-    "material-ui": "^1.0.0-beta.6",
+    "material-ui": "^1.0.0-beta.9",
     "material-ui-icons": "^1.0.0-alpha.19",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",

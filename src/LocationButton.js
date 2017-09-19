@@ -1,6 +1,7 @@
-import { Button } from 'reactstrap';
 import React, { Component } from 'react';
+import Button  from 'material-ui/Button';
 import getLocation from './Location';
+import geoString from './GeoLocationString';
 
 class LocationButton extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class LocationButton extends Component {
     console.log('Your current position is:');
     console.log('Latitude : ' + pos.coords.latitude);
     console.log('Longitude: ' + pos.coords.longitude);
+    console.log('Geo String: ' + geoString(pos.coords.longitude, pos.coords.latitude))
     console.log('More or less ' + pos.coords.accuracy + 'meters.');  
     this.geolocation = pos.coords;
   }
@@ -38,7 +40,7 @@ class LocationButton extends Component {
 
 
   render() {
-    return (<Button color="primary" onClick={() => this.handleGetLocation()}>Location</Button>);
+    return (<Button raised primary={true} onClick={() => this.handleGetLocation()}>Location</Button>);
   }
 }
 

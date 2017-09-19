@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import { CardActions, CardContent, CardMedia} from 'material-ui/Card';
 import ProgressiveCardImg from './ProgressiveCardImg';
 import IconButton from 'material-ui/IconButton';
-import Collapse from 'material-ui/transitions/Collapse';
 import Typography from 'material-ui/Typography';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ForumIcon from 'material-ui-icons/Forum';
@@ -59,6 +58,11 @@ class MessageDetailView extends Component {
     var m = this.props.message;
     var tag = m.tag;
     var chips = [];
+    var date = new Date(m.start);
+    var dateTimeString = date.toGMTString();
+    var interval = m.interval;
+    var duration = m.duration;
+    var link = m.link;
     if(Array.isArray(tag))
     {
         for (var i = 0; i < tag.length; i++) { 
@@ -74,119 +78,37 @@ class MessageDetailView extends Component {
     if (m.photoUrl) {
       photoUrl = m.photoUrl;
     }    
-    if(m.imageUrl)
-    {
-      return(
-          <div>         
-                <CardActions disableActionSpacing>
-                    <IconButton aria-label="Add to favorites">
-                        <FavoriteIcon />
-                    </IconButton>
-                    <IconButton aria-label="Share">
-                        <ShareIcon />
-                    </IconButton>
-                    <div className={classes.flexGrow} />
-                    <IconButton
-                        className={classnames(classes.expand, {
-                            [classes.expandOpen]: this.state.expanded,
-                        })}
-                        onClick={() => this.handleExpandClick()}
-                        aria-expanded={this.state.expanded}
-                        aria-label="Show more"
-                        >
-                        <ExpandMoreIcon />
-                    </IconButton> 
-                </CardActions>                       
-                <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>
-                    <Grid container>
-                        <Grid item>                  
-                            <CardContent>
-                                <IconButton href={facebookURL} data-scheme="fb://profile/10000">
-                                    <ForumIcon />
-                                </IconButton>                         
-                            </CardContent>  
-                        </Grid>  
-                        <Grid item>
-                            <CardMedia 
-                            overlay={m.name}>
-                            <img src={photoUrl} />
-                            <Typography component="p">
-                                {m.name}
-                            </Typography>
-                            </CardMedia>
-                        </Grid>
-                        <Grid item>
-                            <ChipArray chipData={chips} />
-                        </Grid>
-                    </Grid>
-                    <Grid container>  
-                        <Grid item align='center'>
-                        <ProgressiveCardImg width={window.innerWidth * 0.85} gs_src={m.imageUrl}/>    
-                        </Grid>
-                    </Grid>   
-                    <Grid container>  
-                        <Grid item align='center'>
-                            <CardContent>
-                                <EventMap center={geolocation} zoom={zoom}/>
-                            </CardContent>
-                        </Grid>
-                    </Grid>                       
-                </Collapse>                      
-            </div>);                     
-        } else {
-        return(
-        <div>          
-            <CardActions disableActionSpacing>
-                <IconButton aria-label="Add to favorites">
-                    <FavoriteIcon />
-                </IconButton>
-                <IconButton aria-label="Share">
-                    <ShareIcon />
-                </IconButton>
-                <div className={classes.flexGrow} />
-                <IconButton
-                    className={classnames(classes.expand, {
-                        [classes.expandOpen]: this.state.expanded,
-                    })}
-                    onClick={() => this.handleExpandClick()}
-                    aria-expanded={this.state.expanded}
-                    aria-label="Show more"
-                    >
-                    <ExpandMoreIcon />
-                </IconButton> 
-            </CardActions>         
-            <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>
-                <Grid container>
-                    <Grid item>                  
-                        <CardContent>
-                            <IconButton href={facebookURL} data-scheme="fb://profile/10000">
-                                <ForumIcon />
-                            </IconButton>                         
-                        </CardContent>  
-                    </Grid>  
-                    <Grid item>
-                        <CardMedia overlay={m.name}>
-                            <img src={photoUrl} />
-                            <Typography component="p">
-                                {m.name}
-                            </Typography>
-                        </CardMedia>
-                    </Grid>
-                    <Grid item>
-                        <ChipArray chipData={chips} />
-                    </Grid>
-                </Grid>  
-                <Grid container>  
-                    <Grid item align='center'>
-                        <CardContent>
-                            <EventMap center={geolocation} zoom={zoom}/>
-                        </CardContent> 
-                    </Grid>
-                </Grid>                       
-             </Collapse>
-        </div>);    
-        }                 
+    let linkHtml = null;
+    if({link} != "") {
+        linkHtml = <Grid container> <Grid item> <CardContent> <Typography component='p'> 外部連結： {link} </Typography> </CardContent> </Grid></Grid>;
     }
+    let dateHtml = null;
+    if(dateTimeString != "Invalid Date") { 
+        dateHtml = <Grid container>
+                        <Grid item><CardContent><Typography component='p'> 開始: {dateTimeString}</Typography> </CardContent> </Grid>  
+                        <Grid item><CardContent><Typography component='p'> 為期: {duration} </Typography> </CardContent> </Grid>
+                        <Grid item><CardContent><Typography component='p'> 週期: {interval} </Typography> </CardContent> </Grid>                
+                        </Grid>;
+    }   
+    let imageHtml = null;    
+    if(m.imageUrl){                                      
+        imageHtml = <Grid container>
+                        <Grid item align='center'><ProgressiveCardImg width={window.innerWidth * 0.85} gs_src={m.imageUrl}/></Grid>
+                      </Grid>;
+    }   
+    return(<div><Grid container>
+                    <Grid item> <CardContent> <IconButton href={facebookURL} data-scheme='fb://profile/10000'> <ForumIcon /> </IconButton> </CardContent> </Grid>
+                    <Grid item> <CardMedia overlay={m.name}> <img src={photoUrl} /> <Typography component='p'> {m.name} </Typography> </CardMedia> </Grid>
+                    <Grid item> <ChipArray chipData={chips} /> </Grid>
+                </Grid>
+                {linkHtml}
+                {dateHtml}
+                {imageHtml}
+                <Grid container> <Grid item align='center'><CardContent><EventMap center={geolocation} zoom={zoom}/></CardContent></Grid></Grid>
+                </div>);
+
+    }                 
 }
 
 export default withStyles(styles) (MessageDetailView);
+//export default MessageDetailView;

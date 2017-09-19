@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import Card, { CardHeader} from 'material-ui/Card';
 import getLocation from './Location';
 import distance from './Distance.js';
+import timeOffsetStringInChinese from './TimeString.js';
 import { withStyles } from 'material-ui/styles';
 import red from 'material-ui/colors/red';
-import MessageDetailView from './MessageDetailView';
+import MessageExpandView from './MessageExpandView';
 
 
 const styles = theme => ({
@@ -36,10 +37,10 @@ class MessageView extends Component {
   }
 
   successCallBack(pos) {
-    console.log('Your current position is:');
-    console.log('Latitude : ' + pos.coords.latitude);
-    console.log('Longitude: ' + pos.coords.longitude);
-    console.log('More or less ' + pos.coords.accuracy + 'meters.'); 
+//    console.log('Your current position is:');
+//    console.log('Latitude : ' + pos.coords.latitude);
+//    console.log('Longitude: ' + pos.coords.longitude);
+//    console.log('More or less ' + pos.coords.accuracy + 'meters.'); 
     this.setState({ lat: pos.coords.latitude, lon: pos.coords.longitude}); 
   }
 
@@ -67,15 +68,16 @@ class MessageView extends Component {
         distanceSpan += dist;
       }
     }
-    var date = new Date(m.createdAt);
-    var subtitle = '張貼於： ' + date.toGMTString() + ' ' + distanceSpan;
+    var timeOffset = Date.now() - m.createdAt;
+    var timeOffsetString = timeOffsetStringInChinese(timeOffset);
+    var subtitle = '張貼於： ' + timeOffsetString + '前 ' + distanceSpan;
     return (<div>
               <Card  onClick={() => this.handleExpandClick()}>                   
                 <CardHeader
                   title={m.text}
                   subheader={subtitle}>
                 </CardHeader>
-                <MessageDetailView message={m} key={m.key} expanded={this.state.expanded}/>                    
+                <MessageExpandView message={m} key={m.key} expanded={this.state.expanded}/>                    
               </Card>
               <br/>
             </div>);

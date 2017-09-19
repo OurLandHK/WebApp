@@ -58,8 +58,12 @@ class PostMessageView extends Component {
       link: "",
       start: "",
       end: "",
-      interval: "",
       expanded: false, rotate: 'rotate(0deg)'};
+  }
+
+  static defaultProps = {
+    intervalOptions : ['一次', '每週', '每兩週','每月'],
+    durationOptions : ['0:30', '1:00', '1:30','2:00','3:00'],    
   }
 
   componentDidMount() {
@@ -106,9 +110,23 @@ class PostMessageView extends Component {
   }
 
   onSubmit() {
+    var interval = "";
+    if(this.intervalSelection != null)
+    {
+      interval = this.intervalSelection.selectedValue;
+    }
+    var duration = "";
+    if(this.durationSelection != null)
+    {
+      duration = this.durationSelection.selectedValue;
+    }
+    var startTimeInMs = "";
+    if(this.state.start !== "") {
+      startTimeInMs = Date.parse(this.state.start);
+    }
+    console.log(startTimeInMs);
     console.log(this.state.summary);
-    console.log(this.file);              
-    console.log(this.locationButton.geolocation);
+    console.log(this.file.files[0]);              
     if (this.locationButton.geolocation == null) {
       console.log('Unknown Location'); 
     } else {
@@ -116,7 +134,8 @@ class PostMessageView extends Component {
         console.log('Unknown Input');         
       } else {
         var tags = ['Testing', 'Tags'];
-        postMessage(this.state.summary, this.file, tags, this.locationButton.geolocation, this.state.start, this.state.end, this.state.interval, this.state.link);
+        postMessage(this.state.summary, this.file.files[0], tags, this.locationButton.geolocation, startTimeInMs, duration, interval, this.state.link);
+        this.setState({popoverOpen: false});
       }
     }
   }
@@ -148,7 +167,7 @@ class PostMessageView extends Component {
                   <Chip label="Testing"  />
                   <TextField id="status" label="現況" className={classes.textField} disabled value="開放" />                  
                   <Label for="locations">地點</Label>
-                  <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}}/>            
+                  <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}}/>
                 </FormGroup>                          
                 <FormGroup>                     
                   <Label for="file">相片</Label>
@@ -172,24 +191,14 @@ class PostMessageView extends Component {
                       type="datetime-local"
                       className={classes.textField}
                       margin="normal"
-                      value={this.state.start} onChange={event => this.setState({ start: event.target.value })}                      
+                      onChange={event => this.setState({ start: event.target.value })}                      
                       InputLabelProps={{
                         shrink: true,
                       }}
                     />
-                    <TextField
-                      id="End"
-                      label="完結"
-                      type="datetime-local"
-                      className={classes.textField}
-                      margin="normal"
-                      value={this.state.end} onChange={event => this.setState({ end: event.target.value })}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                    <SelectedMenu label="週期" options={['一次', '每週', '每兩週','每月',]} value={this.state.interval} onChange={event => this.setState({ interval: event.target.value })}/> 
-                  </FormGroup> 
+                    <SelectedMenu label="為期" options={this.props.durationOptions} ref={(durationSelection) => {this.durationSelection = durationSelection;}}/>                  
+                    </FormGroup> 
+                  <SelectedMenu label="週期" options={this.props.intervalOptions} ref={(intervalSelection) => {this.intervalSelection = intervalSelection;}}/>                  
                   <FormGroup>                
                     <TextField id="link" label="外部連結" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>
                   </FormGroup>                  
@@ -207,3 +216,4 @@ class PostMessageView extends Component {
 };
 
 export default withStyles(styles) (PostMessageView);
+//export default PostMessageView;
