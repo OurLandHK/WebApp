@@ -22,7 +22,6 @@ const styles = {
 class Header extends  Component {
   constructor(props) {
     super(props);
-    this.drawerMenu = new DrawerMenu();
   }
 
   handleLeftTouchTap() {
@@ -36,7 +35,7 @@ class Header extends  Component {
     return (<div className={classes.root}>
               <AppBar position="static">
                 <Toolbar>
-                  <DrawerMenu/ >
+                  <DrawerMenu ref={(drawerMenu) => {this.drawerMenu = drawerMenu;}} />
                   <Typography type="title" color="inherit" className={classes.flex}>
                     Ourland HK
                   </Typography>
