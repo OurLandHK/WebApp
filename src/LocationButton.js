@@ -40,7 +40,7 @@ class LocationButton extends Component {
 
 
   render() {
-    return (<Button raised primary={true} onClick={() => this.handleGetLocation()}>Location</Button>);
+    return (<Button raised primary={true} onClick={() => this.handleGetLocation()}>取得現在位置</Button>);
   }
 }
 

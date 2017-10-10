@@ -5,6 +5,7 @@ import IconButton from 'material-ui/IconButton';
 import InboxIcon from 'material-ui-icons/Inbox';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Icon from 'material-ui/Icon';
+import UserProfileView from './UserProfileView'
 
 class DrawerMenu extends Component {
 
@@ -18,6 +19,7 @@ class DrawerMenu extends Component {
     this.setState({open: !this.state.open});
   }
   handleClose(){
+    console.log('Closed Drawer');
     this.setState({open: false});
   }
 
@@ -29,8 +31,7 @@ class DrawerMenu extends Component {
         </IconButton>
         <Drawer
           open={this.state.open}
-          onRequestClose={() => this.handleClose()}
-          onClick={() => this.handleClose()}
+          onRequestClose={() => this.handleClose()}          
         >
           <div>
             <List disablePadding>
@@ -38,37 +39,37 @@ class DrawerMenu extends Component {
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary="Current" />
+                <ListItemText primary="Current" onClick={() => this.handleClose()}/>
               </ListItem>
               <ListItem button>
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary="關注" />
+                <ListItemText primary="關注" onClick={() => this.handleClose()}/>
               </ListItem>              
               <ListItem button>
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary="Home" />
+                <ListItemText primary="Home" onClick={() => this.handleClose()}/>
               </ListItem>
               <ListItem button>
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary="Work" />
+                <ListItemText primary="Work" onClick={() => this.handleClose()}/>
               </ListItem>
               <ListItem button>
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary="Ladder" />
+                <ListItemText primary="Ladder" onClick={() => this.handleClose()}/>
               </ListItem>
               <ListItem button>
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary="User Profile" />
+                <UserProfileView parent={this}/>
               </ListItem>                                                        
             </List>
           </div>                  
