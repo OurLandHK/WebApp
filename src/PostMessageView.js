@@ -20,6 +20,8 @@ import Collapse from 'material-ui/transitions/Collapse';
 import Typography from 'material-ui/Typography';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import WebcamCapture from './WebCam';
+import ReactDOM from 'react-dom';
+import CustomTags from './CustomTags';
 
 const styles = theme => ({
   fab: {
@@ -58,7 +60,13 @@ class PostMessageView extends Component {
       link: "",
       start: "",
       end: "",
-      expanded: false, rotate: 'rotate(0deg)'};
+      expanded: false, rotate: 'rotate(0deg)',
+      tags: [{id: 'Testing', text: 'Testing'}]};
+      this.handleRequestDelete = this.handleRequestDelete.bind(this);
+      this.handleTouchTap = this.handleTouchTap.bind(this);
+      this.handleDelete = this.handleDelete.bind(this);
+      this.handleAddition = this.handleAddition.bind(this);
+      this.handleDrag = this.handleDrag.bind(this);
   }
 
   static defaultProps = {
@@ -133,7 +141,7 @@ class PostMessageView extends Component {
       if(this.state.summary == null) {
         console.log('Unknown Input');         
       } else {
-        var tags = ['Testing', 'Tags'];
+        var tags = this.state.tags.map((tag) => tag.text);
         postMessage(this.state.summary, this.file.files[0], tags, this.locationButton.geolocation, startTimeInMs, duration, interval, this.state.link);
         this.setState({popoverOpen: false});
       }
@@ -148,10 +156,44 @@ class PostMessageView extends Component {
     this.setState({ expanded: !this.state.expanded });
   };  
 
+  handleRequestDelete(evt) {
+    alert(evt);
+  }
+
+  handleTouchTap(evt) {
+    alert(evt);
+  }
+
+  handleDelete(i) {
+        let tags = this.state.tags;
+        tags.splice(i, 1);
+        this.setState({tags: tags});
+  }
+
+  handleAddition(tag) {
+	let tags = this.state.tags;
+	tags.push({
+		id: tags.length + 1,
+		text: tag
+	});
+	this.setState({tags: tags});
+  }
+
+  handleDrag(tag, currPos, newPos) {
+	let tags = this.state.tags;
+
+	// mutate array
+	tags.splice(currPos, 1);
+	tags.splice(newPos, 0, tag);
+
+	// re-render
+	this.setState({ tags: tags });
+  }
+
   render() {
     var startTime = new Date().toLocaleTimeString();
     const classes = this.props.classes;
-    
+    const { tags } = this.state; 
     if(this.state.buttonShow) {
       return (
         <span>
@@ -164,7 +206,11 @@ class PostMessageView extends Component {
                 <FormGroup>           
                   <TextField required id="message" label="簡介" fullWidth margin="normal" helperText="介紹事件內容及期望街坊如何參與" value={this.state.summary} onChange={event => this.setState({ summary: event.target.value })}/>                  
                   <Label for="tags">分類</Label>
-                  <Chip label="Testing"  />
+                  <CustomTags tags={tags}
+                    inline={false}
+                    handleDelete={this.handleDelete}
+                    handleAddition={this.handleAddition}
+                    handleDrag={this.handleDrag} /> 
                   <TextField id="status" label="現況" className={classes.textField} disabled value="開放" />                  
                   <Label for="locations">地點</Label>
                   <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}}/>
