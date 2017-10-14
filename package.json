@@ -18,6 +18,7 @@
     "react-mdl": "^1.10.3",
     "react-router-dom": "^4.1.1",
     "react-social-icons": "^2.7.0",
+    "react-tag-input": "^4.7.2",
     "react-transition-group": "^1.2.0",
     "react-webcam": "^0.2.0",
     "reactstrap": "^4.6.2"
