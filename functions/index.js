@@ -108,6 +108,7 @@ exports.sendNotifications = functions.database.ref('/messages/{messageId}').onWr
     }
   };
 
+  
   // Get the list of device tokens.
   return admin.database().ref('fcmTokens').once('value').then(allTokens => {
     if (allTokens.val()) {

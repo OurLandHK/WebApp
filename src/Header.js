@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import SignInButton from './SignInButton';
 import DrawerMenu from './Drawer';
+import UserProfile from './UserProfile';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
@@ -31,6 +32,8 @@ class Header extends  Component {
   }
 
   render() {
+//    <UserProfile ref={(userProfile) => {this.userProfile = userProfile;}}/>
+    
     const classes = this.props.classes;
     return (<div className={classes.root}>
               <AppBar position="static">

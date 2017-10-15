@@ -33,7 +33,7 @@ const styles = {
   },
 };
 
-class UserProfile extends React.Component {
+class UserProfileView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -55,9 +55,7 @@ class UserProfile extends React.Component {
     var auth = firebase.auth();
     console.log(auth);
     auth.onAuthStateChanged((user) => {
-        console.log(user);
       if (user) {
-        console.log('Login'); 
         this.setState({user: user});
       }
     });
@@ -68,8 +66,6 @@ class UserProfile extends React.Component {
     window.fbAsyncInit = function() {
             FB.init(config.fbApp);
         };
-
-        console.log("Loading fb api");
           // Load the SDK asynchronously
         (function(d, s, id) {
             var js, fjs = d.getElementsByTagName(s)[0];
@@ -171,9 +167,9 @@ class UserProfile extends React.Component {
   }
 }
 
-UserProfile.propTypes = {
+UserProfileView.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(UserProfile);
+export default withStyles(styles)(UserProfileView);
 
