@@ -20,6 +20,8 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
+import {getUserProfile, setUserAddress} from './UserProfile';
+
 /* eslint-disable flowtype/require-valid-file-annotation */
 
 
@@ -38,6 +40,7 @@ class UserProfileView extends React.Component {
         super(props);
         this.state = {
             open: false,
+            userProfile: null
         };
     }    
 
@@ -57,6 +60,9 @@ class UserProfileView extends React.Component {
     auth.onAuthStateChanged((user) => {
       if (user) {
         this.setState({user: user});
+        var userProfile = getUserProfile(user);
+        this.setState({userProfile: userProfile});
+        console.log(userProfile);
       }
     });
     this.loadFBLoginApi();
@@ -79,35 +85,8 @@ class UserProfileView extends React.Component {
   onSubmit() {
     this.setState({ open: false });
     this.props.parent.handleClose();
-/*    var interval = "";
-    if(this.intervalSelection != null)
-    {
-      interval = this.intervalSelection.selectedValue;
-    }
-    var duration = "";
-    if(this.durationSelection != null)
-    {
-      duration = this.durationSelection.selectedValue;
-    }
-    var startTimeInMs = "";
-    if(this.state.start !== "") {
-      startTimeInMs = Date.parse(this.state.start);
-    }
-    console.log(startTimeInMs);
-    console.log(this.state.summary);
-    console.log(this.file.files[0]);              
-    if (this.locationButton.geolocation == null) {
-      console.log('Unknown Location'); 
-    } else {
-      if(this.state.summary == null) {
-        console.log('Unknown Input');         
-      } else {
-        var tags = ['Testing', 'Tags'];
-        postMessage(this.state.summary, this.file.files[0], tags, this.locationButton.geolocation, startTimeInMs, duration, interval, this.state.link);
-        this.setState({popoverOpen: false});
-      }
-    }
-*/    
+    var userProfile = setUserAddress(this.state.user, this.homeLocationButton.geolocation, this.officeLocationButton.geolocation);
+    console.log('update profile: ' + userProfile + ' address: ' + this.homeLocationButton.geolocation + ' : ' + this.officeLocationButton.geolocation);
   }
   
 
@@ -115,9 +94,37 @@ class UserProfileView extends React.Component {
     const { classes } = this.props;
     var imgURL = '/images/profile_placeholder.png';
     var displayName = 'nobody';
+    var publish = 0;
+    var concern = 0;
+    var complete = 0;
+    var workAddress = 'Not Set';
+    var homeAddress = 'Not Set';
     if (this.state.user) {
         imgURL = this.state.user.photoURL;
         displayName = this.state.user.displayName
+        if(this.state.userProfile)
+        {
+          if(this.state.userProfile.publishMessages != null)
+          {
+            publish = this.state.userProfile.publishMessages.length;
+          }
+          if(this.state.userProfile.completeMessages != null)
+          {
+            complete = this.state.userProfile.completeMessages.length;
+          }
+          if(this.state.userProfile.concernMessages != null)
+          {
+            concern = this.state.userProfile.concernMessages.length;
+          }                
+          if(this.state.userProfile.homeAddress != null)
+          {
+            homeAddress = this.state.userProfile.homeAddress;
+          }
+          if(this.state.userProfile.workAddress != null)
+          {
+            workAddress = this.state.userProfile.workAddress;
+          }
+        }
     }
     return (
       <div>
@@ -143,21 +150,21 @@ class UserProfileView extends React.Component {
           </AppBar>
           <List>
             <ListItem button>
-              <ListItemText primary="發表事件: " secondary="Tethys" />
+              <ListItemText primary="發表事件: " secondary={publish} />
             </ListItem>            
             <ListItem button>
-              <ListItemText primary="關注事件" secondary="Tethys" />
+              <ListItemText primary="關注事件" secondary={concern} />
             </ListItem>                        
             <ListItem button>
-              <ListItemText primary="完成事件" secondary="Tethys" />
+              <ListItemText primary="完成事件" secondary={complete} />
             </ListItem>                                   
             <Divider />            
             <ListItem>
-              <ListItemText primary="屋企位置" secondary="Titania" /> 
+              <ListItemText primary="屋企位置" secondary={homeAddress} /> 
               設定:<LocationButton ref={(locationButton) => {this.homeLocationButton = locationButton;}}/>
             </ListItem>
             <ListItem>
-              <ListItemText primary="辦公室位置" secondary="Tethys" />
+              <ListItemText primary="辦公室位置" secondary={workAddress} />
               設定:<LocationButton ref={(locationButton) => {this.officeLocationButton = locationButton;}}/>              
             </ListItem>            
           </List>

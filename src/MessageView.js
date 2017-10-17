@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Card, { CardHeader} from 'material-ui/Card';
 import getLocation from './Location';
-import distance from './Distance.js';
+import distance from './Distance';
 import timeOffsetStringInChinese from './TimeString.js';
 import { withStyles } from 'material-ui/styles';
 import red from 'material-ui/colors/red';
