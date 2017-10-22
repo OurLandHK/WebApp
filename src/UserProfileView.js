@@ -20,7 +20,9 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
-import {getUserProfile, setUserAddress} from './UserProfile';
+import geoString from './GeoLocationString';
+import {getUserProfile, updateUserLocation, getUserRecords} from './UserProfile';
+
 
 /* eslint-disable flowtype/require-valid-file-annotation */
 
@@ -59,9 +61,9 @@ class UserProfileView extends React.Component {
     console.log(auth);
     auth.onAuthStateChanged((user) => {
       if (user) {
-        this.setState({user: user});
         var userProfile = getUserProfile(user);
-        this.setState({userProfile: userProfile});
+        var userLocation = getUserRecords(user, "locations");
+        this.setState({user: user, userProfile: userProfile, userLocation: userLocation});
         console.log(userProfile);
       }
     });
@@ -85,8 +87,21 @@ class UserProfileView extends React.Component {
   onSubmit() {
     this.setState({ open: false });
     this.props.parent.handleClose();
-    var userProfile = setUserAddress(this.state.user, this.homeLocationButton.geolocation, this.officeLocationButton.geolocation);
-    console.log('update profile: ' + userProfile + ' address: ' + this.homeLocationButton.geolocation + ' : ' + this.officeLocationButton.geolocation);
+    var homeLocationLongitude = this.state.userProfile.homeLocationLongitude;
+    var homeLocationLatitude = this.state.userProfile.homeLocationLatitude;
+    var officeLocationLongitude = this.state.userProfile.officeLocationLongitude;
+    var officeLocationLatitude = this.state.userProfile.officeLocationLatitude;
+
+    if(this.homeLocationButton.geolocation != null) {
+      homeLocationLongitude = this.homeLocationButton.geolocation.longitude;
+      homeLocationLatitude = this.homeLocationButton.geolocation.latitude;
+    }
+    if(this.officeLocationButton.geolocation != null) {
+      officeLocationLongitude = this.officeLocationButton.geolocation.longitude;
+      officeLocationLatitude = this.officeLocationButton.geolocation.latitude;
+    }
+    
+    updateUserLocation(this.state.user, officeLocationLatitude, officeLocationLongitude, homeLocationLatitude, homeLocationLongitude);
   }
   
 
@@ -97,13 +112,16 @@ class UserProfileView extends React.Component {
     var publish = 0;
     var concern = 0;
     var complete = 0;
-    var workAddress = 'Not Set';
-    var homeAddress = 'Not Set';
+    var officeLocation = 'Not Set';
+    var homeLocation = 'Not Set';
     if (this.state.user) {
         imgURL = this.state.user.photoURL;
         displayName = this.state.user.displayName
-        if(this.state.userProfile)
+        if(this.state.userProfile != null)
         {
+          console.log("UserProfile" + JSON.stringify(this.state.userProfile));          
+          console.log("UserProfile Locations" + JSON.stringify(this.state.userLocation));          
+          
           if(this.state.userProfile.publishMessages != null)
           {
             publish = this.state.userProfile.publishMessages.length;
@@ -116,13 +134,13 @@ class UserProfileView extends React.Component {
           {
             concern = this.state.userProfile.concernMessages.length;
           }                
-          if(this.state.userProfile.homeAddress != null)
+          if(this.state.userLocation != null && this.state.userLocation.homeLocationLatitude != 0)
           {
-            homeAddress = this.state.userProfile.homeAddress;
+            homeLocation = geoString(this.state.userLocation.homeLocationLatitude, this.state.userLocation.homeLocationLongitude);
           }
-          if(this.state.userProfile.workAddress != null)
+          if(this.state.userLocation != null && this.state.userLocation.officeLocationLatitude != 0)
           {
-            workAddress = this.state.userProfile.workAddress;
+            officeLocation = geoString(this.state.userLocation.officeLocationLatitude, this.state.userLocation.officeLocationLongitude); 
           }
         }
     }
@@ -160,11 +178,11 @@ class UserProfileView extends React.Component {
             </ListItem>                                   
             <Divider />            
             <ListItem>
-              <ListItemText primary="屋企位置" secondary={homeAddress} /> 
+              <ListItemText primary="屋企位置" secondary={homeLocation} /> 
               設定:<LocationButton ref={(locationButton) => {this.homeLocationButton = locationButton;}}/>
             </ListItem>
             <ListItem>
-              <ListItemText primary="辦公室位置" secondary={workAddress} />
+              <ListItemText primary="辦公室位置" secondary={officeLocation} />
               設定:<LocationButton ref={(locationButton) => {this.officeLocationButton = locationButton;}}/>              
             </ListItem>            
           </List>

@@ -8,7 +8,7 @@ This folder contains the final prototype code
         * In the Firebase console click on CREATE NEW PROJECT and call it OurLand
     * Enable Auth
 		* To let users sign-in on the web app we'll use *Facebook* auth currently, which needs to be enabled.
-		* Follow this guide to setup Facebook App https://irebase.google.com/docs/auth/web/facebook-login		
+		* Follow this guide to setup Facebook App https://firebase.google.com/docs/auth/web/facebook-login		
 		* In the Firebase Console open the Authentication section > SIGN IN METHOD tab (click here to go there) you need to enable the Facebook Sign-in Provider and click SAVE. This will allow users to sign-in the Web app with their Facebook accounts
 
 

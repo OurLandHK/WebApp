@@ -25,7 +25,10 @@
     "reactstrap": "^4.6.2"
   },
   "devDependencies": {
-    "react-scripts": "1.0.7"
+    "react-scripts": "1.0.7",
+    "@storybook/react": "^3.2.12",
+    "@storybook/addon-actions": "^3.2.12",
+    "@storybook/addon-links": "^3.2.12"
   },
   "peerDependencies": {
     "react-tap-event-plugin": "^2.0.1"
@@ -35,6 +38,8 @@
     "generate_firebase_config": "node bin/generate_config.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   }
 }

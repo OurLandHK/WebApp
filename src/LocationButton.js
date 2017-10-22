@@ -18,13 +18,11 @@ class LocationButton extends Component {
   }
 
   successCallBack(pos) {
-    console.log('Your current position is:');
-    console.log('Latitude : ' + pos.coords.latitude);
-    console.log('Longitude: ' + pos.coords.longitude);
-    console.log('Geo String: ' + geoString(pos.coords.longitude, pos.coords.latitude))
-    console.log('More or less ' + pos.coords.accuracy + 'meters.');  
     this.geolocation = pos.coords;
     this.setState({geolocation: pos.coords});
+    console.log('Your current position is:');
+    console.log('Geo String: ' + geoString(this.geolocation.longitude, this.geolocation.latitude))
+    console.log('this.geolocation: ' + JSON.stringify(this.geolocation));
   }
 
   errorCallBack(error) {
@@ -43,7 +41,7 @@ class LocationButton extends Component {
 
   render() {
     if(this.state.geolocation != null) {
-      var locationString = geoString(this.state.geolocation.longitude, this.state.geolocation.latitude);
+      var locationString = geoString(this.geolocation.longitude, this.geolocation.latitude);
       return (
         <div>
           {locationString}
