@@ -61,10 +61,8 @@ class UserProfileView extends React.Component {
     console.log(auth);
     auth.onAuthStateChanged((user) => {
       if (user) {
-        var userProfile = getUserProfile(user);
-        var userLocation = getUserRecords(user, "locations");
-        this.setState({user: user, userProfile: userProfile, userLocation: userLocation});
-        console.log(userProfile);
+        getUserProfile(user).then((userProfile)=>{
+            this.setState({user: user, userProfile: userProfile});});
       }
     });
     this.loadFBLoginApi();
@@ -119,9 +117,6 @@ class UserProfileView extends React.Component {
         displayName = this.state.user.displayName
         if(this.state.userProfile != null)
         {
-          console.log("UserProfile" + JSON.stringify(this.state.userProfile));          
-          console.log("UserProfile Locations" + JSON.stringify(this.state.userLocation));          
-          
           if(this.state.userProfile.publishMessages != null)
           {
             publish = this.state.userProfile.publishMessages.length;
@@ -134,13 +129,13 @@ class UserProfileView extends React.Component {
           {
             concern = this.state.userProfile.concernMessages.length;
           }                
-          if(this.state.userLocation != null && this.state.userLocation.homeLocationLatitude != 0)
+          if(this.state.userProfile.homeLocationLatitude != 0)
           {
-            homeLocation = geoString(this.state.userLocation.homeLocationLatitude, this.state.userLocation.homeLocationLongitude);
+            homeLocation = geoString(this.state.userProfile.homeLocationLatitude, this.state.userProfile.homeLocationLongitude);
           }
-          if(this.state.userLocation != null && this.state.userLocation.officeLocationLatitude != 0)
+          if(this.state.userProfile.officeLocationLatitude != 0)
           {
-            officeLocation = geoString(this.state.userLocation.officeLocationLatitude, this.state.userLocation.officeLocationLongitude); 
+            officeLocation = geoString(this.state.userProfile.officeLocationLatitude, this.state.userProfile.officeLocationLongitude); 
           }
         }
     }
