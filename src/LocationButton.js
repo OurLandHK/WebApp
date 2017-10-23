@@ -6,6 +6,7 @@ import geoString from './GeoLocationString';
 class LocationButton extends Component {
   constructor(props) {
     super(props);
+    this.state = {geolocation: null};
     this.geolocation = null
     this.disabled = false;
     this.successCallBack = this.successCallBack.bind(this);
@@ -17,12 +18,8 @@ class LocationButton extends Component {
   }
 
   successCallBack(pos) {
-    console.log('Your current position is:');
-    console.log('Latitude : ' + pos.coords.latitude);
-    console.log('Longitude: ' + pos.coords.longitude);
-    console.log('Geo String: ' + geoString(pos.coords.longitude, pos.coords.latitude))
-    console.log('More or less ' + pos.coords.accuracy + 'meters.');  
     this.geolocation = pos.coords;
+    this.setState({geolocation: pos.coords});
   }
 
   errorCallBack(error) {
@@ -40,7 +37,19 @@ class LocationButton extends Component {
 
 
   render() {
-    return (<Button raised primary={true} onClick={() => this.handleGetLocation()}>Location</Button>);
+    if(this.state.geolocation != null) {
+      var locationString = geoString(this.geolocation.latitude, this.geolocation.longitude);
+      return (
+        <div>
+          {locationString}
+        </div>);      
+    }
+    else {
+      return (
+        <div>
+          <Button raised primary={true} onClick={() => this.handleGetLocation()}>取得現在位置</Button>
+        </div>);
+    }
   }
 }
 

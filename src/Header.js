@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import SignInButton from './SignInButton';
 import DrawerMenu from './Drawer';
+import UserProfile from './UserProfile';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
@@ -22,7 +23,6 @@ const styles = {
 class Header extends  Component {
   constructor(props) {
     super(props);
-    this.drawerMenu = new DrawerMenu();
   }
 
   handleLeftTouchTap() {
@@ -32,11 +32,13 @@ class Header extends  Component {
   }
 
   render() {
+//    <UserProfile ref={(userProfile) => {this.userProfile = userProfile;}}/>
+    
     const classes = this.props.classes;
     return (<div className={classes.root}>
               <AppBar position="static">
                 <Toolbar>
-                  <DrawerMenu/ >
+                  <DrawerMenu ref={(drawerMenu) => {this.drawerMenu = drawerMenu;}} />
                   <Typography type="title" color="inherit" className={classes.flex}>
                     Ourland HK
                   </Typography>

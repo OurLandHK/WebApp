@@ -20,10 +20,14 @@ class SignInButton extends  Component {
 
   handleSignIn() {
     var provider = new firebase.auth.FacebookAuthProvider();
+    provider.addScope('user_friends');
     provider.addScope('publish_actions');
+    provider.addScope('user_managed_groups');
+    provider.addScope('user_birthday');
     firebase.auth().signInWithPopup(provider).then(function(result) {
       var token = result.credential.accessToken;
       var user = result.user;
+      console.log(result.additionalUserInfo.profile);
     }).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
@@ -43,7 +47,7 @@ class SignInButton extends  Component {
     }
     else
     {
-      return (<Button raised onClick={() => this.handleSignIn()} primary={true} label="Sign-in with Facebook"/>);
+      return (<Button raised onClick={() => this.handleSignIn()} primary={true}>Sign-in with Facebook</Button>);
     }
   }
 }
