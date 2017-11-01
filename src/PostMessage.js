@@ -25,11 +25,24 @@ function validateFile(file) {
 };
 
 function uploadImage(data, file) {
+
   var auth = firebase.auth();
   var currentUser = auth.currentUser;
+  var Jimp = require("jimp");
   var filePath = currentUser.uid + '/' + data.key + '/' + file.name;
   var storage = firebase.storage();
-  return storage.ref(filePath).put(file);
+/*  
+  return Jimp.read(file).then(function (image) {
+      var tmp = require('tmp');    
+      var tmpobj = tmp.fileSync();
+      image.resize(1080, Jimp.AUTO, Jimp.RESIZE_BICUBIC).write(tmpobj); // save 
+      return storage.ref(filePath).put(tmpobj);          
+  }).catch(function (err) {
+      console.error(err);
+      return storage.ref(filePath).put(file);                
+  })
+*/
+  return storage.ref(filePath).put(file);                
 };
 
 function updateData(data, snapshot) {
