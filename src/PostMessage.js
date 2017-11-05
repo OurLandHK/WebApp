@@ -2,6 +2,7 @@ import * as firebase from 'firebase';
 import config from './config/default';
 import postFbMessage from './FacebookPost';
 import uuid from 'js-uuid';
+import {addPublishMessages} from './UserProfile';
 
 
 
@@ -25,11 +26,25 @@ function validateFile(file) {
 };
 
 function uploadImage(data, file) {
+
   var auth = firebase.auth();
   var currentUser = auth.currentUser;
+//  var Jimp = require("jimp");
   var filePath = currentUser.uid + '/' + data.key + '/' + file.name;
   var storage = firebase.storage();
-  return storage.ref(filePath).put(file);
+
+/*
+  return Jimp.read(file.name).then(function (image) {
+      var smallPicName = 'small' + file.name;
+      image.resize(960, Jimp.AUTO, Jimp.RESIZE_BICUBIC).write(smallPicName); // save 
+      var smallPic = new File(smallPicName);
+      return storage.ref(filePath).put(smallPic);
+  }).catch(function (err) {
+      console.error(err);
+      return storage.ref(filePath).put(file);                
+  })
+*/
+  return storage.ref(filePath).put(file);                
 };
 
 function updateData(data, snapshot) {
@@ -53,6 +68,7 @@ function postMessage(message, file, tags, geolocation, start, duration, interval
     duration = null;
     interval = null;
   }
+  var key = uuid.v4();
   return messagesRef.push({
     name: currentUser.displayName,
     //imageUrl: loadingImageUrl,
@@ -62,28 +78,30 @@ function postMessage(message, file, tags, geolocation, start, duration, interval
     longitude: geolocation.longitude,
     tag: tags,
     createdAt: now,
-    key: uuid.v4(),    
+    key: key,
     fbpost: 'fbpost',    
     start: start,
     duration: duration,
     interval: interval,
     link: link
   }).then((data) => {
-    var fbpostmessage = message;
-    if (! validateFile(file)) {
-      console.log("Invalid file.");
-      postFbMessage(fbpostmessage, geolocation, '', tags, data);
-    }
-    else
-    {    
-      uploadImage(data, file).then(
-        (snapshot) =>  {
-          return updateData(data, snapshot).then(() =>
-            {
-              postFbMessage(fbpostmessage, geolocation, snapshot, tags,data);
-            });
-        });
-    }
+    addPublishMessages(currentUser,key).then(() => {
+      var fbpostmessage = message;
+      if (! validateFile(file)) {
+        console.log("Invalid file.");
+        postFbMessage(fbpostmessage, geolocation, '', tags, data);
+      }
+      else
+      {    
+        uploadImage(data, file).then(
+          (snapshot) =>  {
+            return updateData(data, snapshot).then(() =>
+              {
+                postFbMessage(fbpostmessage, geolocation, snapshot, tags,data);
+              });
+          });
+      }
+    })
   });  
 };
 
