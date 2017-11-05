@@ -28,11 +28,9 @@ function getUserRecords(user, path) {
     var database = firebase.database();
     return database.ref(config.userDB +'/'+user.uid + '/' + path).once('value').then(function(snapshot) {
         var userRecord = snapshot.val(); 
-//        console.log('getUserRecords:' + JSON.stringify(userRecord));
         return userRecord;        
     });;
 }
-
 
 function updateUserRecords(userid, userRecord, path) {
     var database = firebase.database();
@@ -40,7 +38,6 @@ function updateUserRecords(userid, userRecord, path) {
     updates['/'+ config.userDB +'/'+userid + '/' + path] = userRecord;
     return database.ref().update(updates); 
 }
-
 
 function updateUserLocation(user, officeLocationLatitude, officeLocationLongitude, homeLocationLatitude, homeLocationLongitude) {
     return getUserProfile(user).then((userRecord) => {
@@ -57,5 +54,19 @@ function updateUserLocation(user, officeLocationLatitude, officeLocationLongitud
     });
 }
 
+function addPublishMessages(user, messageUUID) {
+    return getUserProfile(user).then((userRecord) => {
+        if(userRecord.publishMessages != null)
+        {
+            userRecord.publishMessages.push(messageUUID);
+        }
+        else
+        {
+            userRecord.publishMessages = [messageUUID];
+        }
+        var path = "";
+        return updateUserRecords(user.uid, userRecord, path);
+    });
+}
 
-export {getUserProfile, updateUserLocation, getUserRecords};
+export {getUserProfile, updateUserLocation, getUserRecords, addPublishMessages};
