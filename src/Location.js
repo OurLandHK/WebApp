@@ -1,5 +1,4 @@
 function getLocation(successCallBack, errorCallBack, notSupportedCallBack) {
-  console.log('Your current position is:');
   if(navigator.geolocation) {
    var options = {
       enableHighAccuracy: true,
