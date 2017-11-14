@@ -56,6 +56,8 @@ class MessageView extends Component {
   render() {
     const classes = this.props.classes;
     var m = this.props.message;
+    var uuid = this.props.message.key;
+    var user = this.props.user;
     var distanceSpan = "距離: ";
     if (m.latitude) {
       if (this.state.lat) {
@@ -77,7 +79,7 @@ class MessageView extends Component {
                   title={m.text}
                   subheader={subtitle}>
                 </CardHeader>
-                <MessageExpandView message={m} key={m.key} expanded={this.state.expanded}/>                    
+                <MessageExpandView message={m} uuid={uuid} user={user} expanded={this.state.expanded}/>                    
               </Card>
               <br/>
             </div>);

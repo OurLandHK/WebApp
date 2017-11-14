@@ -32,6 +32,52 @@ function getUserRecords(user, path) {
     });;
 }
 
+function toggleConcernMessage(user, messageUUID) {
+    return getUserProfile(user).then((userRecord) => {
+        var rv = true;
+        if(userRecord.concernMessages != null)
+        {
+            console.log("concernMessages:" + userRecord.concernMessages);            
+            var index = userRecord.concernMessages.indexOf(messageUUID);
+            if(index == -1)
+            {
+                userRecord.concernMessages.push(messageUUID);
+            }
+            else
+            {
+                userRecord.concernMessages.splice(index, 1);
+                rv = false;
+                
+            }
+        }
+        else
+        {
+            userRecord.concernMessages = [messageUUID];
+        }
+        var path = "";
+        console.log("UserRecord.concernMessages" + userRecord.concernMessages);        
+        return updateUserRecords(user.uid, userRecord, path).then(() => {
+            return rv;
+        });
+    });
+}
+
+function isConcernMessage(user, messageUUID) {
+    return getUserProfile(user).then((userRecord) => {
+        var rv = false;
+        if(userRecord.concernMessages != null)
+        {
+            var index = userRecord.concernMessages.indexOf(messageUUID);
+            if(index != -1)
+            {
+                rv = true;
+            }
+        }
+        return rv;
+    });
+}
+
+
 function updateUserRecords(userid, userRecord, path) {
     var database = firebase.database();
     var updates = {};
@@ -69,4 +115,4 @@ function addPublishMessages(user, messageUUID) {
     });
 }
 
-export {getUserProfile, updateUserLocation, getUserRecords, addPublishMessages};
+export {getUserProfile, updateUserLocation, getUserRecords, addPublishMessages, toggleConcernMessage, isConcernMessage};

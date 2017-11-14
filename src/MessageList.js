@@ -13,19 +13,19 @@ class MessageList extends Component {
     var auth = firebase.auth();
     auth.onAuthStateChanged((user) => {
       if (user) {
-        this.fetchMessages(); 
+        this.fetchMessages(user); 
       } else {
         this.setState({data:[]})
       }
     });
   }
   
-  fetchMessages() {
+  fetchMessages(user) {
      var database = firebase.database();  
      this.messagesRef = database.ref(config.messageDB);
   // Make sure we remove all previous listeners.
      this.messagesRef.off();
-
+     this.setState({user:user});
      // Loads the last 12 messages and listen for new ones.
      var setMessage = (data) => {
        var val = data.val();
@@ -39,7 +39,7 @@ class MessageList extends Component {
 
   render() {
     var elements = this.state.data.map((message) => {
-      return (<MessageView message={message} key={message.key}/>);
+      return (<MessageView message={message} key={message.key} user={this.state.user}/>);
     });
     return (<div>{elements}</div>);
   }

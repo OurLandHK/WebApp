@@ -13,6 +13,9 @@ import red from 'material-ui/colors/red';
 import FavoriteIcon from 'material-ui-icons/Favorite';
 import ShareIcon from 'material-ui-icons/Share';
 import MessageDetailView from './MessageDetailView';
+import {isConcernMessage, toggleConcernMessage} from './UserProfile';
+
+
 
 const styles = theme => ({
   card: {
@@ -42,22 +45,48 @@ const styles = theme => ({
 class MessageExpandView extends Component {
   constructor(props) {
     super(props);
-    this.state = {expanded: false, rotate: 'rotate(0deg)'};
+    this.state = {expanded: false, favor: false};
   }
+
+  componentDidMount() {
+    var user = this.props.user;
+    var uuid = this.props.uuid;
+    isConcernMessage(user, uuid).then((favor) => {
+      this.setState({favor: favor});
+    });
+  }
+  
 
   handleExpandClick() {
     this.setState({ expanded: !this.state.expanded });
+  };
 
+  handleFavorClick() {
+    var user = this.props.user;
+    var uuid = this.props.uuid;
+    console.log("uuid: " +  uuid);
+    toggleConcernMessage(user, uuid).then((favor) => {
+      this.setState({ favor: favor });
+    });
   };
 
 
   render() {
     const classes = this.props.classes;
     var m = this.props.message;
+    var user = this.props.user;
+    var favorColor = 'primary';
+    if(this.state.favor)
+    {
+      favorColor = 'accent';
+    }
       return(
           <div>         
                 <CardActions disableActionSpacing>
-                    <IconButton aria-label="Add to favorites">
+                    <IconButton 
+                        color={favorColor}
+                        onClick={() => this.handleFavorClick()}
+                        aria-label="Add to favorites">
                         <FavoriteIcon />
                     </IconButton>
                     <IconButton aria-label="Share">
