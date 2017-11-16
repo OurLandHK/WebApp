@@ -43,11 +43,11 @@ class SignInButton extends  Component {
     }
     if (this.state.user) {
       var imgURL = (this.state.user.photoURL || '/images/profile_placeholder.png');
-      return (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{this.state.user.displayName}&nbsp;&nbsp;<Button raised secondary={true} onClick={() => this.handleSignOut()}>Sign-out</Button></div>);
+      return (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{this.state.user.displayName}&nbsp;&nbsp;<Button raised secondary={true} onClick={() => this.handleSignOut()}>登出</Button></div>);
     }
     else
     {
-      return (<Button raised onClick={() => this.handleSignIn()} primary={true}>Sign-in with Facebook</Button>);
+      return (<Button raised onClick={() => this.handleSignIn()} primary={true}>使用Facebook登入</Button>);
     }
   }
 }
