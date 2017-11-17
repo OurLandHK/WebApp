@@ -63,6 +63,7 @@ class MessageDetailView extends Component {
     var interval = m.interval;
     var duration = m.duration;
     var link = m.link;
+    console.log(link);
     if(Array.isArray(tag))
     {
         for (var i = 0; i < tag.length; i++) { 
@@ -79,7 +80,8 @@ class MessageDetailView extends Component {
       photoUrl = m.photoUrl;
     }    
     let linkHtml = null;
-    if({link} != "") {
+    if (link != "") {
+        console.log(link);
         linkHtml = <Grid container> <Grid item> <CardContent> <Typography component='p'> 外部連結： {link} </Typography> </CardContent> </Grid></Grid>;
     }
     let dateHtml = null;
@@ -96,16 +98,34 @@ class MessageDetailView extends Component {
                         <Grid item align='center'><ProgressiveCardImg width={window.innerWidth * 0.85} gs_src={m.imageUrl}/></Grid>
                       </Grid>;
     }   
-    return(<div><Grid container>
-                    <Grid item> <CardContent> <IconButton href={facebookURL} data-scheme='fb://profile/10000'> <ForumIcon /> </IconButton> </CardContent> </Grid>
-                    <Grid item> <CardMedia overlay={m.name}> <img src={photoUrl} /> <Typography component='p'> {m.name} </Typography> </CardMedia> </Grid>
-                    <Grid item> <ChipArray chipData={chips} /> </Grid>
-                </Grid>
-                {linkHtml}
-                {dateHtml}
-                {imageHtml}
-                <Grid container> <Grid item align='center'><CardContent><EventMap center={geolocation} zoom={zoom}/></CardContent></Grid></Grid>
-                </div>);
+    return(<div>
+             <Grid container>
+               <Grid item>
+                   <IconButton href={facebookURL} data-scheme='fb://profile/10000'>
+                     <ForumIcon />
+                   </IconButton>
+               </Grid>
+               <Grid item>
+                 作者：
+                 <CardMedia overlay={m.name}> <img src={photoUrl} />
+                   <Typography component='p'> {m.name} </Typography>
+                 </CardMedia>
+               </Grid>
+               <Grid item>
+                 <ChipArray chipData={chips} />
+               </Grid>
+             </Grid>
+             {linkHtml}
+             {dateHtml}
+             {imageHtml}
+             <Grid container>
+               <Grid item align='center'>
+               <CardContent>
+                 <EventMap center={geolocation} zoom={zoom}/>
+               </CardContent>
+             </Grid>
+           </Grid>
+         </div>);
 
     }                 
 }

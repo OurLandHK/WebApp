@@ -105,7 +105,7 @@ class MessageExpandView extends Component {
                     </IconButton> 
                 </CardActions>                       
                 <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>
-                        <MessageDetailView message={m}/>
+                  <MessageDetailView message={m}/>
                 </Collapse>                      
             </div>);                                    
     }

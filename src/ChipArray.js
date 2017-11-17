@@ -12,6 +12,9 @@ const styles = theme => ({
     justifyContent: 'center',
     flexWrap: 'wrap',
   },
+  tagTitle: {
+    margin: theme.spacing.unit / 2
+  }
 });
 
 class ChipArray extends Component {
@@ -44,6 +47,7 @@ class ChipArray extends Component {
     if(this.props.enableDelete)   {
         return (
             <div className={classes.row}>
+                <div className={classes.tagTitle}>標籤:</div><br/>
                 {this.props.chipData.map(data => {
                 return (
                     <Chip
@@ -59,6 +63,7 @@ class ChipArray extends Component {
     } else  {
         return (
             <div className={classes.row}>
+                <div className={classes.tagTitle}>標籤:</div><br/>
                 {this.props.chipData.map(data => {
                 return (
                     <Chip

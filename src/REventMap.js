@@ -4,8 +4,15 @@ import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 // Using Map https://github.com/fullstackreact/google-maps-react
 
 const style = {
-  width: '95%',
-  height: '30%'
+  height: '100%',
+  width: '100%'
+}
+
+const style2 = {
+  height: '30vh',
+  width:'95vw',
+  border: '1px solid black',
+  position: 'relative'
 }
 
 export class EventMap extends Component {
@@ -16,12 +23,14 @@ export class EventMap extends Component {
 
 render() {
     return (
-      <Map google={this.props.google}
-        style={style}
-        initialCenter={this.props.center}
-        zoom={this.props.zoom}>
-        <Marker position={this.props.center} />
-      </Map>
+      <div style={style2}>
+        <Map google={this.props.google}
+          style={style}
+          initialCenter={this.props.center}
+          zoom={this.props.zoom}>
+          <Marker position={this.props.center} />
+        </Map>
+      </div>
     );
   }
 }
