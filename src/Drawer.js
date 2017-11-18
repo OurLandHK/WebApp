@@ -47,7 +47,7 @@ class DrawerMenu extends Component {
                 </ListItemIcon>
                 <ListItemText primary="關注" onClick={() => this.handleClose()}/>
               </ListItem>              
-              <ListItem button>
+              <ListItem button component="a" href="/">
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
