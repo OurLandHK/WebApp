@@ -97,7 +97,13 @@ class MessageDetailView extends Component {
         imageHtml = <Grid container>
                         <Grid item align='center'><ProgressiveCardImg width={window.innerWidth * 0.85} gs_src={m.imageUrl}/></Grid>
                       </Grid>;
-    }   
+    } 
+    console.log("photo" + photoUrl);
+    let fbProfileImage = <img src={photoUrl} />;
+    if (m.fbuid) {
+      let fbProfileLink = 'https://www.facebook.com/' + m.fbuid;
+      fbProfileImage = <a href={fbProfileLink} target="_blank">{fbProfileImage}</a>;
+    }
     return(<div>
              <Grid container>
                <Grid item>
@@ -106,8 +112,9 @@ class MessageDetailView extends Component {
                    </IconButton>
                </Grid>
                <Grid item>
-                 作者：
-                 <CardMedia overlay={m.name}> <img src={photoUrl} />
+                 作者：<br/>
+                 {fbProfileImage}            
+                 <CardMedia overlay={m.name}> 
                    <Typography component='p'> {m.name} </Typography>
                  </CardMedia>
                </Grid>

@@ -69,17 +69,19 @@ function postMessage(message, file, tags, geolocation, start, duration, interval
     interval = null;
   }
   var key = uuid.v4();
+  console.log(currentUser);
   return messagesRef.push({
     name: currentUser.displayName,
     //imageUrl: loadingImageUrl,
     text: message,
-    photoUrl: currentUser.photoURL || '/images/profile_placeholder.png',
+    photoUrl: currentUser.providerData[0].photoURL || '/images/profile_placeholder.png',
     latitude: geolocation.latitude,
     longitude: geolocation.longitude,
     tag: tags,
     createdAt: now,
     key: key,
     fbpost: 'fbpost',    
+    fbuid: currentUser.providerData[0].uid,
     start: start,
     duration: duration,
     interval: interval,
