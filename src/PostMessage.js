@@ -81,6 +81,7 @@ function postMessage(message, file, tags, geolocation, start, duration, interval
     createdAt: now,
     key: key,
     fbpost: 'fbpost',    
+    uid: currentUser.uid,
     fbuid: currentUser.providerData[0].uid,
     start: start,
     duration: duration,

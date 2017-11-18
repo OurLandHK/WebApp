@@ -100,9 +100,9 @@ class MessageDetailView extends Component {
     } 
     console.log("photo" + photoUrl);
     let fbProfileImage = <img src={photoUrl} />;
-    if (m.fbuid) {
-      let fbProfileLink = 'https://www.facebook.com/' + m.fbuid;
-      fbProfileImage = <a href={fbProfileLink} target="_blank">{fbProfileImage}</a>;
+    if (m.uid) {
+      let fbProfileLink = '/profile/' + m.uid;
+      fbProfileImage = <a href={fbProfileLink}>{fbProfileImage}</a>;
     }
     return(<div>
              <Grid container>
