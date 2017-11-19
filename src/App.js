@@ -1,18 +1,31 @@
 import React, { Component } from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
-import {Container} from 'reactstrap';
-import Header from './Header';
-import MessageList from './MessageList';
-import PostMessageView from './PostMessageView';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-
+import Main from './Main';
+import PublicProfile from './PublicProfile';
+import Header from './Header';
 
 class App extends Component {
   render() {
-    // Needed for onTouchTap
-// http://stackoverflow.com/a/34015469/988941
+    /* Needed for onTouchTap
+       http://stackoverflow.com/a/34015469/988941
+    */
     injectTapEventPlugin();
-    return (<div><Header/><Container><MessageList/><PostMessageView/></Container></div>)
+    return (
+      <div>
+        <Header/>
+        <Router>
+          <div>
+            <Route exact path="/" component={Main}/>
+            <Route exact path={"/profile/:id/"} component={PublicProfile}/>
+          </div>
+        </Router>
+      </div>
+    );
   }
 }
 

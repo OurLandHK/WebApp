@@ -48,7 +48,13 @@ const styles = theme => ({
   },
   formControl: {
     margin: theme.spacing.unit,
-  },  
+  },
+  dialogContainer: {
+    padding: '0.5rem'
+  },
+  dialogTitle: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'  
+  }
 });
 
 class PostMessageView extends Component {
@@ -61,7 +67,7 @@ class PostMessageView extends Component {
       start: "",
       end: "",
       expanded: false, rotate: 'rotate(0deg)',
-      tags: [{id: 'Testing', text: 'Testing'}]};
+      tags: []};
       this.handleRequestDelete = this.handleRequestDelete.bind(this);
       this.handleTouchTap = this.handleTouchTap.bind(this);
       this.handleDelete = this.handleDelete.bind(this);
@@ -201,13 +207,15 @@ class PostMessageView extends Component {
             <AddIcon />
           </Button>
           <Dialog open={this.state.popoverOpen} onRequestClose={() => this.handleRequestClose()}>
-              <div>
+              <DialogTitle className={classes.dialogTitle}>提交</DialogTitle>
+              <div className={classes.dialogContainer}>
               <Form>
                 <FormGroup>           
                   <TextField required id="message" label="簡介" fullWidth margin="normal" helperText="介紹事件內容及期望街坊如何參與" value={this.state.summary} onChange={event => this.setState({ summary: event.target.value })}/>                  
                   <Label for="tags">分類</Label>
                   <CustomTags tags={tags}
                     inline={false}
+                    placeholder="新增標籤"
                     handleDelete={this.handleDelete}
                     handleAddition={this.handleAddition}
                     handleDrag={this.handleDrag} /> 
@@ -249,7 +257,7 @@ class PostMessageView extends Component {
                     <TextField id="link" label="外部連結" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>
                   </FormGroup>                  
                 </Collapse>                    
-                <Button color="info" onClick={() => this.onSubmit()}>Submit</Button>                                          
+                <Button raised color="primary" onClick={() => this.onSubmit()}>提交</Button> 
               </Form>
               </div>
         </Dialog>     
