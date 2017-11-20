@@ -65,7 +65,7 @@ class UserProfileView extends React.Component {
             this.setState({user: user, userProfile: userProfile});});
       }
     });
-    this.loadFBLoginApi();
+  this.loadFBLoginApi();
   }
   
   loadFBLoginApi() {

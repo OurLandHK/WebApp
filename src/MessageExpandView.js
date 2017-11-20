@@ -45,7 +45,7 @@ const styles = theme => ({
 class MessageExpandView extends Component {
   constructor(props) {
     super(props);
-    this.state = {expanded: false, favor: false};
+    this.state = {favor: false};
   }
 
   componentDidMount() {
@@ -56,10 +56,6 @@ class MessageExpandView extends Component {
     });
   }
   
-
-  handleExpandClick() {
-    this.setState({ expanded: !this.state.expanded });
-  };
 
   handleFavorClick() {
     var user = this.props.user;
@@ -81,33 +77,18 @@ class MessageExpandView extends Component {
       favorColor = 'accent';
     }
       return(
-          <div>         
-                <CardActions disableActionSpacing>
-                    <IconButton 
-                        color={favorColor}
-                        onClick={() => this.handleFavorClick()}
-                        aria-label="Add to favorites">
-                        <FavoriteIcon />
-                    </IconButton>
-                    <IconButton aria-label="Share">
-                        <ShareIcon />
-                    </IconButton>
-                    <div className={classes.flexGrow} />
-                    <IconButton
-                        className={classnames(classes.expand, {
-                            [classes.expandOpen]: this.state.expanded,
-                        })}
-                        onClick={() => this.handleExpandClick()}
-                        aria-expanded={this.state.expanded}
-                        aria-label="Show more"
-                        >
-                        <ExpandMoreIcon />
-                    </IconButton> 
-                </CardActions>                       
-                <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>
-                  <MessageDetailView message={m}/>
-                </Collapse>                      
-            </div>);                                    
+        <CardActions disableActionSpacing>
+            <IconButton 
+                color={favorColor}
+                onClick={() => this.handleFavorClick()}
+                aria-label="Add to favorites">
+                <FavoriteIcon />
+            </IconButton>
+            <IconButton aria-label="Share">
+                <ShareIcon />
+            </IconButton>
+            <div className={classes.flexGrow} />
+      </CardActions>);                       
     }
 }
 
