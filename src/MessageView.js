@@ -6,7 +6,7 @@ import distance from './Distance';
 import timeOffsetStringInChinese from './TimeString.js';
 import { withStyles } from 'material-ui/styles';
 import red from 'material-ui/colors/red';
-import MessageExpandView from './MessageExpandView';
+import MessageDialog from './MessageDialog';
 
 
 const styles = theme => ({
@@ -24,8 +24,10 @@ const styles = theme => ({
 class MessageView extends Component {
   constructor(props) {
     super(props);
-    this.state = {lat: 0, lon: 0, expanded: false};
+    this.state = {lat: 0, lon: 0, dialogOpen: false};
     this.successCallBack = this.successCallBack.bind(this);
+//    this.openDialog = this.openDialog.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
@@ -37,10 +39,6 @@ class MessageView extends Component {
   }
 
   successCallBack(pos) {
-//    console.log('Your current position is:');
-//    console.log('Latitude : ' + pos.coords.latitude);
-//    console.log('Longitude: ' + pos.coords.longitude);
-//    console.log('More or less ' + pos.coords.accuracy + 'meters.'); 
     this.setState({ lat: pos.coords.latitude, lon: pos.coords.longitude}); 
   }
 
@@ -48,8 +46,8 @@ class MessageView extends Component {
     console.warn('ERROR(${err.code}): ${err.message}');
   }
 
-    handleExpandClick() {
-    this.setState({ expanded: !this.state.expanded });
+  handleClick() {
+    this.openDialog();
   };
 
 
@@ -74,12 +72,13 @@ class MessageView extends Component {
     var timeOffsetString = timeOffsetStringInChinese(timeOffset);
     var subtitle = '張貼於： ' + timeOffsetString + '前 ' + distanceSpan;
     return (<div>
-              <Card  onClick={() => this.handleExpandClick()}>                   
+              <Card>                   
                 <CardHeader
                   title={m.text}
-                  subheader={subtitle}>
+                  subheader={subtitle}
+                  onClick={() => this.handleClick()}>
                 </CardHeader>
-                <MessageExpandView message={m} uuid={uuid} user={user} expanded={this.state.expanded}/>                    
+                <MessageDialog message={m} uuid={uuid} user={user} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
               </Card>
               <br/>
             </div>);

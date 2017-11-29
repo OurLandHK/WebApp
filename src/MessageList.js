@@ -7,6 +7,7 @@ class MessageList extends Component {
   constructor(props) {
     super(props);
     this.state = {data:[]}
+    this.setMessage = this.setMessage.bind(this);
   }
 
   componentDidMount() {
@@ -19,21 +20,26 @@ class MessageList extends Component {
       }
     });
   }
+
+  setMessage(data) {
+    var val = data.val();
+    this.state.data.push(val);
+    this.setState({data:this.state.data});
+  };
+
   
   fetchMessages(user) {
      var database = firebase.database();  
-     this.messagesRef = database.ref(config.messageDB);
-  // Make sure we remove all previous listeners.
-     this.messagesRef.off();
      this.setState({user:user});
-     // Loads the last 12 messages and listen for new ones.
-     var setMessage = (data) => {
-       var val = data.val();
-       this.state.data.push(val);
-       this.setState({data:this.state.data});
-     };
-     this.messagesRef.orderByChild("createdAt").limitToLast(20).on('child_added', setMessage);
-     this.messagesRef.orderByChild("createdAt").limitToLast(20).on('child_changed', setMessage);
+
+     // Loads the last 20 messages and listen for new ones.
+     var messageNumber = 20; 
+     this.messagesRef = database.ref(config.messageDB);
+     // Make sure we remove all previous listeners.
+     this.messagesRef.off();
+   
+     this.messagesRef.orderByChild("createdAt").limitToLast(messageNumber).on('child_added', this.setMessage);
+     this.messagesRef.orderByChild("createdAt").limitToLast(messageNumber).on('child_changed', this.setMessage);
 
   }
 

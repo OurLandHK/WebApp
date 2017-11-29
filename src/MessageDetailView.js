@@ -80,7 +80,7 @@ class MessageDetailView extends Component {
       photoUrl = m.photoUrl;
     }    
     let linkHtml = null;
-    if (link != "") {
+    if (link != null && link != "") {
         console.log(link);
         linkHtml = <Grid container> <Grid item> <CardContent> <Typography component='p'> 外部連結： {link} </Typography> </CardContent> </Grid></Grid>;
     }
@@ -93,7 +93,7 @@ class MessageDetailView extends Component {
                         </Grid>;
     }   
     let imageHtml = null;    
-    if(m.imageUrl){                                      
+    if(m.imageUrl  != null ){                                      
         imageHtml = <Grid container>
                         <Grid item align='center'><ProgressiveCardImg width={window.innerWidth * 0.85} gs_src={m.imageUrl}/></Grid>
                       </Grid>;

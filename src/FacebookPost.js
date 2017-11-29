@@ -2,23 +2,24 @@
 import * as firebase from 'firebase';
 import config from './config/default';
 import geoString from './GeoLocationString';
+import {addMessageFB_Post} from './MessageDB';
 
 
-function postFbMessage(fbpostmessage, geolocation, snapshot, tags, data){
+function postFbMessage(fbpostmessage, geolocation, snapshot, tags, messageKey){
     var tagsLength = tags.length;
     var tagString = '';
     for (var i = 0; i < tagsLength; i++) {
       tagString += "\n#"+tags[i];
     }
     if(snapshot === '') {
-        postFbTextMessage(fbpostmessage + tagString, geolocation, tags, data);
+        postFbTextMessage(fbpostmessage + tagString, geolocation, tags, messageKey);
     }else{
-        postFbPhotoMessage(fbpostmessage + tagString, geolocation, snapshot, tags, data);
+        postFbPhotoMessage(fbpostmessage + tagString, geolocation, snapshot, tags, messageKey);
     }
 
 }
 
-function postFbTextMessage(fbpostmessage, geolocation, tags, data){
+function postFbTextMessage(fbpostmessage, geolocation, tags, messageKey){
   var fbpost = "";
   var mapString = "https://www.google.com.hk/maps/place/"+ geoString(geolocation.latitude, geolocation.longitude) + "/@" + geolocation.latitude + "," + geolocation.longitude + ",18z/"
   
@@ -38,7 +39,7 @@ function postFbTextMessage(fbpostmessage, geolocation, tags, data){
           console.log('Post ID: ' + response.id);
           fbpost = '/groups/' + config.fbGroupId + '/permalink/' + response.id.split("_")[1];
           console.log('URL: ' + fbpost);
-          data.update({fbpost: fbpost});
+          addMessageFB_Post(messageKey, fbpost);
         } else {
           console.log('Error:' + response.error.message + ' code ' + response.error.code);
           console.log(fbpostmessage);
@@ -47,7 +48,7 @@ function postFbTextMessage(fbpostmessage, geolocation, tags, data){
   }, {scope: 'publish_actions,user_managed_groups'});
 };
 
-function postFbPhotoMessage(fbpostmessage, geolocation, snapshot, tags, data){
+function postFbPhotoMessage(fbpostmessage, geolocation, snapshot, tags, messageKey){
   var fbpost = "";
   var mapString = "\nhttps://www.google.com.hk/maps/place/"+ geoString(geolocation.latitude, geolocation.longitude) + "/@" + geolocation.latitude + "," + geolocation.longitude + ",18z/"  
   var imagePublicURL = "no update";
@@ -75,7 +76,7 @@ function postFbPhotoMessage(fbpostmessage, geolocation, snapshot, tags, data){
               console.log('Post ID: ' + response.id);
               fbpost = "/photo.php?fbid=" + response.id;
               console.log('URL: ' + fbpost);
-              data.update({fbpost: fbpost});
+              addMessageFB_Post(messageKey, fbpost);
             } else {
               console.log('Error:' + response.error.message + ' code ' + response.error.code);
               console.log(fbpostmessage);

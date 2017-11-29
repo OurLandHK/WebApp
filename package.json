@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "bootstrap": "^4.0.0-alpha.6",
+    "bootstrap": "^4.0.0-beta.2",
     "bootstrap-social": "^5.1.1",
     "firebase": "^4.2.0",
     "firebase-admin": "^5.4.0",
     "firebase-tools": "^3.9.1",
     "google-maps-react": "^1.1.0",
     "jimp": "^0.2.28",
+    "jquery": "^1.9.1",
     "js-uuid": "0.0.6",
     "material-ui": "^1.0.0-beta.20",
     "material-ui-icons": "^1.0.0-alpha.19",
@@ -21,10 +22,11 @@
     "react-router-dom": "^4.1.1",
     "react-social-icons": "^2.7.0",
     "react-tag-input": "^4.7.2",
+    "react-tap-event-plugin": "^2.0.1",
     "react-transition-group": "^1.2.0",
     "react-webcam": "^0.2.0",
     "reactstrap": "^4.6.2",
-    "tmp": "0.0.33"
+    "webpack": "^2.2.0"
   },
   "devDependencies": {
     "react-scripts": "1.0.7",
