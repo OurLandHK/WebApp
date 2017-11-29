@@ -100,7 +100,7 @@ function updateUserLocation(user, officeLocationLatitude, officeLocationLongitud
     });
 }
 
-function addPublishMessages(user, messageUUID) {
+function addPublishMessagesKeyToUserProfile(user, messageUUID) {
     return getUserProfile(user).then((userRecord) => {
         if(userRecord.publishMessages != null)
         {
@@ -115,4 +115,4 @@ function addPublishMessages(user, messageUUID) {
     });
 }
 
-export {getUserProfile, updateUserLocation, getUserRecords, addPublishMessages, toggleConcernMessage, isConcernMessage};
+export {getUserProfile, updateUserLocation, getUserRecords, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage};

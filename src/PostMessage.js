@@ -1,9 +1,8 @@
 import * as firebase from 'firebase';
 import config from './config/default';
 import postFbMessage from './FacebookPost';
-import uuid from 'js-uuid';
-import {addPublishMessages} from './UserProfile';
-
+import {addPublishMessagesKeyToUserProfile} from './UserProfile';
+import {addMessage, updateMessageImageURL} from './MessageDB';
 
 
 function validateFile(file) {
@@ -25,12 +24,10 @@ function validateFile(file) {
   return true;
 };
 
-function uploadImage(data, file) {
+function uploadImage(currentUser, messageKey, file) {
 
-  var auth = firebase.auth();
-  var currentUser = auth.currentUser;
 //  var Jimp = require("jimp");
-  var filePath = currentUser.uid + '/' + data.key + '/' + file.name;
+  var filePath = currentUser.uid + '/' + messageKey + '/' + file.name;
   var storage = firebase.storage();
 
 /*
@@ -47,65 +44,28 @@ function uploadImage(data, file) {
   return storage.ref(filePath).put(file);                
 };
 
-function updateData(data, snapshot) {
-  var fullPath = snapshot.metadata.fullPath;
-  return data.update({imageUrl: firebase.storage().ref(fullPath).toString()});
-};
-
 
 function postMessage(message, file, tags, geolocation, start, duration, interval, link) {
-  // Check if the file is an image.
-
-  //var loadingImageUrl = "https://www.google.com/images/spin-32.gif";
   var auth = firebase.auth();
   var currentUser = auth.currentUser;       
-  var messagesRef = firebase.database().ref(config.messageDB);
-  var now = Date.now();
-  console.log("Start: " + start + " Duration: " + duration + " Interval: " + interval + " Link: " + link);
-  if(start === "")
-  {
-    start = null;
-    duration = null;
-    interval = null;
-  }
-  var key = uuid.v4();
-  console.log(currentUser);
-  return messagesRef.push({
-    name: currentUser.displayName,
-    //imageUrl: loadingImageUrl,
-    text: message,
-    photoUrl: currentUser.providerData[0].photoURL || '/images/profile_placeholder.png',
-    latitude: geolocation.latitude,
-    longitude: geolocation.longitude,
-    tag: tags,
-    createdAt: now,
-    key: key,
-    fbpost: 'fbpost',    
-    uid: currentUser.uid,
-    fbuid: currentUser.providerData[0].uid,
-    start: start,
-    duration: duration,
-    interval: interval,
-    link: link
-  }).then((data) => {
-    addPublishMessages(currentUser,key).then(() => {
+  addMessage(message, currentUser, file, tags, geolocation, start, duration, interval, link).then((messageKey) => {
+    addPublishMessagesKeyToUserProfile(currentUser,messageKey).then(() => {
       var fbpostmessage = message;
       if (! validateFile(file)) {
         console.log("Invalid file.");
-        postFbMessage(fbpostmessage, geolocation, '', tags, data);
+        // postFbMessage(fbpostmessage, geolocation, '', tags, messageKey);
       }
       else
       {    
-        uploadImage(data, file).then(
+        uploadImage(currentUser, messageKey, file).then(
           (snapshot) =>  {
-            return updateData(data, snapshot).then(() =>
-              {
-                postFbMessage(fbpostmessage, geolocation, snapshot, tags,data);
-              });
+            var fullPath = snapshot.metadata.fullPath;
+            var imageURL = firebase.storage().ref(fullPath).toString();
+            return updateMessageImageURL(messageKey, imageURL);
           });
       }
     })
-  });  
+  });
 };
 
 export default postMessage;

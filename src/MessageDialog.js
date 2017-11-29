@@ -12,6 +12,7 @@ import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import MessageDetailView from './MessageDetailView';
 import MessageExpandView from './MessageExpandView';
+import {getMessage} from './MessageDB';
 
 const styles = {
   appBar: {
@@ -32,20 +33,16 @@ class MessageDialog extends React.Component {
         this.props.open = false;
         this.state = {open: false};
         this.openDialog = this.openDialog.bind(this);
+        this.props.openDialog(this.openDialog);
+        this.message = null;
     }
 
-
-    componentDidMount() {
-        this.props.openDialog(this.openDialog)
-    }    
-
   openDialog(){
-    this.setState({ open: true });
-  };
-
-
-  handleClickOpen = () => {
-    this.setState({ open: true });
+    var uuid = this.props.uuid;
+    return getMessage(uuid).then((message) => {
+      this.message = message;   
+      this.setState({open: true });         
+    });
   };
 
   handleRequestClose = () => {
@@ -54,10 +51,19 @@ class MessageDialog extends React.Component {
 
   render() {
     const { classes } = this.props;
-    var m = this.props.message;
     var user = this.props.user;
     var uuid = this.props.uuid;
-//    this.setState({open: this.props.open});
+    let titleHtml = null;
+    let detailView = null;
+    let expandView = null;
+    if(this.state.open) {
+      var m = this.message;
+      titleHtml = <Typography type={"title"} color="inherit" className={classes.flex}>
+            {m.text}
+          </Typography>;
+      detailView = <MessageDetailView message={m}/>;
+      expandView = <MessageExpandView message={m} uuid={uuid} user={user}/>;                              
+    }
     return (
         <Dialog
           fullScreen
@@ -71,14 +77,11 @@ class MessageDialog extends React.Component {
               <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
-              <Typography type={"title"} color="inherit" className={classes.flex}>
-                {m.text}
-              </Typography>
+              {titleHtml}      
             </Toolbar>
           </AppBar>
-          <MessageDetailView message={m}/>
-          <MessageExpandView message={m} uuid={uuid} user={user}/>                    
-          
+          {detailView}
+          {expandView}
         </Dialog>
     );
   }

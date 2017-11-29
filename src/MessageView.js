@@ -26,7 +26,7 @@ class MessageView extends Component {
     super(props);
     this.state = {lat: 0, lon: 0, dialogOpen: false};
     this.successCallBack = this.successCallBack.bind(this);
-    this.openDialog = this.openDialog.bind(this);
+//    this.openDialog = this.openDialog.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -44,10 +44,6 @@ class MessageView extends Component {
 
   errorCallBack(error) {
     console.warn('ERROR(${err.code}): ${err.message}');
-  }
-
-  openDialog() {
-    this.messageDialog.openDialog();
   }
 
   handleClick() {
@@ -82,7 +78,7 @@ class MessageView extends Component {
                   subheader={subtitle}
                   onClick={() => this.handleClick()}>
                 </CardHeader>
-                <MessageDialog message={m} uuid={uuid} user={user} ref={(messageDialog) => {this.messageDialog = messageDialog;}} openDialog={openDialog => this.openDialog = openDialog}/>
+                <MessageDialog message={m} uuid={uuid} user={user} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
               </Card>
               <br/>
             </div>);
