@@ -51,9 +51,12 @@ class MessageExpandView extends Component {
   componentDidMount() {
     var user = this.props.user;
     var uuid = this.props.uuid;
-    isConcernMessage(user, uuid).then((favor) => {
-      this.setState({favor: favor});
-    });
+    if(user)
+    {
+      isConcernMessage(user, uuid).then((favor) => {
+        this.setState({favor: favor});
+      });
+    }
   }
   
 
@@ -61,16 +64,18 @@ class MessageExpandView extends Component {
     var user = this.props.user;
     var uuid = this.props.uuid;
     console.log("uuid: " +  uuid);
-    toggleConcernMessage(user, uuid).then((favor) => {
-      this.setState({ favor: favor });
-    });
+    if(user)
+    {
+      toggleConcernMessage(user, uuid).then((favor) => {
+        this.setState({ favor: favor });
+      });
+    }
   };
 
 
   render() {
     const classes = this.props.classes;
     var m = this.props.message;
-    var user = this.props.user;
     var favorColor = 'primary';
     if(this.state.favor)
     {

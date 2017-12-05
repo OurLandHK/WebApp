@@ -23,6 +23,9 @@ import Slide from 'material-ui/transitions/Slide';
 import geoString from './GeoLocationString';
 import {getUserProfile, updateUserLocation, getUserRecords} from './UserProfile';
 
+function Transition(props) {
+  return <Slide direction="right" {...props} />;
+}
 
 /* eslint-disable flowtype/require-valid-file-annotation */
 
@@ -42,18 +45,22 @@ class UserProfileView extends React.Component {
         super(props);
         this.state = {
             open: false,
-            userProfile: null
+            user: null
         };
+        this.openDialog = this.openDialog.bind(this);
+        this.props.openDialog(this.openDialog);
     }    
 
-  handleClickOpen = () => {
+  openDialog = () => {
+    console.log('UserProfile Open'); 
     this.setState({ open: true });
   };
 
   handleRequestClose = () => {
     this.setState({ open: false });
-    this.props.parent.handleClose();
   };
+
+  
 
   componentDidMount() {
     console.log('UserProfile login'); 
@@ -65,7 +72,7 @@ class UserProfileView extends React.Component {
             this.setState({user: user, userProfile: userProfile});});
       }
     });
-  this.loadFBLoginApi();
+//  this.loadFBLoginApi();
   }
   
   loadFBLoginApi() {
@@ -84,7 +91,6 @@ class UserProfileView extends React.Component {
 
   onSubmit() {
     this.setState({ open: false });
-    this.props.parent.handleClose();
     var homeLocationLongitude = this.state.userProfile.homeLocationLongitude;
     var homeLocationLatitude = this.state.userProfile.homeLocationLatitude;
     var officeLocationLongitude = this.state.userProfile.officeLocationLongitude;
@@ -112,7 +118,8 @@ class UserProfileView extends React.Component {
     var complete = 0;
     var officeLocation = 'Not Set';
     var homeLocation = 'Not Set';
-    if (this.state.user) {
+    let dialogHtml = null;
+    if (this.state.user != null) {
         imgURL = this.state.user.photoURL;
         displayName = this.state.user.displayName
         if(this.state.userProfile != null)
@@ -140,49 +147,41 @@ class UserProfileView extends React.Component {
         }
     }
     return (
-      <div>
-        <ListItemText primary="User Profile" onClick={this.handleClickOpen}/>
-        <Dialog
-          fullScreen
-          open={this.state.open}
-          onRequestClose={this.handleRequestClose}
-          transition={<Slide direction="right" />}
-        >
-          <AppBar className={classes.appBar}>
-            <Toolbar>
-              <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton>
-              <Typography type="title" color="inherit" className={classes.flex}>
-                <img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{displayName}
-              </Typography>
-              <Button color="contrast" onClick={() => this.onSubmit()}>
-                save
-              </Button>
-            </Toolbar>
-          </AppBar>
-          <List>
-            <ListItem button>
-              <ListItemText primary="發表事件: " secondary={publish} />
-            </ListItem>            
-            <ListItem button>
-              <ListItemText primary="關注事件" secondary={concern} />
-            </ListItem>                        
-            <ListItem button>
-              <ListItemText primary="完成事件" secondary={complete} />
-            </ListItem>                                   
-            <Divider />            
-            <ListItem>
-              <ListItemText primary="屋企位置" secondary={homeLocation} /> 
-              設定:<LocationButton ref={(locationButton) => {this.homeLocationButton = locationButton;}}/>
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="辦公室位置" secondary={officeLocation} />
-              設定:<LocationButton ref={(locationButton) => {this.officeLocationButton = locationButton;}}/>              
-            </ListItem>            
-          </List>
+      <Dialog fullScreen  open={this.state.open} onRequestClose={this.handleRequestClose} transition={Transition}>
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
+              <CloseIcon />
+            </IconButton>
+            <Typography type="title" color="inherit" className={classes.flex}>
+              <img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{displayName}
+            </Typography>
+            <Button color="contrast" onClick={() => this.onSubmit()}>
+              save
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <List>
+          <ListItem button>
+            <ListItemText primary="發表事件: " secondary={publish} />
+          </ListItem>            
+          <ListItem button>
+            <ListItemText primary="關注事件: " secondary={concern} />
+          </ListItem>                        
+          <ListItem button>
+            <ListItemText primary="完成事件: " secondary={complete} />
+          </ListItem>                                   
+          <Divider />            
+          <ListItem>
+            <ListItemText primary="屋企位置: " secondary={homeLocation} /> 
+            設定:<LocationButton ref={(locationButton) => {this.homeLocationButton = locationButton;}}/>
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="辦公室位置: " secondary={officeLocation} />
+            設定:<LocationButton ref={(locationButton) => {this.officeLocationButton = locationButton;}}/>              
+          </ListItem>            
+        </List>
         </Dialog>
-      </div>
     );
   }
 }

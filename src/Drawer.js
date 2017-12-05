@@ -23,12 +23,18 @@ class DrawerMenu extends Component {
     this.setState({open: false});
   }
 
+  userProfileClick(){
+    this.handleClose();
+    this.openUserProfileDialog();
+  }
+
   render() {
     return (
       <div>
         <IconButton onClick={() => this.handleToggle()}>
           <Icon>menu</Icon>
         </IconButton>
+        <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>        
         <Drawer
           open={this.state.open}
           onRequestClose={() => this.handleClose()}          
@@ -69,7 +75,7 @@ class DrawerMenu extends Component {
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <UserProfileView parent={this}/>
+                <ListItemText primary="User Profile" onClick={() => this.userProfileClick()}/>
               </ListItem>                                                        
             </List>
           </div>                  
