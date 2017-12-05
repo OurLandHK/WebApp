@@ -24,9 +24,8 @@ const styles = theme => ({
 class MessageView extends Component {
   constructor(props) {
     super(props);
-    this.state = {lat: 0, lon: 0, dialogOpen: false};
+    this.state = {lat: 0, lon: 0};
     this.successCallBack = this.successCallBack.bind(this);
-//    this.openDialog = this.openDialog.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -56,6 +55,12 @@ class MessageView extends Component {
     var m = this.props.message;
     var uuid = this.props.message.key;
     var user = this.props.user;
+    //var openDialog = this.props.openDialog;
+    var o = false;
+    if(this.props.openDialogDefault) {
+      o = true;
+    }
+
     var distanceSpan = "距離: ";
     if (m.latitude) {
       if (this.state.lat) {
@@ -78,7 +83,7 @@ class MessageView extends Component {
                   subheader={subtitle}
                   onClick={() => this.handleClick()}>
                 </CardHeader>
-                <MessageDialog message={m} uuid={uuid} user={user} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
+                <MessageDialog uuid={uuid} user={user} open={o} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
               </Card>
               <br/>
             </div>);

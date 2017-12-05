@@ -21,6 +21,8 @@ class App extends Component {
         <Router>
           <div>
             <Route exact path="/" component={Main}/>
+            <Route exact path="/:id" component={Main}/>
+            <Route exact path="/event/:id/" component={Main}/>            
             <Route exact path={"/profile/:id/"} component={PublicProfile}/>
           </div>
         </Router>

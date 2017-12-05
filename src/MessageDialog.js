@@ -28,16 +28,28 @@ function Transition(props) {
 }
 
 class MessageDialog extends React.Component {
-    constructor(props) {
-        super(props);
-        this.props.open = false;
-        this.state = {open: false};
-        this.openDialog = this.openDialog.bind(this);
-        this.props.openDialog(this.openDialog);
-        this.message = null;
+  constructor(props) {
+      super(props);
+      this.state = {open: false};
+      this.message = null;                
+      this.openDialog = this.openDialog.bind(this);
+      this.props.openDialog(this.openDialog);  
+  }
+
+  componentDidMount() {
+    if(this.props.open) {
+      console.log("openDialog uuid: " + uuid);
+      var uuid = this.props.uuid;
+      getMessage(uuid).then((message) => {
+        console.log("Message: " + message);            
+        this.message = message;   
+        this.setState({open: true });          
+      });
     }
+  }
 
   openDialog(){
+//    console.log("openDialog new UUID: " + newUUid);
     var uuid = this.props.uuid;
     return getMessage(uuid).then((message) => {
       this.message = message;   
