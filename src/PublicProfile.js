@@ -42,7 +42,7 @@ class PublicProfile extends Component {
        var val = data.val();
        this.setState({data:val});
      };
-     this.userRef.child(this.props.match.params.id).once('value').then(setUser);
+     this.userRef.child(this.props.id).once('value').then(setUser);
   }
 
   componentDidMount() {

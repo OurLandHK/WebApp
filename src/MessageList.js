@@ -13,7 +13,6 @@ class MessageList extends Component {
 
   componentDidMount() {
     if(this.props.uuid != null) {
-      console.log("queryMessage1");
       getMessage(this.props.uuid).then((message) => {this.queryMessage = message});
     } else {
       this.queryMessage = null;
@@ -40,7 +39,7 @@ class MessageList extends Component {
     var database = firebase.database();  
  
      // Loads the last 20 messages and listen for new ones.
-     var messageNumber = 20; 
+     var messageNumber = this.props.eventNumber; 
      this.messagesRef = database.ref(config.messageDB);
      // Make sure we remove all previous listeners.
      this.messagesRef.off();
