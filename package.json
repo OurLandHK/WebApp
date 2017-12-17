@@ -20,6 +20,7 @@
     "react-github-fork-ribbon": "^0.5.0",
     "react-mdl": "^1.10.3",
     "react-router-dom": "^4.1.1",
+    "react-share": "^1.18.0",
     "react-social-icons": "^2.7.0",
     "react-tag-input": "^4.7.2",
     "react-tap-event-plugin": "^2.0.1",

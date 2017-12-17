@@ -32,6 +32,17 @@ function getUserRecords(user, path) {
     });;
 }
 
+function getUserConcernMessages(user) {
+    return getUserRecords(user, "concernMessages");
+}
+
+function getUserPublishMessages(user) {
+    return getUserRecords(user, "publishMessages");
+}
+
+function getUserCompleteMessages(user) {
+    return getUserRecords(user, "completeMessage");
+}
 function toggleConcernMessage(user, messageUUID) {
     return getUserProfile(user).then((userRecord) => {
         var rv = true;
@@ -115,4 +126,4 @@ function addPublishMessagesKeyToUserProfile(user, messageUUID) {
     });
 }
 
-export {getUserProfile, updateUserLocation, getUserRecords, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage};
+export {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, getUserRecords, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage};
