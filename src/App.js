@@ -10,6 +10,16 @@ import PublicProfile from './PublicProfile';
 import Header from './Header';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.updateLocation = this.updateLocation.bind(this);
+  }  
+
+  updateLocation(locationString, longitude, latitude) {
+    console.log('App: ' + longitude + "," + latitude);
+    this.updateLocationCallback(locationString, longitude, latitude);
+  }
+
   render() {
     /* Needed for onTouchTap
        http://stackoverflow.com/a/34015469/988941
@@ -17,14 +27,8 @@ class App extends Component {
     injectTapEventPlugin();
     return (
       <div>
-        <Header/>
-        <Router>
-          <div>
-            <Route exact path="/" component={Main}/>
-            <Route exact path="/event/:id/" component={Main}/>            
-            <Route exact path={"/profile/:id/"} component={PublicProfile}/>
-          </div>
-        </Router>
+        <Header ref={(header) => {this.header = header;}} updateLocationCallback={this.updateLocation} />
+        <Main updateLocationCallback={updateLocationCallback => this.updateLocationCallback = updateLocationCallback}/>
       </div>
     );
   }
