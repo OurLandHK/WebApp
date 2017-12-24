@@ -29,7 +29,9 @@ function Transition(props) {
 
 /* eslint-disable flowtype/require-valid-file-annotation */
 
-
+const currentLocationLabel = "現在位置";
+const officeLocationLabel = "辦公室位置";
+const homeLocationLabel = "屋企位置";
 
 const styles = {
   appBar: {
@@ -108,6 +110,7 @@ class UserProfileView extends React.Component {
     updateUserLocation(this.state.user, officeLocationLatitude, officeLocationLongitude, homeLocationLatitude, homeLocationLongitude);
   }
   
+  
 
   render() {
     const { classes } = this.props;
@@ -173,11 +176,11 @@ class UserProfileView extends React.Component {
           </ListItem>                                   
           <Divider />            
           <ListItem>
-            <ListItemText primary="屋企位置: " secondary={homeLocation} /> 
+            <ListItemText primary={homeLocationLabel + ": "} secondary={homeLocation} /> 
             設定:<LocationButton ref={(locationButton) => {this.homeLocationButton = locationButton;}}/>
           </ListItem>
           <ListItem>
-            <ListItemText primary="辦公室位置: " secondary={officeLocation} />
+            <ListItemText primary={officeLocationLabel + ": "} secondary={officeLocation} />
             設定:<LocationButton ref={(locationButton) => {this.officeLocationButton = locationButton;}}/>              
           </ListItem>            
         </List>

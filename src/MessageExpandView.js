@@ -13,7 +13,15 @@ import red from 'material-ui/colors/red';
 import FavoriteIcon from 'material-ui-icons/Favorite';
 import ShareIcon from 'material-ui-icons/Share';
 import MessageDetailView from './MessageDetailView';
-import {isConcernMessage, toggleConcernMessage} from './UserProfile';
+import {
+  isConcernMessage, 
+  toggleConcernMessage
+} from './UserProfile';
+import {
+  ShareButtons,
+  ShareCounts,
+  generateShareIcon
+} from 'react-share';
 
 
 
@@ -39,7 +47,36 @@ const styles = theme => ({
   flexGrow: {
     flex: '1 1 auto',
   },
+  someNetwork: {
+    verticalAlign: "top",
+    display: "inline-block",
+    marginRight: "30px",
+    textAlign: "center",
+  },
+  someNetworkShareCount: {
+    marginTop: "3px",
+    fontSize: "12px",
+  },
+  someNetworkShareButton: {
+    cursor: "pointer",
+  },
 });
+
+const {
+  FacebookShareButton,
+  TelegramShareButton,
+  WhatsappShareButton,
+  EmailShareButton,
+} = ShareButtons;
+
+const {
+  FacebookShareCount,
+} = ShareCounts;
+
+const FacebookIcon = generateShareIcon('facebook');
+const TelegramIcon = generateShareIcon('telegram');
+const WhatsappIcon = generateShareIcon('whatsapp');
+const EmailIcon = generateShareIcon('email');
 
 
 class MessageExpandView extends Component {
@@ -72,10 +109,32 @@ class MessageExpandView extends Component {
     }
   };
 
+  facebookHashTag(tags) {
+    var tagsLength = tags.length;
+    var tagString = '';
+    for (var i = 0; i < tagsLength; i++) {
+      tagString += "#"+tags[i] + " ";
+    }
+    console.log("HashTag String:" + tagString);
+    return tagString;
+
+  }
+
+  facebookQuote(message) {
+/*    var quote = "<meta property=\"og:type\"               content=\"article\" />" +
+                "<meta property=\"og:title\"              content=\"" + message.text + "\" />" +
+                "<meta property=\"og:description\"        content=\"Location"  +  "" + "\" />";
+*/
+    var quote = message.text;
+    return quote;    
+  }
+
 
   render() {
     const classes = this.props.classes;
-    var m = this.props.message;
+    var m = this.facebookQuote(this.props.message);
+    var hashtag = this.facebookHashTag(this.props.message.tag);
+    var shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + this.props.uuid;
     var favorColor = 'primary';
     if(this.state.favor)
     {
@@ -89,9 +148,44 @@ class MessageExpandView extends Component {
                 aria-label="Add to favorites">
                 <FavoriteIcon />
             </IconButton>
-            <IconButton aria-label="Share">
-                <ShareIcon />
-            </IconButton>
+            <div className={classes.someNetwork}>
+              <FacebookShareButton
+                url={shareUrl}
+                quote={m}
+                hashtag={hashtag}
+                className={classes.someNetworkShareButton}>
+                <FacebookIcon
+                  size={32}
+                  round />
+              </FacebookShareButton>
+    
+              <FacebookShareCount
+                url={shareUrl}
+                className={classes.someNetworkShareCount}>
+                {count => count}
+              </FacebookShareCount>
+            </div>
+            <div className={classes.someNetwork}>
+              <WhatsappShareButton
+                url={shareUrl}
+                title={m}
+                separator=":: "
+                className={classes.someNetworkShareButton}>
+                <WhatsappIcon size={32} round />
+              </WhatsappShareButton>
+            </div>
+
+            <div className={classes.someNetwork}>
+              <EmailShareButton
+                url={shareUrl}
+                subject={m}
+                body={shareUrl}
+                className={classes.someNetworkShareButton}>
+                <EmailIcon
+                  size={32}
+                  round />
+              </EmailShareButton>
+          </div>                     
             <div className={classes.flexGrow} />
       </CardActions>);                       
     }

@@ -25,24 +25,7 @@ class MessageView extends Component {
   constructor(props) {
     super(props);
     this.state = {lat: 0, lon: 0};
-    this.successCallBack = this.successCallBack.bind(this);
     this.handleClick = this.handleClick.bind(this);
-  }
-
-  componentDidMount() {
-    getLocation(this.successCallBack, this.errorCallBack, this.notSupportedCallback);
-  }
-
-  notSupportedCallBack() {
-    console.log('Disabled');
-  }
-
-  successCallBack(pos) {
-    this.setState({ lat: pos.coords.latitude, lon: pos.coords.longitude}); 
-  }
-
-  errorCallBack(error) {
-    console.warn('ERROR(${err.code}): ${err.message}');
   }
 
   handleClick() {
@@ -63,8 +46,8 @@ class MessageView extends Component {
 
     var distanceSpan = "距離: ";
     if (m.latitude) {
-      if (this.state.lat) {
-        var dis = distance(m.longitude,m.latitude,this.state.lon,this.state.lat);
+      if (this.props.lat) {
+        var dis = distance(m.longitude,m.latitude,this.props.lon,this.props.lat);
         var dist;
         if (dis > 1)
           dist = Math.round(dis) + "km";
