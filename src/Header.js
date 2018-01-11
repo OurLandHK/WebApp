@@ -79,14 +79,12 @@ class Header extends  Component {
 
   render() {
     const classes = this.props.classes;
-    var titleString = "我地: " + this.state.locationString;
-    console.log("TitleString: " + titleString);
     return (<div className={classes.root}>
               <AppBar position="fixed">
                 <Toolbar>
                   <DrawerMenu header={this} ref={(drawerMenu) => {this.drawerMenu = drawerMenu;}} />
                   <Typography type="title" color="inherit" className={classes.flex}>
-                    {titleString}
+                    我地
                   </Typography>
                   <SignInButton/>
                 </Toolbar>

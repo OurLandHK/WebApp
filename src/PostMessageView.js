@@ -22,6 +22,8 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import WebcamCapture from './WebCam';
 import ReactDOM from 'react-dom';
 import CustomTags from './CustomTags';
+import {connect} from "react-redux";
+
 
 const styles = theme => ({
   fab: {
@@ -269,5 +271,17 @@ class PostMessageView extends Component {
   }
 };
 
-export default withStyles(styles) (PostMessageView);
-//export default PostMessageView;
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    geoLocation : state.geoLocation,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+};
+
+
+export default withStyles(styles) (connect(mapStateToProps, mapDispatchToProps)(PostMessageView));
