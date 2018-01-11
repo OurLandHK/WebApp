@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';  
-import { FETCH_LOCATION, DISABLE_LOCATION } from './actions/types';
+import { FETCH_USER, FETCH_LOCATION, DISABLE_LOCATION } from './actions/types';
 
 
 function geoLocationReducer(state={}, action) {
@@ -13,8 +13,18 @@ function geoLocationReducer(state={}, action) {
   }
 }
 
+function userReducer(state=null, action) {
+  switch (action.type) {
+    case FETCH_USER:
+      return action.user;
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({  
-  geoLocation: geoLocationReducer
+  geoLocation: geoLocationReducer,
+  user: userReducer
 });
 
 
