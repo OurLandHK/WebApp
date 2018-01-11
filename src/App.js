@@ -12,6 +12,9 @@ import Header from './Header';
 class App extends Component {
   constructor(props) {
     super(props);
+    let params = (new URL(document.location)).searchParams;
+    this.eventId = params.get("eventid");
+    this.userId = params.get("userid");
     this.updateLocation = this.updateLocation.bind(this);
   }  
 
