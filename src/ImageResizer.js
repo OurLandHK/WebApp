@@ -26,7 +26,7 @@ function imageResizer(file, maxWidth, maxHeight, callback) {
             canvas.height = height;
             var ctx = canvas.getContext("2d");
             ctx.drawImage(img, 0, 0, width, height);
-            canvas.toBlob(callback);
+            canvas.toBlob(callback, "image/jpeg", 0.8);
         }
     }
     // Load files into file reader
