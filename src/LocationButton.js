@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Button  from 'material-ui/Button';
-import getLocation from './Location';
 import geoString from './GeoLocationString';
 import {connect} from "react-redux";
 import {fetchLocation} from "./actions";

@@ -1,8 +1,13 @@
 import {FETCH_USER, DISABLE_LOCATION, FETCH_LOCATION} from './actions/types';
 import * as firebase from 'firebase';
+import {getUserProfile} from './UserProfile';
 
-function receiveLocation(pos){
-  return {type: FETCH_LOCATION, geoLocation: pos};
+const currentLocationLabel = "現在位置";
+const officeLocationLabel = "辦公室位置";
+const homeLocationLabel = "屋企位置";
+
+function receiveLocation(pos, label=currentLocationLabel){
+  return {type: FETCH_LOCATION, geoLocation: pos, label: label};
 }
 
 function disableLocation() {
@@ -70,5 +75,37 @@ export function signOut() {
   return dispatch => {
     firebase.auth().signOut();
     dispatch(fetchUser(null)); 
+  }
+}
+
+export function setHomeLocation() {
+  return dispatch => {
+    var auth = firebase.auth();
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        getUserProfile(user).then((userProfile)=>{
+          dispatch(receiveLocation(
+            { latitiude: userProfile.homeLocationLongitude,
+              longitude: userProfile.homeLocationLatitude },
+            homeLocationLabel));
+        });
+      }
+    });
+  }
+}
+
+export function setOfficeLocation() {
+  return dispatch => {
+    var auth = firebase.auth();
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        getUserProfile(user).then((userProfile)=>{
+          dispatch(receiveLocation(
+            { latitiude: userProfile.officeLocationLongitude,
+              longitude: userProfile.officeLocationLatitude },
+            officeLocationLabel));
+        });
+      }
+    });
   }
 }

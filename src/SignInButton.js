@@ -15,8 +15,7 @@ class SignInButton extends  Component {
     const {classes, user, signOut, signIn} = this.props;
     console.log(user);
     if (user) {
-      var imgURL = (user.photoURL || '/images/profile_placeholder.png');
-      return (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{user.displayName}&nbsp;&nbsp;<Button raised secondary={true} onClick={signOut}>登出</Button></div>);
+      return (<Button raised secondary={true} onClick={signOut}>登出</Button>);
     }
     else
     {

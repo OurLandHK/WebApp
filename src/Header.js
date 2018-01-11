@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import SignInButton from './SignInButton';
 import DrawerMenu from './Drawer';
@@ -9,7 +8,9 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import getLocation from './Location';
+import {connect} from "react-redux";
+import {fetchLocation} from "./actions";
+
 
 const styles = {
   root: {
@@ -39,7 +40,6 @@ class Header extends  Component {
   }
 
   componentDidMount() {
-    getLocation(this.successCallBack, this.errorCallBack, this.notSupportedCallback);
   }
 
   notSupportedCallBack() {
@@ -62,7 +62,7 @@ class Header extends  Component {
     console.log("set New Location1:" + locationString);
     if(locationString == "" || locationString == currentLocationLabel) {
       this.setState({locationString: currentLocationLabel});
-      getLocation(this.successCallBack, this.errorCallBack, this.notSupportedCallback);      
+      //getLocation(this.successCallBack, this.errorCallBack, this.notSupportedCallback);      
     } else {
       console.log("set New Location2:" + longitude + " " + latitude);
       this.setState({locationString: locationString, lon: longitude, lat: latitude});
@@ -97,5 +97,19 @@ Header.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Header);
+const mapStateToProps = (state, ownProps) => {
+  return {
+    geoLocation : state.geoLocation,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchLocation: () => dispatch(fetchLocation())
+  }
+};
+
+
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Header));
 //export default Header;
