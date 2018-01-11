@@ -4,6 +4,7 @@ import MessageDialog from './MessageDialog';
 import PublicProfile from './PublicProfile';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import {connect} from "react-redux";
 
 class Main extends Component {
   constructor(props) {
@@ -50,4 +51,16 @@ class Main extends Component {
 
 }
 
-export default Main;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    geoLocation : state.geoLocation,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);

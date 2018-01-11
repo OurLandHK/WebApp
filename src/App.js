@@ -8,6 +8,13 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import Main from './Main';
 import PublicProfile from './PublicProfile';
 import Header from './Header';
+import { createStore, applyMiddleware } from 'redux';  
+import { Provider } from 'react-redux';  
+import thunk from 'redux-thunk';  
+import rootReducer from './reducers';
+
+const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);  
+const store = createStoreWithMiddleware(rootReducer);
 
 class App extends Component {
   constructor(props) {
@@ -29,10 +36,12 @@ class App extends Component {
     */
     injectTapEventPlugin();
     return (
-      <div>
-        <Header ref={(header) => {this.header = header;}} updateLocationCallback={this.updateLocation} />
-        <Main updateLocationCallback={updateLocationCallback => this.updateLocationCallback = updateLocationCallback}/>
-      </div>
+      <Provider store={store}>
+        <div>
+          <Header ref={(header) => {this.header = header;}} updateLocationCallback={this.updateLocation} />
+          <Main updateLocationCallback={updateLocationCallback => this.updateLocationCallback = updateLocationCallback}/>
+        </div>
+      </Provider>
     );
   }
 }

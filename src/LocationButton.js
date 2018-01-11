@@ -2,43 +2,21 @@ import React, { Component } from 'react';
 import Button  from 'material-ui/Button';
 import getLocation from './Location';
 import geoString from './GeoLocationString';
+import {connect} from "react-redux";
+import {fetchLocation} from "./actions";
+import { bindActionCreators } from 'redux';
 
 class LocationButton extends Component {
   constructor(props) {
     super(props);
-    this.state = {geolocation: null};
-    this.geolocation = null
-    this.disabled = false;
-    this.successCallBack = this.successCallBack.bind(this);
-  }
-
-  notSupportedCallBack() {
-    this.disabled = true;
-    console.log('Disabled');
-  }
-
-  successCallBack(pos) {
-    this.geolocation = pos.coords;
-    this.setState({geolocation: pos.coords});
-  }
-
-  errorCallBack(error) {
-    console.warn('ERROR(${err.code}): ${err.message}');
-  }
-
-  handleGetLocation() {
-    if (this.disabled) {
-      alert('Location not supported!');
-    }
-    else {
-      getLocation(this.successCallBack, this.errorCallBack, this.notSupportedCallback);
-    }
   }
 
 
   render() {
-    if(this.state.geolocation != null) {
-      var locationString = geoString(this.geolocation.latitude, this.geolocation.longitude);
+    const {fetchLocation, geoLocation} = this.props;
+    const pos = geoLocation.pos;
+    if (pos != null) {
+      var locationString = geoString(pos.latitude, pos.longitude);
       return (
         <div>
           {locationString}
@@ -47,10 +25,23 @@ class LocationButton extends Component {
     else {
       return (
         <div>
-          <Button raised primary={true} onClick={() => this.handleGetLocation()}>取得現在位置</Button>
+          <Button raised primary={true} onClick={() => fetchLocation()}>取得現在位置</Button>
         </div>);
     }
   }
 }
 
-export default LocationButton;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    geoLocation : state.geoLocation,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchLocation: () => dispatch(fetchLocation())
+  }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(LocationButton);
