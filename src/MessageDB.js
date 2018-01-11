@@ -63,11 +63,14 @@ function updateMessage(messageKey, messageRecord, path) {
     return database.ref().update(updates); 
 }
 
-function updateMessageImageURL(messageKey, imageUrl) {
+function updateMessageImageURL(messageKey, firebaseImageURL, publicImageURL) {
     return getMessage(messageKey).then((messageRecord) => {
-        if(imageUrl != messageRecord.imageUrl) {
-            messageRecord.imageUrl = imageUrl;
+        if(firebaseImageURL != messageRecord.imageUrl) {
+            messageRecord.imageUrl = firebaseImageURL;
         }
+        if(publicImageURL != messageRecord.publicImageURL) {
+            messageRecord.publicImageURL = publicImageURL;
+        }        
         var path = "";
         return updateMessage(messageKey, messageRecord, path);
     });

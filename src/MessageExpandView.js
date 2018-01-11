@@ -110,7 +110,10 @@ class MessageExpandView extends Component {
   };
 
   facebookHashTag(tags) {
-    var tagsLength = tags.length;
+    var tagsLength = 0
+    if(tags != null) {
+      tagsLength = tags.length;
+    }
     var tagString = '';
     for (var i = 0; i < tagsLength; i++) {
       tagString += "#"+tags[i] + " ";

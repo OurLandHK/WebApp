@@ -3,6 +3,8 @@ import config from './config/default';
 import postFbMessage from './FacebookPost';
 import {addPublishMessagesKeyToUserProfile} from './UserProfile';
 import {addMessage, updateMessageImageURL} from './MessageDB';
+import geoString from './GeoLocationString';
+import imageResizer from './ImageResizer';
 
 
 function validateFile(file) {
@@ -24,45 +26,36 @@ function validateFile(file) {
   return true;
 };
 
-function uploadImage(currentUser, messageKey, file) {
+function uploadImage(currentUser, messageKey, blob) {
 
 //  var Jimp = require("jimp");
-  var filePath = currentUser.uid + '/' + messageKey + '/' + file.name;
+  var filePath = currentUser.uid + '/' + messageKey + '/event.png';
   var storage = firebase.storage();
-
-/*
-  return Jimp.read(file.name).then(function (image) {
-      var smallPicName = 'small' + file.name;
-      image.resize(960, Jimp.AUTO, Jimp.RESIZE_BICUBIC).write(smallPicName); // save 
-      var smallPic = new File(smallPicName);
-      return storage.ref(filePath).put(smallPic);
-  }).catch(function (err) {
-      console.error(err);
-      return storage.ref(filePath).put(file);                
-  })
-*/
-  return storage.ref(filePath).put(file);                
+  return storage.ref(filePath).put(blob);  
 };
 
 
 function postMessage(message, file, tags, geolocation, start, duration, interval, link) {
   var auth = firebase.auth();
-  var currentUser = auth.currentUser;       
-  addMessage(message, currentUser, file, tags, geolocation, start, duration, interval, link).then((messageKey) => {
-    addPublishMessagesKeyToUserProfile(currentUser,messageKey).then(() => {
-      var fbpostmessage = message;
-      if (! validateFile(file)) {
-        console.log("Invalid file.");
-        // postFbMessage(fbpostmessage, geolocation, '', tags, messageKey);
-      }
-      else
-      {    
-        uploadImage(currentUser, messageKey, file).then(
-          (snapshot) =>  {
-            var fullPath = snapshot.metadata.fullPath;
-            var imageURL = firebase.storage().ref(fullPath).toString();
-            return updateMessageImageURL(messageKey, imageURL);
+  var currentUser = auth.currentUser;     
+  var mapString = "\nhttps://www.google.com.hk/maps/place/"+ geoString(geolocation.latitude, geolocation.longitude) + "/@" + geolocation.latitude + "," + geolocation.longitude + ",18z/";
+    addMessage(message, currentUser, file, tags, geolocation, start, duration, interval, link).then((messageKey) => {
+      addPublishMessagesKeyToUserProfile(currentUser,messageKey).then(() => {
+        if (validateFile(file)) {
+          imageResizer(file, 1280, 1280, function(blob) {
+            uploadImage(currentUser, messageKey, blob).then((snapshot) =>  {
+              var fullPath = snapshot.metadata.fullPath;
+              var firebaseImageURL = firebase.storage().ref(fullPath).toString();
+              firebase.storage().ref(fullPath).getDownloadURL().then((url) => {
+                var publicImageURL = url;
+                console.log('publicImageURL: ' + publicImageURL);
+                return updateMessageImageURL(messageKey, firebaseImageURL, publicImageURL);
+            });
           });
+        });
+      } else  {
+        console.log("Not Image/No Image");
+        // postFbMessage(fbpostmessage, geolocation, '', tags, messageKey);
       }
     })
   });

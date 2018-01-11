@@ -61,6 +61,7 @@ class MessageList extends Component {
   render() {
     let elements = null;
     let queryMessage = null;
+    let linebreak = <div><br/><br/></div>;
     if(this.state.lon != 200) { // for receive the location info from upper layer
       elements = this.state.data.reverse().map((message) => {
         return (<MessageView message={message} key={message.key} user={this.state.user} lon={this.state.lon} lat={this.state.lat}/>);
@@ -72,7 +73,7 @@ class MessageList extends Component {
         queryMessage = <MessageView message={message} key={message.key} user={this.state.user} lon={this.state.lon} lat={this.state.lat} openDialogDefault={true} />;  
       }
     }
-    return (<div width="100%"><AppBar position="static" marginTop="1"><Toolbar/></AppBar>{queryMessage}{elements}</div>);
+    return (<div width="100%">{linebreak}{queryMessage}{elements}</div>);
   }
 };
 
