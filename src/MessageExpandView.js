@@ -151,10 +151,12 @@ class MessageExpandView extends Component {
     {
       favorColor = 'accent';
     }
+
+    var facebookURL = "https://facebook.com/" + m.fbpost;
       return(
         <div className={classes.bottom}>
         <CardActions disableActionSpacing>
-            <IconButton 
+            <IconButton
                 color={favorColor}
                 onClick={() => this.handleFavorClick()}
                 aria-label="Add to favorites">
@@ -197,8 +199,13 @@ class MessageExpandView extends Component {
                   size={32}
                   round />
               </EmailShareButton>
-          </div>                     
-            <div className={classes.flexGrow} />
+          </div>
+          <div className={classes.someNetwork}>
+            <IconButton href={facebookURL} data-scheme='fb://profile/10000'>
+              <ForumIcon />
+            </IconButton>
+          </div>
+          <div className={classes.flexGrow} />
       </CardActions>
       </div>);                       
     }

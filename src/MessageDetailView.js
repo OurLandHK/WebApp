@@ -2,7 +2,6 @@ import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import { CardActions, CardContent, CardMedia} from 'material-ui/Card';
 import ProgressiveCardImg from './ProgressiveCardImg';
-import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ForumIcon from 'material-ui-icons/Forum';
@@ -115,9 +114,7 @@ class MessageDetailView extends Component {
     return(<div>
              <Grid container>
                <Grid item>
-                   <IconButton href={facebookURL} data-scheme='fb://profile/10000'>
-                     <ForumIcon />
-                   </IconButton>
+                   
                </Grid>
                <Grid item>
                  作者：<br/>
