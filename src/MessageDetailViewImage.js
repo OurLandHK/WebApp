@@ -8,7 +8,7 @@ class MessageDetailViewImage extends Component {
   render() {
     const { url } = this.props;
     if(url  != null ) {
-        return (<ProgressiveCardImg gs_src={url} width='100vw'/>);
+        return (<ProgressiveCardImg gs_src={url}/>);
     }
     return (<div></div>);
   }

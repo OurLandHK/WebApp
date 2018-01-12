@@ -17,8 +17,12 @@ import EventMap from './REventMap';
 import ChipArray from './ChipArray';
 import MessageDetailViewImage from './MessageDetailViewImage';
 import Tabs, { Tab } from 'material-ui/Tabs';
+import AppBar from 'material-ui/AppBar';
 
 const styles = theme => ({
+  appBar: {
+    backgroundColor: theme.palette.secondary['200'],
+  },
   card: {
     maxWidth: 400,
   },
@@ -128,10 +132,16 @@ class MessageDetailView extends Component {
              </Grid>
              {linkHtml}
              {dateHtml}
-             <Tabs value={tab} onChange={this.handleChangeTab} centered>
-               <Tab label="圖片" />
-               <Tab label="地圖"/>
-             </Tabs>
+             <br/>
+             <br/>
+             <div>
+               <AppBar position="static" className={classes.appBar}>
+                 <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
+                   <Tab label="圖片" />
+                   <Tab label="地圖"/>
+                 </Tabs>
+               </AppBar>
+             </div>
              {tab == 0 && <MessageDetailViewImage url={m.imageUrl}/>}
              {tab == 1 && <EventMap center={geolocation} zoom={zoom}/>}
 
