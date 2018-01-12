@@ -7,11 +7,13 @@ import InboxIcon from 'material-ui-icons/Inbox';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Icon from 'material-ui/Icon';
 import UserProfileView from './UserProfileView'
-import {getUserProfile} from './UserProfile';
-
+import {connect} from "react-redux";
+import Divider from 'material-ui/Divider';
+import {fetchLocation, setHomeLocation, setOfficeLocation} from "./actions";
 const currentLocationLabel = "現在位置";
 const officeLocationLabel = "辦公室位置";
 const homeLocationLabel = "屋企位置";
+
 
 class DrawerMenu extends Component {
 
@@ -21,11 +23,10 @@ class DrawerMenu extends Component {
   }
 
   handleToggle(){
-    //console.log('Toggle Drawer: ' + this.state.open);
     this.setState({open: !this.state.open});
   }
+
   handleClose(){
-    //console.log('Closed Drawer');
     this.setState({open: false});
   }
 
@@ -35,41 +36,31 @@ class DrawerMenu extends Component {
   }
 
   currentClick() {
-    this.props.header.setLocation(currentLocationLabel, 0, 0);
+    this.props.fetchLocation();
     this.handleClose();
   }  
 
   homeClick() {
-    var auth = firebase.auth();
-    console.log(auth);
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        getUserProfile(user).then((userProfile)=>{
-          this.props.header.setLocation(homeLocationLabel, userProfile.homeLocationLongitude, userProfile.homeLocationLatitude);
-          this.handleClose();
-        });
-      } else {
-        this.handleClose();
-      }
-    });
+    this.props.setHomeLocation();
+    this.handleClose();
   }  
 
   officeClick() {
-    var auth = firebase.auth();
-    console.log(auth);
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        getUserProfile(user).then((userProfile)=>{
-          this.props.header.setLocation(officeLocationLabel, userProfile.officeLocationLongitude, userProfile.officeLocationLatitude);
-          this.handleClose();
-        });
-      } else {
-        this.handleClose();
-      }
-    });
+    this.props.setOfficeLocation();
+    this.handleClose();
   }  
 
   render() {
+    let userSection = (<div></div>);
+
+    const { user } = this.props;
+
+    if (user) {
+      var imgURL = (user.photoURL || '/images/profile_placeholder.png');
+      userSection = (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{user.displayName}&nbsp;&nbsp;</div>);
+
+    }
+
     return (
       <div>
         <IconButton onClick={() => this.handleToggle()}>
@@ -81,7 +72,14 @@ class DrawerMenu extends Component {
           onRequestClose={() => this.handleClose()}          
         >
           <div>
+            <List>
+              <ListItem>
+              {userSection}
+              </ListItem>
+            </List>
+            <Divider/>
             <List disablePadding>
+              
               <ListItem button>
                 <ListItemIcon>
                   <InboxIcon />
@@ -126,4 +124,20 @@ class DrawerMenu extends Component {
   }
 }
 
-export default DrawerMenu;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    geoLocation : state.geoLocation,
+    user: state.user
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchLocation: () => dispatch(fetchLocation()),
+    setOfficeLocation: () => dispatch(setOfficeLocation()),
+    setHomeLocation: () => dispatch(setHomeLocation())
+  }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(DrawerMenu);

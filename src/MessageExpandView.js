@@ -13,6 +13,7 @@ import red from 'material-ui/colors/red';
 import FavoriteIcon from 'material-ui-icons/Favorite';
 import ShareIcon from 'material-ui-icons/Share';
 import MessageDetailView from './MessageDetailView';
+import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
 import {
   isConcernMessage, 
   toggleConcernMessage
@@ -26,6 +27,13 @@ import {
 
 
 const styles = theme => ({
+  bottom: {
+    position: 'fixed',
+    bottom:'0%',
+    height:'10vh',
+    backgroundColor: theme.palette.primary['400'],
+    width: '100%'
+  },
   card: {
     maxWidth: 400,
   },
@@ -143,9 +151,12 @@ class MessageExpandView extends Component {
     {
       favorColor = 'accent';
     }
+
+    var facebookURL = "https://facebook.com/" + m.fbpost;
       return(
+        <div className={classes.bottom}>
         <CardActions disableActionSpacing>
-            <IconButton 
+            <IconButton
                 color={favorColor}
                 onClick={() => this.handleFavorClick()}
                 aria-label="Add to favorites">
@@ -188,9 +199,15 @@ class MessageExpandView extends Component {
                   size={32}
                   round />
               </EmailShareButton>
-          </div>                     
-            <div className={classes.flexGrow} />
-      </CardActions>);                       
+          </div>
+          <div className={classes.someNetwork}>
+            <IconButton href={facebookURL} data-scheme='fb://profile/10000'>
+              <ForumIcon />
+            </IconButton>
+          </div>
+          <div className={classes.flexGrow} />
+      </CardActions>
+      </div>);                       
     }
 }
 

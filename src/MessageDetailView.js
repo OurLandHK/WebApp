@@ -2,7 +2,6 @@ import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import { CardActions, CardContent, CardMedia} from 'material-ui/Card';
 import ProgressiveCardImg from './ProgressiveCardImg';
-import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ForumIcon from 'material-ui-icons/Forum';
@@ -15,8 +14,14 @@ import FavoriteIcon from 'material-ui-icons/Favorite';
 import ShareIcon from 'material-ui-icons/Share';
 import EventMap from './REventMap';
 import ChipArray from './ChipArray';
+import MessageDetailViewImage from './MessageDetailViewImage';
+import Tabs, { Tab } from 'material-ui/Tabs';
+import AppBar from 'material-ui/AppBar';
 
 const styles = theme => ({
+  appBar: {
+    backgroundColor: theme.palette.secondary['200'],
+  },
   card: {
     maxWidth: 400,
   },
@@ -44,13 +49,18 @@ const styles = theme => ({
 class MessageDetailView extends Component {
   constructor(props) {
     super(props);
-    this.state = {expanded: false, rotate: 'rotate(0deg)'};
+    this.state = {expanded: false, rotate: 'rotate(0deg)', tab: 0};
+    this.handleChangeTab = this.handleChangeTab.bind(this);
   }
 
   handleExpandClick() {
     this.setState({ expanded: !this.state.expanded });
 
   };
+
+  handleChangeTab(evt, value) {
+     this.setState({...this.state, tab: value});
+  }
 
 
   render() {
@@ -91,25 +101,20 @@ class MessageDetailView extends Component {
                         <Grid item><CardContent><Typography component='p'> 為期: {duration} </Typography> </CardContent> </Grid>
                         <Grid item><CardContent><Typography component='p'> 週期: {interval} </Typography> </CardContent> </Grid>                
                         </Grid>;
-    }   
-    let imageHtml = null;    
-    if(m.imageUrl  != null ){                                      
-        imageHtml = <Grid container>
-                        <Grid item align='center'><ProgressiveCardImg width={window.innerWidth * 0.85} gs_src={m.imageUrl}/></Grid>
-                      </Grid>;
-    } 
+    }
     console.log("photo" + photoUrl);
     let fbProfileImage = <img src={photoUrl} />;
     if (m.uid) {
       let fbProfileLink = '/?userid=' + m.uid;
       fbProfileImage = <a href={fbProfileLink}>{fbProfileImage}</a>;
     }
+
+    const tab = this.state.tab;
+
     return(<div>
              <Grid container>
                <Grid item>
-                   <IconButton href={facebookURL} data-scheme='fb://profile/10000'>
-                     <ForumIcon />
-                   </IconButton>
+                   
                </Grid>
                <Grid item>
                  作者：<br/>
@@ -124,17 +129,22 @@ class MessageDetailView extends Component {
              </Grid>
              {linkHtml}
              {dateHtml}
-             {imageHtml}
-             <Grid container>
-               <Grid item align='center'>
-               <CardContent>
-                 <EventMap center={geolocation} zoom={zoom}/>
-               </CardContent>
-             </Grid>
-           </Grid>
+             <br/>
+             <br/>
+             <div>
+               <AppBar position="static" className={classes.appBar}>
+                 <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
+                   <Tab label="圖片" />
+                   <Tab label="地圖"/>
+                 </Tabs>
+               </AppBar>
+             </div>
+             {tab == 0 && <MessageDetailViewImage url={m.imageUrl}/>}
+             {tab == 1 && <EventMap center={geolocation} zoom={zoom}/>}
+
          </div>);
 
-    }                 
+    }
 }
 
 export default withStyles(styles) (MessageDetailView);

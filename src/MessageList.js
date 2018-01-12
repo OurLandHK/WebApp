@@ -5,19 +5,14 @@ import MessageView from './MessageView';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import {getMessage} from './MessageDB';
+import {connect} from "react-redux";
+
 
 class MessageList extends Component {
   constructor(props) {
     super(props);
-    this.state = {data:[], lon:200, lat:100};
+    this.state = {data:[]};
     this.setMessage = this.setMessage.bind(this);
-    this.updateLocation = this.updateLocation.bind(this);
-    this.props.updateLocationCallback(this.updateLocation);
-  }
-
-  updateLocation(locationString, longitude, latitude) {
-    console.log('Message List: ' + longitude + "," + latitude);
-    this.setState({lon: longitude, lat: latitude});
   }
 
   componentDidMount() {
@@ -62,20 +57,34 @@ class MessageList extends Component {
     let elements = null;
     let queryMessage = null;
     let linebreak = <div><br/><br/></div>;
-    if(this.state.lon != 200) { // for receive the location info from upper layer
+    const {geoLocation} = this.props;
+    const lon = geoLocation.longitude;
+    const lat = geoLocation.latitude;
+    if(geoLocation.longitude != 200) { // for receive the location info from upper layer
       elements = this.state.data.reverse().map((message) => {
-        return (<MessageView message={message} key={message.key} user={this.state.user} lon={this.state.lon} lat={this.state.lat}/>);
+        return (<MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat}/>);
       });
 
       if(this.queryMessage != null) {
         console.log("queryMessage2");      
         var message = this.queryMessage;
-        queryMessage = <MessageView message={message} key={message.key} user={this.state.user} lon={this.state.lon} lat={this.state.lat} openDialogDefault={true} />;  
+        queryMessage = <MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat} openDialogDefault={true} />;  
       }
     }
     return (<div width="100%">{linebreak}{queryMessage}{elements}</div>);
   }
 };
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    geoLocation : state.geoLocation,
+  };
+}
 
-export default MessageList;
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessageList);

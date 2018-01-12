@@ -74,7 +74,7 @@ class MessageDialog extends React.Component {
             {m.text}
           </Typography>;
       detailView = <MessageDetailView message={m}/>;
-      expandView = <MessageExpandView message={m} uuid={uuid} user={user}/>;                              
+      expandView = <MessageExpandView message={m} uuid={uuid} user={user}/>;
     }
     return (
         <Dialog

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
+import CardMedia from 'material-ui/Card';
 
 // Using Map https://github.com/fullstackreact/google-maps-react
 
@@ -9,9 +10,8 @@ const style = {
 }
 
 const style2 = {
-  height: '30vh',
-  width:'95vw',
-  border: '1px solid black',
+  height: '40vh',
+  width:'100vw',
   position: 'relative'
 }
 
@@ -23,18 +23,20 @@ export class EventMap extends Component {
 
 render() {
     return (
-      <div style={style2}>
-        <Map google={this.props.google}
-          style={style}
-          initialCenter={this.props.center}
-          zoom={this.props.zoom}>
-          <Marker position={this.props.center} />
-        </Map>
-      </div>
+      <CardMedia>
+        <div style={style2}>
+          <Map google={this.props.google}
+            style={style}
+            initialCenter={this.props.center}
+            zoom={this.props.zoom}>
+            <Marker position={this.props.center} />
+          </Map>
+        </div>
+      </CardMedia>
     );
   }
 }
- 
+
 export default GoogleApiWrapper({
   apiKey: 'AIzaSyDdPxqSdKSWLot9NS0yMD2CQtI1j4GF_Qo'
 })(EventMap)
