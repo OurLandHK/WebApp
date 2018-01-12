@@ -142,15 +142,15 @@ class PostMessageView extends Component {
     }
     console.log(startTimeInMs);
     console.log(this.state.summary);
-    console.log(this.file.files[0]);              
-    if (this.locationButton.geolocation == null) {
-      console.log('Unknown Location'); 
+    console.log(this.file.files[0]);
+    if (this.props.geoLocation == null) {
+      console.log('Unknown Location');
     } else {
       if(this.state.summary == null) {
-        console.log('Unknown Input');         
+        console.log('Unknown Input');
       } else {
         var tags = this.state.tags.map((tag) => tag.text);
-        postMessage(this.state.summary, this.file.files[0], tags, this.locationButton.geolocation, startTimeInMs, duration, interval, this.state.link);
+        postMessage(this.state.summary, this.file.files[0], tags, this.props.geoLocation.pos, startTimeInMs, duration, interval, this.state.link);
         this.setState({popoverOpen: false});
       }
     }
@@ -162,7 +162,7 @@ class PostMessageView extends Component {
 
   handleExpandClick() {
     this.setState({ expanded: !this.state.expanded });
-  };  
+  };
 
   handleRequestDelete(evt) {
     alert(evt);
