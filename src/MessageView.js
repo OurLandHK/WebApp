@@ -6,7 +6,7 @@ import timeOffsetStringInChinese from './TimeString.js';
 import { withStyles } from 'material-ui/styles';
 import red from 'material-ui/colors/red';
 import MessageDialog from './MessageDialog';
-
+import {connect} from "react-redux";
 
 const styles = theme => ({
   card: {
@@ -23,7 +23,6 @@ const styles = theme => ({
 class MessageView extends Component {
   constructor(props) {
     super(props);
-    this.state = {lat: 0, lon: 0};
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -76,5 +75,17 @@ MessageView.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MessageView);
+const mapStateToProps = (state, ownProps) => {
+  return {
+    geoLocation : state.geoLocation,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+};
+
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(MessageView));
 //export default MessageView;
