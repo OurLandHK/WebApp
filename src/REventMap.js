@@ -10,7 +10,7 @@ const style = {
 
 const style2 = {
   height: '30vh',
-  width:'95vw',
+  width:'70vw',
   border: '1px solid black',
   position: 'relative'
 }
@@ -34,7 +34,7 @@ render() {
     );
   }
 }
- 
+
 export default GoogleApiWrapper({
   apiKey: 'AIzaSyDdPxqSdKSWLot9NS0yMD2CQtI1j4GF_Qo'
 })(EventMap)

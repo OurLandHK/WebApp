@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import CardMedia from 'material-ui/Card';
 import * as firebase from 'firebase';
 
+const style = {
+  position: 'relative',
+  width: '80vw',
+  display:'table'
+};
+
 class ProgressiveCardImg extends Component {
   constructor(props) {
     super(props);
@@ -24,9 +30,8 @@ class ProgressiveCardImg extends Component {
 
   render() {
       return (<CardMedia >
-                    <img width={this.width} src={this.state.url} />
-            </CardMedia>)
-//    return (<CardImg height={this.height} src={this.state.url}/>)
+               <img src={this.state.url} style={style}/>
+              </CardMedia>)
   }
 }
 
