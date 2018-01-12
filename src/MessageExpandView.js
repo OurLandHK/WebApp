@@ -13,6 +13,7 @@ import red from 'material-ui/colors/red';
 import FavoriteIcon from 'material-ui-icons/Favorite';
 import ShareIcon from 'material-ui-icons/Share';
 import MessageDetailView from './MessageDetailView';
+import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
 import {
   isConcernMessage, 
   toggleConcernMessage
@@ -26,6 +27,13 @@ import {
 
 
 const styles = theme => ({
+  bottom: {
+    position: 'fixed',
+    bottom:'0%',
+    height:'10vh',
+    backgroundColor: theme.palette.primary['400'],
+    width: '100%'
+  },
   card: {
     maxWidth: 400,
   },
@@ -144,6 +152,7 @@ class MessageExpandView extends Component {
       favorColor = 'accent';
     }
       return(
+        <div className={classes.bottom}>
         <CardActions disableActionSpacing>
             <IconButton 
                 color={favorColor}
@@ -190,7 +199,8 @@ class MessageExpandView extends Component {
               </EmailShareButton>
           </div>                     
             <div className={classes.flexGrow} />
-      </CardActions>);                       
+      </CardActions>
+      </div>);                       
     }
 }
 

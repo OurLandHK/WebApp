@@ -9,8 +9,8 @@ const style = {
 }
 
 const style2 = {
-  height: '30vh',
-  width:'70vw',
+  height: '40vh',
+  width:'100vw',
   border: '1px solid black',
   position: 'relative'
 }

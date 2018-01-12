@@ -128,7 +128,7 @@ class MessageDetailView extends Component {
              </Grid>
              {linkHtml}
              {dateHtml}
-             <Tabs value={tab} onChange={this.handleChangeTab}>
+             <Tabs value={tab} onChange={this.handleChangeTab} centered>
                <Tab label="圖片" />
                <Tab label="地圖"/>
              </Tabs>
