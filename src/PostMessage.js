@@ -42,7 +42,7 @@ function postMessage(message, file, tags, geolocation, start, duration, interval
     addMessage(message, currentUser, file, tags, geolocation, start, duration, interval, link).then((messageKey) => {
       addPublishMessagesKeyToUserProfile(currentUser,messageKey).then(() => {
         if (validateFile(file)) {
-          imageResizer(file, 1280, 1280, function(blob) {
+          imageResizer(file, 1280, 1280, "image/jpeg", 0.5, function(blob) {
             uploadImage(currentUser, messageKey, blob).then((snapshot) =>  {
               var fullPath = snapshot.metadata.fullPath;
               var firebaseImageURL = firebase.storage().ref(fullPath).toString();

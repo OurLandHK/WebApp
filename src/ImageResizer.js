@@ -1,4 +1,4 @@
-function imageResizer(file, maxWidth, maxHeight, callback) {
+function imageResizer(file, maxWidth, maxHeight, type, quality, callback) {
     // Create a file reader
     var reader = new FileReader();
     reader.onload = function(e) {
@@ -26,7 +26,7 @@ function imageResizer(file, maxWidth, maxHeight, callback) {
             canvas.height = height;
             var ctx = canvas.getContext("2d");
             ctx.drawImage(img, 0, 0, width, height);
-            canvas.toBlob(callback, "image/jpeg", 0.8);
+            canvas.toBlob(callback, type, quality);
         }
     }
     // Load files into file reader
