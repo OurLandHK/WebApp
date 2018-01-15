@@ -1,8 +1,9 @@
 /*global FB*/
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
-import { Form, FormGroup, Label, Input} from 'reactstrap';
-import { FormText, FormControl } from 'material-ui/Form';
+import { Form, Label, Input} from 'reactstrap';
+import { FormGroup, FormControlLabel, FormText, FormControl } from 'material-ui/Form';
+import Checkbox from 'material-ui/Checkbox';
 import LocationButton from './LocationButton';
 import postMessage from './PostMessage';
 import SelectedMenu from './SelectedMenu';
@@ -18,6 +19,10 @@ import InputLabel from 'material-ui/Input/InputLabel';
 import IconButton from 'material-ui/IconButton';
 import Collapse from 'material-ui/transitions/Collapse';
 import Typography from 'material-ui/Typography';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import CloseIcon from 'material-ui-icons/Close';
+import Slide from 'material-ui/transitions/Slide';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import WebcamCapture from './WebCam';
 import ReactDOM from 'react-dom';
@@ -38,6 +43,9 @@ const styles = theme => ({
     display: 'flex',
     flexWrap: 'wrap',
   },
+  flex: {
+    flex: 1,
+  },  
   expand: {
     transform: 'rotate(0deg)',
     transition: theme.transitions.create('transform', {
@@ -58,6 +66,10 @@ const styles = theme => ({
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'  
   }
 });
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 
 class PostMessageView extends Component {
   constructor(props) {
@@ -98,6 +110,13 @@ class PostMessageView extends Component {
   handleRequestOpen(evt) {
     evt.preventDefault();
     this.setState({
+     // message
+      summary: "",
+      link: "",
+      start: "",
+      end: "",
+      expanded: false, rotate: 'rotate(0deg)',
+      tags: [],
       popoverOpen: true,
       anchorEl: evt.currentTarget
     });
@@ -208,8 +227,21 @@ class PostMessageView extends Component {
           <Button fab color="primary" className={classes.fab} raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
             <AddIcon />
           </Button>
-          <Dialog open={this.state.popoverOpen} onRequestClose={() => this.handleRequestClose()}>
-              <DialogTitle className={classes.dialogTitle}>提交</DialogTitle>
+          <Dialog
+            fullScreen
+            open={this.state.popoverOpen}
+            onRequestClose={() => this.handleRequestClose()}
+            transition={Transition}
+            unmountOnExit>
+            <AppBar className={classes.dialogTitle}>
+              <Toolbar>
+                <IconButton color="contrast" onClick={() => this.handleRequestClose()} aria-label="Close">
+                  <CloseIcon />
+                </IconButton>
+                <Typography type={"title"} color="inherit" className={classes.flex}>提交</Typography>     
+              </Toolbar>
+            </AppBar>
+              <br/>
               <div className={classes.dialogContainer}>
               <Form>
                 <FormGroup>           
@@ -228,17 +260,19 @@ class PostMessageView extends Component {
                 <FormGroup>                     
                   <Label for="file">相片</Label>
                   <input type="file" name="file" id="file" ref={(file) => {this.file = file;}}/>
-                  <IconButton
-                        className={classnames(classes.expand, {
-                            [classes.expandOpen]: this.state.expanded,
-                        })}
-                        onClick={() => this.handleExpandClick()}
-                        aria-expanded={this.state.expanded}
-                        aria-label="Show more"
-                        >
-                        <ExpandMoreIcon />
-                  </IconButton>                   
-                </FormGroup>                          
+                </FormGroup>
+                <FormGroup>    
+                  <FormControlLabel
+                  label="活動"
+                  control={
+                    <Checkbox
+                      checked={this.state.expanded}
+                      onChange={() => this.handleExpandClick()}
+                      value="checkedA"
+                    />
+                    }
+                  />                                                    
+                </FormGroup>                                          
                 <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>                
                   <FormGroup>                
                     <TextField

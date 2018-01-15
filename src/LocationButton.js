@@ -10,23 +10,22 @@ class LocationButton extends Component {
     super(props);
   }
 
+  rest() {
+
+  }
+
 
   render() {
     const {fetchLocation, geoLocation} = this.props;
     const pos = geoLocation.pos;
+    let locationString = null;
     if (pos != null) {
-      var locationString = geoString(pos.latitude, pos.longitude);
-      return (
-        <div>
-          {locationString}
-        </div>);      
+      locationString = "現在位置: " + geoString(pos.latitude, pos.longitude);     
     }
-    else {
-      return (
-        <div>
-          <Button raised primary={true} onClick={() => fetchLocation()}>取得現在位置</Button>
-        </div>);
-    }
+    return (
+      <div>
+        <Button raised primary={true} onClick={() => fetchLocation()}>取得現在位置</Button> {locationString}
+      </div>);
   }
 }
 
