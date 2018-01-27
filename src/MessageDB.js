@@ -2,14 +2,14 @@ import * as firebase from 'firebase';
 import uuid from 'js-uuid';
 import config from './config/default';
 
-function fetchMessages(numberOfMessage, callback) {
+function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
     var database = firebase.database();  
     var messagesRef = database.ref(config.messageDB);
  // Make sure we remove all previous listeners.
     messagesRef.off();
-
+    console.log("fetchMessageBaseOnGo");
     messagesRef.orderByChild("createdAt").limitToLast(numberOfMessage).on('child_added', callback);
-    messagesRef.orderByChild("createdAt").limitToLast(numberOfMessage).on('child_changed', callback);
+//    messagesRef.orderByChild("createdAt").limitToLast(numberOfMessage).on('child_changed', callback);
  }
 
  function addMessage(message, currentUser, file, tags, geolocation, start, duration, interval, link) {
@@ -91,4 +91,43 @@ function  addMessageFB_Post(messageKey, fbpost) {
     });
 }
 
-export {fetchMessages, addMessage, addMessageFB_Post, updateMessageImageURL, getMessage};
+function updateMessageConcernUser(messageUuid, user, isConcern) {
+    var database = firebase.database();
+    return database.ref(config.concernDB +'/'+messageUuid).once('value').then(function(snapshot) {
+        var concernRecord = snapshot.val();         
+        if(concernRecord == null) {
+            if(isConcern)
+            {
+                console.log("message Uuid " + messageUuid + " User Id " + user.uid)
+                concernRecord = [user.uid];
+                return database.ref(config.concernDB +'/'+messageUuid).set(concernRecord).then(() => {
+                    return concernRecord
+                });
+            }
+        }
+        else
+        {
+            var index = concernRecord.indexOf(user.uid);
+            if(index == -1 && isConcern)
+            {
+                concernRecord.push(user.uid);
+                database.ref(config.concernDB +'/'+messageUuid).set(concernRecord).then(() => {
+                    return concernRecord
+                });
+            }
+            else
+            {
+                if(!isConcern) {
+                    concernRecord.splice(index, 1);
+                    database.ref(config.concernDB +'/'+messageUuid).set(concernRecord).then(() => {
+                        return concernRecord
+                    });
+                }
+            }
+        }        
+        return concernRecord;        
+    });;
+    
+}
+
+export {fetchMessagesBaseOnGeo, addMessage, addMessageFB_Post, updateMessageImageURL, getMessage, updateMessageConcernUser};

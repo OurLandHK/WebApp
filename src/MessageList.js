@@ -4,7 +4,7 @@ import config from './config/default';
 import MessageView from './MessageView';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
-import {getMessage} from './MessageDB';
+import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
 import {connect} from "react-redux";
 
 
@@ -32,6 +32,7 @@ class MessageList extends Component {
   }
 
   setMessage(data) {
+    console.log("setMessageCalled");
     var val = data.val();
     this.state.data.push(val);
     this.setState({data:this.state.data});
@@ -39,17 +40,12 @@ class MessageList extends Component {
 
   
   fetchMessages(user) {
-    this.setState({user:user});    
-    var database = firebase.database();  
- 
+    this.setState({user:user});     
      // Loads the last 20 messages and listen for new ones.
-     var messageNumber = this.props.eventNumber; 
-     this.messagesRef = database.ref(config.messageDB);
-     // Make sure we remove all previous listeners.
-     this.messagesRef.off();
-   
-     this.messagesRef.orderByChild("createdAt").limitToLast(messageNumber).on('child_added', this.setMessage);
-     this.messagesRef.orderByChild("createdAt").limitToLast(messageNumber).on('child_changed', this.setMessage);
+     var numberOfMessage = this.props.eventNumber;
+     var distance = this.props.distance;
+     const {geoLocation} = this.props;
+     fetchMessagesBaseOnGeo(geoLocation, distance, numberOfMessage, this.setMessage)
 
   }
 
@@ -65,8 +61,7 @@ class MessageList extends Component {
         return (<MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat}/>);
       });
 
-      if(this.queryMessage != null) {
-        console.log("queryMessage2");      
+      if(this.queryMessage != null) {      
         var message = this.queryMessage;
         queryMessage = <MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat} openDialogDefault={true} />;  
       }
@@ -78,6 +73,7 @@ class MessageList extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     geoLocation : state.geoLocation,
+    distance : state.distance,
   };
 }
 
