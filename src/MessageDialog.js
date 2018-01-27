@@ -13,6 +13,7 @@ import Slide from 'material-ui/transitions/Slide';
 import MessageDetailView from './MessageDetailView';
 import MessageExpandView from './MessageExpandView';
 import {getMessage} from './MessageDB';
+import {Helmet} from "react-helmet";
 
 const styles = {
   appBar: {
@@ -68,8 +69,13 @@ class MessageDialog extends React.Component {
     let titleHtml = null;
     let detailView = null;
     let expandView = null;
+    var shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + uuid;
+    var title = "";
+    var imageUrl = "";
     if(this.state.open) {
       var m = this.message;
+      title = m.text;
+      imageUrl = m.publicImageURL
       titleHtml = <Typography type={"title"} color="inherit" className={classes.flex}>
             {m.text}
           </Typography>;
@@ -84,6 +90,14 @@ class MessageDialog extends React.Component {
           transition={Transition}
           unmountOnExit
         >
+          <Helmet>
+              <meta charSet="utf-8" />
+              <link rel="canonical" href={shareUrl} />
+              <meta property="og:url" content={shareUrl} />
+              <meta property="og:type" content="article" />
+              <meta property="og:title" content={title} />
+              <meta property="og:image" content={imageUrl} />
+          </Helmet>        
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">

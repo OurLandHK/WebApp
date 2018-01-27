@@ -24,7 +24,6 @@ import Toolbar from 'material-ui/Toolbar';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import WebcamCapture from './WebCam';
 import ReactDOM from 'react-dom';
 import CustomTags from './CustomTags';
 import {connect} from "react-redux";

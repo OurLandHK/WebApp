@@ -13,9 +13,13 @@ class Main extends Component {
     this.eventId = params.get("eventid");
     this.userId = params.get("userid");
     this.eventNumber = params.get("eventnumber");
+    this.distance = params.get("distance");
     if(this.eventNumber == null) {
       this.eventNumber = 20;
     }
+    if(this.distance == null) {
+      this.distance = 1000;
+    }    
     this.updateLocation = this.updateLocation.bind(this);
     this.props.updateLocationCallback(this.updateLocation);
   }
@@ -38,7 +42,7 @@ class Main extends Component {
     if(this.userId != null) {
       pubilcProfileHtml = <PublicProfile id={this.userId}/>;
     } else {
-      messageHtml = <div><MessageList uuid={this.eventId} eventNumber={this.eventNumber} updateLocationCallback={updateLocationCallback => this.updateLocationCallback = updateLocationCallback}/><PostMessageView/></div>;
+      messageHtml = <div><MessageList uuid={this.eventId} eventNumber={this.eventNumber} distance={this.distance} updateLocationCallback={updateLocationCallback => this.updateLocationCallback = updateLocationCallback}/><PostMessageView/></div>;
     }
     return (
       <div>

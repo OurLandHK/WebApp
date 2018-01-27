@@ -4,11 +4,19 @@
       ".read": "auth !== null",
       ".write": "auth !== null"
     },
+    "concernMessages": {
+      ".read": "auth !== null",
+      ".write": "auth !== null"
+    },    
     "userProfile": {
       ".read": "auth !== null",
       ".write": "auth !== null"
     },     
     "messageTest": {
+      ".read": "auth !== null",
+      ".write": "auth !== null"
+    },    
+    "concernMessagesTest": {
       ".read": "auth !== null",
       ".write": "auth !== null"
     },    

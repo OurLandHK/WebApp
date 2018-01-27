@@ -13,6 +13,7 @@ import red from 'material-ui/colors/red';
 import FavoriteIcon from 'material-ui-icons/Favorite';
 import ShareIcon from 'material-ui-icons/Share';
 import MessageDetailView from './MessageDetailView';
+import {updateMessageConcernUser} from './MessageDB';
 import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
 import {
   isConcernMessage, 
@@ -112,7 +113,9 @@ class MessageExpandView extends Component {
     if(user)
     {
       toggleConcernMessage(user, uuid).then((favor) => {
-        this.setState({ favor: favor });
+        updateMessageConcernUser(uuid, user, favor).then(() => {
+          this.setState({ favor: favor });
+        });
       });
     }
   };
@@ -146,6 +149,12 @@ class MessageExpandView extends Component {
     var m = this.facebookQuote(this.props.message);
     var hashtag = this.facebookHashTag(this.props.message.tag);
     var shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + this.props.uuid;
+/*
+    if(this.props.message.publicImageURL != null) {
+      m = m + " " + hashtag + " " + shareUrl;
+      shareUrl = this.props.message.publicImageURL; 
+    }
+*/    
     var favorColor = 'primary';
     if(this.state.favor)
     {
