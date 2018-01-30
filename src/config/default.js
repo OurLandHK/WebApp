@@ -1,4 +1,8 @@
 import './firebase';
+import 'firebase/firestore';
+import * as firebase from 'firebase';
+import * as firestore from 'firebase/firestore';
+//import 'firebase/firestore-types';
 
 let config = {
   fbApp: {
@@ -17,5 +21,10 @@ let config = {
   userDB: 'userProfileTest' // For developments.
 };
 
+let constant = {
+  invalidLocation: new firebase.firestore.GeoPoint(90, 0),
+}
 
-export default config;
+
+export  default config;
+export {constant};

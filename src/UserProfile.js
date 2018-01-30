@@ -1,8 +1,41 @@
 import * as firebase from 'firebase';
-import config from './config/default';
+import * as firestore from 'firebase/firestore';
+import config, {constant} from './config/default';
+//import { GeoPoint } from '@firebase/firestore-types';
 
 function getUserProfile(user) {
-    var database = firebase.database();
+    // Use firestore
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.userDB);
+    var docRef = collectionRef.doc(user.uid);
+    return docRef.get().then(function(doc) {
+        if (doc.exists) {
+            return(doc.data());
+        } else {
+            var userRecord = {
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+                officeLocation: constant.invalidLocation, 
+                homeLocation: constant.invalidLocation,
+                publishMessages: [],
+                concernMessages: [],
+                completeMessage: []
+            };
+            collectionRef.doc(user.uid).set(userRecord).then(function(userRecordRef) {
+                console.log("Document written with ID: ", user.uid);
+                return(userRecordRef.data);
+            })
+            .catch(function(error) {
+                console.error("Error adding document: ", error);
+                return(null);
+            });
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+        return(null);
+    });
+    // Use firebase realdb
+/*    var database = firebase.database();
     return database.ref(config.userDB +'/'+user.uid).once('value').then(function(snapshot) {
         var userRecord = snapshot.val(); 
         
@@ -22,27 +55,57 @@ function getUserProfile(user) {
         }
         return userRecord;        
     });;
-}
-
-function getUserRecords(user, path) {
-    var database = firebase.database();
-    return database.ref(config.userDB +'/'+user.uid + '/' + path).once('value').then(function(snapshot) {
-        var userRecord = snapshot.val(); 
-        return userRecord;        
-    });;
+*/    
 }
 
 function getUserConcernMessages(user) {
-    return getUserRecords(user, "concernMessages");
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.userDB);
+    var docRef = collectionRef.doc(user.uid);
+    return docRef.get().then(function(doc) {
+        if (doc.exists) {
+            return(doc.data().concernMessages);
+        } else {
+            return(null);
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+        return(null);
+    });
 }
 
 function getUserPublishMessages(user) {
-    return getUserRecords(user, "publishMessages");
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.userDB);
+    var docRef = collectionRef.doc(user.uid);
+    return docRef.get().then(function(doc) {
+        if (doc.exists) {
+            return(doc.data().publishMessages);
+        } else {
+            return(null);
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+        return(null);
+    });
 }
 
 function getUserCompleteMessages(user) {
-    return getUserRecords(user, "completeMessage");
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.userDB);
+    var docRef = collectionRef.doc(user.uid);
+    return docRef.get().then(function(doc) {
+        if (doc.exists) {
+            return(doc.data().completeMessage);
+        } else {
+            return(null);
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+        return(null);
+    });
 }
+
 function toggleConcernMessage(user, messageUUID) {
     return getUserProfile(user).then((userRecord) => {
         var rv = true;
@@ -89,25 +152,24 @@ function isConcernMessage(user, messageUUID) {
 }
 
 
-function updateUserRecords(userid, userRecord, path) {
-    var database = firebase.database();
-    var updates = {};
-    updates['/'+ config.userDB +'/'+userid + '/' + path] = userRecord;
-    return database.ref().update(updates); 
+function updateUserRecords(userid, userRecord) {
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.userDB);    
+    collectionRef.doc(userid).set(userRecord).then(function(userRecordRef) {
+        console.log("Document written with ID: ", userid);
+        return(userRecordRef);
+    }) 
 }
 
 function updateUserLocation(user, officeLocationLatitude, officeLocationLongitude, homeLocationLatitude, homeLocationLongitude) {
     return getUserProfile(user).then((userRecord) => {
-        if(homeLocationLatitude != userRecord.homeLocationLatitude && homeLocationLongitude != userRecord.homeLocationLongitude)   {
-            userRecord.homeLocationLongitude = homeLocationLongitude;
-            userRecord.homeLocationLatitude = homeLocationLatitude;
+        if(homeLocationLatitude != userRecord.homeLocation.latitude && homeLocationLongitude != userRecord.homeLocation.longitude)   {
+            userRecord.homeLocation = new firebase.firestore.GeoPoint(homeLocationLatitude, homeLocationLongitude);
         }
-        if(officeLocationLatitude != userRecord.officeLocationLatitude && officeLocationLongitude != userRecord.officeLocationLongitude)  {
-            userRecord.officeLocationLatitude = officeLocationLatitude;
-            userRecord.officeLocationLongitude = officeLocationLongitude;
+        if(officeLocationLatitude != userRecord.officeLocation.latitude && officeLocationLongitude != userRecord.officeLocation.longitude)  {
+            userRecord.homeLocation = new firebase.firestore.GeoPoint(homeLocationLatitude, homeLocationLongitude);
         }
-        var path = "";
-        return updateUserRecords(user.uid, userRecord, path);
+        return updateUserRecords(user.uid, userRecord);
     });
 }
 
@@ -121,9 +183,9 @@ function addPublishMessagesKeyToUserProfile(user, messageUUID) {
         {
             userRecord.publishMessages = [messageUUID];
         }
-        var path = "";
-        return updateUserRecords(user.uid, userRecord, path);
+        return updateUserRecords(user.uid, userRecord);
     });
 }
 
-export {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, getUserRecords, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage};
+export {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage};
+

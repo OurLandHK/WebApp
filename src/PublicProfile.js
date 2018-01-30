@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import config from './config/default';
-import {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, getUserRecords} from './UserProfile';
+import {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation} from './UserProfile';
+
 
 class PublicProfile extends Component {
   constructor(props) {
