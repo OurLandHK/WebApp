@@ -34,28 +34,6 @@ function getUserProfile(user) {
         console.log("Error getting document:", error);
         return(null);
     });
-    // Use firebase realdb
-/*    var database = firebase.database();
-    return database.ref(config.userDB +'/'+user.uid).once('value').then(function(snapshot) {
-        var userRecord = snapshot.val(); 
-        
-        if(userRecord == null) {
-            userRecord = {
-                displayName: user.displayName,
-                photoURL: user.photoURL,
-                officeLocationLatitude: 0, 
-                officeLocationLongitude: 0,
-                homeLocationLatitude: 0,
-                homeLocationLongitude: 0,
-                publishMessages: [],
-                concernMessages: [],
-                completeMessage: []
-            };
-            database.ref(config.userDB +'/'+user.uid).set(userRecord);
-        }
-        return userRecord;        
-    });;
-*/    
 }
 
 function getUserConcernMessages(user) {
@@ -130,7 +108,7 @@ function toggleConcernMessage(user, messageUUID) {
         }
         var path = "";
         console.log("UserRecord.concernMessages" + userRecord.concernMessages);        
-        return updateUserRecords(user.uid, userRecord, path).then(() => {
+        return updateUserRecords(user.uid, userRecord).then(function(userRecordRef){
             return rv;
         });
     });
@@ -155,7 +133,7 @@ function isConcernMessage(user, messageUUID) {
 function updateUserRecords(userid, userRecord) {
     var db = firebase.firestore();
     var collectionRef = db.collection(config.userDB);    
-    collectionRef.doc(userid).set(userRecord).then(function(userRecordRef) {
+    return collectionRef.doc(userid).set(userRecord).then(function(userRecordRef) {
         console.log("Document written with ID: ", userid);
         return(userRecordRef);
     }) 

@@ -17,8 +17,9 @@ class Main extends Component {
     if(this.eventNumber == null) {
       this.eventNumber = 20;
     }
+    // distance in KM
     if(this.distance == null) {
-      this.distance = 1000;
+      this.distance = 1;
     }    
     this.updateLocation = this.updateLocation.bind(this);
     this.props.updateLocationCallback(this.updateLocation);

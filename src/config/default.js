@@ -17,7 +17,6 @@ let config = {
 
   fbGroupId: '264191847414716', // For Development https://www.facebook.com/groups/264191847414716/ 
   messageDB: 'messageTest', // For development.
-  concernDB: 'concernMessagesTest' , // For development.
   userDB: 'userProfileTest' // For developments.
 };
 
