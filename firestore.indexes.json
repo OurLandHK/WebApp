@@ -3,7 +3,8 @@
     {
         "collectionId": "messageTest",
         "fields": [
-          { "fieldPath": "createdAt", "mode": "DESCENDING" }
+          { "fieldPath": "createdAt", "mode": "DESCENDING" },
+          { "fieldPath": "start", "mode": "DESCENDING" }
         ]
     }
   ]
