@@ -85,7 +85,7 @@ class MessageDetailView extends Component {
     console.log('facebookURL: '+facebookURL);
     var zoom=15;
     var photoUrl = '/images/profile_placeholder.png';
-    var geolocation = {lat: m.latitude, lng: m.longitude};
+    var geolocation = {lat: m.geolocation.latitude, lng: m.geolocation.longitude};
     if (m.photoUrl) {
       photoUrl = m.photoUrl;
     }    

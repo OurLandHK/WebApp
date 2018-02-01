@@ -22,6 +22,7 @@ import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import geoString from './GeoLocationString';
 import {getUserProfile, updateUserLocation, getUserRecords} from './UserProfile';
+import  {constant} from './config/default';
 
 function Transition(props) {
   return <Slide direction="right" {...props} />;
@@ -93,10 +94,10 @@ class UserProfileView extends React.Component {
 
   onSubmit() {
     this.setState({ open: false });
-    var homeLocationLongitude = this.state.userProfile.homeLocationLongitude;
-    var homeLocationLatitude = this.state.userProfile.homeLocationLatitude;
-    var officeLocationLongitude = this.state.userProfile.officeLocationLongitude;
-    var officeLocationLatitude = this.state.userProfile.officeLocationLatitude;
+    var homeLocationLongitude = this.state.userProfile.homeLocation.longitude;
+    var homeLocationLatitude = this.state.userProfile.homeLocation.latitude;
+    var officeLocationLongitude = this.state.userProfile.officeLocation.longitude;
+    var officeLocationLatitude = this.state.userProfile.officeLocation.latitude;
 
     if(this.homeLocationButton.geolocation != null) {
       homeLocationLongitude = this.homeLocationButton.geolocation.longitude;
@@ -139,13 +140,13 @@ class UserProfileView extends React.Component {
           {
             concern = this.state.userProfile.concernMessages.length;
           }                
-          if(this.state.userProfile.homeLocationLatitude != 0)
+          if(this.state.userProfile.homeLocation.latitude != constant.invalidLocation.latitude)
           {
-            homeLocation = geoString(this.state.userProfile.homeLocationLatitude, this.state.userProfile.homeLocationLongitude);
+            homeLocation = geoString(this.state.userProfile.homeLocation.latitude, this.state.userProfile.homeLocation.longitude);
           }
-          if(this.state.userProfile.officeLocationLatitude != 0)
+          if(this.state.userProfile.officeLocation.latitude != constant.invalidLocation.latitude)
           {
-            officeLocation = geoString(this.state.userProfile.officeLocationLatitude, this.state.userProfile.officeLocationLongitude); 
+            officeLocation = geoString(this.state.userProfile.officeLocation.latitude, this.state.userProfile.officeLocation.longitude); 
           }
         }
     }

@@ -31,9 +31,9 @@ class MessageList extends Component {
     });
   }
 
-  setMessage(data) {
+  setMessage(doc) {
     console.log("setMessageCalled");
-    var val = data.val();
+    var val = doc.data();
     this.state.data.push(val);
     this.setState({data:this.state.data});
   };

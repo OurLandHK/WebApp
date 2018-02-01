@@ -43,9 +43,9 @@ class MessageView extends Component {
     }
 
     var distanceSpan = "距離: ";
-    if (m.latitude) {
+    if (m.geolocation.latitude) {
       if (this.props.lat) {
-        var dis = distance(m.longitude,m.latitude,this.props.lon,this.props.lat);
+        var dis = distance(m.geolocation.longitude,m.geolocation.latitude,this.props.lon,this.props.lat);
         var dist;
         if (dis > 1)
           dist = Math.round(dis) + "km";

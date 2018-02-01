@@ -3,17 +3,47 @@ import uuid from 'js-uuid';
 import config from './config/default';
 
 function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
-    var database = firebase.database();  
-    var messagesRef = database.ref(config.messageDB);
- // Make sure we remove all previous listeners.
-    messagesRef.off();
-    console.log("fetchMessageBaseOnGo");
-    messagesRef.orderByChild("createdAt").limitToLast(numberOfMessage).on('child_added', callback);
-//    messagesRef.orderByChild("createdAt").limitToLast(numberOfMessage).on('child_changed', callback);
+
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.messageDB);
+    collectionRef.onSnapshot(function() {})         
+    if(geocode != null && geocode != NaN && geocode.latitude != undefined) {
+        // ~1 km of lat and lon in degrees
+        let lat = 0.009005379598;
+        let lon = 0.01129765804;
+
+        let lowerLat = geocode.latitude - (lat * distance);
+        let lowerLon = geocode.longitude - (lon * distance);
+
+        let greaterLat = geocode.latitude + (lat * distance);
+        let greaterLon = geocode.longitude + (lon * distance)
+
+        let lesserGeopoint = new firebase.firestore.GeoPoint(lowerLat, lowerLon);
+        let greaterGeopoint = new firebase.firestore.GeoPoint(greaterLat, greaterLon);
+
+        // Use firestore
+
+        collectionRef.where("geolocation", ">=", lesserGeopoint).where("location", "<=", greaterGeopoint).orderBy("createdAt", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
+            querySnapshot.forEach(callback);
+        })
+        .catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
+    } else {
+        // Use firestore
+        collectionRef.orderBy("createdAt", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
+            querySnapshot.forEach(callback);
+        })
+        .catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
+        collectionRef.onSnapshot(function(querySnapshot) {
+            querySnapshot.forEach(callback);
+        })        
+    }
  }
 
  function addMessage(message, currentUser, file, tags, geolocation, start, duration, interval, link) {
-    var database = firebase.database();
     var now = Date.now();
     console.log("Start: " + start + " Duration: " + duration + " Interval: " + interval + " Link: " + link);
     if(start === "")
@@ -27,8 +57,7 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
         name: currentUser.displayName,
         text: message,
         photoUrl: currentUser.providerData[0].photoURL || '/images/profile_placeholder.png',
-        latitude: geolocation.latitude,
-        longitude: geolocation.longitude,
+        geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
         tag: tags,
         createdAt: now,
         key: key,   
@@ -39,29 +68,40 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
         interval: interval,
         link: link
       };
-    return database.ref(config.messageDB +'/'+key).set(messageRecord).then((data) => {
-        return key;
-    })
+    // Use firestore
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.messageDB);  
+    return collectionRef.doc(key).set(messageRecord).then(function(userRecordRef) {
+        console.log("Document written with ID: ", key);
+        return(key);
+    })        
 };
   
 
 function getMessage(uuid) {
-    var database = firebase.database();
-    return database.ref(config.messageDB +'/'+uuid).once('value').then(function(snapshot) {
-        var messageRecord = null;
-        if(snapshot != null) {
-            messageRecord = snapshot.val();
-        } 
-        return messageRecord;        
-    });;
+    // firestore
+    // Use firestore
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.messageDB);
+    var docRef = collectionRef.doc(uuid);
+    return docRef.get().then(function(doc) {
+        if (doc.exists) {
+            return(doc.data());
+        } else {
+            return null;
+        }
+    });     
 }
 
 function updateMessage(messageKey, messageRecord, path) {
-    var database = firebase.database();
-    var updates = {};
-    updates['/'+ config.messageDB +'/'+ messageKey + '/' + path] = messageRecord;
-    return database.ref().update(updates); 
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.messageDB);    
+    collectionRef.doc(messageKey).set(messageRecord).then(function(messageRecordRef) {
+        console.log("Document written with ID: ", messageKey);
+        return(messageRecordRef);
+    })      
 }
+
 
 function updateMessageImageURL(messageKey, firebaseImageURL, publicImageURL) {
     return getMessage(messageKey).then((messageRecord) => {
@@ -92,42 +132,39 @@ function  addMessageFB_Post(messageKey, fbpost) {
 }
 
 function updateMessageConcernUser(messageUuid, user, isConcern) {
-    var database = firebase.database();
-    return database.ref(config.concernDB +'/'+messageUuid).once('value').then(function(snapshot) {
-        var concernRecord = snapshot.val();         
-        if(concernRecord == null) {
-            if(isConcern)
+    // Use firestore
+    return getMessage(messageUuid).then((messageRecord) => {
+        if(messageRecord != null) {
+            if(messageRecord.concernRecord != null)
             {
-                console.log("message Uuid " + messageUuid + " User Id " + user.uid)
-                concernRecord = [user.uid];
-                return database.ref(config.concernDB +'/'+messageUuid).set(concernRecord).then(() => {
-                    return concernRecord
-                });
-            }
-        }
-        else
-        {
-            var index = concernRecord.indexOf(user.uid);
-            if(index == -1 && isConcern)
-            {
-                concernRecord.push(user.uid);
-                database.ref(config.concernDB +'/'+messageUuid).set(concernRecord).then(() => {
-                    return concernRecord
-                });
-            }
-            else
-            {
-                if(!isConcern) {
-                    concernRecord.splice(index, 1);
-                    database.ref(config.concernDB +'/'+messageUuid).set(concernRecord).then(() => {
-                        return concernRecord
-                    });
+                var index = messageRecord.concernRecord.indexOf(user.uid);
+                if(index == -1 && isConcern)
+                {
+                    messageRecord.concernRecord.push(user.uid);
+                    var path = "";
+                    return updateMessage(messageUuid, messageRecord, path);
+                }
+                else
+                {
+                    if(!isConcern) {
+                        messageRecord.concernRecord.splice(index, 1);
+                        var path = "";
+                        return updateMessage(messageUuid, messageRecord, path);
+                    }
+                }
+            } else {
+                if(isConcern)
+                {
+                    console.log("message Uuid " + messageUuid + " User Id " + user.uid)
+                    messageRecord.concernRecord = [user.uid];
+                    var path = "";
+                    return updateMessage(messageUuid, messageRecord, path); 
                 }
             }
-        }        
-        return concernRecord;        
-    });;
-    
+        } else {
+            return null;
+        }
+    });        
 }
 
 export {fetchMessagesBaseOnGeo, addMessage, addMessageFB_Post, updateMessageImageURL, getMessage, updateMessageConcernUser};
