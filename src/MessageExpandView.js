@@ -3,9 +3,11 @@ import React, { Component } from 'react';
 import { CardActions, CardContent, CardMedia} from 'material-ui/Card';
 import ProgressiveCardImg from './ProgressiveCardImg';
 import IconButton from 'material-ui/IconButton';
+import Button from 'material-ui/Button';
 import Collapse from 'material-ui/transitions/Collapse';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ForumIcon from 'material-ui-icons/Forum';
+import EmailIcon from 'material-ui-icons/Email';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import classnames from 'classnames';
@@ -15,6 +17,7 @@ import ShareIcon from 'material-ui-icons/Share';
 import MessageDetailView from './MessageDetailView';
 import {updateMessageConcernUser} from './MessageDB';
 import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
+import yellow from 'material-ui/colors/yellow';
 import {
   isConcernMessage, 
   toggleConcernMessage
@@ -24,6 +27,24 @@ import {
   ShareCounts,
   generateShareIcon
 } from 'react-share';
+
+const someNetwork = {
+  verticalAlign: "top",
+  display: "inline-block",
+  marginRight: "1em",
+  textAlign: "center",
+  height: '80%',
+};
+
+const buttonStyle = {
+  width: '3.3em',
+  height: '3.3em',
+};
+
+const forumButtonStyle = {
+  ...buttonStyle,
+  backgroundColor: yellow[500],
+};
 
 
 
@@ -56,18 +77,22 @@ const styles = theme => ({
   flexGrow: {
     flex: '1 1 auto',
   },
-  someNetwork: {
-    verticalAlign: "top",
-    display: "inline-block",
-    marginRight: "30px",
-    textAlign: "center",
-  },
+  someNetwork: someNetwork,
   someNetworkShareCount: {
-    marginTop: "3px",
-    fontSize: "12px",
+    color: 'white',
+    marginLeft: '0.3em',
+    fontSize: '1.0em',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   someNetworkShareButton: {
     cursor: "pointer",
+  },
+  facebook: {
+    ...someNetwork,
+    display: 'flex',
   },
 });
 
@@ -85,7 +110,6 @@ const {
 const FacebookIcon = generateShareIcon('facebook');
 const TelegramIcon = generateShareIcon('telegram');
 const WhatsappIcon = generateShareIcon('whatsapp');
-const EmailIcon = generateShareIcon('email');
 
 
 class MessageExpandView extends Component {
@@ -135,12 +159,118 @@ class MessageExpandView extends Component {
   }
 
   facebookQuote(message) {
-/*    var quote = "<meta property=\"og:type\"               content=\"article\" />" +
+/*
                 "<meta property=\"og:title\"              content=\"" + message.text + "\" />" +
                 "<meta property=\"og:description\"        content=\"Location"  +  "" + "\" />";
 */
     var quote = message.text;
     return quote;    
+  }
+
+  favorColor() {
+    var favorColor = 'primary';
+    if(this.state.favor)
+    {
+      favorColor = 'accent';
+    }
+    return favorColor;
+  }
+
+  renderEmail(shareUrl, m) {
+    const {classes} = this.props;
+    return (
+      <div className={classes.someNetwork}>
+        <EmailShareButton
+          url={shareUrl}
+          subject={m}
+          body={shareUrl}
+          className={classes.someNetworkShareButton}>
+
+          <Button color="secondary" fab style={buttonStyle}>
+          <EmailIcon
+            size={'3.3em'}
+            round />
+
+         </Button>
+        </EmailShareButton>
+      </div>
+    );
+  }
+
+  renderForum(facebookURL) {
+    const {classes} = this.props;
+    return (
+      <div className={classes.someNetwork}>
+        <Button fab href={facebookURL} data-scheme='fb://profile/10000' style={forumButtonStyle}>
+          <ForumIcon />
+        </Button>
+      </div>
+    );
+  }
+
+  renderFavorite() {
+    const {classes} = this.props;
+    return (
+
+      <div className={classes.someNetwork}>
+        <Button
+          color={this.favorColor()}
+          onClick={() => this.handleFavorClick()}
+          aria-label="Add to favorites"
+          fab
+          style={buttonStyle}
+        >
+          <FavoriteIcon />
+        </Button>
+      </div>
+    );
+  }
+
+  renderWhatsapp(shareUrl, m) {
+    const {classes} = this.props;
+    return (
+      <div className={classes.someNetwork}>
+        <WhatsappShareButton
+          url={shareUrl}
+          title={m}
+          separator=":: "
+          className={classes.someNetworkShareButton}
+        >
+          <Button fab style={buttonStyle}>
+            <WhatsappIcon round size={'3.3em'} />
+          </Button>
+        </WhatsappShareButton>
+      </div>
+    );
+
+  }
+
+  renderFacebook(shareUrl, m, hashtag) {
+    const {classes} = this.props;
+    return (
+      <div className={classes.facebook}>
+          <FacebookShareButton
+            url={shareUrl}
+            quote={m}
+            hashtag={hashtag}
+            className={classes.someNetworkShareButton}>
+            <Button
+               onClick={() => this.handleFavorClick()}
+               aria-label="Add to favorites"
+               fab
+               style={buttonStyle}
+            >
+              <FacebookIcon round size={'3.3em'} />
+            </Button>
+          </FacebookShareButton>
+          <FacebookShareCount
+            url={shareUrl}
+            className={classes.someNetworkShareCount}>
+            {count => count}
+          </FacebookShareCount>
+      </div>
+    );
+  
   }
 
 
@@ -155,69 +285,21 @@ class MessageExpandView extends Component {
       shareUrl = this.props.message.publicImageURL; 
     }
 */    
-    var favorColor = 'primary';
-    if(this.state.favor)
-    {
-      favorColor = 'accent';
-    }
+    
 
     var facebookURL = "https://facebook.com/" + m.fbpost;
-      return(
-        <div className={classes.bottom}>
-        <CardActions disableActionSpacing>
-            <IconButton
-                color={favorColor}
-                onClick={() => this.handleFavorClick()}
-                aria-label="Add to favorites">
-                <FavoriteIcon />
-            </IconButton>
-            <div className={classes.someNetwork}>
-              <FacebookShareButton
-                url={shareUrl}
-                quote={m}
-                hashtag={hashtag}
-                className={classes.someNetworkShareButton}>
-                <FacebookIcon
-                  size={32}
-                  round />
-              </FacebookShareButton>
-    
-              <FacebookShareCount
-                url={shareUrl}
-                className={classes.someNetworkShareCount}>
-                {count => count}
-              </FacebookShareCount>
-            </div>
-            <div className={classes.someNetwork}>
-              <WhatsappShareButton
-                url={shareUrl}
-                title={m}
-                separator=":: "
-                className={classes.someNetworkShareButton}>
-                <WhatsappIcon size={32} round />
-              </WhatsappShareButton>
-            </div>
-
-            <div className={classes.someNetwork}>
-              <EmailShareButton
-                url={shareUrl}
-                subject={m}
-                body={shareUrl}
-                className={classes.someNetworkShareButton}>
-                <EmailIcon
-                  size={32}
-                  round />
-              </EmailShareButton>
-          </div>
-          <div className={classes.someNetwork}>
-            <IconButton href={facebookURL} data-scheme='fb://profile/10000'>
-              <ForumIcon />
-            </IconButton>
-          </div>
-          <div className={classes.flexGrow} />
-      </CardActions>
-      </div>);                       
-    }
+    return(
+      <div className={classes.bottom}>
+      <CardActions disableActionSpacing>
+        { this.renderFavorite() }
+        { this.renderFacebook(shareUrl, m, hashtag) }
+        { this.renderWhatsapp(shareUrl, m) }          
+        { this.renderEmail(shareUrl, m) }
+        { this.renderForum(facebookURL) }
+        <div className={classes.flexGrow} />
+    </CardActions>
+    </div>);                       
+  }
 }
 
 export default withStyles(styles) (MessageExpandView);
