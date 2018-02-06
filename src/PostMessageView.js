@@ -223,7 +223,7 @@ class PostMessageView extends Component {
     if(this.state.buttonShow) {
       return (
         <span>
-          <Button fab color="primary" className={classes.fab} raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
+          <Button variant="fab" color="primary" className={classes.fab} raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
             <AddIcon />
           </Button>
           <Dialog
@@ -244,7 +244,7 @@ class PostMessageView extends Component {
               <div className={classes.dialogContainer}>
               <Form>
                 <FormGroup>           
-                  <TextField required id="message" label="簡介" fullWidth margin="normal" helperText="介紹事件內容及期望街坊如何參與" value={this.state.summary} onChange={event => this.setState({ summary: event.target.value })}/>                  
+                  <TextField autoFocus required id="message" label="簡介" fullWidth margin="normal" helperText="介紹事件內容及期望街坊如何參與" value={this.state.summary} onChange={event => this.setState({ summary: event.target.value })}/>                  
                   <Label for="tags">分類</Label>
                   <CustomTags tags={tags}
                     inline={false}
@@ -292,7 +292,7 @@ class PostMessageView extends Component {
                     <TextField id="link" label="外部連結" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>
                   </FormGroup>                  
                 </Collapse>                    
-                <Button raised color="primary" onClick={() => this.onSubmit()}>提交</Button> 
+                <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>提交</Button> 
               </Form>
               </div>
         </Dialog>     

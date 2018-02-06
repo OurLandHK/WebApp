@@ -11,10 +11,9 @@
   "dependencies": {
     "@google-cloud/storage": "^0.6.1",
     "@google-cloud/vision": "^0.7.1",
-    "child-process-promise": "^2.2.0",    
-    "firebase-admin": "~5.4.2",
-    "firebase-functions": "^0.7.1"
+    "child-process-promise": "^2.2.0",
+    "firebase-admin": "^5.8.2",
+    "firebase-functions": "^0.8.1"
   },
   "private": true
 }
- 
