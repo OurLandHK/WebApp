@@ -157,7 +157,7 @@ class UserProfileView extends React.Component {
             <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
               <CloseIcon />
             </IconButton>
-            <Typography type="title" color="inherit" className={classes.flex}>
+            <Typography variant="title" color="inherit" className={classes.flex}>
               <img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{displayName}
             </Typography>
             <Button color="contrast" onClick={() => this.onSubmit()}>

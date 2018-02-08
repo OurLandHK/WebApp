@@ -83,7 +83,7 @@ class Header extends  Component {
               <AppBar position="fixed">
                 <Toolbar>
                   <DrawerMenu header={this} ref={(drawerMenu) => {this.drawerMenu = drawerMenu;}} />
-                  <Typography type="title" color="inherit" className={classes.flex}>
+                  <Typography variant="title" color="inherit" className={classes.flex}>
                     我地
                   </Typography>
                   <SignInButton/>

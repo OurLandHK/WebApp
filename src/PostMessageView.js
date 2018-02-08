@@ -102,7 +102,6 @@ class PostMessageView extends Component {
         this.setState({buttonShow: true});
       }
     });
-    this.loadFBLoginApi();
   }
   
 
@@ -127,22 +126,6 @@ class PostMessageView extends Component {
     });
   };
 
-  loadFBLoginApi() {
-    window.fbAsyncInit = function() {
-            FB.init(config.fbApp);
-        };
-
-        console.log("Loading fb api");
-          // Load the SDK asynchronously
-        (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en_US/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk')); 
-  }
-
   onSubmit() {
     var interval = "";
     if(this.intervalSelection != null)
@@ -158,17 +141,15 @@ class PostMessageView extends Component {
     if(this.state.start !== "") {
       startTimeInMs = Date.parse(this.state.start);
     }
-    console.log(startTimeInMs);
-    console.log(this.state.summary);
-    console.log(this.file.files[0]);
-    if (this.props.geoLocation == null) {
+    console.log(this.locationButton.geolocation);
+    if (this.locationButton.geolocation == null) {
       console.log('Unknown Location');
     } else {
       if(this.state.summary == null) {
         console.log('Unknown Input');
       } else {
         var tags = this.state.tags.map((tag) => tag.text);
-        postMessage(this.state.summary, this.file.files[0], tags, this.props.geoLocation.pos, startTimeInMs, duration, interval, this.state.link);
+        postMessage(this.state.summary, this.file.files[0], tags, this.locationButton.geolocation, startTimeInMs, duration, interval, this.state.link);
         this.setState({popoverOpen: false});
       }
     }
@@ -220,10 +201,12 @@ class PostMessageView extends Component {
     var startTime = new Date().toLocaleTimeString();
     const classes = this.props.classes;
     const { tags } = this.state; 
+    if(this.locationButton != null && this.locationButton.geolocation != null)
+      console.log("Geolocation:" + this.locationButton.geolocation);
     if(this.state.buttonShow) {
       return (
         <span>
-          <Button fab color="primary" className={classes.fab} raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
+          <Button variant="fab" color="primary" className={classes.fab} raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
             <AddIcon />
           </Button>
           <Dialog
@@ -237,14 +220,14 @@ class PostMessageView extends Component {
                 <IconButton color="contrast" onClick={() => this.handleRequestClose()} aria-label="Close">
                   <CloseIcon />
                 </IconButton>
-                <Typography type={"title"} color="inherit" className={classes.flex}>提交</Typography>     
+                <Typography variant="title" color="inherit" className={classes.flex}>提交</Typography>     
               </Toolbar>
             </AppBar>
               <br/>
               <div className={classes.dialogContainer}>
               <Form>
                 <FormGroup>           
-                  <TextField required id="message" label="簡介" fullWidth margin="normal" helperText="介紹事件內容及期望街坊如何參與" value={this.state.summary} onChange={event => this.setState({ summary: event.target.value })}/>                  
+                  <TextField autoFocus required id="message" label="簡介" fullWidth margin="normal" helperText="介紹事件內容及期望街坊如何參與" value={this.state.summary} onChange={event => this.setState({ summary: event.target.value })}/>                  
                   <Label for="tags">分類</Label>
                   <CustomTags tags={tags}
                     inline={false}
@@ -292,7 +275,7 @@ class PostMessageView extends Component {
                     <TextField id="link" label="外部連結" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>
                   </FormGroup>                  
                 </Collapse>                    
-                <Button raised color="primary" onClick={() => this.onSubmit()}>提交</Button> 
+                <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>提交</Button> 
               </Form>
               </div>
         </Dialog>     

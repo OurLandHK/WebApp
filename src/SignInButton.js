@@ -15,11 +15,11 @@ class SignInButton extends  Component {
     const {classes, user, signOut, signIn} = this.props;
     console.log(user);
     if (user) {
-      return (<Button raised secondary={true} onClick={signOut}>登出</Button>);
+      return (<Button variant="raised" secondary={true} onClick={signOut}>登出</Button>);
     }
     else
     {
-      return (<Button raised onClick={signIn} primary={true}>使用Facebook登入</Button>);
+      return (<Button variant="raised" onClick={signIn} primary={true}>使用Facebook登入</Button>);
     }
   }
 }
