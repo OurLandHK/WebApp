@@ -8,17 +8,21 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog';
 import geoString from './GeoLocationString';
+/*
 import {connect} from "react-redux";
 import {fetchLocation} from "./actions";
-import { bindActionCreators } from 'redux';
-import getLocation from './Location';
+import {bindActionCreators } from 'redux';
+*/
+import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
 
 class LocationButton extends Component {
   constructor(props) {
     super(props);
-    this.state = {open: false, streetAddress: "",};
+    this.state = {open: false, streetAddress: "", geolocation: null, disableSumbit: true};
+    this.geolocation = null;
     this.disabled = false;
     this.successCallBack = this.successCallBack.bind(this);
+    this.streetAddressSuccessCallBack = this.streetAddressSuccessCallBack.bind(this);
     this.notSupportedCallBack = this.notSupportedCallBack.bind(this);
   }
 
@@ -29,7 +33,21 @@ class LocationButton extends Component {
 
   successCallBack(pos) {
     this.geolocation = pos.coords;
-    this.setState({geolocation: pos.coords});
+    console.log("successCallBack " + this.geolocation.latitude + this.geolocation.longitude);
+    this.setState({geolocation: pos.coords, disableSumbit: false});
+  }
+
+  streetAddressSuccessCallBack(err, response) {
+    if (!err) {
+      console.log(response.json.results);
+      var pos = { coords: 
+                  {
+                    latitude: response.json.results[0].geometry.location.lat,
+                    longitude: response.json.results[0].geometry.location.lng
+                  }
+                };
+      this.successCallBack(pos);
+    }
   }
 
   errorCallBack(error) {
@@ -41,30 +59,50 @@ class LocationButton extends Component {
       alert('Location not supported!');
     }
     else {
-      getLocation(this.successCallBack, this.errorCallBack, this.notSupportedCallback);
+      getCurrentLocation(this.successCallBack, this.errorCallBack, this.notSupportedCallback);
     }
   }
+
+  handleGetLocationFromStreetAddress() {
+    if (this.disabled) {
+      alert('Location not supported!');
+    }
+    else {
+      getGeoLocationFromStreetAddress(this.state.streetAddress, this.streetAddressSuccessCallBack, this.errorCallBack);
+    }
+  }
+  
 
   rest() {
 
   }
 
   handleClickOpen = () => {
-    this.setState({ open: true });
+    this.geolocation = null;
+    this.setState({ open: true, streetAddress: "", geolocation: null, disableSumbit: true});
   };
 
   handleClose = () => {
     this.setState({ open: false });
   };
+
+  handleSubmit = () => {
+    this.streetAddress = this.state.streetAddress;
+    console.log(this.state.geolocation.latitude);
+    console.log(this.geolocation.latitude);
+    //this.geolocation = this.state.geolocation
+    console.log(this.geolocation.latitude);
+    this.setState({ open: false });
+  };
   
 
   render() {
-    const {fetchLocation, geoLocation} = this.props;
-    const pos = geoLocation.pos;
+    //const {fetchLocation, geoLocation} = this.props;
+    const pos = this.state.geolocation;
     let locationString = null;
     if (pos != null) {
       if(this.state.streetAddress != "") {
-        locationString = "位置: " + this.state.streetAddress;
+        locationString = "位置: " + this.state.streetAddress + geoString(pos.latitude, pos.longitude);
       } else {
         locationString = "位置: " + geoString(pos.latitude, pos.longitude);   
       }  
@@ -92,15 +130,15 @@ class LocationButton extends Component {
               fullWidth
               value={this.state.streetAddress} onChange={event => this.setState({ streetAddress: event.target.value })}
             />
-            <Button variant="raised" primary={true} onClick={() => this.handleGetLocation()}>驗證街道地址</Button>
-            <Button variant="raised" primary={true} onClick={() => fetchLocation()}>使用您當前的位置</Button> {locationString}
+            <Button variant="raised" primary={true} onClick={() => this.handleGetLocationFromStreetAddress()}>驗證街道地址</Button>
+            <Button variant="raised" primary={true} onClick={() => this.handleGetLocation()}>使用您當前的位置</Button> {locationString}
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={this.handleClose} color="primary">
-              Subscribe
+            <Button disabled={this.state.disableSumbit} onClick={this.handleSubmit} color="primary">
+              Submit
             </Button>
           </DialogActions>
         </Dialog>        
@@ -108,7 +146,7 @@ class LocationButton extends Component {
       </div>);
   }
 }
-
+/*
 const mapStateToProps = (state, ownProps) => {
   return {
     geoLocation : state.geoLocation,
@@ -123,3 +161,5 @@ const mapDispatchToProps = (dispatch) => {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(LocationButton);
+*/
+export default LocationButton;
