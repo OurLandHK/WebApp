@@ -17,6 +17,7 @@ import ChipArray from './ChipArray';
 import MessageDetailViewImage from './MessageDetailViewImage';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import AppBar from 'material-ui/AppBar';
+import geoString from './GeoLocationString';
 
 const styles = theme => ({
   appBar: {
@@ -68,8 +69,13 @@ class MessageDetailView extends Component {
     var m = this.props.message;
     var tag = m.tag;
     var chips = [];
-    var date = new Date(m.start);
-    var dateTimeString = date.toGMTString();
+    var date = null;
+    var dateTimeString = null;
+    if(m.start != null && m.start.getFullYear() > 1970)
+    {
+      date = new Date(m.start);
+      dateTimeString = date.toGMTString();
+    }
     var interval = m.interval;
     var duration = m.duration;
     var link = m.link;
@@ -88,14 +94,22 @@ class MessageDetailView extends Component {
     var geolocation = {lat: m.geolocation.latitude, lng: m.geolocation.longitude};
     if (m.photoUrl) {
       photoUrl = m.photoUrl;
-    }    
+    }
+    var locationString = null
+    if(m.streetAddress != null) {
+      locationString = "地點: " + m.streetAddress + " (" + geoString(m.geolocation.latitude, m.geolocation.longitude) + ")";
+    } else {
+      locationString = "地點: 近" + geoString(m.geolocation.latitude, m.geolocation.longitude);      
+    } 
+    let locationHtml = <Grid container> <Grid item> <CardContent> <Typography component='p'> {locationString} </Typography> </CardContent> </Grid></Grid>;
+
     let linkHtml = null;
     if (link != null && link != "") {
         console.log(link);
         linkHtml = <Grid container> <Grid item> <CardContent> <Typography component='p'> 外部連結： {link} </Typography> </CardContent> </Grid></Grid>;
     }
     let dateHtml = null;
-    if(dateTimeString != "Invalid Date") { 
+    if(dateTimeString != null) { 
         dateHtml = <Grid container>
                         <Grid item><CardContent><Typography component='p'> 開始: {dateTimeString}</Typography> </CardContent> </Grid>  
                         <Grid item><CardContent><Typography component='p'> 為期: {duration} </Typography> </CardContent> </Grid>
@@ -127,6 +141,7 @@ class MessageDetailView extends Component {
                  <ChipArray chipData={chips} />
                </Grid>
              </Grid>
+             {locationHtml}
              {linkHtml}
              {dateHtml}
              <br/>

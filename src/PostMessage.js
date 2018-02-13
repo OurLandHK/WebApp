@@ -35,11 +35,11 @@ function uploadImage(currentUser, messageKey, blob) {
 };
 
 
-function postMessage(message, file, tags, geolocation, start, duration, interval, link) {
+function postMessage(message, file, tags, geolocation, streetAddress, start, duration, interval, link) {
   var auth = firebase.auth();
   var currentUser = auth.currentUser;     
   var mapString = "\nhttps://www.google.com.hk/maps/place/"+ geoString(geolocation.latitude, geolocation.longitude) + "/@" + geolocation.latitude + "," + geolocation.longitude + ",18z/";
-    addMessage(message, currentUser, file, tags, geolocation, start, duration, interval, link).then((messageKey) => {
+    addMessage(message, currentUser, file, tags, geolocation, streetAddress, start, duration, interval, link).then((messageKey) => {
       addPublishMessagesKeyToUserProfile(currentUser,messageKey).then(() => {
         if (validateFile(file)) {
           imageResizer(file, 1280, 1280, "image/jpeg", 0.5, function(blob) {
