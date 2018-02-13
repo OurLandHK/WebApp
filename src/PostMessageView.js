@@ -149,7 +149,7 @@ class PostMessageView extends Component {
         console.log('Unknown Input');
       } else {
         var tags = this.state.tags.map((tag) => tag.text);
-        postMessage(this.state.summary, this.file.files[0], tags, this.locationButton.geolocation, startTimeInMs, duration, interval, this.state.link);
+        postMessage(this.state.summary, this.file.files[0], tags, this.locationButton.geolocation, this.locationButton.streetAddress, startTimeInMs, duration, interval, this.state.link);
         this.setState({popoverOpen: false});
       }
     }

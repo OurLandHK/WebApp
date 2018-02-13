@@ -43,7 +43,7 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
     }
  }
 
- function addMessage(message, currentUser, file, tags, geolocation, start, duration, interval, link) {
+ function addMessage(message, currentUser, file, tags, geolocation, streetAddress, start, duration, interval, link) {
     var now = Date.now();
     console.log("Start: " + start + " Duration: " + duration + " Interval: " + interval + " Link: " + link);
     if(start === "")
@@ -58,12 +58,13 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
         text: message,
         photoUrl: currentUser.providerData[0].photoURL || '/images/profile_placeholder.png',
         geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
+        streetAddress: streetAddress,
         tag: tags,
-        createdAt: now,
+        createdAt: new Date(now),
         key: key,   
         uid: currentUser.uid,
         fbuid: currentUser.providerData[0].uid,
-        start: start,
+        start: new Date(start),
         duration: duration,
         interval: interval,
         link: link

@@ -76,7 +76,7 @@ class MessageDialog extends React.Component {
       var m = this.message;
       title = m.text;
       imageUrl = m.publicImageURL
-      titleHtml = <Typography type={"title"} color="inherit" className={classes.flex}>
+      titleHtml = <Typography  variant="title" color="inherit" className={classes.flex}>
             {m.text}
           </Typography>;
       detailView = <MessageDetailView message={m}/>;
