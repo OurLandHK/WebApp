@@ -35,7 +35,7 @@ function uploadImage(currentUser, messageKey, blob) {
 };
 
 
-function postMessage(message, file, tags, geolocation, streetAddress, start, duration, interval, link) {
+function postMessage(message, file, tags, geolocation, streetAddress, start, duration, interval, link, status) {
   var auth = firebase.auth();
   var currentUser = auth.currentUser;     
   var mapString = "\nhttps://www.google.com.hk/maps/place/"+ geoString(geolocation.latitude, geolocation.longitude) + "/@" + geolocation.latitude + "," + geolocation.longitude + ",18z/";

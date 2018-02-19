@@ -79,6 +79,7 @@ class PostMessageView extends Component {
       link: "",
       start: "",
       end: "",
+      status: "開放",
       expanded: false, rotate: 'rotate(0deg)',
       tags: []};
       this.handleRequestDelete = this.handleRequestDelete.bind(this);
@@ -149,7 +150,7 @@ class PostMessageView extends Component {
         console.log('Unknown Input');
       } else {
         var tags = this.state.tags.map((tag) => tag.text);
-        postMessage(this.state.summary, this.file.files[0], tags, this.locationButton.geolocation, this.locationButton.streetAddress, startTimeInMs, duration, interval, this.state.link);
+        postMessage(this.state.summary, this.file.files[0], tags, this.locationButton.geolocation, this.locationButton.streetAddress, startTimeInMs, duration, interval, this.state.link, this.state.status);
         this.setState({popoverOpen: false});
       }
     }
@@ -235,7 +236,7 @@ class PostMessageView extends Component {
                     handleDelete={this.handleDelete}
                     handleAddition={this.handleAddition}
                     handleDrag={this.handleDrag} /> 
-                  <TextField id="status" label="現況" className={classes.textField} disabled value="開放" />                  
+                  <TextField id="status" label="現況" className={classes.textField} disabled value={this.state.status} />                  
                   <Label for="locations">地點</Label>
                   <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}}/>
                 </FormGroup>                          

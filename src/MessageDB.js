@@ -23,7 +23,7 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
 
         // Use firestore
 
-        collectionRef.where("geolocation", ">=", lesserGeopoint).where("location", "<=", greaterGeopoint).orderBy("createdAt", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
+        collectionRef.where("hide", "==", false).where("geolocation", ">=", lesserGeopoint).where("location", "<=", greaterGeopoint).orderBy("createdAt", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
             querySnapshot.forEach(callback);
         })
         .catch(function(error) {
@@ -31,19 +31,21 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
         });
     } else {
         // Use firestore
-        collectionRef.orderBy("createdAt", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
+        collectionRef.where("hide", "==", false).orderBy("createdAt", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
             querySnapshot.forEach(callback);
         })
         .catch(function(error) {
             console.log("Error getting documents: ", error);
         });
+        /*
         collectionRef.onSnapshot(function(querySnapshot) {
             querySnapshot.forEach(callback);
-        })        
+        })
+        */        
     }
  }
 
- function addMessage(message, currentUser, file, tags, geolocation, streetAddress, start, duration, interval, link) {
+ function addMessage(message, currentUser, file, tags, geolocation, streetAddress, start, duration, interval, link, status) {
     var now = Date.now();
     console.log("Start: " + start + " Duration: " + duration + " Interval: " + interval + " Link: " + link);
     if(start === "")
@@ -54,6 +56,7 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
     }
     var key = uuid.v4();
     var messageRecord = {
+        hide: false,
         name: currentUser.displayName,
         text: message,
         photoUrl: currentUser.providerData[0].photoURL || '/images/profile_placeholder.png',
@@ -67,7 +70,8 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
         start: new Date(start),
         duration: duration,
         interval: interval,
-        link: link
+        link: link,
+        status: status
       };
     // Use firestore
     var db = firebase.firestore();

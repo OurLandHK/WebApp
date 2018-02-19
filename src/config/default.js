@@ -22,6 +22,8 @@ let config = {
 
 let constant = {
   invalidLocation: new firebase.firestore.GeoPoint(90, 0),
+  user: "User", 
+  admin: "我地管理員"
 }
 
 

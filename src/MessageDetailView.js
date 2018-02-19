@@ -17,7 +17,9 @@ import ChipArray from './ChipArray';
 import MessageDetailViewImage from './MessageDetailViewImage';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import AppBar from 'material-ui/AppBar';
+import CommentList from './comment/CommentList';
 import geoString from './GeoLocationString';
+import PostCommentView from './comment/PostCommentView';
 
 const styles = theme => ({
   appBar: {
@@ -101,13 +103,14 @@ class MessageDetailView extends Component {
     } else {
       locationString = "地點: 近" + geoString(m.geolocation.latitude, m.geolocation.longitude);      
     } 
-    let locationHtml = <Grid container> <Grid item> <CardContent> <Typography component='p'> {locationString} </Typography> </CardContent> </Grid></Grid>;
+    let locationHtml = <Grid item> <CardContent> <Typography component='p'> {locationString} </Typography> </CardContent> </Grid>;
 
     let linkHtml = null;
     if (link != null && link != "") {
         console.log(link);
-        linkHtml = <Grid container> <Grid item> <CardContent> <Typography component='p'> 外部連結： {link} </Typography> </CardContent> </Grid></Grid>;
+        linkHtml = <Grid item> <CardContent> <Typography component='p'> 外部連結： {link} </Typography> </CardContent> </Grid>;
     }
+    let baseHtml = <Grid container> {locationHtml}{linkHtml}</Grid>;
     let dateHtml = null;
     if(dateTimeString != null) { 
         dateHtml = <Grid container>
@@ -127,8 +130,7 @@ class MessageDetailView extends Component {
 
     return(<div>
              <Grid container>
-               <Grid item>
-                   
+               <Grid item>                   
                </Grid>
                <Grid item>
                  作者：<br/>
@@ -138,24 +140,24 @@ class MessageDetailView extends Component {
                  </CardMedia>
                </Grid>
                <Grid item>
+                 "現況": {m.status}
                  <ChipArray chipData={chips} />
                </Grid>
              </Grid>
-             {locationHtml}
-             {linkHtml}
+             {baseHtml}
              {dateHtml}
-             <br/>
-             <br/>
              <div>
                <AppBar position="static" className={classes.appBar}>
                  <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
+                   <Tab label="參與紀錄" />
                    <Tab label="圖片" />
                    <Tab label="地圖"/>
                  </Tabs>
                </AppBar>
              </div>
-             {tab == 0 && <MessageDetailViewImage url={m.imageUrl}/>}
-             {tab == 1 && <EventMap center={geolocation} zoom={zoom}/>}
+             {tab == 0 && <div><PostCommentView messageUUID={m.uid}/><CommentList messageUUID={m.uid}/></div>}
+             {tab == 1 && <MessageDetailViewImage url={m.imageUrl}/>}
+             {tab == 2 && <EventMap center={geolocation} zoom={zoom}/>}
 
          </div>);
 

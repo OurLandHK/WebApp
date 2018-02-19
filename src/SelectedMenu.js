@@ -41,6 +41,12 @@ class SelectedMenu extends Component {
   };
 
   render() {
+    let listItemHtml = null;
+    if(this.props.label == null || this.props.label == "") {
+      listItemHtml = <ListItemText secondary={this.props.options[this.state.selectedIndex]}/>
+    } else {
+      listItemHtml = <ListItemText primary={this.props.label}  secondary={this.props.options[this.state.selectedIndex]}/>
+    } 
     return (
       <div>
         <List>
@@ -51,10 +57,7 @@ class SelectedMenu extends Component {
             aria-label={this.props.label}
             onClick={this.handleClickListItem}
           >
-            <ListItemText
-              primary={this.props.label}
-              secondary={this.props.options[this.state.selectedIndex]}
-            />
+            {listItemHtml}
           </ListItem>
         </List>
         <Menu

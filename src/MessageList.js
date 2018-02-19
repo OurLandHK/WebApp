@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import config from './config/default';
 import MessageView from './MessageView';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
 import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
 import {connect} from "react-redux";
 
@@ -33,6 +31,7 @@ class MessageList extends Component {
 
   setMessage(doc) {
     var val = doc.data();
+//    console.log(val);
     this.state.data.push(val);
     this.setState({data:this.state.data});
   };
