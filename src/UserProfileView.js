@@ -117,6 +117,7 @@ class UserProfileView extends React.Component {
     const { classes } = this.props;
     var imgURL = '/images/profile_placeholder.png';
     var displayName = 'nobody';
+    var displayRole = '權限: '
     var publish = 0;
     var concern = 0;
     var complete = 0;
@@ -125,7 +126,8 @@ class UserProfileView extends React.Component {
     let dialogHtml = null;
     if (this.state.user != null) {
         imgURL = this.state.user.photoURL;
-        displayName = this.state.user.displayName
+        displayName = this.state.userProfile.displayName;
+        displayRole += this.state.userProfile.role;
         if(this.state.userProfile != null)
         {
           if(this.state.userProfile.publishMessages != null)
@@ -159,13 +161,16 @@ class UserProfileView extends React.Component {
             </IconButton>
             <Typography variant="title" color="inherit" className={classes.flex}>
               <img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{displayName}
-            </Typography>
+            </Typography>           
             <Button color="contrast" onClick={() => this.onSubmit()}>
               save
             </Button>
           </Toolbar>
         </AppBar>
         <List>
+          <ListItem >
+            <ListItemText primary={displayRole} />
+          </ListItem>          
           <ListItem button>
             <ListItemText primary="發表事件: " secondary={publish} />
           </ListItem>            

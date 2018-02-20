@@ -56,7 +56,7 @@ class MessageView extends Component {
     }
     var timeOffset = Date.now() - m.createdAt;
     var timeOffsetString = timeOffsetStringInChinese(timeOffset);
-    var subtitle = '張貼於： ' + timeOffsetString + '前 ' + distanceSpan;
+    var subtitle = '張貼於： ' + timeOffsetString + '前 ' + distanceSpan + ' 現況: ' + m.status;
     return (<div>
               <Card>                   
                 <CardHeader

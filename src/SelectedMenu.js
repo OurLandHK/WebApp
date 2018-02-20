@@ -30,17 +30,24 @@ class SelectedMenu extends Component {
   };
 
   handleMenuItemClick = (event, index) => {
-    this.setState({ selectedIndex: index, open: false });
+    this.setState({ selectedIndex: index, open: false });    
     this.selectedValue = this.props.options[index];
-    console.log(this);
+    if(this.props.changeSelection != null) {
+      this.props.changeSelection(this.selectedValue);
+    }
   };
 
   handleRequestClose = () => {
     this.setState({ open: false });
-    console.log(this);    
   };
 
   render() {
+    let listItemHtml = null;
+    if(this.props.label == null || this.props.label == "") {
+      listItemHtml = <ListItemText secondary={this.props.options[this.state.selectedIndex]}/>
+    } else {
+      listItemHtml = <ListItemText primary={this.props.label}  secondary={this.props.options[this.state.selectedIndex]}/>
+    } 
     return (
       <div>
         <List>
@@ -51,10 +58,7 @@ class SelectedMenu extends Component {
             aria-label={this.props.label}
             onClick={this.handleClickListItem}
           >
-            <ListItemText
-              primary={this.props.label}
-              secondary={this.props.options[this.state.selectedIndex]}
-            />
+            {listItemHtml}
           </ListItem>
         </List>
         <Menu

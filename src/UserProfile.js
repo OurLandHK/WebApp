@@ -17,6 +17,7 @@ function getUserProfile(user) {
                 photoURL: user.photoURL,
                 officeLocation: constant.invalidLocation, 
                 homeLocation: constant.invalidLocation,
+                role: constant.user,
                 publishMessages: [],
                 concernMessages: [],
                 completeMessage: []
