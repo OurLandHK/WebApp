@@ -30,14 +30,15 @@ class SelectedMenu extends Component {
   };
 
   handleMenuItemClick = (event, index) => {
-    this.setState({ selectedIndex: index, open: false });
+    this.setState({ selectedIndex: index, open: false });    
     this.selectedValue = this.props.options[index];
-    console.log(this);
+    if(this.props.changeSelection != null) {
+      this.props.changeSelection(this.selectedValue);
+    }
   };
 
   handleRequestClose = () => {
     this.setState({ open: false });
-    console.log(this);    
   };
 
   render() {

@@ -45,12 +45,6 @@ const styles = theme => ({
   flex: {
     flex: 1,
   },  
-  expand: {
-    transform: 'rotate(0deg)',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },  
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
@@ -75,15 +69,13 @@ class PostCommentView extends Component {
     super(props);
     this.state = {popoverOpen: false, buttonShow: false, 
       // comment
+      commentSelection: '發表回應',
       text: "",
       geolocation: null,
       streetAddress: null,
       changeStatus: null,
       createdAt: null,
       link: null};
-    this.commentSelection = '';
-    this.handleRequestDelete = this.handleRequestDelete.bind(this);
-    this.handleTouchTap = this.handleTouchTap.bind(this);
   }
 
   static defaultProps = {
@@ -106,6 +98,7 @@ class PostCommentView extends Component {
     console.log("Request for open " + this.state.popoverOpen);
     this.setState({
      // message
+        commentSelection: '發表回應',
         text: "",
         geolocation: null,
         streetAddress: null,
@@ -117,10 +110,8 @@ class PostCommentView extends Component {
     });
   }
 
-  handleRequestClose() {
-    this.setState({
-      popoverOpen: false,
-    });
+  handleClose() {
+    this.setState({popoverOpen: false});
   };
 
   onSubmit() {
@@ -128,25 +119,27 @@ class PostCommentView extends Component {
     this.setState({popoverOpen: false});
   }
 
-  handleChange = event => {
-    this.setState({ name: event.target.value });
-  };
-
-  handleExpandClick() {
-    this.setState({ expanded: !this.state.expanded });
-  };
-
-  handleRequestDelete(evt) {
-    alert(evt);
-  }
-
-  handleTouchTap(evt) {
-    alert(evt);
+  commentOptionSelection(selectedValue) {
+      this.setState({commentSelection: selectedValue});
   }
 
   render() {
     const classes = this.props.classes;
     if(this.state.buttonShow) {
+        let inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="更新事件進度及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
+        if(this.state.commentSelection != "發表回應") {
+            switch(this.state.commentSelection) {
+                case "要求更改現況":
+                    inputHtml = <SelectedMenu label="" options={this.props.statusOptions} ref={(statusSelection) => {this.statusSelection = statusSelection}}/>;
+                    break;
+                case "要求更改地點":
+                    inputHtml = <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}}/>;
+                    break;
+                case "要求更改外部連結":
+                    inputHtml = <TextField id="link" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>;
+                    break;
+            }
+        }
       return (
         <span>
             <Button variant="fab" color="primary" className={classes.fab} raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
@@ -154,21 +147,17 @@ class PostCommentView extends Component {
             </Button>
             <Dialog
                 open={this.state.popoverOpen}
-                onRequestClose={() => this.handleRequestClose()}
+                onClose={() => this.handleClose()}
                 aria-labelledby="form-dialog-title"
                 unmountOnExit>
-                <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+                <DialogTitle id="form-dialog-title">更新參與進度</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        Update single field each time
-                    </DialogContentText>
-                    <SelectedMenu label="" options={this.props.commentOptions} ref={(commentSelection) => {this.commentSelection = commentSelection;}}/>                  
-                    <TextField autoFocus required id="message" fullWidth margin="normal" helperText="介紹事件內容及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>                  
-                    <SelectedMenu label="" options={this.props.statusOptions} ref={(statusSelection) => {this.statusSelection = statusSelection;}}/>                  
-                    <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}}/>
-                    <TextField id="link" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>
+                    <DialogContentText>選擇更新範圍</DialogContentText>
+                    <SelectedMenu label="" options={this.props.commentOptions} changeSelection={(selectedValue) => this.commentOptionSelection(selectedValue)} ref={(commentSelection) => {this.commentSelection = commentSelection}}/>
+                    {inputHtml}
                 </DialogContent>  
                 <DialogActions>
+                    <Button color="primary" onClick={() => this.handleClose()} >取消</Button>
                     <Button color="primary" onClick={() => this.onSubmit()}>提交</Button> 
                 </DialogActions>          
             </Dialog>     
