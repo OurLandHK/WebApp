@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import config from '../config/default';
 import CommentView from './CommentView';
-//import {postComment, fetchCommentsBaseonMessageID} from '../MessageDB';
+import {fetchCommentsBaseonMessageID} from '../MessageDB';
 import {connect} from "react-redux";
 
 
@@ -25,8 +25,8 @@ class CommentList extends Component {
   }
 
   setComment(doc) {
-//    var val = doc.data();
-    var val = doc.data;
+    var val = doc.data();
+//    var val = doc.data;
     this.state.data.push(val);
     this.setState({data:this.state.data});
   };
@@ -35,8 +35,8 @@ class CommentList extends Component {
   fetchComments(user) {
     this.setState({user:user});
     if(this.props.messageUUID != null) {
-//        fetchCommentsBaseonMessageID(user, this.props.messageUUID, this.setComment)
-        var now = Date.now();
+        fetchCommentsBaseonMessageID(user, this.props.messageUUID, this.setComment)
+/*        var now = Date.now();
         var messageRecord1 = {
             data: {
                 hide: false,
@@ -101,7 +101,8 @@ class CommentList extends Component {
         this.setComment(messageRecord2);
         this.setComment(messageRecord3);
         this.setComment(messageRecord4);
-    }
+        */
+    }    
   }
 
   render() {
