@@ -1,6 +1,7 @@
 import * as firebase from 'firebase';
 import uuid from 'js-uuid';
 import config from './config/default';
+import { light } from 'material-ui/styles/createPalette';
 
 function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
 
@@ -47,7 +48,6 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
 
  function addMessage(message, currentUser, file, tags, geolocation, streetAddress, start, duration, interval, link, status) {
     var now = Date.now();
-    console.log("Start: " + start + " Duration: " + duration + " Interval: " + interval + " Link: " + link);
     if(start === "")
     {
       start = null;
@@ -64,6 +64,7 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
         streetAddress: streetAddress,
         tag: tags,
         createdAt: new Date(now),
+        lastUpdate: null,
         key: key,   
         uid: currentUser.uid,
         fbuid: currentUser.providerData[0].uid,
@@ -100,11 +101,23 @@ function getMessage(uuid) {
 
 function updateMessage(messageKey, messageRecord, path) {
     var db = firebase.firestore();
-    var collectionRef = db.collection(config.messageDB);    
-    collectionRef.doc(messageKey).set(messageRecord).then(function(messageRecordRef) {
-        console.log("Document written with ID: ", messageKey);
-        return(messageRecordRef);
-    })      
+    var now = Date.now();
+    var collectionRef = db.collection(config.messageDB);
+    if(messageRecord == null) {
+        messageRecord.lastUpdate = new Date(now);
+        collectionRef.doc(messageKey).update({
+            lastUpdate: new Date(now)
+        }).then(function(messageRecordRef) {
+            console.log("Document written with ID: ", messageKey);
+            return(messageRecordRef);
+        }) 
+    } else {
+        messageRecord.lastUpdate = new Date(now);
+        collectionRef.doc(messageKey).set(messageRecord).then(function(messageRecordRef) {
+            console.log("Document written with ID: ", messageKey);
+            return(messageRecordRef);
+        })      
+    }
 }
 
 
@@ -172,4 +185,60 @@ function updateMessageConcernUser(messageUuid, user, isConcern) {
     });        
 }
 
-export {fetchMessagesBaseOnGeo, addMessage, addMessageFB_Post, updateMessageImageURL, getMessage, updateMessageConcernUser};
+/// All about comment
+function addComment(messageUUID, currentUser, photo, commentText, tags, geolocation, streetAddress, link, status) {
+    var now = Date.now();
+    var fireBaseGeo = null;
+    var commentRecord = {
+        hide: false,
+        name: currentUser.displayName,
+        photoUrl: currentUser.providerData[0].photoURL || '/images/profile_placeholder.png',
+        createdAt: new Date(now),
+        lastUpdate: null,
+    }; 
+    if(commentText != null) {
+        commentRecord.text = commentText;
+    } else {
+        if(geolocation != null) {
+            commentRecord.geolocation =  new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude);
+            if(streetAddress != null) {
+                commentRecord.streetAddress = streetAddress;
+            }
+        } else {
+            if(status != null) {
+                commentRecord.changeStatus = status;
+            } else {
+                if(link != null) {
+                    commentRecord.link = link;
+                } else {
+                    if(tags != null) {
+                        commentRecord.tags = tags;
+                    }
+                }
+            }
+        }
+    }
+    console.log(commentRecord);
+    // Use firestore
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.messageDB);  
+    return collectionRef.doc(messageUUID).collection("comment").add(commentRecord).then(function(docRef) {
+        console.log("comment written with ID: ", docRef.id);
+        return(docRef.id);
+    });  
+}
+
+function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.messageDB).doc(messageUUID).collection("comment");
+    collectionRef.onSnapshot(function() {})         
+    // Use firestore
+    collectionRef.where("hide", "==", false).get().then(function(querySnapshot) {
+        querySnapshot.forEach(callback);
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+}
+
+export {fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, addMessageFB_Post, updateMessageImageURL, getMessage, updateMessageConcernUser};

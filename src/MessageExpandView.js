@@ -56,6 +56,9 @@ const styles = theme => ({
     backgroundColor: theme.palette.primary['400'],
     width: '100%'
   },
+  root: {
+    width: 500,
+  },  
   card: {
     maxWidth: 400,
   },
@@ -279,15 +282,10 @@ class MessageExpandView extends Component {
     var m = this.facebookQuote(this.props.message);
     var hashtag = this.facebookHashTag(this.props.message.tag);
     var shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + this.props.uuid;
-/*
-    if(this.props.message.publicImageURL != null) {
-      m = m + " " + hashtag + " " + shareUrl;
-      shareUrl = this.props.message.publicImageURL; 
-    }
-*/    
-    
+
 
     var facebookURL = "https://facebook.com/" + m.fbpost;
+/*    
     return(
       <div className={classes.bottom}>
       <CardActions disableActionSpacing>
@@ -298,7 +296,17 @@ class MessageExpandView extends Component {
         { this.renderForum(facebookURL) }
         <div className={classes.flexGrow} />
     </CardActions>
-    </div>);                       
+    </div>);
+  */
+  return(
+    <BottomNavigation
+    className={classes.root}>
+      { this.renderFavorite() }
+      { this.renderFacebook(shareUrl, m, hashtag) }
+      { this.renderWhatsapp(shareUrl, m) }          
+      { this.renderEmail(shareUrl, m) }
+      { this.renderForum(facebookURL) }
+    </BottomNavigation>);                   
   }
 }
 
