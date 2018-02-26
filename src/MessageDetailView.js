@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import React, { Component } from 'react';
-import { CardActions, CardContent, CardMedia} from 'material-ui/Card';
+import Card, { CardActions, CardContent, CardMedia} from 'material-ui/Card';
 import ProgressiveCardImg from './ProgressiveCardImg';
 import Typography from 'material-ui/Typography';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
@@ -20,6 +20,7 @@ import AppBar from 'material-ui/AppBar';
 import CommentList from './comment/CommentList';
 import geoString from './GeoLocationString';
 import PostCommentView from './comment/PostCommentView';
+import MessageExpandView from './MessageExpandView';
 
 const styles = theme => ({
   appBar: {
@@ -42,6 +43,10 @@ const styles = theme => ({
   },
   avatar: {
     backgroundColor: red[500],
+  },
+  cover: {
+    width: 64,
+    height: 64,
   },
   flexGrow: {
     flex: '1 1 auto',
@@ -103,14 +108,34 @@ class MessageDetailView extends Component {
     } else {
       locationString = "地點: 近" + geoString(m.geolocation.latitude, m.geolocation.longitude);      
     } 
-    let locationHtml = <Grid item> <CardContent> <Typography component='p'> {locationString} </Typography> </CardContent> </Grid>;
+//    let locationHtml = <Grid item> <CardContent> <Typography component='p'> {locationString} </Typography> </CardContent> </Grid>;
+    let locationHtml = <CardContent> <Typography component='p'> {locationString} </Typography> </CardContent>;
 
     let linkHtml = null;
     if (link != null && link != "") {
         console.log(link);
-        linkHtml = <Grid item> <CardContent> <Typography component='p'> 外部連結： {link} </Typography> </CardContent> </Grid>;
+       // linkHtml = <Grid item> <CardContent> <Typography component='p'> 外部連結： {link} </Typography> </CardContent> </Grid>;
+        linkHtml = <CardContent> <Typography component='p'> 外部連結： {link} </Typography> </CardContent>;
+
+      }
+    let fbProfileImage = <img src={photoUrl} />;
+    let fbProfileLink = null;
+    if (m.uid) {
+      let fbProfileLink = '/?userid=' + m.uid;
+      fbProfileImage = <a href={fbProfileLink}>{fbProfileImage}</a>;
     }
+//    let author =  <a href={fbProfileLink}><CardMedia className={classes.cover} image={photoUrl} title={m.name}/></a>    
+let author = <div>
+              {fbProfileImage} 
+              <CardMedia overlay={m.name}> 
+                <Typography component='p'> {m.name} </Typography>
+              </CardMedia>
+              </div>;
+
     let baseHtml = <Grid container> {locationHtml}{linkHtml}</Grid>;
+//    let baseHtml = <div> {locationHtml}{linkHtml}</div>;
+
+    let actionView = <MessageExpandView message={m} uuid={m.key} user={this.props.user}/>;
     let dateHtml = null;
     if(dateTimeString != null) { 
         dateHtml = <Grid container>
@@ -119,33 +144,21 @@ class MessageDetailView extends Component {
                         <Grid item><CardContent><Typography component='p'> 週期: {interval} </Typography> </CardContent> </Grid>                
                         </Grid>;
     }
-    console.log("photo" + photoUrl);
-    let fbProfileImage = <img src={photoUrl} />;
-    if (m.uid) {
-      let fbProfileLink = '/?userid=' + m.uid;
-      fbProfileImage = <a href={fbProfileLink}>{fbProfileImage}</a>;
-    }
 
     const tab = this.state.tab;
+    
+    let header = <Grid container>
+                    <Grid item>{author}</Grid>
+                    <Grid item> "現況": {m.status} <ChipArray chipData={chips} /></Grid>
+                </Grid>
+
+//let header = <div>{author} <CardContent><Typography component='p'> "現況": {m.status} </Typography><ChipArray chipData={chips} /></CardContent></div>;
 
     return(<div>
-             <Grid container>
-               <Grid item>                   
-               </Grid>
-               <Grid item>
-                 作者：<br/>
-                 {fbProfileImage}            
-                 <CardMedia overlay={m.name}> 
-                   <Typography component='p'> {m.name} </Typography>
-                 </CardMedia>
-               </Grid>
-               <Grid item>
-                 "現況": {m.status}
-                 <ChipArray chipData={chips} />
-               </Grid>
-             </Grid>
+             {header}
              {baseHtml}
              {dateHtml}
+             {actionView}
              <div>
                <AppBar position="static" className={classes.appBar}>
                  <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>

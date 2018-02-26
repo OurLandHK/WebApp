@@ -16,7 +16,7 @@ import FavoriteIcon from 'material-ui-icons/Favorite';
 import ShareIcon from 'material-ui-icons/Share';
 import MessageDetailView from './MessageDetailView';
 import {updateMessageConcernUser} from './MessageDB';
-import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
+import ShareDrawer from './ShareDrawer';
 import yellow from 'material-ui/colors/yellow';
 import {
   isConcernMessage, 
@@ -61,18 +61,6 @@ const styles = theme => ({
   },  
   card: {
     maxWidth: 400,
-  },
-  media: {
-    height: 960,
-  },
-  expand: {
-    transform: 'rotate(0deg)',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
   },
   avatar: {
     backgroundColor: red[500],
@@ -147,29 +135,6 @@ class MessageExpandView extends Component {
     }
   };
 
-  facebookHashTag(tags) {
-    var tagsLength = 0
-    if(tags != null) {
-      tagsLength = tags.length;
-    }
-    var tagString = '';
-    for (var i = 0; i < tagsLength; i++) {
-      tagString += "#"+tags[i] + " ";
-    }
-    console.log("HashTag String:" + tagString);
-    return tagString;
-
-  }
-
-  facebookQuote(message) {
-/*
-                "<meta property=\"og:title\"              content=\"" + message.text + "\" />" +
-                "<meta property=\"og:description\"        content=\"Location"  +  "" + "\" />";
-*/
-    var quote = message.text;
-    return quote;    
-  }
-
   favorColor() {
     var favorColor = 'primary';
     if(this.state.favor)
@@ -177,38 +142,6 @@ class MessageExpandView extends Component {
       favorColor = 'accent';
     }
     return favorColor;
-  }
-
-  renderEmail(shareUrl, m) {
-    const {classes} = this.props;
-    return (
-      <div className={classes.someNetwork}>
-        <EmailShareButton
-          url={shareUrl}
-          subject={m}
-          body={shareUrl}
-          className={classes.someNetworkShareButton}>
-
-          <Button color="secondary" fab style={buttonStyle}>
-          <EmailIcon
-            size={'3.3em'}
-            round />
-
-         </Button>
-        </EmailShareButton>
-      </div>
-    );
-  }
-
-  renderForum(facebookURL) {
-    const {classes} = this.props;
-    return (
-      <div className={classes.someNetwork}>
-        <Button fab href={facebookURL} data-scheme='fb://profile/10000' style={forumButtonStyle}>
-          <ForumIcon />
-        </Button>
-      </div>
-    );
   }
 
   renderFavorite() {
@@ -229,84 +162,17 @@ class MessageExpandView extends Component {
     );
   }
 
-  renderWhatsapp(shareUrl, m) {
-    const {classes} = this.props;
-    return (
-      <div className={classes.someNetwork}>
-        <WhatsappShareButton
-          url={shareUrl}
-          title={m}
-          separator=":: "
-          className={classes.someNetworkShareButton}
-        >
-          <Button fab style={buttonStyle}>
-            <WhatsappIcon round size={'3.3em'} />
-          </Button>
-        </WhatsappShareButton>
-      </div>
-    );
-
-  }
-
-  renderFacebook(shareUrl, m, hashtag) {
-    const {classes} = this.props;
-    return (
-      <div className={classes.facebook}>
-          <FacebookShareButton
-            url={shareUrl}
-            quote={m}
-            hashtag={hashtag}
-            className={classes.someNetworkShareButton}>
-            <Button
-               onClick={() => this.handleFavorClick()}
-               aria-label="Add to favorites"
-               fab
-               style={buttonStyle}
-            >
-              <FacebookIcon round size={'3.3em'} />
-            </Button>
-          </FacebookShareButton>
-          <FacebookShareCount
-            url={shareUrl}
-            className={classes.someNetworkShareCount}>
-            {count => count}
-          </FacebookShareCount>
-      </div>
-    );
-  
-  }
-
 
   render() {
     const classes = this.props.classes;
-    var m = this.facebookQuote(this.props.message);
-    var hashtag = this.facebookHashTag(this.props.message.tag);
-    var shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + this.props.uuid;
-
-
-    var facebookURL = "https://facebook.com/" + m.fbpost;
-/*    
     return(
-      <div className={classes.bottom}>
+      <div>
       <CardActions disableActionSpacing>
         { this.renderFavorite() }
-        { this.renderFacebook(shareUrl, m, hashtag) }
-        { this.renderWhatsapp(shareUrl, m) }          
-        { this.renderEmail(shareUrl, m) }
-        { this.renderForum(facebookURL) }
+        <ShareDrawer message={this.props.message}/>
         <div className={classes.flexGrow} />
     </CardActions>
     </div>);
-  */
-  return(
-    <BottomNavigation
-    className={classes.root}>
-      { this.renderFavorite() }
-      { this.renderFacebook(shareUrl, m, hashtag) }
-      { this.renderWhatsapp(shareUrl, m) }          
-      { this.renderEmail(shareUrl, m) }
-      { this.renderForum(facebookURL) }
-    </BottomNavigation>);                   
   }
 }
 

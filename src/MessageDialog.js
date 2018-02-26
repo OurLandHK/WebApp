@@ -11,7 +11,6 @@ import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import MessageDetailView from './MessageDetailView';
-import MessageExpandView from './MessageExpandView';
 import {getMessage} from './MessageDB';
 import {Helmet} from "react-helmet";
 
@@ -68,7 +67,6 @@ class MessageDialog extends React.Component {
     var uuid = this.props.uuid;
     let titleHtml = null;
     let detailView = null;
-    let expandView = null;
     var shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + uuid;
     var title = "";
     var imageUrl = "";
@@ -79,8 +77,7 @@ class MessageDialog extends React.Component {
       titleHtml = <Typography  variant="title" color="inherit" className={classes.flex}>
             {m.text}
           </Typography>;
-      detailView = <MessageDetailView message={m}/>;
-      expandView = <MessageExpandView message={m} uuid={uuid} user={user}/>;
+      detailView = <MessageDetailView message={m} user={user}/>;
     }
     return (
         <Dialog
@@ -107,7 +104,6 @@ class MessageDialog extends React.Component {
             </Toolbar>
           </AppBar>
           {detailView}
-          {expandView}
         </Dialog>
     );
   }
