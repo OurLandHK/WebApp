@@ -14,8 +14,8 @@ function disableLocation() {
   return {type: DISABLE_LOCATION};
 }
 
-function fetchUser(user) {
-  return {type: FETCH_USER, user: user};
+function fetchUser(user, loading=false) {
+  return {type: FETCH_USER, user: user, loading: loading};
 }
 
 export function fetchLocation() {
@@ -43,9 +43,8 @@ export function fetchLocation() {
 export function checkAuthState() {
   return dispatch => {
     var auth = firebase.auth();
+    dispatch(fetchUser(null, true));
     auth.onAuthStateChanged((user) => {
-      console.log(user);
-      console.log('user');
       dispatch(fetchUser(user));
     });
   };

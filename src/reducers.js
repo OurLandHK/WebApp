@@ -13,10 +13,10 @@ function geoLocationReducer(state={}, action) {
   }
 }
 
-function userReducer(state=null, action) {
+function userReducer(state={user: null, loading: true}, action) {
   switch (action.type) {
     case FETCH_USER:
-      return action.user;
+      return {user: action.user, loading: action.loading};
     default:
       return state;
   }
