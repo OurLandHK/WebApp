@@ -18,16 +18,6 @@ const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 const store = createStoreWithMiddleware(rootReducer);
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.updateLocation = this.updateLocation.bind(this);
-  }  
-
-  updateLocation(locationString, longitude, latitude) {
-    console.log('App: ' + longitude + "," + latitude);
-    this.updateLocationCallback(locationString, longitude, latitude);
-  }
-
   render() {
     /* Needed for onTouchTap
        http://stackoverflow.com/a/34015469/988941
@@ -37,8 +27,8 @@ class App extends Component {
       <Provider store={store}>
         <div>
 
-          <Header ref={(header) => {this.header = header;}} updateLocationCallback={this.updateLocation} />
-          <Main updateLocationCallback={updateLocationCallback => this.updateLocationCallback = updateLocationCallback}/>
+          <Header ref={(header) => {this.header = header;}}/>
+          <Main />
         </div>
       </Provider>
     );
