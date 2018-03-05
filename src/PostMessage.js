@@ -39,7 +39,7 @@ function postMessage(message, file, tags, geolocation, streetAddress, start, dur
   var auth = firebase.auth();
   var currentUser = auth.currentUser;     
   var mapString = "\nhttps://www.google.com.hk/maps/place/"+ geoString(geolocation.latitude, geolocation.longitude) + "/@" + geolocation.latitude + "," + geolocation.longitude + ",18z/";
-    addMessage(message, currentUser, file, tags, geolocation, streetAddress, start, duration, interval, link).then((messageKey) => {
+    addMessage(message, currentUser, file, tags, geolocation, streetAddress, start, duration, interval, link, status).then((messageKey) => {
       addPublishMessagesKeyToUserProfile(currentUser,messageKey).then(() => {
         if (validateFile(file)) {
           // Upload Event Full Image
