@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
+import * as firebase from 'firebase';
 import PropTypes from 'prop-types';
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
+import PlaceIcon from 'material-ui-icons/Place';
+import WorkIcon from 'material-ui-icons/Work';
+import HomeIcon from 'material-ui-icons/Home';
 import Typography from 'material-ui/Typography';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import LocationButton from '../LocationButton';
@@ -13,9 +17,9 @@ import Dialog, {
 import TextField from 'material-ui/TextField';
 import timeOffsetStringInChinese from '../TimeString';
 import { withStyles } from 'material-ui/styles';
-import PlaceIcon from 'material-ui-icons/Place';
 import geoString from '../GeoLocationString';
-import  {constant} from '../config/default';
+import {updateAddress} from '../UserProfile';
+import  {constant, addressEnum} from '../config/default';
 
 
 const styles = theme => ({
@@ -34,20 +38,22 @@ class AddressView extends Component {
         super(props);
         var text = "";
         var geolocation = null;
-        var streetAddress = null;        
+        var streetAddress = null;  
+        var type = addressEnum.other;      
         if(this.props.addressRef != null) {
             var c = this.props.addressRef.data();
             text = c.text;
             geolocation = c.geolocation;
             streetAddress = c.streetAddress;
+            type = c.type;
         }        
         this.state = {
             popoverOpen: false,
             text: text,
             geolocation: geolocation,
-            streetAddress: streetAddress
+            streetAddress: streetAddress,
+            type: type
         };
-        console.log("text " + text + " " + this.state.text);
     }
 
     handleRequestOpen(evt) {
@@ -64,9 +70,9 @@ class AddressView extends Component {
         }        
         this.setState({
             popoverOpen: true,
-            text: {text},
-            geolocation: {geolocation},
-            streetAddress: {streetAddress}
+            text: text,
+            geolocation: geolocation,
+            streetAddress: streetAddress
         });
       }
     
@@ -79,10 +85,12 @@ class AddressView extends Component {
     onSubmit() {
         var auth = firebase.auth();
         auth.onAuthStateChanged((user) => {
-            if (this.props.addressRef == null) {
-                //add Address
-                this.setState({popoverOpen: false});
+            var key = null
+            if (this.props.addressRef != null) {
+                key = this.props.addressRef.id;
             }
+            updateAddress(user, key, this.state.type, this.state.text, this.locationButton.geolocation, this.locationButton.streetAddress);
+            this.setState({popoverOpen: false});
             this.setState({popoverOpen: false});
             return null;
         });
@@ -95,11 +103,14 @@ class AddressView extends Component {
         let addressButtonHtml = null;
         let titleText = constant.updateAddressLabel;
         let geolocation = null;
-        let streetAddress = null;        
+        let streetAddress = null;
+        let type = addressEnum.other;  
+        let icons = <PlaceIcon />;
         if(this.props.addressRef != null) {
             var c = this.props.addressRef.data();
             var text = c.text;
-            geolocation = c.geolocation;
+            geolocation = {latitude :c.geolocation.latitude,
+                            longitude: c.geolocation.longitude};
             streetAddress = c.streetAddress;            
             var locationString = constant.addressNotSet;
             if(c.geolocation != null) {
@@ -121,11 +132,20 @@ class AddressView extends Component {
                                     <AddIcon />
                                 </Button>
         }
+        switch(type) {
+            case addressEnum.home:
+                icons = <HomeIcon />;
+                break;
+            case addressEnum.office:
+                icons = <WorkIcon />;
+                break;
+        }
         return(<span>
                     {addressButtonHtml}
                     <Dialog open={this.state.popoverOpen} onClose={() => this.handleRequestClose()} aria-labelledby="form-dialog-title" unmountOnExit>
                         <DialogTitle id="form-dialog-title">{titleText}</DialogTitle>
                         <DialogContent>
+                            {icons}
                             <TextField autoFocus required id="message" fullWidth margin="normal" helperText="名稱" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>
                             <LocationButton autoFocus geolocation={geolocation} streetAddress={streetAddress} ref={(locationButton) => {this.locationButton = locationButton;}}/>                   
                         </DialogContent>  

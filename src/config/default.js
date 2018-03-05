@@ -32,6 +32,12 @@ let constant = {
 
 }
 
+let addressEnum = {
+  home: "住宅",
+  office: "辦工室",
+  other: "其他"
+}
+
 
 export  default config;
-export {constant};
+export {constant, addressEnum};

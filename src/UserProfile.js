@@ -169,7 +169,7 @@ function addPublishMessagesKeyToUserProfile(user, messageUUID) {
 /// All about address
 function fetchAddressBaseonUser(user, callback) {
     var db = firebase.firestore();
-    var collectionRef = collectionRef.doc(user.uid).collection("AddressBook");
+    var collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
     collectionRef.onSnapshot(function() {})         
     // Use firestore
     collectionRef.get().then(function(querySnapshot) {
@@ -180,48 +180,32 @@ function fetchAddressBaseonUser(user, callback) {
     });
 }
 
-function addAddress(currentUser, text, geolocation, streetAddress) {
+function updateAddress(user, key, type, text, geolocation, streetAddress) {
     var now = Date.now();
-    var fireBaseGeo = null;
-    var commentRecord = {
-        hide: false,
-        name: currentUser.displayName,
-        photoUrl: currentUser.providerData[0].photoURL || '/images/profile_placeholder.png',
-        createdAt: new Date(now),
-        lastUpdate: null,
+    var addressRecord = {
+        type: type,
+        updateAt: new Date(now),
+        text: text,
+        geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
+        streetAddress: streetAddress
     }; 
-    if(commentText != null) {
-        commentRecord.text = commentText;
-    } else {
-        if(geolocation != null) {
-            commentRecord.geolocation =  new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude);
-            if(streetAddress != null) {
-                commentRecord.streetAddress = streetAddress;
-            }
-        } else {
-            if(status != null) {
-                commentRecord.changeStatus = status;
-            } else {
-                if(link != null) {
-                    commentRecord.link = link;
-                } else {
-                    if(tags != null) {
-                        commentRecord.tags = tags;
-                    }
-                }
-            }
-        }
-    }
-    console.log(commentRecord);
+    console.log(addressRecord);
     // Use firestore
     var db = firebase.firestore();
-    var collectionRef = db.collection(config.messageDB);  
-    return collectionRef.doc(messageUUID).collection("comment").add(commentRecord).then(function(docRef) {
-        console.log("comment written with ID: ", docRef.id);
-        return(docRef.id);
-    });  
+    var collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
+    if(key != null) {
+        return collectionRef.doc(key).set(addressRecord).then(function(docRef) {
+            console.log("comment written with ID: ", docRef.id);
+            return(docRef.id);
+        });
+    } else {
+        return collectionRef.add(addressRecord).then(function(docRef) {
+            console.log("comment written with ID: ", docRef.id);
+            return(docRef.id);
+        });
+    }  
 }
 
 
-export {fetchAddressBaseonUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage};
+export {updateAddress, fetchAddressBaseonUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage};
 

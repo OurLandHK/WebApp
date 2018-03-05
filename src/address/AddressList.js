@@ -14,18 +14,19 @@ class AddressList extends Component {
   }
 
   componentDidMount() {
+ 
     var auth = firebase.auth();
     auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.fetchAddress(user); 
-      } else {
-        this.setState({data:[]})
-      }
+        if (user) {
+            this.fetchAddress(user); 
+        } else {
+            this.setState({data:[]})
+        }
     });
   }
 
   setAddress(doc) {
-    var val = doc;
+    var val = doc.data();
     this.state.data.push(val);
     this.setState({data:this.state.data});
   };
@@ -33,9 +34,7 @@ class AddressList extends Component {
   
   fetchAddress(user) {
     this.setState({user:user});
-    if(this.props.messageUUID != null) {
-        fetchAddressBaseonUser(user, this.setAddress)
-    }    
+    fetchAddressBaseonUser(user, this.setAddress)
   }
 
   render() {

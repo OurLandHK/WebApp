@@ -89,10 +89,6 @@ class LocationButton extends Component {
 
   handleSubmit = () => {
     this.streetAddress = this.state.streetAddress;
-    console.log(this.state.geolocation.latitude);
-    console.log(this.geolocation.latitude);
-    //this.geolocation = this.state.geolocation
-    console.log(this.geolocation.latitude);
     this.setState({ open: false });
   };
   
