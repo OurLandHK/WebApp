@@ -166,5 +166,62 @@ function addPublishMessagesKeyToUserProfile(user, messageUUID) {
     });
 }
 
-export {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage};
+/// All about address
+function fetchAddressBaseonUser(user, callback) {
+    var db = firebase.firestore();
+    var collectionRef = collectionRef.doc(user.uid).collection("AddressBook");
+    collectionRef.onSnapshot(function() {})         
+    // Use firestore
+    collectionRef.get().then(function(querySnapshot) {
+        querySnapshot.forEach(callback);
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+}
+
+function addAddress(currentUser, text, geolocation, streetAddress) {
+    var now = Date.now();
+    var fireBaseGeo = null;
+    var commentRecord = {
+        hide: false,
+        name: currentUser.displayName,
+        photoUrl: currentUser.providerData[0].photoURL || '/images/profile_placeholder.png',
+        createdAt: new Date(now),
+        lastUpdate: null,
+    }; 
+    if(commentText != null) {
+        commentRecord.text = commentText;
+    } else {
+        if(geolocation != null) {
+            commentRecord.geolocation =  new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude);
+            if(streetAddress != null) {
+                commentRecord.streetAddress = streetAddress;
+            }
+        } else {
+            if(status != null) {
+                commentRecord.changeStatus = status;
+            } else {
+                if(link != null) {
+                    commentRecord.link = link;
+                } else {
+                    if(tags != null) {
+                        commentRecord.tags = tags;
+                    }
+                }
+            }
+        }
+    }
+    console.log(commentRecord);
+    // Use firestore
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.messageDB);  
+    return collectionRef.doc(messageUUID).collection("comment").add(commentRecord).then(function(docRef) {
+        console.log("comment written with ID: ", docRef.id);
+        return(docRef.id);
+    });  
+}
+
+
+export {fetchAddressBaseonUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage};
 

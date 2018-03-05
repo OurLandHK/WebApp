@@ -75,21 +75,6 @@ class UserProfileView extends React.Component {
             this.setState({user: user, userProfile: userProfile});});
       }
     });
-//  this.loadFBLoginApi();
-  }
-  
-  loadFBLoginApi() {
-    window.fbAsyncInit = function() {
-            FB.init(config.fbApp);
-        };
-          // Load the SDK asynchronously
-        (function(d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en_US/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk')); 
   }
 
   onSubmit() {
@@ -121,8 +106,8 @@ class UserProfileView extends React.Component {
     var publish = 0;
     var concern = 0;
     var complete = 0;
-    var officeLocation = 'Not Set';
-    var homeLocation = 'Not Set';
+    var officeLocation = constant.addressNotSet;
+    var homeLocation = constant.addressNotSet;
     let dialogHtml = null;
     if (this.state.user != null) {
         imgURL = this.state.user.photoURL;

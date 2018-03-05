@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SignInButton from './SignInButton';
 import DrawerMenu from './Drawer';
+import LocationDrawer from './LocationDrawer';
 import UserProfileView from './UserProfileView'
 import UserProfile from './UserProfile';
 import AppBar from 'material-ui/AppBar';
@@ -88,6 +89,9 @@ class Header extends  Component {
                   </Typography>
                   <SignInButton/>
                 </Toolbar>
+                <Toolbar>
+                  <LocationDrawer/>
+                </Toolbar>                
               </AppBar>      
             </div>);
   }

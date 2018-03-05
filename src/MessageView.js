@@ -66,7 +66,6 @@ class MessageView extends Component {
                 </CardHeader>
                 <MessageDialog uuid={uuid} user={user} open={o} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
               </Card>
-              <br/>
             </div>);
   }
 }

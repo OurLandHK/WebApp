@@ -19,7 +19,8 @@ class LocationButton extends Component {
   constructor(props) {
     super(props);
     this.state = {open: false, streetAddress: "", geolocation: null, disableSumbit: true};
-    this.geolocation = null;
+    this.geolocation = this.props.geolocation;
+    this.streetAddress = this.props.streetAddress;
     this.disabled = false;
     this.successCallBack = this.successCallBack.bind(this);
     this.streetAddressSuccessCallBack = this.streetAddressSuccessCallBack.bind(this);
