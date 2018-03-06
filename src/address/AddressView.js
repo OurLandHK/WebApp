@@ -43,7 +43,8 @@ class AddressView extends Component {
         if(this.props.addressRef != null) {
             var c = this.props.addressRef.data();
             text = c.text;
-            geolocation = c.geolocation;
+            geolocation = {latitude :c.geolocation.latitude,
+                longitude: c.geolocation.longitude};
             streetAddress = c.streetAddress;
             type = c.type;
         }        
@@ -60,20 +61,22 @@ class AddressView extends Component {
         evt.preventDefault();
         var text = "";
         var geolocation = null;
-        var streetAddress = null;        
+        var streetAddress = null; 
+        var type = addressEnum.other;        
         if(this.props.addressRef != null) {
-            console.log("AddressRef: " + this.props.addressRef);
             var c = this.props.addressRef.data();
             text = c.text;
             geolocation = {latitude :c.geolocation.latitude,
                             longitude: c.geolocation.longitude};
             streetAddress = c.streetAddress;
+            type = c.type;
         }        
         this.setState({
             popoverOpen: true,
             text: text,
             geolocation: geolocation,
-            streetAddress: streetAddress
+            streetAddress: streetAddress,
+            type: type
         });
       }
     
@@ -109,12 +112,20 @@ class AddressView extends Component {
         if(this.props.addressRef != null) {
             var c = this.props.addressRef.data();
             var text = c.text;
-            geolocation = {latitude :c.geolocation.latitude,
-                            longitude: c.geolocation.longitude};
             streetAddress = c.streetAddress;
-            type = c.type;        
+            type = c.type;
             var locationString = constant.addressNotSet;
+            switch(type) {
+                case addressEnum.home:
+                    icons = <HomeIcon />;
+                    break;
+                case addressEnum.office:
+                    icons = <WorkIcon />;
+                    break;
+            }
             if(c.geolocation != null) {
+                geolocation = {latitude :c.geolocation.latitude,
+                    longitude: c.geolocation.longitude};
                 if(c.streetAddress != null) {
                     locationString =  c.streetAddress + " (" + geoString(c.geolocation.latitude, c.geolocation.longitude) + ")";
                 } else {
@@ -123,7 +134,7 @@ class AddressView extends Component {
             }
             addressButtonHtml = <ListItem button onClick={(evt) => this.handleRequestOpen(evt)}>
                                     <ListItemIcon>
-                                        <PlaceIcon />
+                                        {icons}
                                     </ListItemIcon>
                                     <ListItemText primary={text} secondary={locationString} />
                                 </ListItem>
@@ -132,14 +143,6 @@ class AddressView extends Component {
             addressButtonHtml = <Button variant="fab" color="primary" className={classes.fab} raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
                                     <AddIcon />
                                 </Button>
-        }
-        switch(type) {
-            case addressEnum.home:
-                icons = <HomeIcon />;
-                break;
-            case addressEnum.office:
-                icons = <WorkIcon />;
-                break;
         }
         return(<span>
                     {addressButtonHtml}
