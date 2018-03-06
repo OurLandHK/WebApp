@@ -54,7 +54,7 @@ class MessageList extends Component {
   render() {
     let elements = null;
     let queryMessage = null;
-    let linebreak = <div><br/><br/><br/></div>;
+    let linebreak = <div><br/><br/><br/><br/></div>;
     let lon = 0; 
     let lat = 0;
     if(this.props.geolocation != null) {
