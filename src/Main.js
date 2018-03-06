@@ -21,19 +21,11 @@ class Main extends Component {
     if(this.distance == null) {
       this.distance = 1;
     }    
-    this.updateLocation = this.updateLocation.bind(this);
-    this.props.updateLocationCallback(this.updateLocation);
   }
 
   handleClick() {
     this.openDialog();
   };
-
-  updateLocation(locationString, longitude, latitude) {
-    console.log('Main: ' + longitude + "," + latitude);
-    this.updateLocationCallback(locationString, longitude, latitude);
-  }
-
 
   render() {
 
@@ -43,7 +35,7 @@ class Main extends Component {
     if(this.userId != null) {
       pubilcProfileHtml = <PublicProfile id={this.userId}/>;
     } else {
-      messageHtml = <div><MessageList uuid={this.eventId} eventNumber={this.eventNumber} distance={this.distance} updateLocationCallback={updateLocationCallback => this.updateLocationCallback = updateLocationCallback}/><PostMessageView/></div>;
+      messageHtml = <div><MessageList uuid={this.eventId} eventNumber={this.eventNumber} distance={this.distance} geolocation={this.props.geolocation}/><PostMessageView/></div>;
     }
     return (
       <div>

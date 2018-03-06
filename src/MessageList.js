@@ -14,6 +14,10 @@ class MessageList extends Component {
   }
 
   componentDidMount() {
+    this.refreshMessageList();
+  }
+
+  refreshMessageList() {
     if(this.props.uuid != null) {
       getMessage(this.props.uuid).then((message) => {this.queryMessage = message});
     } else {
@@ -41,8 +45,9 @@ class MessageList extends Component {
      // Loads the last 20 messages and listen for new ones.
      var numberOfMessage = this.props.eventNumber;
      var distance = this.props.distance;
-     const {geoLocation} = this.props;
-     fetchMessagesBaseOnGeo(geoLocation, distance, numberOfMessage, this.setMessage)
+     var geolocation = this.props.geolocation;
+     console.log("FetchMessage: " + geolocation);
+     fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, this.setMessage)
 
   }
 
@@ -50,18 +55,19 @@ class MessageList extends Component {
     let elements = null;
     let queryMessage = null;
     let linebreak = <div><br/><br/><br/></div>;
-    const {geoLocation} = this.props;
-    const lon = geoLocation.longitude;
-    const lat = geoLocation.latitude;
-    if(geoLocation.longitude != 200) { // for receive the location info from upper layer
-      elements = this.state.data.reverse().map((message) => {
-        return (<MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat}/>);
-      });
+    let lon = 0; 
+    let lat = 0;
+    if(this.props.geolocation != null) {
+      lon = this.props.geolocation.longitude;
+      lat = this.props.geolocation.latitude;
+    }
+    elements = this.state.data.reverse().map((message) => {
+      return (<MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat}/>);
+    });
 
-      if(this.queryMessage != null) {      
-        var message = this.queryMessage;
-        queryMessage = <MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat} openDialogDefault={true} />;  
-      }
+    if(this.queryMessage != null) {      
+      var message = this.queryMessage;
+      queryMessage = <MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat} openDialogDefault={true} />;  
     }
     return (<div width="100%">{linebreak}{queryMessage}{elements}</div>);
   }
