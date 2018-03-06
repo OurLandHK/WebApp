@@ -22,10 +22,22 @@ let config = {
 
 let constant = {
   invalidLocation: new firebase.firestore.GeoPoint(90, 0),
-  user: "User", 
-  admin: "我地管理員"
+  user: "用戶", 
+  admin: "我地管理員",
+  addressNotSet: "尚未設定",
+  currentLocation: "現在位置",
+  addressBookLabel: "地址簿",
+  addAddressLabel: "新增地址",
+  updateAddressLabel: "更新地址",
+
+}
+
+let addressEnum = {
+  home: "住宅",
+  office: "辦工室",
+  other: "其他"
 }
 
 
 export  default config;
-export {constant};
+export {constant, addressEnum};

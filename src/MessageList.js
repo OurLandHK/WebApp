@@ -31,7 +31,6 @@ class MessageList extends Component {
 
   setMessage(doc) {
     var val = doc.data();
-//    console.log(val);
     this.state.data.push(val);
     this.setState({data:this.state.data});
   };
@@ -50,7 +49,7 @@ class MessageList extends Component {
   render() {
     let elements = null;
     let queryMessage = null;
-    let linebreak = <div><br/><br/></div>;
+    let linebreak = <div><br/><br/><br/></div>;
     const {geoLocation} = this.props;
     const lon = geoLocation.longitude;
     const lat = geoLocation.latitude;

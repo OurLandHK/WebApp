@@ -18,8 +18,15 @@ import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
 class LocationButton extends Component {
   constructor(props) {
     super(props);
-    this.state = {open: false, streetAddress: "", geolocation: null, disableSumbit: true};
     this.geolocation = null;
+    this.streetAddress = null;
+    if(this.props.geolocation != null) {
+      this.geolocation = this.props.geolocation;
+    }
+    if(this.props.streetAddress != null) {
+      this.streetAddress = this.props.streetAddress;
+    }
+    this.state = {open: false, streetAddress: this.streetAddress, geolocation: this.geolocation, disableSumbit: true};
     this.disabled = false;
     this.successCallBack = this.successCallBack.bind(this);
     this.streetAddressSuccessCallBack = this.streetAddressSuccessCallBack.bind(this);
@@ -88,10 +95,6 @@ class LocationButton extends Component {
 
   handleSubmit = () => {
     this.streetAddress = this.state.streetAddress;
-    console.log(this.state.geolocation.latitude);
-    console.log(this.geolocation.latitude);
-    //this.geolocation = this.state.geolocation
-    console.log(this.geolocation.latitude);
     this.setState({ open: false });
   };
   
