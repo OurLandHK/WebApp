@@ -110,6 +110,9 @@ class LocationDrawer extends React.Component {
         console.log("successCallBack " + this.geolocation.latitude + this.geolocation.longitude);
         this.setState({geolocation: coords});
         this.toggleDrawer(false);
+        if(this.props.OnChangeLocation != null) {
+            this.props.OnChangeLocation(coords);
+        }
     }
 
     render() {

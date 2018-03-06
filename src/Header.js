@@ -23,15 +23,10 @@ const styles = {
   },
 };
 
-const currentLocationLabel = "現在位置";
 
 class Header extends  Component {
   constructor(props) {
     super(props);
-    this.state = {locationString: currentLocationLabel};
-    this.setLocation = this.setLocation.bind(this);
-    this.successCallBack = this.successCallBack.bind(this);
-    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   handleLeftTouchTap() {
@@ -43,39 +38,14 @@ class Header extends  Component {
   componentDidMount() {
   }
 
-  notSupportedCallBack() {
-    console.log('Disabled');
-  }
-
-  successCallBack(pos) {
-    console.log('get New Location: ' + pos.coords.longitude + "," + pos.coords.latitude);
-    this.setState({ lat: pos.coords.latitude, lon: pos.coords.longitude}); 
-    if(this.props.updateLocationCallback != null) {
-      this.props.updateLocationCallback(this.state.locationString, this.state.lon, this.state.lat);
-    }
-  }
-
   errorCallBack(error) {
     console.warn('ERROR(${err.code}): ${err.message}');
   }  
 
-  setLocation(locationString, longitude, latitude) {
-    console.log("set New Location1:" + locationString);
-    if(locationString == "" || locationString == currentLocationLabel) {
-      this.setState({locationString: currentLocationLabel});
-      //getLocation(this.successCallBack, this.errorCallBack, this.notSupportedCallback);      
-    } else {
-      console.log("set New Location2:" + longitude + " " + latitude);
-      this.setState({locationString: locationString, lon: longitude, lat: latitude});
-      if(this.props.updateLocationCallback != null) {
-        this.props.updateLocationCallback(this.state.locationString, this.state.lon, this.state.lat);
-      }      
+  changeLocation(geolocation) {
+    if(this.props.OnChangeLocation != null) {
+      this.props.OnChangeLocation(geolocation);
     }
-  }
-
-  getLocation() {
-    var locationValue = {longitude: this.state.lon, latitude: this.state.lat};
-    return locationValue;
   }
 
   render() {
@@ -90,7 +60,7 @@ class Header extends  Component {
                   <SignInButton/>
                 </Toolbar>
                 <Toolbar>
-                  <LocationDrawer/>
+                  <LocationDrawer OnChangeLocation={(geolocation) => {this.changeLocation(geolocation)}}/>
                 </Toolbar>                
               </AppBar>      
             </div>);

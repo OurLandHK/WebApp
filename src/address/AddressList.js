@@ -3,7 +3,6 @@ import * as firebase from 'firebase';
 import config from '../config/default';
 import AddressView from './AddressView';
 import {fetchAddressBaseonUser} from '../UserProfile';
-import {connect} from "react-redux";
 
 
 class AddressList extends Component {
@@ -14,7 +13,6 @@ class AddressList extends Component {
   }
 
   componentDidMount() {
- 
     var auth = firebase.auth();
     auth.onAuthStateChanged((user) => {
         if (user) {
@@ -40,7 +38,7 @@ class AddressList extends Component {
   render() {
     let elements = null;
     elements = this.state.data.reverse().map((addressRef) => {
-        return (<AddressView address={addressRef}/>);
+        return (<AddressView addressRef={addressRef}/>);
       });      
     return (<div width="100%">{elements}</div>);
   }
