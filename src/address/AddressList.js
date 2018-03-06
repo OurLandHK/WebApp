@@ -26,7 +26,7 @@ class AddressList extends Component {
   }
 
   setAddress(doc) {
-    var val = doc.data();
+    var val = doc;
     this.state.data.push(val);
     this.setState({data:this.state.data});
   };
@@ -39,8 +39,8 @@ class AddressList extends Component {
 
   render() {
     let elements = null;
-    elements = this.state.data.reverse().map((address) => {
-        return (<AddressView address={address}/>);
+    elements = this.state.data.reverse().map((addressRef) => {
+        return (<AddressView address={addressRef}/>);
       });      
     return (<div width="100%">{elements}</div>);
   }

@@ -194,9 +194,8 @@ function updateAddress(user, key, type, text, geolocation, streetAddress) {
     var db = firebase.firestore();
     var collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
     if(key != null) {
-        return collectionRef.doc(key).set(addressRecord).then(function(docRef) {
-            console.log("comment written with ID: ", docRef.id);
-            return(docRef.id);
+        return collectionRef.doc(key).set(addressRecord).then(function() {
+            return(key);
         });
     } else {
         return collectionRef.add(addressRecord).then(function(docRef) {

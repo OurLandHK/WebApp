@@ -65,7 +65,8 @@ class AddressView extends Component {
             console.log("AddressRef: " + this.props.addressRef);
             var c = this.props.addressRef.data();
             text = c.text;
-            geolocation = c.geolocation;
+            geolocation = {latitude :c.geolocation.latitude,
+                            longitude: c.geolocation.longitude};
             streetAddress = c.streetAddress;
         }        
         this.setState({
@@ -85,12 +86,11 @@ class AddressView extends Component {
     onSubmit() {
         var auth = firebase.auth();
         auth.onAuthStateChanged((user) => {
-            var key = null
+            var key = null;
             if (this.props.addressRef != null) {
                 key = this.props.addressRef.id;
             }
             updateAddress(user, key, this.state.type, this.state.text, this.locationButton.geolocation, this.locationButton.streetAddress);
-            this.setState({popoverOpen: false});
             this.setState({popoverOpen: false});
             return null;
         });
@@ -111,7 +111,8 @@ class AddressView extends Component {
             var text = c.text;
             geolocation = {latitude :c.geolocation.latitude,
                             longitude: c.geolocation.longitude};
-            streetAddress = c.streetAddress;            
+            streetAddress = c.streetAddress;
+            type = c.type;        
             var locationString = constant.addressNotSet;
             if(c.geolocation != null) {
                 if(c.streetAddress != null) {
