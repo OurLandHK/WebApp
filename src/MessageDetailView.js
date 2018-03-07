@@ -81,7 +81,7 @@ class MessageDetailView extends Component {
     if(m.start != null && m.start.getFullYear() > 1970)
     {
       date = new Date(m.start);
-      dateTimeString = date.toGMTString();
+      dateTimeString = date.toLocaleString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });
     }
     var interval = m.interval;
     var duration = m.duration;
