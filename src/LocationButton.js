@@ -42,6 +42,7 @@ class LocationButton extends Component {
     this.geolocation = pos.coords;
     console.log("successCallBack " + this.geolocation.latitude + this.geolocation.longitude);
     this.setState({geolocation: pos.coords, disableSumbit: false});
+    this.handleClose();
   }
 
   streetAddressSuccessCallBack(err, response) {

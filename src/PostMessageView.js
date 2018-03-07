@@ -82,11 +82,12 @@ class PostMessageView extends Component {
       status: "開放",
       expanded: false, rotate: 'rotate(0deg)',
       tags: []};
-      this.handleRequestDelete = this.handleRequestDelete.bind(this);
-      this.handleTouchTap = this.handleTouchTap.bind(this);
-      this.handleDelete = this.handleDelete.bind(this);
-      this.handleAddition = this.handleAddition.bind(this);
-      this.handleDrag = this.handleDrag.bind(this);
+    this.handleRequestDelete = this.handleRequestDelete.bind(this);
+    this.handleTouchTap = this.handleTouchTap.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleAddition = this.handleAddition.bind(this);
+    this.handleDrag = this.handleDrag.bind(this);
+    this.summaryTextField = null;
   }
 
   static defaultProps = {
@@ -142,9 +143,10 @@ class PostMessageView extends Component {
     if(this.state.start !== "") {
       startTimeInMs = Date.parse(this.state.start);
     }
-    console.log(this.locationButton.geolocation);
-    if (this.locationButton.geolocation == null) {
-      console.log('Unknown Location');
+    if (this.state.summary.length == 0) {
+      this.summaryTextField.select();
+    } else if (this.locationButton.geolocation == null) {
+      this.locationButton.handleClickOpen();
     } else {
       if(this.state.summary == null) {
         console.log('Unknown Input');
@@ -228,7 +230,18 @@ class PostMessageView extends Component {
               <div className={classes.dialogContainer}>
               <Form>
                 <FormGroup>           
-                  <TextField autoFocus required id="message" label="簡介" fullWidth margin="normal" helperText="介紹事件內容及期望街坊如何參與" value={this.state.summary} onChange={event => this.setState({ summary: event.target.value })}/>                  
+                  <TextField
+                    autoFocus
+                    required
+                    id="message"
+                    label="簡介"
+                    fullWidth
+                    margin="normal"
+                    helperText="介紹事件內容及期望街坊如何參與"
+                    value={this.state.summary}
+                    onChange={event => this.setState({ summary: event.target.value })}
+                    inputRef={(tf) => {this.summaryTextField = tf;}}
+                  />
                   <Label for="tags">分類</Label>
                   <CustomTags tags={tags}
                     inline={false}
