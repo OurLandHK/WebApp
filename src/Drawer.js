@@ -6,10 +6,14 @@ import IconButton from 'material-ui/IconButton';
 import InboxIcon from 'material-ui-icons/Inbox';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Icon from 'material-ui/Icon';
-import UserProfileView from './UserProfileView'
+import MenuIcon from 'material-ui-icons/Menu';
+import LibraryBooksIcon from 'material-ui-icons/LibraryBooks';
+import UserProfileView from './UserProfileView';
+import AddressDialog from './address/AddressDialog';
 import {connect} from "react-redux";
 import Divider from 'material-ui/Divider';
 import {fetchLocation, setHomeLocation, setOfficeLocation} from "./actions";
+import  {constant} from './config/default';
 const currentLocationLabel = "現在位置";
 const officeLocationLabel = "辦公室位置";
 const homeLocationLabel = "屋企位置";
@@ -34,6 +38,12 @@ class DrawerMenu extends Component {
     this.handleClose();
     this.openUserProfileDialog();
   }
+
+  addressDialogClick(){
+    this.handleClose();
+    this.openAddressDialog();
+  }
+
 
   currentClick() {
     this.props.fetchLocation();
@@ -64,9 +74,10 @@ class DrawerMenu extends Component {
     return (
       <div>
         <IconButton onClick={() => this.handleToggle()}>
-          <Icon>menu</Icon>
+          <MenuIcon />
         </IconButton>
         <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>        
+        <AddressDialog ref={(addressDialog) => {this.addressDialog = addressDialog;}} openDialog={openDialog => this.openAddressDialog = openDialog}/>        
         <Drawer
           open={this.state.open}
           onRequestClose={() => this.handleClose()}          
@@ -79,31 +90,12 @@ class DrawerMenu extends Component {
             </List>
             <Divider/>
             <List disablePadding>
-              
-              <ListItem button>
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary={currentLocationLabel} onClick={() => this.currentClick()}/>
-              </ListItem>
               <ListItem button>
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
                 <ListItemText primary="關注" onClick={() => this.handleClose()}/>
               </ListItem>              
-              <ListItem button>
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary={homeLocationLabel} onClick={() => this.homeClick()}/>
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary={officeLocationLabel} onClick={() => this.officeClick()}/>
-              </ListItem>
               <ListItem button>
                 <ListItemIcon>
                   <InboxIcon />
@@ -115,6 +107,12 @@ class DrawerMenu extends Component {
                   <InboxIcon />
                 </ListItemIcon>
                 <ListItemText primary="User Profile" onClick={() => this.userProfileClick()}/>
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <LibraryBooksIcon />
+                </ListItemIcon>
+                <ListItemText primary={constant.addressBookLabel} onClick={() => this.addressDialogClick()}/>
               </ListItem>                                                        
             </List>
           </div>                  

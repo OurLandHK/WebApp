@@ -190,15 +190,7 @@ class ShareDrawer extends React.Component {
     var m = this.facebookQuote(this.props.message);
     var hashtag = this.facebookHashTag(this.props.message.tag);
     var shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + this.props.uuid;
-    /*
-    const fullList = (
-      <div className={classes.fullList}>
-        <List>{mailFolderListItems}</List>
-        <Divider />
-        <List>{otherMailFolderListItems}</List>
-      </div>
-    );
-*/
+ 
     return (
       <div>
         <Button onClick={this.toggleDrawer('bottom', true)}>Share</Button>

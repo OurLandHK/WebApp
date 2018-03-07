@@ -35,7 +35,7 @@ class Main extends Component {
     if(this.userId != null) {
       pubilcProfileHtml = <PublicProfile id={this.userId}/>;
     } else {
-      messageHtml = <div><MessageList uuid={this.eventId} eventNumber={this.eventNumber} distance={this.distance} /><PostMessageView/></div>;
+      messageHtml = <div><MessageList uuid={this.eventId} eventNumber={this.eventNumber} distance={this.distance} geolocation={this.props.geolocation}/><PostMessageView/></div>;
     }
     return (
       <div>

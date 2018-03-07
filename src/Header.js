@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SignInButton from './SignInButton';
 import DrawerMenu from './Drawer';
+import LocationDrawer from './LocationDrawer';
 import UserProfileView from './UserProfileView'
 import UserProfile from './UserProfile';
 import AppBar from 'material-ui/AppBar';
@@ -22,6 +23,7 @@ const styles = {
   },
 };
 
+
 class Header extends  Component {
   constructor(props) {
     super(props);
@@ -31,6 +33,19 @@ class Header extends  Component {
     console.log('Open Drawer');
     alert('onTouchTap triggered on the title component');
     this.drawerMenu.handleToggle();
+  }
+
+  componentDidMount() {
+  }
+
+  errorCallBack(error) {
+    console.warn('ERROR(${err.code}): ${err.message}');
+  }  
+
+  changeLocation(geolocation) {
+    if(this.props.OnChangeLocation != null) {
+      this.props.OnChangeLocation(geolocation);
+    }
   }
 
   render() {
@@ -44,6 +59,9 @@ class Header extends  Component {
                   </Typography>
                   <SignInButton/>
                 </Toolbar>
+                <Toolbar>
+                  <LocationDrawer OnChangeLocation={(geolocation) => {this.changeLocation(geolocation)}}/>
+                </Toolbar>                
               </AppBar>      
             </div>);
   }

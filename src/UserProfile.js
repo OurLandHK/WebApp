@@ -166,5 +166,45 @@ function addPublishMessagesKeyToUserProfile(user, messageUUID) {
     });
 }
 
-export {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage};
+/// All about address
+function fetchAddressBaseonUser(user, callback) {
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
+    collectionRef.onSnapshot(function() {})         
+    // Use firestore
+    collectionRef.get().then(function(querySnapshot) {
+        querySnapshot.forEach(callback);
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+}
+
+function updateAddress(user, key, type, text, geolocation, streetAddress) {
+    var now = Date.now();
+    var addressRecord = {
+        type: type,
+        updateAt: new Date(now),
+        text: text,
+        geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
+        streetAddress: streetAddress
+    }; 
+    console.log(addressRecord);
+    // Use firestore
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
+    if(key != null) {
+        return collectionRef.doc(key).set(addressRecord).then(function() {
+            return(key);
+        });
+    } else {
+        return collectionRef.add(addressRecord).then(function(docRef) {
+            console.log("comment written with ID: ", docRef.id);
+            return(docRef.id);
+        });
+    }  
+}
+
+
+export {updateAddress, fetchAddressBaseonUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage};
 

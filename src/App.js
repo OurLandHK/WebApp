@@ -18,17 +18,25 @@ const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 const store = createStoreWithMiddleware(rootReducer);
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {geolocation: null};
+  }  
+
+  changeLocation(geolocation) {
+    this.setState({geolocation: geolocation});
+  }
+
   render() {
     /* Needed for onTouchTap
        http://stackoverflow.com/a/34015469/988941
     */
-    injectTapEventPlugin();   
+    //injectTapEventPlugin();   
     return (
       <Provider store={store}>
         <div>
-
           <Header ref={(header) => {this.header = header;}}/>
-          <Main />
+          <Main geolocation={this.state.geolocation}/>
         </div>
       </Provider>
     );

@@ -164,13 +164,13 @@ class PostCommentView extends Component {
         if(this.state.commentSelection != "發表回應") {
             switch(this.state.commentSelection) {
                 case "要求更改現況":
-                    inputHtml = <SelectedMenu label="" options={this.props.statusOptions} changeSelection={(selectedValue) => this.setState({changeStatus: selectedValue})} ref={(statusSelection) => {this.statusSelection = statusSelection}}/>;
+                    inputHtml = <SelectedMenu autoFocus label="" options={this.props.statusOptions} changeSelection={(selectedValue) => this.setState({changeStatus: selectedValue})} ref={(statusSelection) => {this.statusSelection = statusSelection}}/>;
                     break;
                 case "要求更改地點":
-                    inputHtml = <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}}/>;
+                    inputHtml = <LocationButton autoFocus ref={(locationButton) => {this.locationButton = locationButton;}}/>;
                     break;
                 case "要求更改外部連結":
-                    inputHtml = <TextField id="link" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>;
+                    inputHtml = <TextField autoFocus id="link" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>;
                     break;
             }
         }
