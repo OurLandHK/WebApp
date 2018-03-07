@@ -7,12 +7,18 @@ import { CardActions, CardContent, CardMedia} from 'material-ui/Card';
 class MessageDetailViewImage extends Component {
   render() {
     const { url } = this.props;
-    if(url  != null ) {
-        return (<ProgressiveCardImg gs_src={url}/>);
+    if(url != null) {
+      return (<ProgressiveCardImg gs_src={url}/>);
     }
-    return (<div></div>);
+    return (
+      <div>
+        <center>
+          <br/>
+          <h1>沒有圖片</h1>
+        </center>
+      </div>
+    );
   }
-
 }
 
 export default MessageDetailViewImage;

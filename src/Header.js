@@ -84,6 +84,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Header));
-//export default Header;
