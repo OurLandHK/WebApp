@@ -27,10 +27,12 @@ class DrawerMenu extends Component {
   }
 
   handleToggle(){
+    console.log('daads');
     this.setState({open: !this.state.open});
   }
 
   handleClose(){
+    console.log('asdf');
     this.setState({open: false});
   }
 
@@ -80,7 +82,7 @@ class DrawerMenu extends Component {
         <AddressDialog ref={(addressDialog) => {this.addressDialog = addressDialog;}} openDialog={openDialog => this.openAddressDialog = openDialog}/>        
         <Drawer
           open={this.state.open}
-          onRequestClose={() => this.handleClose()}          
+          onClose={() => this.handleClose()}
         >
           <div>
             <List>
