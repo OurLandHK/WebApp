@@ -105,10 +105,10 @@ class LocationDrawer extends React.Component {
         this.setLocation(pos.coords);
     }
     
-    setLocation(coords) {
+    setLocation(text, coords) {
         this.geolocation = coords;
         console.log("successCallBack " + this.geolocation.latitude + this.geolocation.longitude);
-        this.setState({geolocation: coords});
+        this.setState({locationName: text, geolocation: coords});
         this.toggleDrawer(false);
         if(this.props.OnChangeLocation != null) {
             this.props.OnChangeLocation(coords);
@@ -142,7 +142,7 @@ class LocationDrawer extends React.Component {
             }
             if(locationString != constant.addressNotSet) {
                 return (
-                        <ListItem button onClick={() => {this.setLocation(geolocation)}}>
+                        <ListItem button onClick={() => {this.setLocation(text, geolocation)}}>
                             <ListItemIcon>
                                 {icons}
                             </ListItemIcon>

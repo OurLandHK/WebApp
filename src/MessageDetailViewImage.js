@@ -6,6 +6,9 @@ import { CardActions, CardContent, CardMedia} from 'material-ui/Card';
 
 class MessageDetailViewImage extends Component {
   render() {
+    var width = window.innerWidth;
+    console.log("Windows Width: " + width);
+    
     const { url } = this.props;
     if(url != null) {
       return (<ProgressiveCardImg gs_src={url}/>);
