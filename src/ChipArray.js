@@ -9,7 +9,7 @@ const styles = theme => ({
   },
   row: {
     display: 'flex',
-    justifyContent: 'center',
+    alignItems: 'center',
     flexWrap: 'wrap',
   },
   tagTitle: {
@@ -41,9 +41,28 @@ class ChipArray extends Component {
     this.setState({ chipData });
   };
 
+  renderReadOnlyChips() {
+    const { classes, chipData } = this.props;
+    if (chipData.length == 0) {
+      return (<div></div>);
+    }
+    return (
+      <div className={classes.row}>
+        <div className={classes.tagTitle}>標籤:</div><br/>
+        {chipData.map(data => (
+          <Chip
+            label={data.label}
+            key={data.key}
+            className={classes.chip}
+          />
+        ))}
+      </div>
+           
+    );
+  }
+
   render() {
-    //this.setState({chipData: this.props.chipData});
-    const classes = this.props.classes;
+    const { classes } = this.props;
     if(this.props.enableDelete)   {
         return (
             <div className={classes.row}>
@@ -61,20 +80,7 @@ class ChipArray extends Component {
             </div>
         );
     } else  {
-        return (
-            <div className={classes.row}>
-                <div className={classes.tagTitle}>標籤:</div><br/>
-                {this.props.chipData.map(data => {
-                return (
-                    <Chip
-                    label={data.label}
-                    key={data.key}
-                    className={classes.chip}
-                    />
-                );
-                })}
-            </div>
-        );
+      return this.renderReadOnlyChips();
     }
   }
 }

@@ -21,8 +21,20 @@ import CommentList from './comment/CommentList';
 import geoString from './GeoLocationString';
 import PostCommentView from './comment/PostCommentView';
 import MessageExpandView from './MessageExpandView';
+import Avatar from 'material-ui/Avatar';
 
 const styles = theme => ({
+  authorContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  authorColumn: {
+    flex: '0 0 auto',
+  },
+  authorColumn2: {
+    flex: '1 0 auto',
+  },
+
   appBar: {
     backgroundColor: theme.palette.secondary['200'],
   },
@@ -71,6 +83,46 @@ class MessageDetailView extends Component {
   }
 
 
+  renderAuthor() {
+    const { message, classes } = this.props;
+    const photoUrl = message.photoUrl || '/images/profile_placeholder.png';
+    let fbProfileImage = <Avatar src={photoUrl} />;
+    let fbProfileLink = null;
+    if (message.uid) {
+      let fbProfileLink = '/?userid=' + message.uid;
+      fbProfileImage = <a href={fbProfileLink}>{fbProfileImage}</a>;
+    }
+    return (
+      <div className={classes.authorContainer}>
+        <div className={classes.authorColumn}>
+          {fbProfileImage}
+        </div>
+        <div className={classes.authorColumn2}>
+          &nbsp; {message.name}
+        </div>
+        <div className={classes.authorColumn2}>
+           現況: {message.status}
+        </div>
+      </div>
+    );
+  }
+
+  renderLocation() {
+    var locationString = null
+    const { message, classes } = this.props;
+    if (message.streetAddress) {
+      return (
+        <CardContent>
+          <Typography component='p'>
+          {`地點: ${message.streetAddress} (${geoString(message.geolocation.latitude, message.geolocation.longitude)})`}
+          </Typography>
+        </CardContent>
+      );
+    } else {
+      return (<div></div>);
+    }
+  }
+
   render() {
     const classes = this.props.classes;
     var m = this.props.message;
@@ -102,15 +154,6 @@ class MessageDetailView extends Component {
     if (m.photoUrl) {
       photoUrl = m.photoUrl;
     }
-    var locationString = null
-    if(m.streetAddress != null) {
-      locationString = "地點: " + m.streetAddress + " (" + geoString(m.geolocation.latitude, m.geolocation.longitude) + ")";
-    } else {
-      locationString = "地點: 近" + geoString(m.geolocation.latitude, m.geolocation.longitude);      
-    } 
-//    let locationHtml = <Grid item> <CardContent> <Typography component='p'> {locationString} </Typography> </CardContent> </Grid>;
-    let locationHtml = <CardContent> <Typography component='p'> {locationString} </Typography> </CardContent>;
-
     let linkHtml = null;
     if (link != null && link != "") {
         console.log(link);
@@ -124,16 +167,9 @@ class MessageDetailView extends Component {
       let fbProfileLink = '/?userid=' + m.uid;
       fbProfileImage = <a href={fbProfileLink}>{fbProfileImage}</a>;
     }
-//    let author =  <a href={fbProfileLink}><CardMedia className={classes.cover} image={photoUrl} title={m.name}/></a>    
-let author = <div>
-              {fbProfileImage} 
-              <CardMedia overlay={m.name}> 
-                <Typography component='p'> {m.name} </Typography>
-              </CardMedia>
-              </div>;
-
-    let baseHtml = <Grid container> {locationHtml}{linkHtml}</Grid>;
-//    let baseHtml = <div> {locationHtml}{linkHtml}</div>;
+    
+    const author = this.renderAuthor();
+    let baseHtml = <Grid container> {this.renderLocation()}{linkHtml}</Grid>;
 
     let actionView = <MessageExpandView message={m} uuid={m.key} user={this.props.user}/>;
     let dateHtml = null;
@@ -146,16 +182,10 @@ let author = <div>
     }
 
     const tab = this.state.tab;
-    
-    let header = <Grid container>
-                    <Grid item>{author}</Grid>
-                    <Grid item> "現況": {m.status} <ChipArray chipData={chips} /></Grid>
-                </Grid>
-
-//let header = <div>{author} <CardContent><Typography component='p'> "現況": {m.status} </Typography><ChipArray chipData={chips} /></CardContent></div>;
 
     return(<div>
-             {header}
+             {author}
+             <ChipArray chipData={chips} />
              {baseHtml}
              {dateHtml}
              {actionView}
