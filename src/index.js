@@ -7,7 +7,7 @@ import { MuiThemeProvider, createMuiTheme }
 
 const theme = createMuiTheme({
   typography: {
-    "fontFamily": "Comic Sans",
+    "fontFamily": "Noto Sans CJK TC, Arial",
   }
 });
 
