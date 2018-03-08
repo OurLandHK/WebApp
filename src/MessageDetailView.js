@@ -81,7 +81,7 @@ class MessageDetailView extends Component {
     if(m.start != null && m.start.getFullYear() > 1970)
     {
       date = new Date(m.start);
-      dateTimeString = date.toGMTString();
+      dateTimeString = date.toLocaleString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });
     }
     var interval = m.interval;
     var duration = m.duration;
@@ -169,7 +169,7 @@ let author = <div>
                </AppBar>
              </div>
              {tab == 0 && <div><PostCommentView messageUUID={m.key}/><CommentList messageUUID={m.key}/></div>}
-             {tab == 1 && <MessageDetailViewImage url={m.imageUrl}/>}
+             {tab == 1 && <MessageDetailViewImage url={m.publicImageURL}/>}
              {tab == 2 && <EventMap center={geolocation} zoom={zoom}/>}
 
          </div>);

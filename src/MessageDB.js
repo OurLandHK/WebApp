@@ -72,6 +72,8 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
         duration: duration,
         interval: interval,
         link: link,
+        publicImageURL: null,
+        imageUrl: null,
         status: status
       };
     // Use firestore
