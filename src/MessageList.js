@@ -1,15 +1,27 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
-import config from './config/default';
+import config, {constant} from './config/default';
 import MessageView from './MessageView';
 import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
-import {connect} from "react-redux";
+//import {connect} from "react-redux";
 
 
 class MessageList extends Component {
   constructor(props) {
     super(props);
-    this.state = {data:[]};
+    let geolocation = this.props.geolocation;
+    if(geolocation == null) {
+      geolocation = constant.invalidLocation;
+    }
+    this.state = {
+      eventId: this.props.eventId,
+      eventNumber: this.props.eventNumber,
+      distance: this.props.distance, 
+      geolocation: geolocation,
+      userId: this.props.userId,
+      data:[]
+    };
+    this.updateFilter = this.updateFilter.bind(this);
     this.setMessage = this.setMessage.bind(this);
   }
 
@@ -17,8 +29,18 @@ class MessageList extends Component {
     this.refreshMessageList();
   }
 
+  updateFilter(eventNumber, distance, geolocation) {
+    console.log("ML Update Filter: " + geolocation);
+    this.setState({
+      eventNumber: eventNumber,
+      distance: distance, 
+      geolocation: geolocation,
+    });
+    this.refreshMessageList();
+  }
+
   refreshMessageList() {
-    if(this.props.uuid != null) {
+    if(this.props.uuid != null && this.props.uuid != "") {
       getMessage(this.props.uuid).then((message) => {this.queryMessage = message});
     } else {
       this.queryMessage = null;
@@ -43,12 +65,14 @@ class MessageList extends Component {
   fetchMessages(user) {
     this.setState({user:user});     
      // Loads the last 20 messages and listen for new ones.
-     var numberOfMessage = this.props.eventNumber;
-     var distance = this.props.distance;
-     var geolocation = this.props.geolocation;
-     console.log("FetchMessage: " + geolocation);
-     fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, this.setMessage)
-
+    var numberOfMessage = this.state.eventNumber;
+    var distance = this.state.distance;
+    var geolocation = this.state.geolocation;
+    if(geolocation != constant.invalidLocation) {
+      console.log("FetchMessage: " + geolocation);
+      this.setState({data:[]})
+      fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, this.setMessage);
+    }
   }
 
   render() {
@@ -57,11 +81,13 @@ class MessageList extends Component {
     let linebreak = <div><br/><br/><br/><br/></div>;
     let lon = 0; 
     let lat = 0;
-    if(this.props.geolocation != null) {
-      lon = this.props.geolocation.longitude;
-      lat = this.props.geolocation.latitude;
+    
+    if(this.state.geolocation != constant.invalidLocation) {
+      lon = this.state.geolocation.longitude;
+      lat = this.state.geolocation.latitude;
     }
-    elements = this.state.data.reverse().map((message) => {
+    
+    elements = this.state.data.map((message) => {
       return (<MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat}/>);
     });
 
@@ -73,6 +99,7 @@ class MessageList extends Component {
   }
 };
 
+/*
 const mapStateToProps = (state, ownProps) => {
   return {
     geoLocation : state.geoLocation,
@@ -87,3 +114,5 @@ const mapDispatchToProps = (dispatch) => {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(MessageList);
+*/
+export default MessageList;

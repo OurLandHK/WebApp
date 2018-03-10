@@ -66,9 +66,7 @@ class UserProfileView extends React.Component {
   
 
   componentDidMount() {
-    console.log('UserProfile login'); 
     var auth = firebase.auth();
-    console.log(auth);
     auth.onAuthStateChanged((user) => {
       if (user) {
         getUserProfile(user).then((userProfile)=>{
