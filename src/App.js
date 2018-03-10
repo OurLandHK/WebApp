@@ -61,7 +61,7 @@ class App extends Component {
       <Provider store={store}>
         <div>
           <Header ref={(header) => {this.header = header;}}  OnChangeLocation={(geolocation) => {this.changeLocation(geolocation)}}/>
-          <Main ref={(main) => {this.main = main;}} userId={this.state.userId} eventNumber={this.state.eventNumber} distance={this.state.distance} geolocation={this.state.geolocation}/>
+          <Main ref={(main) => {this.main = main;}} eventId={this.state.eventId} userId={this.state.userId} eventNumber={this.state.eventNumber} distance={this.state.distance} geolocation={this.state.geolocation}/>
         </div>
       </Provider>
     );

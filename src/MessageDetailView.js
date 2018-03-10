@@ -111,16 +111,17 @@ class MessageDetailView extends Component {
     var locationString = null
     const { message, classes } = this.props;
     if (message.streetAddress) {
-      return (
-        <CardContent>
-          <Typography component='p'>
-          {`地點: ${message.streetAddress} (${geoString(message.geolocation.latitude, message.geolocation.longitude)})`}
-          </Typography>
-        </CardContent>
-      );
+      locationString = `地點: ${message.streetAddress} (${geoString(message.geolocation.latitude, message.geolocation.longitude)})`;
     } else {
-      return (<div></div>);
+      locationString = `地點: 近(${geoString(message.geolocation.latitude, message.geolocation.longitude)})`;
     }
+    return (
+      <CardContent>
+        <Typography component='p'>
+        {locationString}
+        </Typography>
+      </CardContent>
+    );
   }
 
   render() {
