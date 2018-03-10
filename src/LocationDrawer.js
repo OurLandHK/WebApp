@@ -59,7 +59,6 @@ class LocationDrawer extends React.Component {
     };
 
     handleGetLocation() {
-        this.setState({locationName: constant.currentLocation});
         if (this.disabled) {
             alert('Location not supported!');  
         } else {
@@ -71,7 +70,11 @@ class LocationDrawer extends React.Component {
         var auth = firebase.auth();
         auth.onAuthStateChanged((user) => {
             if (user) {
-                this.fetchAddress(user); 
+                this.fetchAddress(user);
+                if(this.geolocation === null) {
+                    console.log("Get current address at start up");
+                    this.handleGetLocation();
+                }
             } else {
                 this.setState({addressBook:[]})
             }
@@ -102,12 +105,12 @@ class LocationDrawer extends React.Component {
     }
 
     successCallBack(pos) {
-        this.setLocation(pos.coords);
+        this.setLocation(constant.currentLocation, pos.coords);
     }
     
     setLocation(text, coords) {
         this.geolocation = coords;
-        console.log("successCallBack " + this.geolocation.latitude + this.geolocation.longitude);
+        console.log("set " + text + "(" + this.geolocation.latitude + "," +  this.geolocation.longitude + ")");
         this.setState({locationName: text, geolocation: coords});
         this.toggleDrawer(false);
         if(this.props.OnChangeLocation != null) {
@@ -120,9 +123,9 @@ class LocationDrawer extends React.Component {
         let addressBook = this.state.addressBook.map((address) => {
             let icons = <PlaceIcon />;
             let type = address.type;
-            var text = address.text;
-            var locationString = constant.addressNotSet;
-            var geolocation = null;
+            let text = address.text;
+            let locationString = constant.addressNotSet;
+            let geolocation = null;
             if(address.geolocation != null) {
                 geolocation = {latitude :address.geolocation.latitude,
                     longitude: address.geolocation.longitude};

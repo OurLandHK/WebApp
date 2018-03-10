@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import uuid from 'js-uuid';
-import config from './config/default';
+import config, {constant} from './config/default';
 import { light } from 'material-ui/styles/createPalette';
 
 function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
@@ -9,6 +9,7 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
     var collectionRef = db.collection(config.messageDB);
     collectionRef.onSnapshot(function() {})         
     if(geocode != null && geocode != NaN && geocode.latitude != undefined) {
+        console.log("Get message base on Location: (" + geocode.latitude + " ," + geocode.longitude + ")");
         // ~1 km of lat and lon in degrees
         let lat = 0.009005379598;
         let lon = 0.01129765804;
@@ -24,12 +25,15 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
 
         // Use firestore
 
-        collectionRef.where("hide", "==", false).where("geolocation", ">=", lesserGeopoint).where("location", "<=", greaterGeopoint).orderBy("createdAt", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
+        collectionRef.where("hide", "==", false).where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
             querySnapshot.forEach(callback);
         })
         .catch(function(error) {
             console.log("Error getting documents: ", error);
         });
+        collectionRef.where("hide", "==", false).where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).onSnapshot(function(querySnapshot) {
+            querySnapshot.forEach(callback);
+        })       
     } else {
         // Use firestore
         collectionRef.where("hide", "==", false).orderBy("createdAt", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
@@ -38,11 +42,9 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
         .catch(function(error) {
             console.log("Error getting documents: ", error);
         });
-        /*
-        collectionRef.onSnapshot(function(querySnapshot) {
+        collectionRef.where("hide", "==", false).onSnapshot(function(querySnapshot) {
             querySnapshot.forEach(callback);
-        })
-        */        
+        })       
     }
  }
 
