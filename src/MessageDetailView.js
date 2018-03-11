@@ -1,5 +1,6 @@
 import * as firebase from 'firebase';
 import React, { Component } from 'react';
+import Button from 'material-ui/Button';
 import Card, { CardActions, CardContent, CardMedia} from 'material-ui/Card';
 import ProgressiveCardImg from './ProgressiveCardImg';
 import Typography from 'material-ui/Typography';
@@ -10,8 +11,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import classnames from 'classnames';
 import red from 'material-ui/colors/red';
-import FavoriteIcon from 'material-ui-icons/Favorite';
-import ShareIcon from 'material-ui-icons/Share';
 import EventMap from './REventMap';
 import ChipArray from './ChipArray';
 import MessageDetailViewImage from './MessageDetailViewImage';
@@ -20,8 +19,10 @@ import AppBar from 'material-ui/AppBar';
 import CommentList from './comment/CommentList';
 import geoString from './GeoLocationString';
 import PostCommentView from './comment/PostCommentView';
-import MessageExpandView from './MessageExpandView';
 import Avatar from 'material-ui/Avatar';
+import green from 'material-ui/colors/green';
+import ShareDrawer from './ShareDrawer';
+import FavoriteButton from './FavoriteButton';
 
 const styles = theme => ({
   authorContainer: {
@@ -62,6 +63,14 @@ const styles = theme => ({
   },
   flexGrow: {
     flex: '1 1 auto',
+  },
+  leftButtonsContainer: {
+    marginLeft: '0.5rem',
+    top: 'auto',
+    left: 20,
+    bottom: 20,
+    left: 'auto',
+    position: 'fixed',
   },
 });
 
@@ -157,11 +166,8 @@ class MessageDetailView extends Component {
     }
     let linkHtml = null;
     if (link != null && link != "") {
-        console.log(link);
-       // linkHtml = <Grid item> <CardContent> <Typography component='p'> 外部連結： {link} </Typography> </CardContent> </Grid>;
-        linkHtml = <CardContent> <Typography component='p'> 外部連結： {link} </Typography> </CardContent>;
-
-      }
+      linkHtml = <CardContent> <Typography component='p'> 外部連結： {link} </Typography> </CardContent>;
+    }
     let fbProfileImage = <img src={photoUrl} />;
     let fbProfileLink = null;
     if (m.uid) {
@@ -172,7 +178,6 @@ class MessageDetailView extends Component {
     const author = this.renderAuthor();
     let baseHtml = <Grid container> {this.renderLocation()}{linkHtml}</Grid>;
 
-    let actionView = <MessageExpandView message={m} uuid={m.key} user={this.props.user}/>;
     let dateHtml = null;
     if(dateTimeString != null) { 
         dateHtml = <Grid container>
@@ -189,7 +194,9 @@ class MessageDetailView extends Component {
              <ChipArray chipData={chips} />
              {baseHtml}
              {dateHtml}
-             {actionView}
+             <br/>
+             <br/>
+             <br/>
              <div>
                <AppBar position="static" className={classes.appBar}>
                  <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
@@ -202,11 +209,13 @@ class MessageDetailView extends Component {
              {tab == 0 && <div><PostCommentView messageUUID={m.key}/><CommentList messageUUID={m.key}/></div>}
              {tab == 1 && <MessageDetailViewImage url={m.publicImageURL}/>}
              {tab == 2 && <EventMap center={geolocation} zoom={zoom}/>}
-
+             <div className={classes.leftButtonsContainer}>
+               <FavoriteButton message={this.props.message} user={this.props.user} />
+               <ShareDrawer message={this.props.message} />
+             </div>
          </div>);
 
     }
 }
 
 export default withStyles(styles) (MessageDetailView);
-//export default MessageDetailView;

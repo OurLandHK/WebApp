@@ -8,13 +8,19 @@ import ForumIcon from 'material-ui-icons/Forum';
 import EmailIcon from 'material-ui-icons/Email';
 import classnames from 'classnames';
 import red from 'material-ui/colors/red';
+import Typography from 'material-ui/Typography';
 import FavoriteIcon from 'material-ui-icons/Favorite';
 import ShareIcon from 'material-ui-icons/Share';
 import MessageDetailView from './MessageDetailView';
 import {updateMessageConcernUser} from './MessageDB';
 import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
 import Grid from 'material-ui/Grid';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
 import yellow from 'material-ui/colors/yellow';
+import purple from 'material-ui/colors/purple';
+
+
 import {
   isConcernMessage, 
   toggleConcernMessage
@@ -30,7 +36,6 @@ const someNetwork = {
   display: "inline-block",
   marginRight: "1em",
   textAlign: "center",
-  height: '80%',
 };
 
 const buttonStyle = {
@@ -46,6 +51,11 @@ const forumButtonStyle = {
 
 
 const styles = theme => ({
+  shareButton: {
+    margin: 0,
+    marginLeft: '2rem',
+    backgroundColor: purple[500],
+  },
   avatar: {
     backgroundColor: red[500],
   },
@@ -67,7 +77,12 @@ const styles = theme => ({
   },
   facebook: {
     ...someNetwork,
+  },
+  container: {
     display: 'flex',
+    height: '5rem',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
@@ -129,13 +144,10 @@ class ShareDrawer extends React.Component {
           subject={m}
           body={shareUrl}
           className={classes.someNetworkShareButton}>
-
-          <Button color="secondary" fab style={buttonStyle}>
           <EmailIcon
-            size={'3.3em'}
+            style={{width: '4.5rem', height: '4.5rem'}}
+            color="secondary"
             round />
-
-         </Button>
         </EmailShareButton>
       </div>
     );
@@ -151,9 +163,7 @@ class ShareDrawer extends React.Component {
           separator=":: "
           className={classes.someNetworkShareButton}
         >
-          <Button fab style={buttonStyle}>
-            <WhatsappIcon round size={'3.3em'} />
-          </Button>
+          <WhatsappIcon round size={'3.3em'} />
         </WhatsappShareButton>
       </div>
     );
@@ -164,20 +174,13 @@ class ShareDrawer extends React.Component {
     const {classes} = this.props;
     return (
       <div className={classes.facebook}>
-          <FacebookShareButton
-            url={shareUrl}
-            quote={m}
-            hashtag={hashtag}
-            className={classes.someNetworkShareButton}>
-            <Button fab style={buttonStyle}>
-              <FacebookIcon round size={'3.3em'} />
-            </Button>
-          </FacebookShareButton>
-          <FacebookShareCount
-            url={shareUrl}
-            className={classes.someNetworkShareCount}>
-            {count => count}
-          </FacebookShareCount>
+        <FacebookShareButton
+          url={shareUrl}
+          quote={m}
+          hashtag={hashtag}
+          className={classes.someNetworkShareButton}>
+          <FacebookIcon round size={'3.3em'} />
+        </FacebookShareButton>
       </div>
     );
   
@@ -192,31 +195,41 @@ class ShareDrawer extends React.Component {
     var shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + this.props.message.key;
  
     return (
-      <div>
-        <Button onClick={this.toggleDrawer('bottom', true)}>Share</Button>
+      <span>
+        <Button
+          variant="fab"
+          color="primary"
+          className={classes.shareButton}
+          raised={true}
+          onClick={this.toggleDrawer('bottom', true)}
+        >
+          <ShareIcon />
+        </Button>
         <Drawer
           anchor="bottom"
           open={this.state.bottom}
           onClose={this.toggleDrawer('bottom', false)}
         >
+          <AppBar position="static">
+            <Toolbar>
+              <Typography variant="title" color="inherit">
+                分享
+              </Typography>
+            </Toolbar>
+          </AppBar>
           <div
             tabIndex={0}
             role="button"
+            className={classes.container}
             onClick={this.toggleDrawer('bottom', false)}
             onKeyDown={this.toggleDrawer('bottom', false)}
           >
-          <Grid container>
-            <Grid item>
-                { this.renderFacebook(shareUrl, m, hashtag) }
-            </Grid><Grid item>
-                { this.renderWhatsapp(shareUrl, m) }
-            </Grid><Grid item>
-                { this.renderEmail(shareUrl, m) }
-            </Grid>
-           </Grid>
+            { this.renderFacebook(shareUrl, m, hashtag) }
+            { this.renderWhatsapp(shareUrl, m) }
+            { this.renderEmail(shareUrl, m) }
           </div>
         </Drawer>
-      </div>
+      </span>
     );
   }
 }
