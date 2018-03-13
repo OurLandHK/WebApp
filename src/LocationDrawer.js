@@ -52,10 +52,12 @@ class LocationDrawer extends React.Component {
 
     
     toggleDrawer(open){
-        console.log("open: " + open);
         this.setState({
             open: open,
         });
+        if(open===true) {
+            this.componentDidMount(); 
+        }
     };
 
     handleGetLocation() {
@@ -89,7 +91,7 @@ class LocationDrawer extends React.Component {
     
       
     fetchAddress(user) {
-        this.setState({user:user});
+        this.setState({user:user, addressBook:[]});
         fetchAddressBaseonUser(user, this.setAddress)
     }
     
@@ -162,7 +164,8 @@ class LocationDrawer extends React.Component {
             <Chip onClick={() => {this.toggleDrawer(true)}} label={this.state.locationName} className={classes.chip} />
             <Drawer anchor="bottom"
                 open={this.state.open}
-                onClose={() => {this.toggleDrawer(false)}}>
+                onClose={() => {this.toggleDrawer(false)}}
+                unmountOnExit>
                 <div tabIndex={0}
                     role="button"
                     className={classes.fullList}>

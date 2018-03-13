@@ -53,7 +53,7 @@ class AddressDialog extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-        <Dialog fullScreen  open={this.state.open} onRequestClose={this.handleRequestClose} transition={Transition}>
+        <Dialog fullScreen  open={this.state.open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
             <AppBar className={classes.appBar}>
                 <Toolbar>
                     <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
