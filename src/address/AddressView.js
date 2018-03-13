@@ -95,7 +95,11 @@ class AddressView extends Component {
             }
             updateAddress(user, key, this.state.type, this.state.text, this.locationButton.geolocation, this.locationButton.streetAddress);
             this.setState({popoverOpen: false});
-            return null;
+            console.log("call on change" + this.props.onChange);
+            if(this.props.OnChange != null) {
+                console.log("call onchange props");
+                this.props.OnChange();
+            }
         });
     }
     

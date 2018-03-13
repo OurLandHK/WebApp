@@ -12,16 +12,30 @@ import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import MessageDetailView from './MessageDetailView';
 import {getMessage} from './MessageDB';
-import {Helmet} from "react-helmet";
 
-const styles = {
+const styles = theme => ({
   appBar: {
     position: 'relative',
   },
   flex: {
     flex: 1,
+  }, 
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
   },
-};
+  formControl: {
+    margin: theme.spacing.unit,
+  },
+  dialogContainer: {
+    padding: '0.5rem'
+  },
+  dialogTitle: {
+    position: 'relative',
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'  
+  }
+  
+});
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
@@ -74,7 +88,7 @@ class MessageDialog extends React.Component {
       var m = this.message;
       title = m.text;
       imageUrl = m.publicImageURL
-      titleHtml = <Typography  variant="title" color="inherit" className={classes.flex}>
+      titleHtml = <Typography variant="title" color="inherit" className={classes.flex}>
             {m.text}
           </Typography>;
       detailView = <MessageDetailView message={m} user={user}/>;
@@ -86,16 +100,8 @@ class MessageDialog extends React.Component {
           onRequestClose={this.handleRequestClose}
           transition={Transition}
           unmountOnExit
-        >
-          <Helmet>
-              <meta charSet="utf-8" />
-              <link rel="canonical" href={shareUrl} />
-              <meta property="og:url" content={shareUrl} />
-              <meta property="og:type" content="article" />
-              <meta property="og:title" content={title} />
-              <meta property="og:image" content={imageUrl} />
-          </Helmet>        
-          <AppBar className={classes.appBar}>
+        >      
+          <AppBar className={classes.dialogTitle}>
             <Toolbar>
               <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                 <CloseIcon />

@@ -39,30 +39,12 @@ const styles = theme => ({
   appBar: {
     backgroundColor: theme.palette.secondary['200'],
   },
-  card: {
-    maxWidth: 400,
-  },
-  media: {
-    height: 960,
-  },
-  expand: {
-    transform: 'rotate(0deg)',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
-  },
   avatar: {
     backgroundColor: red[500],
   },
   cover: {
     width: 64,
     height: 64,
-  },
-  flexGrow: {
-    flex: '1 1 auto',
   },
   leftButtonsContainer: {
     marginLeft: '0.5rem',

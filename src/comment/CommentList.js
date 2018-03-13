@@ -44,7 +44,17 @@ class CommentList extends Component {
     elements = this.state.data.reverse().map((comment) => {
         return (<CommentView comment={comment}/>);
       });      
-    return (<div width="100%">{elements}</div>);
+    if(this.state.data.length !=0) {
+      return (<div width="100%">{elements}</div>);
+    }
+    return (
+      <div>
+        <center>
+          <br/>
+          <h2>按+成為第一個參與者</h2>
+        </center>
+      </div>
+    );
   }
 };
 

@@ -38,18 +38,8 @@ const styles = theme => ({
     left: 'auto',
     position: 'fixed',
   },
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
   flex: {
     flex: 1,
-  },  
-  expand: {
-    transform: 'rotate(0deg)',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
   },  
   textField: {
     marginLeft: theme.spacing.unit,

@@ -13,6 +13,7 @@ class AddressList extends Component {
   }
 
   componentDidMount() {
+    console.log("Address List mount");
     var auth = firebase.auth();
     auth.onAuthStateChanged((user) => {
         if (user) {
@@ -31,16 +32,16 @@ class AddressList extends Component {
 
   
   fetchAddress(user) {
-    this.setState({user:user});
+    this.setState({user:user, addressBook:[]});
     fetchAddressBaseonUser(user, this.setAddress)
   }
 
   render() {
     let elements = null;
-    elements = this.state.data.reverse().map((addressRef) => {
-        return (<AddressView addressRef={addressRef}/>);
+    elements = this.state.data.map((addressRef) => {
+        return (<AddressView addressRef={addressRef} OnChange={() => {this.componentDidMount()}}/>);
       });      
-    return (<div width="100%">{elements}</div>);
+    return (<div width="100%" >{elements}</div>);
   }
 };
 
