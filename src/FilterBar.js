@@ -11,12 +11,10 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import {connect} from "react-redux";
 import {fetchLocation} from "./actions";
-import FilterBar from './FilterBar';
 
 
 const styles = {
-  root: {
-    marginTop: 1,
+  filter: {
     width: '100%',
   },
   flex: {
@@ -25,16 +23,11 @@ const styles = {
 };
 
 
-class Header extends  Component {
+class FilterBar extends  Component {
   constructor(props) {
     super(props);
   }
 
-  handleLeftTouchTap() {
-    console.log('Open Drawer');
-    alert('onTouchTap triggered on the title component');
-    this.drawerMenu.handleToggle();
-  }
 
   componentDidMount() {
   }
@@ -45,22 +38,13 @@ class Header extends  Component {
 
   render() {
     const classes = this.props.classes;
-    return (<div className={classes.root}>
-              <AppBar position="fixed">
-                <Toolbar>
-                  <DrawerMenu header={this} ref={(drawerMenu) => {this.drawerMenu = drawerMenu;}} />
-                  <Typography variant="title" color="inherit" className={classes.flex}>
-                    我地
-                  </Typography>
-                  <SignInButton/>
-                </Toolbar>  
-                <FilterBar />           
-              </AppBar>      
-            </div>);
+    return (<Toolbar>
+                  <LocationDrawer />
+                </Toolbar>);
   }
 }
 
-Header.propTypes = {
+FilterBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
@@ -77,4 +61,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Header));
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(FilterBar));
