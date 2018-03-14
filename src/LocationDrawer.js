@@ -13,6 +13,8 @@ import AddLocationIcon from 'material-ui-icons/AddLocation';
 import PlaceIcon from 'material-ui-icons/Place';
 import WorkIcon from 'material-ui-icons/Work';
 import HomeIcon from 'material-ui-icons/Home';
+import LocationIcon from 'material-ui-icons/LocationOn';
+import blue from 'material-ui/colors/blue';
 import {fetchAddressBaseonUser} from './UserProfile';
 import config,  {constant, addressEnum} from './config/default';
 import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
@@ -31,8 +33,16 @@ const styles = theme => ({
   fullList: {
     width: 'auto',
   },
+  white: {
+    color: "#FFFFFF",
+  },
   chip: {
+    fontWeight: 'bold',
+    fontSize: '0.8rem',
     margin: theme.spacing.unit,
+    background: blue[800],
+    color: '#FFFFFF',
+    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
   },  
 });
 
@@ -162,7 +172,12 @@ class LocationDrawer extends React.Component {
          
         return (
         <div>
-            <Chip onClick={() => {this.toggleDrawer(true)}} label={this.state.locationName} className={classes.chip} />
+            <Chip
+              avatar={<LocationIcon className={classes.white}/>}
+              onClick={() => {this.toggleDrawer(true)}}
+              label={`在${this.state.locationName}的${this.props.filter.distance}公里內`}
+              className={classes.chip}
+            />
             <Drawer anchor="bottom"
                 open={this.state.open}
                 onClose={() => {this.toggleDrawer(false)}}
