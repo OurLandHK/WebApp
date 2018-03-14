@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Card, { CardHeader} from 'material-ui/Card';
+import Card, { CardHeader, CardContent} from 'material-ui/Card';
 import distance from './Distance';
 import timeOffsetStringInChinese from './TimeString.js';
 import { withStyles } from 'material-ui/styles';
 import red from 'material-ui/colors/red';
 import MessageDialog from './MessageDialog';
+import Typography from 'material-ui/Typography';
 import {connect} from "react-redux";
 
 const styles = theme => ({
@@ -17,6 +18,15 @@ const styles = theme => ({
   },
   flexGrow: {
     flex: '1 1 auto',
+  },
+  title: {
+//    marginBottom: 16,
+    fontSize: 14,
+    color: theme.palette.text.secondary,
+  },
+  pos: {
+//    marginBottom: 12,
+    color: theme.palette.text.secondary,
   },
 });
 
@@ -56,16 +66,19 @@ class MessageView extends Component {
     }
     var timeOffset = Date.now() - m.createdAt;
     var timeOffsetString = timeOffsetStringInChinese(timeOffset);
-    var subtitle = '張貼於： ' + timeOffsetString + '前 ' + distanceSpan + ' 現況: ' + m.status;
+    var auther = m.name + ' 於: ' + timeOffsetString + '前張貼 '
+    var subtitle = distanceSpan + ' 現況: ' + m.status;
+//    let summary = <CardHeader title={m.text}  subheader={subtitle}  onClick={() => this.handleClick()}>  </CardHeader>
+    let summary = <CardContent onClick={() => this.handleClick()}>
+                    <Typography className={classes.title}>{auther}</Typography>
+                      <Typography variant="headline" component="h2"> {m.text}</Typography>
+                    <Typography className={classes.pos}>{subtitle}</Typography>
+                  </CardContent>
     return (<div>
-              <Card>                   
-                <CardHeader
-                  title={m.text}
-                  subheader={subtitle}
-                  onClick={() => this.handleClick()}>
-                </CardHeader>
-                <MessageDialog uuid={uuid} user={user} open={o} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
+              <Card>
+                {summary}
               </Card>
+              <MessageDialog uuid={uuid} user={user} open={o} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
             </div>);
   }
 }
