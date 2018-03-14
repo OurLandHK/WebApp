@@ -6,7 +6,10 @@ import InboxIcon from 'material-ui-icons/Inbox';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Icon from 'material-ui/Icon';
 import MenuIcon from 'material-ui-icons/Menu';
-import LibraryBooksIcon from 'material-ui-icons/LibraryBooks';
+import StarIcon from 'material-ui-icons/Star';
+import LocationOn from 'material-ui-icons/LocationOn';
+import ChatBubbleIcon from 'material-ui-icons/ChatBubbleOutline';
+import PersonIcon from 'material-ui-icons/Person';
 import UserProfileView from './UserProfileView';
 import AddressDialog from './address/AddressDialog';
 import {connect} from "react-redux";
@@ -111,25 +114,25 @@ class DrawerMenu extends Component {
               </ListItem>              
               <ListItem button>
                 <ListItemIcon>
-                  <InboxIcon />
+                  <StarIcon />
                 </ListItemIcon>
                 <ListItemText primary="人氣排名榜" onClick={() => this.handleClose()}/>
               </ListItem>
               <ListItem button>
                 <ListItemIcon>
-                  <InboxIcon />
+                  <PersonIcon />
                 </ListItemIcon>
                 <ListItemText primary="使用者設定" onClick={() => this.userProfileClick()}/>
               </ListItem>
               <ListItem button>
                 <ListItemIcon>
-                  <LibraryBooksIcon />
+                  <LocationOn />
                 </ListItemIcon>
                 <ListItemText primary={constant.addressBookLabel} onClick={() => this.addressDialogClick()}/>
               </ListItem>                                                        
               <ListItem button>
                 <ListItemIcon>
-                  <LibraryBooksIcon />
+                  <ChatBubbleIcon />
                 </ListItemIcon>
                 <ListItemText primary="關於" onClick={() => this.showAbout()}/>
               </ListItem>                                                        
