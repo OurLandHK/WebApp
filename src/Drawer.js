@@ -113,13 +113,13 @@ class DrawerMenu extends Component {
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary="Ladder" onClick={() => this.handleClose()}/>
+                <ListItemText primary="人氣排名榜" onClick={() => this.handleClose()}/>
               </ListItem>
               <ListItem button>
                 <ListItemIcon>
                   <InboxIcon />
                 </ListItemIcon>
-                <ListItemText primary="User Profile" onClick={() => this.userProfileClick()}/>
+                <ListItemText primary="使用者設定" onClick={() => this.userProfileClick()}/>
               </ListItem>
               <ListItem button>
                 <ListItemIcon>
