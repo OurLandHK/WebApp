@@ -1,11 +1,16 @@
+import { withStyles } from 'material-ui/styles';
 import MessageList from './MessageList';
 import PostMessageView from './PostMessageView';
 import MessageDialog from './MessageDialog';
 import PublicProfile from './PublicProfile';
 import React, { Component } from 'react';
 import config, {constant} from './config/default';
-//import PropTypes from 'prop-types';
-//import {connect} from "react-redux";
+
+const styles = () => ({
+  container: {
+    marginTop: '0.5rem',
+  },
+});
 
 class Main extends Component {
   constructor(props) {
@@ -18,25 +23,30 @@ class Main extends Component {
         eventId: this.props.eventId,
         eventNumber: this.props.eventNumber,
         distance: this.props.distance, 
-        geolocation: this.props.geolocation,
-        userId: this.props.userId
+        geolocation: this.props.geolocation,CHANGE_FILTERserId: this.props.userId
       };
-      this.updateFilter = this.updateFilter.bind(this);
-  }
-
-  updateFilter(eventNumber, distance, geolocation) {
-//    console.log("Main Update Filter : " + geolocation.latitude + "," + geolocation.longitude);
-    this.setState({
-      eventNumber: eventNumber,
-      distance: distance, 
-      geolocation: geolocation,
-    });
-    this.messageList.updateFilter(eventNumber, distance, geolocation);
   }
 
   handleClick() {
     this.openDialog();
   };
+
+  renderMessages() {
+    const { eventNumber, distance, geolocation, eventId } = this.state;
+    const { classes } = this.props; 
+    return (
+      <div className={classes.container}>
+        <MessageList
+          ref={(messageList) => {this.messageList = messageList;}}
+          uuid={eventId}
+          eventNumber={eventNumber}
+          distance={distance}
+          geolocation={geolocation}
+        />
+        <PostMessageView />
+      </div>
+    );
+  }
 
   render() {
     let pubilcProfileHtml = null;
@@ -45,7 +55,7 @@ class Main extends Component {
     if(this.state.userId != null && this.state.userId != "") {
       pubilcProfileHtml = <PublicProfile id={this.state.userId}/>;
     } else {
-      messageHtml = <div><MessageList ref={(messageList) => {this.messageList = messageList;}} uuid={this.state.eventId} eventNumber={this.state.eventNumber} distance={this.state.distance} geolocation={this.state.geolocation}/><PostMessageView/></div>;
+      messageHtml = this.renderMessages();
     }
     return (
       <div>
@@ -57,19 +67,4 @@ class Main extends Component {
   }
 }
 
-/*
-const mapStateToProps = (state, ownProps) => {
-  return {
-    geoLocation : state.geoLocation,
-  };
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-  }
-};
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
-*/
-export default Main;
+export default withStyles(styles)(Main);

@@ -1,5 +1,11 @@
 import { combineReducers } from 'redux';  
-import { FETCH_USER, FETCH_LOCATION, DISABLE_LOCATION } from './actions/types';
+import {
+  FETCH_USER,
+  FETCH_LOCATION,
+  DISABLE_LOCATION,
+  UPDATE_FILTER_LOCATION,
+  UPDATE_FILTER
+} from './actions/types';
 
 
 function geoLocationReducer(state={}, action) {
@@ -22,9 +28,28 @@ function userReducer(state={user: null, loading: true}, action) {
   }
 }
 
+function filterReducer(state={eventNumber: 20, geolocation: null, distance: 1}, action) {
+  switch (action.type) {
+    case UPDATE_FILTER:
+      return {
+        eventNumber: action.eventNumber,
+        geolocation: action.geolocation,
+        distance: action.distance
+      };
+    case UPDATE_FILTER_LOCATION:
+      return {
+        ...state,
+        geolocation: action.geolocation,
+      }
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({  
   geoLocation: geoLocationReducer,
-  user: userReducer
+  user: userReducer,
+  filter: filterReducer,
 });
 
 

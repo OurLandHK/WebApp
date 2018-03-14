@@ -1,4 +1,10 @@
-import {FETCH_USER, DISABLE_LOCATION, FETCH_LOCATION} from './actions/types';
+import {
+  UPDATE_FILTER,
+  UPDATE_FILTER_LOCATION,
+  FETCH_USER,
+  DISABLE_LOCATION,
+  FETCH_LOCATION
+} from './actions/types';
 import * as firebase from 'firebase';
 import {getUserProfile} from './UserProfile';
 
@@ -16,6 +22,14 @@ function disableLocation() {
 
 function fetchUser(user, loading=false) {
   return {type: FETCH_USER, user: user, loading: loading};
+}
+
+function dispatchFilter(eventNumber, distance, geolocation) {
+  return {type: UPDATE_FILTER, eventNumber: eventNumber, geolocation: geolocation, distance: distance}
+}
+
+function dispatchFilterLocation(geolocation) {
+  return {type: UPDATE_FILTER_LOCATION, geolocation: geolocation};
 }
 
 export function fetchLocation() {
@@ -107,4 +121,16 @@ export function setOfficeLocation() {
       }
     });
   }
+}
+
+export function updateFilter(eventNumber, distance, geolocation) {
+  return dispatch => {
+    dispatch(dispatchFilter(eventNumber, distance, geolocation));
+  };
+}
+
+export function updateFilterLocation(geolocation) {
+  return dispatch => {
+    dispatch(dispatchFilterLocation(geolocation));
+  };
 }

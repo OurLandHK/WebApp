@@ -17,6 +17,8 @@ import {fetchAddressBaseonUser} from './UserProfile';
 import config,  {constant, addressEnum} from './config/default';
 import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
 import geoString from './GeoLocationString';
+import { updateFilterLocation } from './actions';
+import {connect} from "react-redux";
 
 
 const styles = theme => ({
@@ -115,9 +117,8 @@ class LocationDrawer extends React.Component {
         console.log("set " + text + "(" + this.geolocation.latitude + "," +  this.geolocation.longitude + ")");
         this.setState({locationName: text, geolocation: coords});
         this.toggleDrawer(false);
-        if(this.props.OnChangeLocation != null) {
-            this.props.OnChangeLocation(coords);
-        }
+        const { updateFilterLocation } = this.props;
+        updateFilterLocation(coords);
     }
 
     render() {
@@ -189,4 +190,23 @@ LocationDrawer.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(LocationDrawer);
+const mapStateToProps = (state, ownProps) => {
+  return {
+    filter : state.filter,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateFilterLocation:
+      (geolocation) =>
+        dispatch(updateFilterLocation(geolocation)),
+  }
+};
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
+(withStyles(styles)(LocationDrawer));

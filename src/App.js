@@ -13,6 +13,7 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';  
 import thunk from 'redux-thunk';  
 import rootReducer from './reducers';
+import { updateFilter } from './actions';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);  
 const store = createStoreWithMiddleware(rootReducer);
@@ -49,7 +50,6 @@ class App extends Component {
 
   changeLocation(geolocation) {
     this.setState({geolocation: geolocation});
-    this.main.updateFilter(this.state.eventNumber, this.state.distance, geolocation);
   }
 
   render() {
@@ -60,8 +60,14 @@ class App extends Component {
     return (
       <Provider store={store}>
         <div>
-          <Header ref={(header) => {this.header = header;}}  OnChangeLocation={(geolocation) => {this.changeLocation(geolocation)}}/>
-          <Main ref={(main) => {this.main = main;}} eventId={this.state.eventId} userId={this.state.userId} eventNumber={this.state.eventNumber} distance={this.state.distance} geolocation={this.state.geolocation}/>
+          <Header />
+          <Main
+            eventId={this.state.eventId}
+            userId={this.state.userId}
+            eventNumber={this.state.eventNumber}
+            distance={this.state.distance}
+            geolocation={this.state.geolocation}
+          />
         </div>
       </Provider>
     );

@@ -42,12 +42,6 @@ class Header extends  Component {
     console.warn('ERROR(${err.code}): ${err.message}');
   }  
 
-  changeLocation(geolocation) {
-    if(this.props.OnChangeLocation != null) {
-      this.props.OnChangeLocation(geolocation);
-    }
-  }
-
   render() {
     const classes = this.props.classes;
     return (<div className={classes.root}>
@@ -60,7 +54,7 @@ class Header extends  Component {
                   <SignInButton/>
                 </Toolbar>
                 <Toolbar>
-                  <LocationDrawer OnChangeLocation={(geolocation) => {this.changeLocation(geolocation)}}/>
+                  <LocationDrawer />
                 </Toolbar>                
               </AppBar>      
             </div>);
