@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import Drawer from 'material-ui/Drawer';
@@ -12,8 +11,14 @@ import UserProfileView from './UserProfileView';
 import AddressDialog from './address/AddressDialog';
 import {connect} from "react-redux";
 import Divider from 'material-ui/Divider';
-import {fetchLocation, setHomeLocation, setOfficeLocation} from "./actions";
-import  {constant} from './config/default';
+import {
+  fetchLocation,
+  setHomeLocation,
+  setOfficeLocation
+} from "./actions";
+import { constant } from './config/default';
+import AboutDialog from './AboutDialog';
+
 const currentLocationLabel = "現在位置";
 const officeLocationLabel = "辦公室位置";
 const homeLocationLabel = "屋企位置";
@@ -44,6 +49,11 @@ class DrawerMenu extends Component {
   addressDialogClick(){
     this.handleClose();
     this.openAddressDialog();
+  }
+
+  showAbout() {
+    this.handleClose();
+    this.openAboutDialog();
   }
 
 
@@ -80,6 +90,7 @@ class DrawerMenu extends Component {
         </IconButton>
         <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>        
         <AddressDialog ref={(addressDialog) => {this.addressDialog = addressDialog;}} openDialog={openDialog => this.openAddressDialog = openDialog}/>        
+        <AboutDialog openDialog={f => this.openAboutDialog = f}/>        
         <Drawer
           open={this.state.open}
           onClose={() => this.handleClose()}
@@ -115,6 +126,12 @@ class DrawerMenu extends Component {
                   <LibraryBooksIcon />
                 </ListItemIcon>
                 <ListItemText primary={constant.addressBookLabel} onClick={() => this.addressDialogClick()}/>
+              </ListItem>                                                        
+              <ListItem button>
+                <ListItemIcon>
+                  <LibraryBooksIcon />
+                </ListItemIcon>
+                <ListItemText primary="關於" onClick={() => this.showAbout()}/>
               </ListItem>                                                        
             </List>
           </div>                  
