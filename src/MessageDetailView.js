@@ -46,13 +46,19 @@ const styles = theme => ({
     width: 64,
     height: 64,
   },
-  leftButtonsContainer: {
+  rightButtonsContainer: {
     marginLeft: '0.5rem',
-    top: 'auto',
-    left: 20,
-    bottom: 20,
+    top: '80',
     left: 'auto',
+    bottom: 'auto',
+    right: '20',
+    zIndex: '100',
     position: 'fixed',
+    display: 'inline-block',
+  },
+  rightButton: {
+    display: 'block',
+    marginBottom: '1rem',
   },
 });
 
@@ -187,13 +193,22 @@ class MessageDetailView extends Component {
                    <Tab label="地圖"/>
                  </Tabs>
                </AppBar>
-             </div>
+ ,            </div>
              {tab == 0 && <div><PostCommentView messageUUID={m.key}/><CommentList messageUUID={m.key}/></div>}
              {tab == 1 && <MessageDetailViewImage url={m.publicImageURL}/>}
              {tab == 2 && <EventMap center={geolocation} zoom={zoom}/>}
-             <div className={classes.leftButtonsContainer}>
-               <FavoriteButton message={this.props.message} user={this.props.user} />
-               <ShareDrawer message={this.props.message} />
+             <div className={classes.rightButtonsContainer}>
+               <div className={classes.rightButton}>
+                 <FavoriteButton
+                   message={this.props.message}
+                   user={this.props.user}
+                 />
+               </div>
+               <div className={classes.rightButton}>
+                 <ShareDrawer
+                   message={this.props.message}
+                 />
+               </div>
              </div>
          </div>);
 

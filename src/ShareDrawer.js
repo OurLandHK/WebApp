@@ -53,7 +53,6 @@ const forumButtonStyle = {
 const styles = theme => ({
   shareButton: {
     margin: 0,
-    marginLeft: '2rem',
     backgroundColor: purple[500],
   },
   avatar: {
