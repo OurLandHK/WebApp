@@ -1,7 +1,6 @@
 import * as firebase from 'firebase';
 import * as firestore from 'firebase/firestore';
 import config, {constant} from './config/default';
-//import { GeoPoint } from '@firebase/firestore-types';
 
 function getUserProfile(user) {
     // Use firestore
@@ -166,19 +165,6 @@ function addPublishMessagesKeyToUserProfile(user, messageUUID) {
     });
 }
 
-/// All about address
-function fetchAddressBaseonUser(user, callback) {
-    var db = firebase.firestore();
-    var collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
-    collectionRef.onSnapshot(function() {})         
-    // Use firestore
-    collectionRef.get().then(function(querySnapshot) {
-        querySnapshot.forEach(callback);
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
-}
 
 function updateAddress(user, key, type, text, geolocation, streetAddress) {
     var now = Date.now();
@@ -206,5 +192,5 @@ function updateAddress(user, key, type, text, geolocation, streetAddress) {
 }
 
 
-export {updateAddress, fetchAddressBaseonUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage};
+export {updateAddress, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage};
 

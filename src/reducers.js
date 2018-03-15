@@ -4,7 +4,8 @@ import {
   FETCH_LOCATION,
   DISABLE_LOCATION,
   UPDATE_FILTER_LOCATION,
-  UPDATE_FILTER
+  UPDATE_FILTER,
+  FETCH_ADDRESS_BOOK,
 } from './actions/types';
 
 
@@ -23,6 +24,15 @@ function userReducer(state={user: null, loading: true}, action) {
   switch (action.type) {
     case FETCH_USER:
       return {user: action.user, loading: action.loading};
+    default:
+      return state;
+  }
+}
+
+function addressBookReducer(state={addresses:[]}, action) {
+  switch (action.type) {
+    case FETCH_ADDRESS_BOOK:
+      return {addresses: action.addresses}
     default:
       return state;
   }
@@ -50,6 +60,7 @@ const rootReducer = combineReducers({
   geoLocation: geoLocationReducer,
   user: userReducer,
   filter: filterReducer,
+  addressBook: addressBookReducer,
 });
 
 

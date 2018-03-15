@@ -15,11 +15,10 @@ import WorkIcon from 'material-ui-icons/Work';
 import HomeIcon from 'material-ui-icons/Home';
 import LocationIcon from 'material-ui-icons/LocationOn';
 import blue from 'material-ui/colors/blue';
-import {fetchAddressBaseonUser} from './UserProfile';
 import config,  {constant, addressEnum} from './config/default';
 import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
 import geoString from './GeoLocationString';
-import { updateFilterLocation } from './actions';
+import { updateFilterLocation, fetchAddressBookByUser } from './actions';
 import {connect} from "react-redux";
 
 
@@ -51,7 +50,6 @@ class LocationDrawer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {open: false,
-            addressBook:[],
             geolocation: null,
             locationName: "現在位置"};
         this.disabled = false;
@@ -59,7 +57,6 @@ class LocationDrawer extends React.Component {
         this.successCallBack = this.successCallBack.bind(this);
         this.errorCallBack = this.errorCallBack.bind(this);
         this.notSupportedCallBack = this.notSupportedCallBack.bind(this);
-        this.setAddress = this.setAddress.bind(this);
     }    
 
     
@@ -90,21 +87,14 @@ class LocationDrawer extends React.Component {
                     this.handleGetLocation();
                 }
             } else {
-                this.setState({addressBook:[]})
             }
         });
     }    
     
-    setAddress(doc) {
-        var val = doc.data();
-        this.state.addressBook.push(val);
-        this.setState({addressBook:this.state.addressBook});
-    };
-    
       
     fetchAddress(user) {
-        this.setState({user:user, addressBook:[]});
-        fetchAddressBaseonUser(user, this.setAddress)
+        this.setState({user:user});
+        this.props.fetchAddressBookByUser(user);
     }
     
     notSupportedCallBack() {
@@ -131,45 +121,48 @@ class LocationDrawer extends React.Component {
         updateFilterLocation(coords);
     }
 
+    renderAddressBook() {
+      const { classes, addressBook } = this.props;
+      return addressBook.addresses.map(address => {
+        let icons = <PlaceIcon />;
+        let type = address.type;
+        let text = address.text;
+        let locationString = constant.addressNotSet;
+        let geolocation = null;
+        if (address.geolocation != null) {
+          geolocation = {latitude :address.geolocation.latitude,
+          longitude: address.geolocation.longitude};
+          if (address.streetAddress != null) {
+            locationString =  address.streetAddress + " (" + geoString(geolocation.latitude, geolocation.longitude) + ")";
+          } else {
+            locationString = "近" + geoString(geolocation.latitude, geolocation.longitude);      
+          } 
+        }
+        switch(type) {
+          case addressEnum.home:
+            icons = <HomeIcon />;
+            break;
+          case addressEnum.office:
+            icons = <WorkIcon />;
+            break;
+        }
+       if (locationString != constant.addressNotSet) {
+         return (
+           <ListItem button onClick={() => {this.setLocation(text, geolocation)}}>
+             <ListItemIcon>
+             {icons}
+             </ListItemIcon>
+             <ListItemText primary={text} secondary={locationString} />
+           </ListItem>
+         );
+       } else {
+         return (null);
+       }
+      });
+    }
+
     render() {
         const { classes } = this.props;      
-        let addressBook = this.state.addressBook.map((address) => {
-            let icons = <PlaceIcon />;
-            let type = address.type;
-            let text = address.text;
-            let locationString = constant.addressNotSet;
-            let geolocation = null;
-            if(address.geolocation != null) {
-                geolocation = {latitude :address.geolocation.latitude,
-                    longitude: address.geolocation.longitude};
-                if(address.streetAddress != null) {
-                    locationString =  address.streetAddress + " (" + geoString(geolocation.latitude, geolocation.longitude) + ")";
-                } else {
-                    locationString = "近" + geoString(geolocation.latitude, geolocation.longitude);      
-                } 
-            }
-            switch(type) {
-                case addressEnum.home:
-                    icons = <HomeIcon />;
-                    break;
-                case addressEnum.office:
-                    icons = <WorkIcon />;
-                    break;
-            }
-            if(locationString != constant.addressNotSet) {
-                return (
-                        <ListItem button onClick={() => {this.setLocation(text, geolocation)}}>
-                            <ListItemIcon>
-                                {icons}
-                            </ListItemIcon>
-                            <ListItemText primary={text} secondary={locationString} />
-                        </ListItem>
-                        );
-            } else {
-                return (null);
-            }
-        });
-         
         return (
         <div>
             <Chip
@@ -193,7 +186,7 @@ class LocationDrawer extends React.Component {
                             <ListItemText primary={constant.currentLocation} />
                         </ListItem>
                         <Divider />
-                        {addressBook}
+                        {this.renderAddressBook()}
                     </List>
                 </div>
             </Drawer>
@@ -208,13 +201,17 @@ LocationDrawer.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   return {
     filter : state.filter,
+    addressBook: state.addressBook,
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchAddressBookByUser:
+      user =>
+        dispatch(fetchAddressBookByUser(user)),
     updateFilterLocation:
-      (geolocation) =>
+      geolocation =>
         dispatch(updateFilterLocation(geolocation)),
   }
 };

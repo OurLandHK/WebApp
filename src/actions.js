@@ -3,9 +3,11 @@ import {
   UPDATE_FILTER_LOCATION,
   FETCH_USER,
   DISABLE_LOCATION,
-  FETCH_LOCATION
+  FETCH_LOCATION,
+  FETCH_ADDRESS_BOOK,
 } from './actions/types';
 import * as firebase from 'firebase';
+import config, {constant} from './config/default';
 import {getUserProfile} from './UserProfile';
 
 const currentLocationLabel = "現在位置";
@@ -18,6 +20,10 @@ function receiveLocation(pos, label=currentLocationLabel){
 
 function disableLocation() {
   return {type: DISABLE_LOCATION};
+}
+
+function fetchAddressBook(address) {
+  return {type: FETCH_ADDRESS_BOOK, addresses: address};
 }
 
 function fetchUser(user, loading=false) {
@@ -133,4 +139,20 @@ export function updateFilterLocation(geolocation) {
   return dispatch => {
     dispatch(dispatchFilterLocation(geolocation));
   };
+}
+
+export function fetchAddressBookByUser(user) {
+  return dispatch => {
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
+    collectionRef.onSnapshot(function() {})         
+    collectionRef.get().then(function(querySnapshot) {
+       const addresses = querySnapshot.docs.map(d => d.data());
+       dispatch(fetchAddressBook(addresses));
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+  };
+
 }

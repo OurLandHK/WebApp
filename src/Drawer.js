@@ -35,12 +35,10 @@ class DrawerMenu extends Component {
   }
 
   handleToggle(){
-    console.log('daads');
     this.setState({open: !this.state.open});
   }
 
   handleClose(){
-    console.log('asdf');
     this.setState({open: false});
   }
 

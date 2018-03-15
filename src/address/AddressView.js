@@ -40,8 +40,8 @@ class AddressView extends Component {
         var geolocation = null;
         var streetAddress = null;  
         var type = addressEnum.other;      
-        if(this.props.addressRef != null) {
-            var c = this.props.addressRef.data();
+        if(this.props.address != null) {
+            var c = this.props.address;
             text = c.text;
             geolocation = {latitude :c.geolocation.latitude,
                 longitude: c.geolocation.longitude};
@@ -63,8 +63,8 @@ class AddressView extends Component {
         var geolocation = null;
         var streetAddress = null; 
         var type = addressEnum.other;        
-        if(this.props.addressRef != null) {
-            var c = this.props.addressRef.data();
+        if(this.props.address != null) {
+            var c = this.props.address;
             text = c.text;
             geolocation = {latitude :c.geolocation.latitude,
                             longitude: c.geolocation.longitude};
@@ -90,8 +90,8 @@ class AddressView extends Component {
         var auth = firebase.auth();
         auth.onAuthStateChanged((user) => {
             var key = null;
-            if (this.props.addressRef != null) {
-                key = this.props.addressRef.id;
+            if (this.props.address != null) {
+                key = this.props.address.id;
             }
             updateAddress(user, key, this.state.type, this.state.text, this.locationButton.geolocation, this.locationButton.streetAddress);
             this.setState({popoverOpen: false});
@@ -113,8 +113,8 @@ class AddressView extends Component {
         let streetAddress = null;
         let type = addressEnum.other;  
         let icons = <PlaceIcon />;
-        if(this.props.addressRef != null) {
-            var c = this.props.addressRef.data();
+        if(this.props.address != null) {
+            var c = this.props.address;
             var text = c.text;
             streetAddress = c.streetAddress;
             type = c.type;

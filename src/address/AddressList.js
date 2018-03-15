@@ -2,47 +2,44 @@ import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import config from '../config/default';
 import AddressView from './AddressView';
-import {fetchAddressBaseonUser} from '../UserProfile';
+import { fetchAddressBookByUser } from '../actions';
+import {connect} from "react-redux";
 
 
 class AddressList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {data:[]};
-    this.setAddress = this.setAddress.bind(this);
+  componentWillMount() {
+    this.props.fetchAddressBookByUser(this.props.user.user);
   }
-
-  componentDidMount() {
-    console.log("Address List mount");
-    var auth = firebase.auth();
-    auth.onAuthStateChanged((user) => {
-        if (user) {
-            this.fetchAddress(user); 
-        } else {
-            this.setState({data:[]})
-        }
-    });
-  }
-
-  setAddress(doc) {
-    var val = doc;
-    this.state.data.push(val);
-    this.setState({data:this.state.data});
-  };
-
   
-  fetchAddress(user) {
-    this.setState({user:user, addressBook:[]});
-    fetchAddressBaseonUser(user, this.setAddress)
-  }
-
   render() {
     let elements = null;
-    elements = this.state.data.map((addressRef) => {
-        return (<AddressView addressRef={addressRef} OnChange={() => {this.componentDidMount()}}/>);
+    const { addressBook } = this.props;
+    elements = addressBook.addresses.map((address) => {
+        return (<AddressView address={address} OnChange={() => {this.componentWillMount()}}/>);
       });      
     return (<div width="100%" >{elements}</div>);
   }
 };
 
-export default AddressList;
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user: state.user,
+    addressBook: state.addressBook,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchAddressBookByUser:
+      user =>
+        dispatch(fetchAddressBookByUser(user)),
+  }
+};
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
+(AddressList);
