@@ -77,21 +77,7 @@ class UserProfileView extends React.Component {
 
   onSubmit() {
     this.setState({ open: false });
-    var homeLocationLongitude = this.state.userProfile.homeLocation.longitude;
-    var homeLocationLatitude = this.state.userProfile.homeLocation.latitude;
-    var officeLocationLongitude = this.state.userProfile.officeLocation.longitude;
-    var officeLocationLatitude = this.state.userProfile.officeLocation.latitude;
-
-    if(this.homeLocationButton.geolocation != null) {
-      homeLocationLongitude = this.homeLocationButton.geolocation.longitude;
-      homeLocationLatitude = this.homeLocationButton.geolocation.latitude;
-    }
-    if(this.officeLocationButton.geolocation != null) {
-      officeLocationLongitude = this.officeLocationButton.geolocation.longitude;
-      officeLocationLatitude = this.officeLocationButton.geolocation.latitude;
-    }
-    
-    updateUserLocation(this.state.user, officeLocationLatitude, officeLocationLongitude, homeLocationLatitude, homeLocationLongitude);
+    // TOADA nothing to submit now
   }
   
   
@@ -125,14 +111,6 @@ class UserProfileView extends React.Component {
           {
             concern = this.state.userProfile.concernMessages.length;
           }                
-          if(this.state.userProfile.homeLocation.latitude != constant.invalidLocation.latitude)
-          {
-            homeLocation = geoString(this.state.userProfile.homeLocation.latitude, this.state.userProfile.homeLocation.longitude);
-          }
-          if(this.state.userProfile.officeLocation.latitude != constant.invalidLocation.latitude)
-          {
-            officeLocation = geoString(this.state.userProfile.officeLocation.latitude, this.state.userProfile.officeLocation.longitude); 
-          }
         }
     }
     return (
@@ -163,15 +141,6 @@ class UserProfileView extends React.Component {
           <ListItem button>
             <ListItemText primary="完成事件: " secondary={complete} />
           </ListItem>                                   
-          <Divider />            
-          <ListItem>
-            <ListItemText primary={homeLocationLabel + ": "} secondary={homeLocation} /> 
-            設定:<LocationButton ref={(locationButton) => {this.homeLocationButton = locationButton;}}/>
-          </ListItem>
-          <ListItem>
-            <ListItemText primary={officeLocationLabel + ": "} secondary={officeLocation} />
-            設定:<LocationButton ref={(locationButton) => {this.officeLocationButton = locationButton;}}/>              
-          </ListItem>            
         </List>
         </Dialog>
     );
