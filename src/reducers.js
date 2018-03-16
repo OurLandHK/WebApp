@@ -9,7 +9,7 @@ import {
 } from './actions/types';
 
 
-function geoLocationReducer(state={}, action) {
+function geoLocationReducer(state={pos: null, enabled: true}, action) {
   switch (action.type) {
     case FETCH_LOCATION:
       return {...state, pos: action.geoLocation.coords, enabled: true };

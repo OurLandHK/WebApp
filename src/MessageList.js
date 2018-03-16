@@ -26,15 +26,11 @@ class MessageList extends Component {
     this.setMessage = this.setMessage.bind(this);
     this.clear = this.clear.bind(this);
   }
-
-  componentWillUpdate(nextProps) {
-    if (nextProps.filter !== this.props.filter) {
-      this.refreshMessageList(nextProps.filter);
+ 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.user != this.props.user || this.props.filter != prevProps.filter) {
+      this.refreshMessageList();
     }
-  }
-
-  componentDidMount() {
-    this.refreshMessageList();
   }
 
   updateFilter(eventNumber, distance, geolocation) {
@@ -45,19 +41,21 @@ class MessageList extends Component {
   }
 
   refreshMessageList(filter) {
+    if (filter == null) {
+      filter = this.props.filter;
+    }
+    console.log('filter', filter);
     if(this.props.uuid != null && this.props.uuid != "") {
       getMessage(this.props.uuid).then((message) => {this.queryMessage = message});
     } else {
       this.queryMessage = null;
-    }    
-    var auth = firebase.auth();
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.fetchMessages(user, filter); 
-      } else {
-        this.clear();
-      }
-    });
+    }
+    const { user } = this.props;
+    if (user.user) {
+      this.fetchMessages(user.user, filter); 
+    } else {
+      this.clear();
+    }
   }
 
   setMessage(doc) {
@@ -76,7 +74,7 @@ class MessageList extends Component {
     const {
      eventNumber: numberOfMessage,
      distance,
-     geolocation
+     geolocation,
     } = filter;
     if(geolocation != constant.invalidLocation) {
       console.log("FetchMessage: " + geolocation);
@@ -112,6 +110,8 @@ class MessageList extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     filter : state.filter,
+    geolocation: state.geolocation,
+    user: state.user,
   };
 }
 

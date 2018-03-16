@@ -10,10 +10,14 @@ import PublicProfile from './PublicProfile';
 import Header from './Header';
 import {getMessage} from './MessageDB';
 import { createStore, applyMiddleware } from 'redux';  
-import { Provider } from 'react-redux';  
 import thunk from 'redux-thunk';  
+import {connect} from "react-redux";
 import rootReducer from './reducers';
-import { updateFilter } from './actions';
+import {
+  fetchAddressBookByUser,
+  updateFilter,
+  checkAuthState
+} from './actions';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);  
 const store = createStoreWithMiddleware(rootReducer);
@@ -43,13 +47,18 @@ class App extends Component {
         eventId: eventId,
         eventNumber: eventNumber,
         distance: distance, 
-        geolocation: null,
         userId: userId,
       };
   }  
 
-  changeLocation(geolocation) {
-    this.setState({geolocation: geolocation});
+  componentWillMount() {
+    this.props.checkAuthState();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.user != this.props.user && this.props.user.user) {
+      this.props.fetchAddressBookByUser(this.props.user.user); 
+    }
   }
 
   render() {
@@ -58,7 +67,6 @@ class App extends Component {
     */
     //injectTapEventPlugin();   
     return (
-      <Provider store={store}>
         <div>
           <Header />
           <Main
@@ -66,12 +74,32 @@ class App extends Component {
             userId={this.state.userId}
             eventNumber={this.state.eventNumber}
             distance={this.state.distance}
-            geolocation={this.state.geolocation}
           />
         </div>
-      </Provider>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    filter : state.filter,
+    geolocation: state.geolocation,
+    user: state.user,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateFilter:
+      (eventNumber, distance, geolocation) =>
+        dispatch(updateFilter(eventNumber, distance, geolocation)),
+    checkAuthState:
+      () => dispatch(checkAuthState()),
+    fetchAddressBookByUser:
+      user =>
+        dispatch(fetchAddressBookByUser(user)),
+  }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

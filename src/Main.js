@@ -23,7 +23,7 @@ class Main extends Component {
         eventId: this.props.eventId,
         eventNumber: this.props.eventNumber,
         distance: this.props.distance, 
-        geolocation: this.props.geolocation,CHANGE_FILTERserId: this.props.userId
+        geolocation: this.props.geolocation
       };
   }
 

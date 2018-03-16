@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { SocialIcon } from 'react-social-icons';
 import { withStyles } from 'material-ui/styles';
 import ExitToApp from 'material-ui-icons/ExitToApp';
-import { checkAuthState, signOut, signIn } from "./actions";
+import { signOut, signIn } from "./actions";
 
 const styles = theme => ({
   button: {
@@ -19,11 +19,6 @@ class SignInButton extends  Component {
     this.state = {loading: true};
   }
 
-  componentDidMount() {
-    const { checkAuthState } = this.props;
-    checkAuthState();
-  }
- 
   render() {
     const { classes, user, signOut, signIn } = this.props;
 
@@ -77,7 +72,6 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    checkAuthState: () => dispatch(checkAuthState()),
     signOut: () => dispatch(signOut()),
     signIn: () => dispatch(signIn())
   }

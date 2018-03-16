@@ -18,7 +18,12 @@ import blue from 'material-ui/colors/blue';
 import config,  {constant, addressEnum} from './config/default';
 import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
 import geoString from './GeoLocationString';
-import { updateFilterLocation, fetchAddressBookByUser } from './actions';
+import {
+  fetchLocation,
+  updateFilterLocation,
+  fetchAddressBookByUser,
+  updateFilterWithCurrentLocation,
+} from './actions';
 import {connect} from "react-redux";
 
 
@@ -47,151 +52,131 @@ const styles = theme => ({
 
 
 class LocationDrawer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {open: false,
-            geolocation: null,
-            locationName: "現在位置"};
-        this.disabled = false;
-        this.geolocation = null;
-        this.successCallBack = this.successCallBack.bind(this);
-        this.errorCallBack = this.errorCallBack.bind(this);
-        this.notSupportedCallBack = this.notSupportedCallBack.bind(this);
-    }    
+  constructor(props) {
+      super(props);
+      this.state = {
+        open: false,
+        locationName: "現在位置",
+        isUsingCurrentLocation: true,
+      };
+      this.geolocation = null;
+      this.currentLocationOnClick = this.currentLocationOnClick.bind(this);
+  }    
 
-    
-    toggleDrawer(open){
-        this.setState({
-            open: open,
-        });
-        if(open===true) {
-            this.componentDidMount(); 
-        }
-    };
 
-    handleGetLocation() {
-        if (this.disabled) {
-            alert('Location not supported!');  
-        } else {
-            getCurrentLocation(this.successCallBack, this.errorCallBack, this.notSupportedCallback);
+  componentWillMount() {
+    this.currentLocationOnClick();
+  }
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.user !== this.props.user) {
+      const { geolocation, fetchLocation } = this.props;
+      const { user } = nextProps;
+      if (user) {
+        this.fetchAddress(user.user);
+        if (geolocation === null || geolocation.pos === null) {
+          fetchLocation();     
         }
+      }
     }
+  }
 
-    componentDidMount() {
-        var auth = firebase.auth();
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                this.fetchAddress(user);
-                if(this.geolocation === null) {
-                    console.log("Get current address at start up");
-                    this.handleGetLocation();
-                }
-            } else {
-            }
-        });
-    }    
-    
+  toggleDrawer(open){
+    this.setState({open: open});
+  };
       
-    fetchAddress(user) {
-        this.setState({user:user});
-        this.props.fetchAddressBookByUser(user);
-    }
-    
-    notSupportedCallBack() {
-        this.disabled = true;
-        this.toggleDrawer(false)  
-        console.log('Disabled');
-    }
+  fetchAddress(user) {
+    this.setState({user:user});
+    this.props.fetchAddressBookByUser(user);
+  }
+  
+  setLocation(text, coords, isUsingCurrentLocation=false) {
+      this.geolocation = coords;
+      this.setState({...this.state, isUsingCurrentLocation: isUsingCurrentLocation})
+      console.log("set " + text + "(" + this.geolocation.latitude + "," +  this.geolocation.longitude + ")");
+      this.setState({locationName: text, geolocation: coords});
+      this.toggleDrawer(false);
+      const { updateFilterLocation } = this.props;
+      updateFilterLocation(coords);
+  }
 
-    errorCallBack(err) {
-        console.warn('ERROR(${err.code}): ${err.message}');
-        this.toggleDrawer(false);
-    }
+  renderAddressBook() {
+    const { classes, addressBook, geolocation } = this.props;
+    return addressBook.addresses.map(address => {
+      let icons = <PlaceIcon />;
+      let type = address.type;
+      let text = address.text;
+      let locationString = constant.addressNotSet;
+      let geolocation = null;
+      if (address.geolocation != null) {
+        geolocation = {latitude :address.geolocation.latitude,
+        longitude: address.geolocation.longitude};
+        if (address.streetAddress != null) {
+          locationString =  address.streetAddress + " (" + geoString(geolocation.latitude, geolocation.longitude) + ")";
+        } else {
+          locationString = "近" + geoString(geolocation.latitude, geolocation.longitude);      
+        } 
+      }
+      switch(type) {
+        case addressEnum.home:
+          icons = <HomeIcon />;
+          break;
+        case addressEnum.office:
+          icons = <WorkIcon />;
+          break;
+      }
+     if (locationString != constant.addressNotSet) {
+       return (
+         <ListItem button onClick={() => {this.setLocation(text, geolocation)}}>
+           <ListItemIcon>
+           {icons}
+           </ListItemIcon>
+           <ListItemText primary={text} secondary={locationString} />
+         </ListItem>
+       );
+     } else {
+       return (null);
+     }
+    });
+  }
 
-    successCallBack(pos) {
-        this.setLocation(constant.currentLocation, pos.coords);
-    }
-    
-    setLocation(text, coords) {
-        this.geolocation = coords;
-        console.log("set " + text + "(" + this.geolocation.latitude + "," +  this.geolocation.longitude + ")");
-        this.setState({locationName: text, geolocation: coords});
-        this.toggleDrawer(false);
-        const { updateFilterLocation } = this.props;
-        updateFilterLocation(coords);
-    }
+  currentLocationOnClick() {
+    this.setState({...this.state, isUsingCurrentLocation: true});
+    this.props.updateFilterWithCurrentLocation();
+    this.toggleDrawer(false);
+  }
 
-    renderAddressBook() {
-      const { classes, addressBook } = this.props;
-      return addressBook.addresses.map(address => {
-        let icons = <PlaceIcon />;
-        let type = address.type;
-        let text = address.text;
-        let locationString = constant.addressNotSet;
-        let geolocation = null;
-        if (address.geolocation != null) {
-          geolocation = {latitude :address.geolocation.latitude,
-          longitude: address.geolocation.longitude};
-          if (address.streetAddress != null) {
-            locationString =  address.streetAddress + " (" + geoString(geolocation.latitude, geolocation.longitude) + ")";
-          } else {
-            locationString = "近" + geoString(geolocation.latitude, geolocation.longitude);      
-          } 
-        }
-        switch(type) {
-          case addressEnum.home:
-            icons = <HomeIcon />;
-            break;
-          case addressEnum.office:
-            icons = <WorkIcon />;
-            break;
-        }
-       if (locationString != constant.addressNotSet) {
-         return (
-           <ListItem button onClick={() => {this.setLocation(text, geolocation)}}>
-             <ListItemIcon>
-             {icons}
-             </ListItemIcon>
-             <ListItemText primary={text} secondary={locationString} />
-           </ListItem>
-         );
-       } else {
-         return (null);
-       }
-      });
-    }
-
-    render() {
-        const { classes } = this.props;      
-        return (
-        <div>
-            <Chip
-              avatar={<LocationIcon className={classes.white}/>}
-              onClick={() => {this.toggleDrawer(true)}}
-              label={`在${this.state.locationName}的${this.props.filter.distance}公里內`}
-              className={classes.chip}
-            />
-            <Drawer anchor="bottom"
-                open={this.state.open}
-                onClose={() => {this.toggleDrawer(false)}}
-                unmountOnExit>
-                <div tabIndex={0}
-                    role="button"
-                    className={classes.fullList}>
-                    <List>
-                        <ListItem button onClick={() => {this.handleGetLocation()}}>
-                            <ListItemIcon>
-                                <NearMeIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={constant.currentLocation} />
-                        </ListItem>
-                        <Divider />
-                        {this.renderAddressBook()}
-                    </List>
-                </div>
-            </Drawer>
-        </div>);
-    }
+  render() {
+      const { classes } = this.props;      
+      return (
+      <div>
+          <Chip
+            avatar={<LocationIcon className={classes.white}/>}
+            onClick={() => {this.toggleDrawer(true)}}
+            label={`在${this.state.isUsingCurrentLocation ? constant.currentLocation : this.state.locationName}的${this.props.filter.distance}公里內`}
+            className={classes.chip}
+          />
+          <Drawer anchor="bottom"
+              open={this.state.open}
+              onClose={() => {this.toggleDrawer(false)}}
+              unmountOnExit>
+              <div tabIndex={0}
+                  role="button"
+                  className={classes.fullList}>
+                  <List>
+                      <ListItem button onClick={this.currentLocationOnClick}>
+                          <ListItemIcon>
+                              <NearMeIcon />
+                          </ListItemIcon>
+                          <ListItemText primary={constant.currentLocation} />
+                      </ListItem>
+                      <Divider />
+                      {this.renderAddressBook()}
+                  </List>
+              </div>
+          </Drawer>
+      </div>);
+  }
 }
 
 LocationDrawer.propTypes = {
@@ -202,17 +187,21 @@ const mapStateToProps = (state, ownProps) => {
   return {
     filter : state.filter,
     addressBook: state.addressBook,
+    geolocation: state.geolocation,
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchLocation: () => dispatch(fetchLocation()),
     fetchAddressBookByUser:
       user =>
         dispatch(fetchAddressBookByUser(user)),
     updateFilterLocation:
       geolocation =>
         dispatch(updateFilterLocation(geolocation)),
+    updateFilterWithCurrentLocation:
+      () => dispatch(updateFilterWithCurrentLocation()),
   }
 };
 

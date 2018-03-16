@@ -38,7 +38,7 @@ function dispatchFilterLocation(geolocation) {
   return {type: UPDATE_FILTER_LOCATION, geolocation: geolocation};
 }
 
-export function fetchLocation() {
+export function fetchLocation(callback=receiveLocation) {
   return dispatch => {
     if(navigator.geolocation) {
       var options = {
@@ -48,7 +48,7 @@ export function fetchLocation() {
       }; 
       navigator.geolocation.getCurrentPosition((geoLocation) => {
         console.log(geoLocation);
-        dispatch(receiveLocation(geoLocation));
+        callback(geoLocation);
       },
       (error) => {
         console.log(error);
@@ -141,6 +141,15 @@ export function updateFilterLocation(geolocation) {
   };
 }
 
+export function updateFilterWithCurrentLocation() {
+  return dispatch => {
+    dispatch(fetchLocation(geolocation => {
+      dispatch(receiveLocation(geolocation));
+      dispatch(updateFilterLocation(geolocation));     
+    }));  
+  }
+}
+
 export function fetchAddressBookByUser(user) {
   return dispatch => {
     var db = firebase.firestore();
@@ -154,5 +163,4 @@ export function fetchAddressBookByUser(user) {
         console.log("Error getting documents: ", error);
     });
   };
-
 }
