@@ -58,6 +58,7 @@ class LocationDrawer extends React.Component {
         open: false,
         locationName: "現在位置",
         isUsingCurrentLocation: true,
+        distance: this.props.filter.distance,
       };
       this.geolocation = null;
       this.currentLocationOnClick = this.currentLocationOnClick.bind(this);
@@ -90,14 +91,14 @@ class LocationDrawer extends React.Component {
     this.props.fetchAddressBookByUser(user);
   }
   
-  setLocation(text, coords, isUsingCurrentLocation=false) {
+  setLocation(text, distance, coords, isUsingCurrentLocation=false) {
       this.geolocation = coords;
       this.setState({...this.state, isUsingCurrentLocation: isUsingCurrentLocation})
       console.log("set " + text + "(" + this.geolocation.latitude + "," +  this.geolocation.longitude + ")");
-      this.setState({locationName: text, geolocation: coords});
+      this.setState({locationName: text, distance: distance, geolocation: coords});
       this.toggleDrawer(false);
       const { updateFilterLocation } = this.props;
-      updateFilterLocation(coords);
+      updateFilterLocation(coords, distance);
   }
 
   renderAddressBook() {
@@ -107,10 +108,14 @@ class LocationDrawer extends React.Component {
       let type = address.type;
       let text = address.text;
       let locationString = constant.addressNotSet;
+      let distance = this.props.filter.distance;
       let geolocation = null;
       if (address.geolocation != null) {
         geolocation = {latitude :address.geolocation.latitude,
         longitude: address.geolocation.longitude};
+        if(address.distance != null && address.distance > distance) {
+          distance = address.distance;
+        }
         if (address.streetAddress != null) {
           locationString =  address.streetAddress + " (" + geoString(geolocation.latitude, geolocation.longitude) + ")";
         } else {
@@ -127,7 +132,7 @@ class LocationDrawer extends React.Component {
       }
      if (locationString != constant.addressNotSet) {
        return (
-         <ListItem button onClick={() => {this.setLocation(text, geolocation)}}>
+         <ListItem button onClick={() => {this.setLocation(text, distance, geolocation)}}>
            <ListItemIcon>
            {icons}
            </ListItemIcon>
@@ -142,6 +147,7 @@ class LocationDrawer extends React.Component {
 
   currentLocationOnClick() {
     this.setState({...this.state, isUsingCurrentLocation: true});
+    this.setState({distance: this.props.filter.distance});
     this.props.updateFilterWithCurrentLocation();
     this.toggleDrawer(false);
   }
@@ -153,7 +159,7 @@ class LocationDrawer extends React.Component {
           <Chip
             avatar={<LocationIcon className={classes.white}/>}
             onClick={() => {this.toggleDrawer(true)}}
-            label={`在${this.state.isUsingCurrentLocation ? constant.currentLocation : this.state.locationName}的${this.props.filter.distance}公里內`}
+            label={`在${this.state.isUsingCurrentLocation ? constant.currentLocation : this.state.locationName}的${this.state.distance}公里內`}
             className={classes.chip}
           />
           <Drawer anchor="bottom"
@@ -198,8 +204,8 @@ const mapDispatchToProps = (dispatch) => {
       user =>
         dispatch(fetchAddressBookByUser(user)),
     updateFilterLocation:
-      geolocation =>
-        dispatch(updateFilterLocation(geolocation)),
+      (geolocation, distance) =>
+        dispatch(updateFilterLocation(geolocation, distance)),
     updateFilterWithCurrentLocation:
       () => dispatch(updateFilterWithCurrentLocation()),
   }

@@ -34,8 +34,8 @@ function dispatchFilter(eventNumber, distance, geolocation) {
   return {type: UPDATE_FILTER, eventNumber: eventNumber, geolocation: geolocation, distance: distance}
 }
 
-function dispatchFilterLocation(geolocation) {
-  return {type: UPDATE_FILTER_LOCATION, geolocation: geolocation};
+function dispatchFilterLocation(geolocation, distance) {
+  return {type: UPDATE_FILTER_LOCATION, geolocation: geolocation, distance: distance};
 }
 
 export function fetchLocation(callback=receiveLocation) {
@@ -97,47 +97,15 @@ export function signOut() {
   }
 }
 
-export function setHomeLocation() {
-  return dispatch => {
-    var auth = firebase.auth();
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        getUserProfile(user).then((userProfile)=>{
-          dispatch(receiveLocation(
-            { latitiude: userProfile.homeLocationLongitude,
-              longitude: userProfile.homeLocationLatitude },
-            homeLocationLabel));
-        });
-      }
-    });
-  }
-}
-
-export function setOfficeLocation() {
-  return dispatch => {
-    var auth = firebase.auth();
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        getUserProfile(user).then((userProfile)=>{
-          dispatch(receiveLocation(
-            { latitiude: userProfile.officeLocationLongitude,
-              longitude: userProfile.officeLocationLatitude },
-            officeLocationLabel));
-        });
-      }
-    });
-  }
-}
-
 export function updateFilter(eventNumber, distance, geolocation) {
   return dispatch => {
     dispatch(dispatchFilter(eventNumber, distance, geolocation));
   };
 }
 
-export function updateFilterLocation(geolocation) {
+export function updateFilterLocation(geolocation, distance) {
   return dispatch => {
-    dispatch(dispatchFilterLocation(geolocation));
+    dispatch(dispatchFilterLocation(geolocation, distance));
   };
 }
 

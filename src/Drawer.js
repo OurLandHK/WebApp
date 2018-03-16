@@ -16,8 +16,6 @@ import {connect} from "react-redux";
 import Divider from 'material-ui/Divider';
 import {
   fetchLocation,
-  setHomeLocation,
-  setOfficeLocation
 } from "./actions";
 import { constant } from './config/default';
 import AboutDialog from './AboutDialog';
@@ -152,8 +150,6 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchLocation: () => dispatch(fetchLocation()),
-    setOfficeLocation: () => dispatch(setOfficeLocation()),
-    setHomeLocation: () => dispatch(setHomeLocation())
   }
 };
 
