@@ -17,7 +17,8 @@ import Divider from 'material-ui/Divider';
 import {
   fetchLocation,
   setHomeLocation,
-  setOfficeLocation
+  setOfficeLocation,
+  toggleAddressDialog,
 } from "./actions";
 import { constant } from './config/default';
 import AboutDialog from './AboutDialog';
@@ -49,7 +50,7 @@ class DrawerMenu extends Component {
 
   addressDialogClick(){
     this.handleClose();
-    this.openAddressDialog();
+    this.props.toggleAddressDialog(true);
   }
 
   showAbout() {
@@ -153,7 +154,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchLocation: () => dispatch(fetchLocation()),
     setOfficeLocation: () => dispatch(setOfficeLocation()),
-    setHomeLocation: () => dispatch(setHomeLocation())
+    setHomeLocation: () => dispatch(setHomeLocation()),
+    toggleAddressDialog: flag => dispatch(toggleAddressDialog(flag)),
+
   }
 };
 

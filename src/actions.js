@@ -5,6 +5,7 @@ import {
   DISABLE_LOCATION,
   FETCH_LOCATION,
   FETCH_ADDRESS_BOOK,
+  TOGGLE_ADDRESS_DIALOG,
 } from './actions/types';
 import * as firebase from 'firebase';
 import config, {constant} from './config/default';
@@ -13,6 +14,10 @@ import {getUserProfile} from './UserProfile';
 const currentLocationLabel = "現在位置";
 const officeLocationLabel = "辦公室位置";
 const homeLocationLabel = "屋企位置";
+
+function dispatchToggleAddressBook(flag) {
+  return {type: TOGGLE_ADDRESS_DIALOG, open: flag};
+}
 
 function receiveLocation(pos, label=currentLocationLabel){
   return {type: FETCH_LOCATION, geoLocation: pos, label: label};
@@ -202,3 +207,9 @@ export function deleteAddress(user, key) {
   };
 }
 
+
+export function toggleAddressDialog(flag) {
+  return dispatch => {
+    dispatch(dispatchToggleAddressBook(flag));
+  };
+}
