@@ -15,10 +15,11 @@ import Dialog, {
     DialogContentText,
     DialogTitle } from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
-import timeOffsetStringInChinese from '../TimeString';
+import {connect} from "react-redux";
 import { withStyles } from 'material-ui/styles';
+import timeOffsetStringInChinese from '../TimeString';
 import geoString from '../GeoLocationString';
-import {updateAddress} from '../UserProfile';
+import { upsertAddress } from '../actions';
 import  {constant, addressEnum} from '../config/default';
 
 
@@ -93,13 +94,8 @@ class AddressView extends Component {
             if (this.props.address != null) {
                 key = this.props.address.id;
             }
-            updateAddress(user, key, this.state.type, this.state.text, this.locationButton.geolocation, this.locationButton.streetAddress);
+            this.props.upsertAddress(user, key, this.state.type, this.state.text, this.locationButton.geolocation, this.locationButton.streetAddress);
             this.setState({popoverOpen: false});
-            console.log("call on change" + this.props.onChange);
-            if(this.props.OnChange != null) {
-                console.log("call onchange props");
-                this.props.OnChange();
-            }
         });
     }
     
@@ -167,8 +163,25 @@ class AddressView extends Component {
 }
 
 AddressView.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    filter : state.filter,
+    geolocation: state.geolocation,
+    user: state.user,
   };
-  
-export default withStyles(styles, { withTheme: true })(AddressView);
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    upsertAddress:
+      (user, key, type, text, geolocation, streetAddress) =>
+        dispatch(upsertAddress(user, key, type, text, geolocation, streetAddress)),
+  }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AddressView));

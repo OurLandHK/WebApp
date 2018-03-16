@@ -164,3 +164,32 @@ export function fetchAddressBookByUser(user) {
     });
   };
 }
+
+export function upsertAddress(user, key, type, text, geolocation, streetAddress) {
+  return dispatch => {
+    var now = Date.now();
+    var addressRecord = {
+        type: type,
+        updateAt: new Date(now),
+        text: text,
+        geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
+        streetAddress: streetAddress
+    }; 
+    console.log(addressRecord);
+    // Use firestore
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
+    if(key != null) {
+        collectionRef.doc(key).set(addressRecord).then(function() {
+          dispatch(fetchAddressBookByUser(user))
+        });
+    } else {
+        collectionRef.add(addressRecord).then(function(docRef) {
+          console.log("comment written with ID: ", docRef.id);
+          dispatch(fetchAddressBookByUser(user))
+        });
+    }  
+  }
+}
+
+
