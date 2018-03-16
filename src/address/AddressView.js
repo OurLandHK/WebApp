@@ -39,7 +39,8 @@ class AddressView extends Component {
         var text = "";
         var geolocation = null;
         var streetAddress = null;  
-        var type = addressEnum.other;      
+        var type = addressEnum.other;   
+        var distance = 1;   
         if(this.props.address != null) {
             var c = this.props.address;
             text = c.text;
@@ -47,12 +48,16 @@ class AddressView extends Component {
                 longitude: c.geolocation.longitude};
             streetAddress = c.streetAddress;
             type = c.type;
+            if(c.distance != null) {
+                distance = c.distance;
+            }
         }        
         this.state = {
             popoverOpen: false,
             text: text,
             geolocation: geolocation,
             streetAddress: streetAddress,
+            distance: distance,
             type: type
         };
     }
@@ -62,7 +67,8 @@ class AddressView extends Component {
         var text = "";
         var geolocation = null;
         var streetAddress = null; 
-        var type = addressEnum.other;        
+        var type = addressEnum.other;   
+        var distance = 1;      
         if(this.props.address != null) {
             var c = this.props.address;
             text = c.text;
@@ -70,12 +76,16 @@ class AddressView extends Component {
                             longitude: c.geolocation.longitude};
             streetAddress = c.streetAddress;
             type = c.type;
+            if(c.distance != null) {
+                distance = c.distance;
+            }
         }        
         this.setState({
             popoverOpen: true,
             text: text,
             geolocation: geolocation,
             streetAddress: streetAddress,
+            distance: distance,
             type: type
         });
       }
@@ -93,7 +103,7 @@ class AddressView extends Component {
             if (this.props.address != null) {
                 key = this.props.address.id;
             }
-            updateAddress(user, key, this.state.type, this.state.text, this.locationButton.geolocation, this.locationButton.streetAddress);
+            updateAddress(user, key, this.state.type, this.state.text, this.locationButton.geolocation, this.state.distance, this.locationButton.streetAddress);
             this.setState({popoverOpen: false});
             console.log("call on change" + this.props.onChange);
             if(this.props.OnChange != null) {

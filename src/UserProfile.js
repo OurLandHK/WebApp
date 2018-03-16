@@ -166,12 +166,13 @@ function addPublishMessagesKeyToUserProfile(user, messageUUID) {
 }
 
 
-function updateAddress(user, key, type, text, geolocation, streetAddress) {
+function updateAddress(user, key, type, text, geolocation, distance, streetAddress) {
     var now = Date.now();
     var addressRecord = {
         type: type,
         updateAt: new Date(now),
         text: text,
+        distance: distance,
         geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
         streetAddress: streetAddress
     }; 
