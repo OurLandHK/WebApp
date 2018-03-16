@@ -156,7 +156,7 @@ export function fetchAddressBookByUser(user) {
     var collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
     collectionRef.onSnapshot(function() {})         
     collectionRef.get().then(function(querySnapshot) {
-       const addresses = querySnapshot.docs.map(d => d.data());
+       const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
        dispatch(fetchAddressBook(addresses));
     })
     .catch(function(error) {
@@ -192,4 +192,13 @@ export function upsertAddress(user, key, type, text, geolocation, streetAddress)
   }
 }
 
+export function deleteAddress(user, key) {
+  return dispatch => {
+    const db = firebase.firestore();
+    const collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
+    collectionRef.doc(key).delete().then(() => {
+      dispatch(fetchAddressBookByUser(user))
+    });
+  };
+}
 
