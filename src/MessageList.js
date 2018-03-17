@@ -15,7 +15,7 @@ class MessageList extends Component {
       geolocation = constant.invalidLocation;
     }
     this.state = {
-      eventId: this.props.eventId,
+//      eventId: this.props.eventId,
       eventNumber: this.props.eventNumber,
       distance: this.props.distance, 
       geolocation: geolocation,
@@ -45,11 +45,6 @@ class MessageList extends Component {
       filter = this.props.filter;
     }
     console.log('filter', filter);
-    if(this.props.uuid != null && this.props.uuid != "") {
-      getMessage(this.props.uuid).then((message) => {this.queryMessage = message});
-    } else {
-      this.queryMessage = null;
-    }
     const { user } = this.props;
     if (user.user) {
       this.fetchMessages(user.user, filter); 
@@ -85,8 +80,8 @@ class MessageList extends Component {
 
   render() {
     let elements = null;
-    let queryMessage = null;
-    let linebreak = <div><br/><br/><br/><br/></div>;
+//    let queryMessage = null;
+//    let linebreak = <div><br/><br/><br/><br/></div>;
     let lon = 0; 
     let lat = 0;
     
@@ -98,12 +93,7 @@ class MessageList extends Component {
     elements = this.state.data.map((message) => {
       return (<MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat}/>);
     });
-
-    if(this.queryMessage != null) {      
-      var message = this.queryMessage;
-      queryMessage = <MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat} openDialogDefault={true} />;  
-    }
-    return (<div width="100%">{linebreak}{queryMessage}{elements}</div>);
+    return (<div>{elements}</div>);
   }
 };
 

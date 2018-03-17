@@ -7,6 +7,7 @@ import {
   UPDATE_FILTER,
   FETCH_ADDRESS_BOOK,
   TOGGLE_ADDRESS_DIALOG,
+  TOGGLE_NEARBYEVENT_DIALOG,
 } from './actions/types';
 
 
@@ -66,12 +67,22 @@ function addressDialogReducer(state={open: false}, action) {
   }
 }
 
+function nearbyEventDialogReducer(state={open: false}, action) {
+  switch (action.type) {
+    case TOGGLE_NEARBYEVENT_DIALOG:
+      return {...state, open: action.open};
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({  
   geoLocation: geoLocationReducer,
   user: userReducer,
   filter: filterReducer,
   addressBook: addressBookReducer,
   addressDialog: addressDialogReducer,
+  nearbyEventDialog: nearbyEventDialogReducer,
 });
 
 

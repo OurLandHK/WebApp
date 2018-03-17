@@ -1,5 +1,5 @@
 import { withStyles } from 'material-ui/styles';
-import MessageList from './MessageList';
+import NearbyEventDialog from './NearbyEventDialog';
 import PostMessageView from './PostMessageView';
 import MessageDialog from './MessageDialog';
 import PublicProfile from './PublicProfile';
@@ -31,18 +31,29 @@ class Main extends Component {
     this.openDialog();
   };
 
-  renderMessages() {
+  renderMessageFrontPage() {
     const { eventNumber, distance, geolocation, eventId } = this.state;
+    let linebreak = <div><br/><br/><br/></div>;
     const { classes } = this.props; 
+    // Display recent message
+    /*     if(this.state.eventId != null && this.state.eventId != "") {
+      getMessage(this.state.eventId).then((message) => {this.queryMessage = message});
+    } else {
+      this.queryMessage = null;
+    }
+
+    if(this.queryMessage != null) {      
+      var message = this.queryMessage;
+      queryMessage = <MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat} openDialogDefault={true} />;  
+    }
+    */ 
     return (
       <div className={classes.container}>
-        <MessageList
-          ref={(messageList) => {this.messageList = messageList;}}
-          uuid={eventId}
-          eventNumber={eventNumber}
-          distance={distance}
-          geolocation={geolocation}
-        />
+        {linebreak}
+        <NearbyEventDialog 
+                  eventNumber={eventNumber}
+                  distance={distance}
+                  geolocation={geolocation}/>
         <PostMessageView />
       </div>
     );
@@ -55,7 +66,7 @@ class Main extends Component {
     if(this.state.userId != null && this.state.userId != "") {
       pubilcProfileHtml = <PublicProfile id={this.state.userId}/>;
     } else {
-      messageHtml = this.renderMessages();
+      messageHtml = this.renderMessageFrontPage();
     }
     return (
       <div>

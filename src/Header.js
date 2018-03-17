@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import {connect} from "react-redux";
 import {fetchLocation} from "./actions";
-import FilterBar from './FilterBar';
+
 
 
 const styles = {
@@ -54,7 +54,6 @@ class Header extends  Component {
                   </Typography>
                   <SignInButton/>
                 </Toolbar>  
-                <FilterBar />           
               </AppBar>      
             </div>);
   }

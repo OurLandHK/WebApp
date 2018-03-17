@@ -6,14 +6,17 @@ import {
   FETCH_LOCATION,
   FETCH_ADDRESS_BOOK,
   TOGGLE_ADDRESS_DIALOG,
+  TOGGLE_NEARBYEVENT_DIALOG,
 } from './actions/types';
 import * as firebase from 'firebase';
 import config, {constant} from './config/default';
 import {getUserProfile} from './UserProfile';
 
 const currentLocationLabel = "現在位置";
-const officeLocationLabel = "辦公室位置";
-const homeLocationLabel = "屋企位置";
+
+function dispatchToggleNearbyEventDialog(flag) {
+  return {type: TOGGLE_NEARBYEVENT_DIALOG, open: flag};
+}
 
 function dispatchToggleAddressBook(flag) {
   return {type: TOGGLE_ADDRESS_DIALOG, open: flag};
@@ -181,3 +184,10 @@ export function toggleAddressDialog(flag) {
     dispatch(dispatchToggleAddressBook(flag));
   };
 }
+
+export function toggleNearbyEventDialog(flag) {
+  return dispatch => {
+    dispatch(dispatchToggleNearbyEventDialog(flag));
+  };
+}
+
