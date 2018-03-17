@@ -10,9 +10,6 @@ import Typography from 'material-ui/Typography';
 import {connect} from "react-redux";
 
 const styles = theme => ({
-  card: {
-    maxWidth: 400,
-  },
   avatar: {
     backgroundColor: red[500],
   },

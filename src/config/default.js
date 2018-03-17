@@ -31,7 +31,8 @@ let constant = {
   addressBookLabel: "地址簿",
   addAddressLabel: "新增地址",
   updateAddressLabel: "更新地址",
-
+  nearbyEventLabel: "我地社區",
+  regionEventLabel: "十八社區"
 }
 
 let addressEnum = {
