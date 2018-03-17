@@ -15,10 +15,11 @@ import Dialog, {
     DialogContentText,
     DialogTitle } from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
-import timeOffsetStringInChinese from '../TimeString';
+import {connect} from "react-redux";
 import { withStyles } from 'material-ui/styles';
+import timeOffsetStringInChinese from '../TimeString';
 import geoString from '../GeoLocationString';
-import {updateAddress} from '../UserProfile';
+import { deleteAddress, upsertAddress } from '../actions';
 import  {constant, addressEnum} from '../config/default';
 
 
@@ -97,20 +98,30 @@ class AddressView extends Component {
     }; 
     
     onSubmit() {
-        var auth = firebase.auth();
-        auth.onAuthStateChanged((user) => {
-            var key = null;
-            if (this.props.address != null) {
-                key = this.props.address.id;
-            }
-            updateAddress(user, key, this.state.type, this.state.text, this.locationButton.geolocation, this.state.distance, this.locationButton.streetAddress);
-            this.setState({popoverOpen: false});
-            console.log("call on change" + this.props.onChange);
-            if(this.props.OnChange != null) {
-                console.log("call onchange props");
-                this.props.OnChange();
-            }
-        });
+        const { user } = this.props;
+        if (user.user) {
+          var key = null;
+          if (this.props.address != null) {
+              key = this.props.address.id;
+          }
+          this.props.upsertAddress(user.user, key, this.state.type, this.state.text, this.locationButton.geolocation, this.locationButton.streetAddress);
+          this.setState({popoverOpen: false});
+   
+        }
+    }
+
+    onDelete() {
+      const { user } = this.props;
+      if (user.user) {
+        var key = null;
+        if (this.props.address != null) {
+            key = this.props.address.id;
+        }
+        if (key == null)
+          return;
+        this.props.deleteAddress(user.user, key);
+      }  
+      this.setState({popoverOpen: false});
     }
     
 
@@ -168,6 +179,7 @@ class AddressView extends Component {
                             <LocationButton autoFocus geolocation={geolocation} streetAddress={streetAddress} ref={(locationButton) => {this.locationButton = locationButton;}}/>                   
                         </DialogContent>  
                         <DialogActions>
+                            <Button color="secondary" onClick={() => this.onDelete()} >刪除</Button>
                             <Button color="primary" onClick={() => this.handleRequestClose()} >取消</Button>
                             <Button color="primary" onClick={() => this.onSubmit()}>提交</Button> 
                         </DialogActions>          
@@ -177,8 +189,28 @@ class AddressView extends Component {
 }
 
 AddressView.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    filter : state.filter,
+    geolocation: state.geolocation,
+    user: state.user,
   };
-  
-export default withStyles(styles, { withTheme: true })(AddressView);
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    deleteAddress:
+      (user, key) =>
+        dispatch(deleteAddress(user, key)),
+    upsertAddress:
+      (user, key, type, text, geolocation, streetAddress) =>
+        dispatch(upsertAddress(user, key, type, text, geolocation, streetAddress)),
+  }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(AddressView));

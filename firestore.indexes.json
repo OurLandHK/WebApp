@@ -8,6 +8,15 @@
           { "fieldPath": "start", "mode": "DESCENDING" },
           { "fieldPath": "geolocation", "mode": "DESCENDING" }
         ]
-    }
+    },
+    {
+      "collectionId": "message",
+      "fields": [
+        { "fieldPath": "hide", "mode": "DESCENDING" },
+        { "fieldPath": "createdAt", "mode": "DESCENDING" },
+        { "fieldPath": "start", "mode": "DESCENDING" },
+        { "fieldPath": "geolocation", "mode": "DESCENDING" }
+      ]
+  }    
   ]
 }

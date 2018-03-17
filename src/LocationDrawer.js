@@ -8,9 +8,11 @@ import classnames from 'classnames';
 import Chip from 'material-ui/Chip';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
+import Button from 'material-ui/Button';
 import NearMeIcon from 'material-ui-icons/NearMe';
 import AddLocationIcon from 'material-ui-icons/AddLocation';
 import PlaceIcon from 'material-ui-icons/Place';
+import AddIcon from 'material-ui-icons/Add';
 import WorkIcon from 'material-ui-icons/Work';
 import HomeIcon from 'material-ui-icons/Home';
 import LocationIcon from 'material-ui-icons/LocationOn';
@@ -23,6 +25,7 @@ import {
   updateFilterLocation,
   fetchAddressBookByUser,
   updateFilterWithCurrentLocation,
+  toggleAddressDialog,
 } from './actions';
 import {connect} from "react-redux";
 
@@ -62,6 +65,7 @@ class LocationDrawer extends React.Component {
       };
       this.geolocation = null;
       this.currentLocationOnClick = this.currentLocationOnClick.bind(this);
+      this.addLocationOnClick = this.addLocationOnClick.bind(this);
   }    
 
 
@@ -145,6 +149,11 @@ class LocationDrawer extends React.Component {
     });
   }
 
+  addLocationOnClick() {
+    this.toggleDrawer(false);
+    this.props.toggleAddressDialog(true);
+  }
+
   currentLocationOnClick() {
     this.setState({...this.state, isUsingCurrentLocation: true});
     this.setState({distance: this.props.filter.distance});
@@ -170,11 +179,15 @@ class LocationDrawer extends React.Component {
                   role="button"
                   className={classes.fullList}>
                   <List>
-                      <ListItem button onClick={this.currentLocationOnClick}>
-                          <ListItemIcon>
+                      <ListItem>
+                          <Button onClick={this.currentLocationOnClick}>
                               <NearMeIcon />
-                          </ListItemIcon>
-                          <ListItemText primary={constant.currentLocation} />
+                              {constant.currentLocation}
+                          </Button>
+                          <Button onClick={this.addLocationOnClick}>
+                              <AddIcon />
+                              {constant.addAddressLabel}
+                          </Button>
                       </ListItem>
                       <Divider />
                       {this.renderAddressBook()}
@@ -208,6 +221,8 @@ const mapDispatchToProps = (dispatch) => {
         dispatch(updateFilterLocation(geolocation, distance)),
     updateFilterWithCurrentLocation:
       () => dispatch(updateFilterWithCurrentLocation()),
+    toggleAddressDialog:
+      (flag) => dispatch(toggleAddressDialog(flag)),
   }
 };
 

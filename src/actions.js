@@ -5,6 +5,7 @@ import {
   DISABLE_LOCATION,
   FETCH_LOCATION,
   FETCH_ADDRESS_BOOK,
+  TOGGLE_ADDRESS_DIALOG,
 } from './actions/types';
 import * as firebase from 'firebase';
 import config, {constant} from './config/default';
@@ -13,6 +14,10 @@ import {getUserProfile} from './UserProfile';
 const currentLocationLabel = "現在位置";
 const officeLocationLabel = "辦公室位置";
 const homeLocationLabel = "屋企位置";
+
+function dispatchToggleAddressBook(flag) {
+  return {type: TOGGLE_ADDRESS_DIALOG, open: flag};
+}
 
 function receiveLocation(pos, label=currentLocationLabel){
   return {type: FETCH_LOCATION, geoLocation: pos, label: label};
@@ -124,11 +129,55 @@ export function fetchAddressBookByUser(user) {
     var collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
     collectionRef.onSnapshot(function() {})         
     collectionRef.get().then(function(querySnapshot) {
-       const addresses = querySnapshot.docs.map(d => d.data());
+       const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
        dispatch(fetchAddressBook(addresses));
     })
     .catch(function(error) {
         console.log("Error getting documents: ", error);
     });
+  };
+}
+
+export function upsertAddress(user, key, type, text, geolocation, streetAddress) {
+  return dispatch => {
+    var now = Date.now();
+    var addressRecord = {
+        type: type,
+        updateAt: new Date(now),
+        text: text,
+        geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
+        streetAddress: streetAddress
+    }; 
+    console.log(addressRecord);
+    // Use firestore
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
+    if(key != null) {
+        collectionRef.doc(key).set(addressRecord).then(function() {
+          dispatch(fetchAddressBookByUser(user))
+        });
+    } else {
+        collectionRef.add(addressRecord).then(function(docRef) {
+          console.log("comment written with ID: ", docRef.id);
+          dispatch(fetchAddressBookByUser(user))
+        });
+    }  
+  }
+}
+
+export function deleteAddress(user, key) {
+  return dispatch => {
+    const db = firebase.firestore();
+    const collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
+    collectionRef.doc(key).delete().then(() => {
+      dispatch(fetchAddressBookByUser(user))
+    });
+  };
+}
+
+
+export function toggleAddressDialog(flag) {
+  return dispatch => {
+    dispatch(dispatchToggleAddressBook(flag));
   };
 }

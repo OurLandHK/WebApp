@@ -16,6 +16,7 @@ import {connect} from "react-redux";
 import Divider from 'material-ui/Divider';
 import {
   fetchLocation,
+  toggleAddressDialog,
 } from "./actions";
 import { constant } from './config/default';
 import AboutDialog from './AboutDialog';
@@ -47,7 +48,7 @@ class DrawerMenu extends Component {
 
   addressDialogClick(){
     this.handleClose();
-    this.openAddressDialog();
+    this.props.toggleAddressDialog(true);
   }
 
   showAbout() {
@@ -150,6 +151,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchLocation: () => dispatch(fetchLocation()),
+    toggleAddressDialog: flag => dispatch(toggleAddressDialog(flag)),
+
   }
 };
 
