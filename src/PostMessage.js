@@ -29,7 +29,7 @@ function validateFile(file) {
 function uploadImage(currentUser, messageKey, filename, blob) {
 
 //  var Jimp = require("jimp");
-  var filePath = currentUser.uid + '/' + messageKey + '/' + filename;
+  var filePath = config.photoDB + '/' + messageKey + '/' + filename;
   var storage = firebase.storage();
   return storage.ref(filePath).put(blob);  
 };
