@@ -31,8 +31,18 @@ const styles = {
     flex: 1,
   },
   container: {
-    marginTop: '0.5rem',
   },
+  media: {
+    color: '#fff',
+    position: 'relative',
+    height: '10rem',
+  },
+  mediaCredit: {
+    position:'absolute',
+    bottom:'0',
+    right:'0',
+    fontSize:'0.5rem',
+  }
 };
 
 class NearbyEventDialog extends React.Component {
@@ -71,10 +81,22 @@ class NearbyEventDialog extends React.Component {
 
   
   render() {
-    const { classes, open } = this.props;
-    let messageHtml = null;
-    let cardImage = null;
-    //    cardImage = <CardMedia image="/static/images/cards/contemplative-reptile.jpg" title={constant.nearbyEventLabel} />
+    const { classes, open } = this.props;let messageHtml = null;
+
+    const cardImage = (
+      <CardMedia
+        className={classes.media}
+        image="/images/ssp.jpg"
+        title={constant.nearbyEventLabel}
+      >
+        <div
+          className={classes.mediaCredit}
+        >
+          Photo by Steven Wei on Unsplash
+        </div>
+      </CardMedia>
+    );
+
     if(open)  {
         messageHtml = this.renderMessages();
     }

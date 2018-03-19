@@ -8,7 +8,6 @@ import config, {constant} from './config/default';
 
 const styles = () => ({
   container: {
-    marginTop: '0.5rem',
   },
 });
 
@@ -33,27 +32,17 @@ class Main extends Component {
 
   renderMessageFrontPage() {
     const { eventNumber, distance, geolocation, eventId } = this.state;
-    let linebreak = <div><br/><br/><br/></div>;
+    let linebreak = <div><br/></div>;
     const { classes } = this.props; 
-    // Display recent message
-    /*     if(this.state.eventId != null && this.state.eventId != "") {
-      getMessage(this.state.eventId).then((message) => {this.queryMessage = message});
-    } else {
-      this.queryMessage = null;
-    }
 
-    if(this.queryMessage != null) {      
-      var message = this.queryMessage;
-      queryMessage = <MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat} openDialogDefault={true} />;  
-    }
-    */ 
     return (
       <div className={classes.container}>
         {linebreak}
         <NearbyEventDialog 
-                  eventNumber={eventNumber}
-                  distance={distance}
-                  geolocation={geolocation}/>
+          eventNumber={eventNumber}
+          distance={distance}
+          geolocation={geolocation}
+        />
         <PostMessageView />
       </div>
     );
