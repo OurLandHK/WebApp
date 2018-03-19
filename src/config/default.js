@@ -31,9 +31,38 @@ let constant = {
   addressBookLabel: "地址簿",
   addAddressLabel: "新增地址",
   updateAddressLabel: "更新地址",
-  nearbyEventLabel: "我地社區",
+  nearbyEventLabel: "我的社區",
   regionEventLabel: "十八社區"
 }
+
+let regionAddressBook = [
+  {
+    label: "東區",
+    lat: 22.2756648,
+    long: 114.2059834,
+    distance: 3
+  },
+  {
+    label: "南區",
+    lat: 22.2395616,
+    long: 114.15374,
+    distance: 10
+  },
+  {
+    label: "灣仔區",
+    lat: 22.2739793,
+    long: 114.1647234,
+    distance: 2
+  },
+  {
+    label: "中西區",
+    lat: 22.2724967,
+    long: 114.1350874,
+    distance: 3
+  },   
+   
+];
+
 
 let addressEnum = {
   home: "住宅",
