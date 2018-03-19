@@ -104,6 +104,7 @@ class AddressView extends Component {
           if (this.props.address != null) {
               key = this.props.address.id;
           }
+          console.log("addressbook submit" + this.locationButton.streetAddress);
           this.props.upsertAddress(user.user, key, this.state.type, this.state.text, this.locationButton.geolocation, this.locationButton.streetAddress);
           this.setState({popoverOpen: false});
    

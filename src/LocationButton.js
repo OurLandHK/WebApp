@@ -42,7 +42,6 @@ class LocationButton extends Component {
     this.geolocation = pos.coords;
     console.log("successCallBack " + this.geolocation.latitude + this.geolocation.longitude);
     this.setState({geolocation: pos.coords, disableSumbit: false});
-    this.handleClose();
   }
 
   streetAddressSuccessCallBack(err, response) {
@@ -96,6 +95,7 @@ class LocationButton extends Component {
 
   handleSubmit = () => {
     this.streetAddress = this.state.streetAddress;
+    console.log("handleSubmit:" + this.streetAddress);
     this.setState({ open: false });
   };
   
@@ -106,9 +106,9 @@ class LocationButton extends Component {
     let locationString = null;
     if (pos != null) {
       if(this.state.streetAddress != "") {
-        locationString = "位置: " + this.state.streetAddress + geoString(pos.latitude, pos.longitude);
+        locationString = "位置: " + this.state.streetAddress + "\n(" + geoString(pos.latitude, pos.longitude) + ")";
       } else {
-        locationString = "位置: " + geoString(pos.latitude, pos.longitude);   
+        locationString = "位置: 近" + geoString(pos.latitude, pos.longitude);   
       }  
     }
     return (
