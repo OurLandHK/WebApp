@@ -121,7 +121,7 @@ export function updateFilterWithCurrentLocation() {
   return dispatch => {
     dispatch(fetchLocation(geolocation => {
       dispatch(receiveLocation(geolocation));
-      dispatch(updateFilterLocation(geolocation));     
+      dispatch(updateFilterLocation(geolocation.coords));     
     }));  
   }
 }

@@ -71,6 +71,7 @@ class MessageList extends Component {
      distance,
      geolocation,
     } = filter;
+    this.setState({geolocation: geolocation});
     if(geolocation != constant.invalidLocation) {
       console.log("FetchMessage: " + geolocation);
       this.clear();
