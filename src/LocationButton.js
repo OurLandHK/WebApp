@@ -150,20 +150,5 @@ class LocationButton extends Component {
       </div>);
   }
 }
-/*
-const mapStateToProps = (state, ownProps) => {
-  return {
-    geoLocation : state.geoLocation,
-  };
-}
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    fetchLocation: () => dispatch(fetchLocation())
-  }
-};
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(LocationButton);
-*/
 export default LocationButton;
