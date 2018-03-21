@@ -51,7 +51,7 @@ const styles = theme => ({
     top: '80',
     left: 'auto',
     bottom: 'auto',
-    right: '20',
+    right: '5',
     zIndex: '100',
     position: 'fixed',
     display: 'inline-block',
@@ -193,7 +193,7 @@ class MessageDetailView extends Component {
                    <Tab label="地圖"/>
                  </Tabs>
                </AppBar>
- ,            </div>
+             </div>
              {tab == 0 && <div><PostCommentView messageUUID={m.key}/><CommentList messageUUID={m.key}/></div>}
              {tab == 1 && <MessageDetailViewImage url={m.publicImageURL}/>}
              {tab == 2 && <EventMap center={geolocation} zoom={zoom}/>}

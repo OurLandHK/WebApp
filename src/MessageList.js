@@ -49,7 +49,7 @@ class MessageList extends Component {
     if (user.user) {
       this.fetchMessages(user.user, filter); 
     } else {
-      this.clear();
+      this.fetchMessages(null, filter); 
     }
   }
 
@@ -65,7 +65,9 @@ class MessageList extends Component {
 
 
   fetchMessages(user, filter) {
-    this.setState({user:user});     
+    if (user) {
+      this.setState({user:user});     
+    }
     const {
      eventNumber: numberOfMessage,
      distance,

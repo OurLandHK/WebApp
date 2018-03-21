@@ -7,6 +7,7 @@ import Dialog, {
   DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
+import LocationIcon from 'material-ui-icons/LocationOn';
 import geoString from './GeoLocationString';
 /*
 import {connect} from "react-redux";
@@ -86,7 +87,7 @@ class LocationButton extends Component {
 
   handleClickOpen = () => {
     this.geolocation = null;
-    this.setState({ open: true, streetAddress: "", geolocation: null, disableSumbit: true});
+    this.setState({ open: true, disableSumbit: true});
   };
 
   handleClose = () => {
@@ -113,8 +114,15 @@ class LocationButton extends Component {
     }
     return (
       <div>
+        <Button
+          variant="raised"
+          color="secondary"
+          onClick={this.handleClickOpen}>
+          <LocationIcon />
+          輸入位置
+        </Button>
+        &nbsp;
         {locationString}
-        <Button onClick={this.handleClickOpen}>輸入位置</Button>
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
