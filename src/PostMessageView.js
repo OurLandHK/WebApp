@@ -22,6 +22,7 @@ import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import CloseIcon from 'material-ui-icons/Close';
+import FileUploadIcon from 'material-ui-icons/FileUpload';
 import Slide from 'material-ui/transitions/Slide';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ReactDOM from 'react-dom';
@@ -30,6 +31,9 @@ import {connect} from "react-redux";
 
 
 const styles = theme => ({
+  hidden: {
+    display: 'none',
+  },
   fab: {
     margin: 0,
     top: 'auto',
@@ -239,14 +243,33 @@ class PostMessageView extends Component {
                     handleDelete={this.handleDelete}
                     handleAddition={this.handleAddition}
                     handleDrag={this.handleDrag} /> 
-                  <TextField id="status" label="現況" className={classes.textField} disabled value={this.state.status} />                  
+                  <div className={classes.hidden}>
+                    <TextField id="status" label="現況" className={classes.textField} disabled value={this.state.status} />                  
+                  </div>
+                  <br/>
                   <Label for="locations">地點</Label>
                   <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}}/>
                 </FormGroup>                          
                 <FormGroup>                     
+                  <br/>
                   <Label for="file">相片</Label>
-                  <input type="file" name="file" id="file" ref={(file) => {this.file = file;}}/>
+                  <input
+                    type="file"
+                    name="file"
+                    id="file"
+                    className={classes.hidden}
+                    ref={(file) => {this.file = file;}}
+                  />
                 </FormGroup>
+                <Button
+                  className={classes.uploadButton}
+                  variant="raised"
+                  component="label"
+                  htmlFor="file"
+                >
+                  <FileUploadIcon />
+                  上載相片
+                </Button>
                 <FormGroup>    
                   <FormControlLabel
                   label="活動"
@@ -278,6 +301,7 @@ class PostMessageView extends Component {
                   <FormGroup>                
                     <TextField id="link" label="外部連結" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>
                   </FormGroup>                  
+                  <br/>
                 </Collapse>                    
                 <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>提交</Button> 
               </Form>
