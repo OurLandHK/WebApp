@@ -33,7 +33,8 @@ let constant = {
   addAddressLabel: "新增地址",
   updateAddressLabel: "更新地址",
   nearbyEventLabel: "我的社區",
-  regionEventLabel: "十八社區"
+  regionEventLabel: "十八社區",
+  recentEventLabel: "最近查看"
 }
 
 let regionAddressBook = [

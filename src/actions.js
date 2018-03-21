@@ -5,6 +5,7 @@ import {
   DISABLE_LOCATION,
   FETCH_LOCATION,
   FETCH_ADDRESS_BOOK,
+  FETCH_RECENT_MESSAGE,
   TOGGLE_ADDRESS_DIALOG,
   TOGGLE_NEARBYEVENT_DIALOG,
 } from './actions/types';
@@ -38,6 +39,10 @@ function fetchUser(user, loading=false) {
   return {type: FETCH_USER, user: user, loading: loading};
 }
 
+function fetchRecentMessage(recentMessage, openRecent) {
+  return {type: FETCH_RECENT_MESSAGE, recentMessage: recentMessage, openRecent: openRecent};
+}
+
 function dispatchFilter(eventNumber, distance, geolocation) {
   return {type: UPDATE_FILTER, eventNumber: eventNumber, geolocation: geolocation, distance: distance}
 }
@@ -45,6 +50,7 @@ function dispatchFilter(eventNumber, distance, geolocation) {
 function dispatchFilterLocation(geolocation, distance) {
   return {type: UPDATE_FILTER_LOCATION, geolocation: geolocation, distance: distance};
 }
+
 
 export function fetchLocation(callback=receiveLocation) {
   return dispatch => {
@@ -189,5 +195,9 @@ export function toggleNearbyEventDialog(flag) {
   return dispatch => {
     dispatch(dispatchToggleNearbyEventDialog(flag));
   };
+}
+
+export function updateRecentMessage(eventId, openRecent) {
+
 }
 

@@ -3,6 +3,8 @@ import NearbyEventDialog from './NearbyEventDialog';
 import PostMessageView from './PostMessageView';
 import MessageDialog from './MessageDialog';
 import PublicProfile from './PublicProfile';
+import MessageView from './MessageView';
+import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
 import React, { Component } from 'react';
 import config, {constant} from './config/default';
 
@@ -18,26 +20,52 @@ class Main extends Component {
     if(geolocation == null) {
       geolocation = constant.invalidLocation;
     }
+    var openRecent = false;
+    if(this.props.eventId != "") {
+      openRecent = true;
+    }
     this.state = {
         eventId: this.props.eventId,
         eventNumber: this.props.eventNumber,
         distance: this.props.distance, 
+        openRecent: openRecent,
         geolocation: this.props.geolocation
       };
+    
   }
 
   handleClick() {
     this.openDialog();
   };
 
+  componentDidMount() {
+    if(this.state.eventId != "") {
+      console.log("eventID: " + this.state.eventId);
+      getMessage(this.state.eventId).then((message) => {this.setState({queryMessage: message})});
+    } else {
+      this.queryMessage = null;
+    }
+  }
+
   renderMessageFrontPage() {
-    const { eventNumber, distance, geolocation, eventId } = this.state;
-    let linebreak = <div><br/></div>;
+    let recentMessage = null;
+    const { eventNumber, distance, geolocation, eventId, queryMessage, openRecent} = this.state;
+    let linebreak = <div><br/><br/></div>;
     const { classes } = this.props; 
+
+    if(queryMessage != null) {      
+      var message = queryMessage;
+      recentMessage = <div>
+                        {constant.recentEventLabel}
+                        <MessageView message={message} key={message.key} openDialogDefault={openRecent} />
+                        <br/>
+                      </div>;
+    }    
 
     return (
       <div className={classes.container}>
         {linebreak}
+        {recentMessage}
         <NearbyEventDialog 
           eventNumber={eventNumber}
           distance={distance}
@@ -51,7 +79,6 @@ class Main extends Component {
   render() {
     let pubilcProfileHtml = null;
     let messageHtml = null;
-    console.log("Query UserID: " + this.state.userId + " eventID: " + this.state.eventId);
     if(this.state.userId != null && this.state.userId != "") {
       pubilcProfileHtml = <PublicProfile id={this.state.userId}/>;
     } else {
