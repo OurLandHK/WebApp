@@ -16,6 +16,9 @@ import FileUploadIcon from 'material-ui-icons/FileUpload';
 import imageResizer from './ImageResizer';
 
 const styles = theme => ({
+    hidden: {
+      display: 'none',
+    },
     dialogTitle: {
       background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'  
     }
@@ -60,7 +63,8 @@ class UploadImageButton extends Component {
     this.state = {
         disableSumbit: true,
         disableDelete: true,
-        open: false
+        open: false,
+        publicThumbnailImagURL: null
     };
   }
 
@@ -70,19 +74,20 @@ class UploadImageButton extends Component {
         imageResizer(file, 1280, 1280, "image/jpeg", 0.5, function(blob) {
             uploadImage(path, "event.jpg", blob).then((snapshot) =>  {
                 var fullPath = snapshot.metadata.fullPath;
-                this.imageUrlRef = null;
-                this.thumbnailImageURLRef = null;
+//                this.imageUrlRef = firebase.storage().ref(fullPath);
                 var firebaseImageURL = firebase.storage().ref(fullPath).toString();
                 var publicImageURL = snapshot.downloadURL;
                 imageResizer(file, 128, 128, "image/jpeg", 0.5, function(blob1) {
                     uploadImage(path, "thumbnail.jpg", blob1).then((snapshot1) =>  {
                         var thumbnailFullPath = snapshot1.metadata.fullPath;
+                        //this.thumbnailImageURLRef = firebase.storage().ref(thumbnailFullPath);
                         var thumbnailFirebaseImageURL = firebase.storage().ref(thumbnailFullPath).toString();
                         var thumbnailPublicImageURL = snapshot1.downloadURL;
                         this.imageUrl = firebaseImageURL;
                         this.publicImageURL = publicImageURL;
                         this.thumbnailImageURL = thumbnailFirebaseImageURL;
                         this.publicThumbnailImagURL = thumbnailPublicImageURL;
+                        this.setState({publicThumbnailImagURL: this.publicThumbnailImagURL});
                         console("uploadFinish: " + this.imageUrl + " " + this.publicImageURL+ " " + this.thumbnailImageURL+ " " + this.thumbnailPublicImageURL)
 
                         if(this.props.uploadFinish != null) {
@@ -110,14 +115,23 @@ class UploadImageButton extends Component {
   onDelete(){
     // delete
     // Delete the file
-    /*
-    var desertRef = firebase.storage().ref(fullPath)
-desertRef.delete().then(function() {
-    // File deleted successfully
-  }).catch(function(error) {
-    // Uh-oh, an error occurred!
-  });
-  */
+    if(this.imageUrlRef != null) {
+      this.imageUrlRef.delete().then(function() {
+        this.imageUrlRef = null;
+        this.thumbnailImageURLRef.delete().then(function() {
+          this.thumbnailImageURLRef = null;
+          if(this.props.uploadFinish != null) {
+            this.props.uploadFinish(null, null, null, null);
+          }
+        }).catch(function(error) {
+          // Uh-oh, an error occurred!
+        });
+        // File deleted successfully
+      }).catch(function(error) {
+        // Uh-oh, an error occurred!
+      });
+    }
+    
     this.setState({ disableSumbit: true, disableDelete: true});     
     this.setState({ open: false });
   };  
@@ -129,12 +143,12 @@ desertRef.delete().then(function() {
   onSubmit(){
     this.setState({ open: false });
     if(this.props.path != null) {
-        this.postImage(this.path, this.file);
+        this.postImage(this.path, this.file.files[0]);
     }
   };
 
   inputOnchange() {
-      if(this.file != null) {
+      if(this.file != null && this.file.files[0] != null && this.file.files[0] != "") {
         this.setState({ disableSumbit: false , disableDelete: false});
       } else {
         this.setState({ disableSumbit: true, disableDelete: true});   
@@ -144,8 +158,13 @@ desertRef.delete().then(function() {
 
   render() {
     const { classes, theme } = this.props;
+    let thumbnail = "沒有相片";
+    if(this.state.publicThumbnailImagURL != null) {
+      thumbnail = <img src={this.state.publicThumbnailImagURL}/>
+    }
     return (
       <div>
+        {thumbnail}
         <Button variant="raised" color="primary" className={classes.uploadButton} raised={true} onClick={() => this.handleClickOpen()}>
             <FileUploadIcon />
                 上載相片
@@ -157,8 +176,6 @@ desertRef.delete().then(function() {
         >
             <DialogTitle className={classes.dialogTitle} id="form-dialog-title">上載相片</DialogTitle>
                 <DialogContent>
-                    <FormGroup>                     
-                    <br/>
                     <Label for="file">相片</Label>
                         <input
                             type="file"
@@ -167,8 +184,7 @@ desertRef.delete().then(function() {
                             className={classes.hidden}
                             ref={(file) => {this.file = file;}}
                             onChange={() => this.inputOnchange()}
-                        />
-                    </FormGroup>                   
+                        />                                       
                     <Button
                         className={classes.uploadButton}
                         variant="raised"

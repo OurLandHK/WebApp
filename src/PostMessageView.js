@@ -289,7 +289,10 @@ class PostMessageView extends Component {
                   <Label for="locations">地點</Label>
                   <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}}/>
                 </FormGroup>
+                <FormGroup>  
+                <br/>
                 <UploadImageButton path={this.state.key} uploadFinish={(imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
+                </FormGroup>
                 <FormGroup>    
                   <FormControlLabel
                   label="活動"
