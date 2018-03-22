@@ -27,6 +27,8 @@ import Slide from 'material-ui/transitions/Slide';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ReactDOM from 'react-dom';
 import CustomTags from './CustomTags';
+import UploadImageButton from './UploadImageButton';
+import uuid from 'js-uuid';
 import {connect} from "react-redux";
 
 
@@ -67,14 +69,16 @@ function Transition(props) {
 class PostMessageView extends Component {
   constructor(props) {
     super(props);
+    var key = uuid.v4();
     this.state = {popoverOpen: false, buttonShow: false, 
       // message
+      key: key,
       summary: "",
       link: "",
       start: "",
       end: "",
       status: "開放",
-      expanded: false, rotate: 'rotate(0deg)',
+      expanded: false,
       tags: []};
     this.handleRequestDelete = this.handleRequestDelete.bind(this);
     this.handleTouchTap = this.handleTouchTap.bind(this);
@@ -103,8 +107,10 @@ class PostMessageView extends Component {
 
   handleRequestOpen(evt) {
     evt.preventDefault();
+    var key = uuid.v4();
     this.setState({
      // message
+      key: key,
       summary: "",
       link: "",
       start: "",
@@ -112,7 +118,11 @@ class PostMessageView extends Component {
       expanded: false, rotate: 'rotate(0deg)',
       tags: [],
       popoverOpen: true,
-      anchorEl: evt.currentTarget
+      anchorEl: evt.currentTarget,
+      imageUrl: null, 
+      publicImageURL: null, 
+      thumbnailImageURL: null, 
+      thumbnailPublicImageURL: null
     });
   }
 
@@ -145,8 +155,27 @@ class PostMessageView extends Component {
       if(this.state.summary == null) {
         console.log('Unknown Input');
       } else {
+        var imageUrl = null;
+        var publicImageURL = null;
+        var thumbnailImageURL = null;
+        var thumbnailPublicImageURL = null;
+        if(this.state.imageUrl != null) {
+          imageUrl = this.state.imageUrl;
+        }
+        if(this.state.publicImageUrl != null) {
+          imageUrl = this.state.publicImageUrl;
+        }
+        if(this.state.thumbnailImageUrl != null) {
+          imageUrl = this.state.thumbnailImageUrl;
+        }
+        if(this.state.thumbnailPublicImageUrl != null) {
+          imageUrl = this.state.thumbnailPublicImageUrl;
+        }      
         var tags = this.state.tags.map((tag) => tag.text);
-        postMessage(this.state.summary, this.file.files[0], tags, this.locationButton.geolocation, this.locationButton.streetAddress, startTimeInMs, duration, interval, this.state.link, this.state.status);
+        postMessage(this.state.key, this.state.summary, tags, this.locationButton.geolocation, this.locationButton.streetAddress, 
+          startTimeInMs, duration, interval, this.state.link, 
+          imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
+          this.state.status);
         this.setState({popoverOpen: false});
       }
     }
@@ -192,6 +221,16 @@ class PostMessageView extends Component {
 
 	// re-render
 	this.setState({ tags: tags });
+  }
+
+  uploadFinish(imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {
+    console("uploadFinish: " + imageUrl + " " + publicImageURL+ " " + thumbnailImageURL+ " " + thumbnailPublicImageURL)
+    this.setState({
+      imageUrl: imageUrl, 
+      publicImageURL: publicImageURL, 
+      thumbnailImageURL: thumbnailImageURL, 
+      thumbnailPublicImageURL: thumbnailPublicImageURL
+    });
   }
 
   render() {
@@ -249,27 +288,8 @@ class PostMessageView extends Component {
                   <br/>
                   <Label for="locations">地點</Label>
                   <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}}/>
-                </FormGroup>                          
-                <FormGroup>                     
-                  <br/>
-                  <Label for="file">相片</Label>
-                  <input
-                    type="file"
-                    name="file"
-                    id="file"
-                    className={classes.hidden}
-                    ref={(file) => {this.file = file;}}
-                  />
                 </FormGroup>
-                <Button
-                  className={classes.uploadButton}
-                  variant="raised"
-                  component="label"
-                  htmlFor="file"
-                >
-                  <FileUploadIcon />
-                  上載相片
-                </Button>
+                <UploadImageButton path={this.state.key} uploadFinish={(imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
                 <FormGroup>    
                   <FormControlLabel
                   label="活動"

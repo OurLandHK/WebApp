@@ -35,30 +35,17 @@ function uploadImage(currentUser, messageKey, filename, blob) {
 };
 
 
-function postMessage(message, file, tags, geolocation, streetAddress, start, duration, interval, link, status) {
+function postMessage(key, message,tags, geolocation, streetAddress, start, duration, interval, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status) {
   var auth = firebase.auth();
   var currentUser = auth.currentUser;     
   var mapString = "\nhttps://www.google.com.hk/maps/place/"+ geoString(geolocation.latitude, geolocation.longitude) + "/@" + geolocation.latitude + "," + geolocation.longitude + ",18z/";
-    addMessage(message, currentUser, file, tags, geolocation, streetAddress, start, duration, interval, link, status).then((messageKey) => {
-      addPublishMessagesKeyToUserProfile(currentUser,messageKey).then(() => {
-        if (validateFile(file)) {
-          // Upload Event Full Image
-          imageResizer(file, 1280, 1280, "image/jpeg", 0.5, function(blob) {
-            uploadImage(currentUser, messageKey, "event.jpg", blob).then((snapshot) =>  {
-              var fullPath = snapshot.metadata.fullPath;
-              var firebaseImageURL = firebase.storage().ref(fullPath).toString();
-              firebase.storage().ref(fullPath).getDownloadURL().then((url) => {
-                var publicImageURL = url;
-                console.log('publicImageURL: ' + publicImageURL);
-                return updateMessageImageURL(messageKey, firebaseImageURL, publicImageURL);
-            });
-          });
-        });
-      } else  {
-        console.log("Not Image/No Image");
-        // postFbMessage(fbpostmessage, geolocation, '', tags, messageKey);
-      }
-    })
+  addMessage(key, message, currentUser, tags, geolocation, streetAddress,
+    // activites 
+    start, duration, interval, link, 
+    // images
+    imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
+    status).then((messageKey) => {
+    return messageKey;
   });
 };
 
