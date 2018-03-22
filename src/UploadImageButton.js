@@ -79,7 +79,6 @@ class UploadImageButton extends Component {
                         var thumbnailFullPath = snapshot1.metadata.fullPath;
                         var thumbnailFirebaseImageURL = firebase.storage().ref(thumbnailFullPath).toString();
                         var thumbnailPublicImageURL = snapshot1.downloadURL;
-                        var thumbnailPublicImageURL = thumbnailUrl;
                         this.imageUrl = firebaseImageURL;
                         this.publicImageURL = publicImageURL;
                         this.thumbnailImageURL = thumbnailFirebaseImageURL;
