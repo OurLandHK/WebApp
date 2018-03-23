@@ -119,7 +119,7 @@ class PostMessageView extends Component {
       tags: [],
       popoverOpen: true,
       anchorEl: evt.currentTarget,
-      imageUrl: null, 
+      imageURL: null, 
       publicImageURL: null, 
       thumbnailImageURL: null, 
       thumbnailPublicImageURL: null
@@ -127,6 +127,7 @@ class PostMessageView extends Component {
   }
 
   handleRequestClose() {
+  //  this.uploadImageButton.onDelete();
     this.setState({
       popoverOpen: false,
     });
@@ -155,26 +156,28 @@ class PostMessageView extends Component {
       if(this.state.summary == null) {
         console.log('Unknown Input');
       } else {
-        var imageUrl = null;
+        var imageURL = null;
         var publicImageURL = null;
         var thumbnailImageURL = null;
         var thumbnailPublicImageURL = null;
-        if(this.state.imageUrl != null) {
-          imageUrl = this.state.imageUrl;
+        if(this.state.imageURL != null) {
+          imageURL = this.state.imageURL;
         }
-        if(this.state.publicImageUrl != null) {
-          imageUrl = this.state.publicImageUrl;
+        if(this.state.publicImageURL != null) {
+          publicImageURL = this.state.publicImageURL;
         }
-        if(this.state.thumbnailImageUrl != null) {
-          imageUrl = this.state.thumbnailImageUrl;
+        if(this.state.thumbnailImageURL != null) {
+          thumbnailImageURL = this.state.thumbnailImageURL;
         }
-        if(this.state.thumbnailPublicImageUrl != null) {
-          imageUrl = this.state.thumbnailPublicImageUrl;
+        if(this.state.thumbnailPublicImageURL != null) {
+          thumbnailPublicImageURL = this.state.thumbnailPublicImageURL;
         }      
+        //console.log("Submit: " + imageURL + " " + publicImageURL+ " " + thumbnailImageURL+ " " + thumbnailPublicImageURL)
+        
         var tags = this.state.tags.map((tag) => tag.text);
         postMessage(this.state.key, this.state.summary, tags, this.locationButton.geolocation, this.locationButton.streetAddress, 
           startTimeInMs, duration, interval, this.state.link, 
-          imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
+          imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
           this.state.status);
         this.setState({popoverOpen: false});
       }
@@ -223,14 +226,14 @@ class PostMessageView extends Component {
 	this.setState({ tags: tags });
   }
 
-  uploadFinish(imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {
-    console("uploadFinish: " + imageUrl + " " + publicImageURL+ " " + thumbnailImageURL+ " " + thumbnailPublicImageURL)
+  uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {  
     this.setState({
-      imageUrl: imageUrl, 
+      imageURL: imageURL, 
       publicImageURL: publicImageURL, 
       thumbnailImageURL: thumbnailImageURL, 
       thumbnailPublicImageURL: thumbnailPublicImageURL
     });
+//    console.log("uploadFinish: " + this.state.imageURL + " " + this.state.publicImageURL+ " " + this.state.thumbnailImageURL+ " " + this.state.thumbnailPublicImageURL)
   }
 
   render() {
@@ -291,7 +294,7 @@ class PostMessageView extends Component {
                 </FormGroup>
                 <FormGroup>  
                 <br/>
-                <UploadImageButton path={this.state.key} uploadFinish={(imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
+                <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.key} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
                 </FormGroup>
                 <FormGroup>    
                   <FormControlLabel

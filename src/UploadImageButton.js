@@ -54,57 +54,64 @@ function uploadImage(messageKey, filename, blob) {
 class UploadImageButton extends Component {
   constructor(props) {
     super(props);
-    this.imageUrl = null;
+    this.imageURL = null;
     this.publicImageURL = null;
     this.thumbnailImageURL = null;
     this.publicThumbnailImagURL = null;
     this.imageUrlRef = null;
     this.thumbnailImageURLRef = null;
+    this.thumbnailFile = null;
     this.state = {
         disableSumbit: true,
         disableDelete: true,
         open: false,
         publicThumbnailImagURL: null
     };
+    this.pushOriginal = this.pushOriginal.bind(this);
+    this.pushThumbnail = this.pushThumbnail.bind(this);
+    this.onDelete = this.onDelete.bind(this);
   }
 
-  postImage(path, file) {
-    if (validateFile(file)) {
+  postImage() {
+    if (validateFile(this.file.files[0])) {
+      this.thumbnailFile = this.file.files[0];
         // Upload Event Full Image
-        imageResizer(file, 1280, 1280, "image/jpeg", 0.5, function(blob) {
-            uploadImage(path, "event.jpg", blob).then((snapshot) =>  {
-                var fullPath = snapshot.metadata.fullPath;
-//                this.imageUrlRef = firebase.storage().ref(fullPath);
-                var firebaseImageURL = firebase.storage().ref(fullPath).toString();
-                var publicImageURL = snapshot.downloadURL;
-                imageResizer(file, 128, 128, "image/jpeg", 0.5, function(blob1) {
-                    uploadImage(path, "thumbnail.jpg", blob1).then((snapshot1) =>  {
-                        var thumbnailFullPath = snapshot1.metadata.fullPath;
-                        //this.thumbnailImageURLRef = firebase.storage().ref(thumbnailFullPath);
-                        var thumbnailFirebaseImageURL = firebase.storage().ref(thumbnailFullPath).toString();
-                        var thumbnailPublicImageURL = snapshot1.downloadURL;
-                        this.imageUrl = firebaseImageURL;
-                        this.publicImageURL = publicImageURL;
-                        this.thumbnailImageURL = thumbnailFirebaseImageURL;
-                        this.publicThumbnailImagURL = thumbnailPublicImageURL;
-                        this.setState({publicThumbnailImagURL: this.publicThumbnailImagURL});
-                        console("uploadFinish: " + this.imageUrl + " " + this.publicImageURL+ " " + this.thumbnailImageURL+ " " + this.thumbnailPublicImageURL)
-
-                        if(this.props.uploadFinish != null) {
-                            this.props.uploadFinish(this.imageUrl, this.publicImageURL, this.thumbnailImageURL, this.thumbnailPublicImageURL);
-                        }
-                    });
-                });                
-            });
-        });
+        imageResizer(this.file.files[0], 1280, 1280, "image/jpeg", 0.5, this.pushOriginal);
     } else  {
         console.log("Not Image/No Image");
-        this.imageUrl = null;
+        this.imageURL = null;
         this.publicImageURL = null;
         this.thumbnailImageURL = null;
         this.publicThumbnailImagURL = null;
     }
   };
+
+pushOriginal(blob) {
+    uploadImage(this.props.path, "original.jpg", blob).then((snapshot) =>  {
+        var fullPath = snapshot.metadata.fullPath;
+        this.imageUrlRef = firebase.storage().ref(fullPath);
+        var firebaseImageURL = firebase.storage().ref(fullPath).toString();
+        var publicImageURL = snapshot.downloadURL;
+        this.imageURL = firebaseImageURL;
+        this.publicImageURL = publicImageURL;
+        imageResizer(this.thumbnailFile, 128, 128, "image/jpeg", 0.5, this.pushThumbnail);                
+    });
+};
+
+  pushThumbnail(blob) {
+    uploadImage(this.props.path, "thumbnail.jpg", blob).then((snapshot) =>  {
+        var thumbnailFullPath = snapshot.metadata.fullPath;
+        this.thumbnailImageURLRef = firebase.storage().ref(thumbnailFullPath);
+        var thumbnailFirebaseImageURL = firebase.storage().ref(thumbnailFullPath).toString();
+        var thumbnailPublicImageURL = snapshot.downloadURL;
+        this.thumbnailImageURL = thumbnailFirebaseImageURL;
+        this.publicThumbnailImagURL = thumbnailPublicImageURL;
+        this.setState({publicThumbnailImagURL: this.publicThumbnailImagURL});
+        if(this.props.uploadFinish != null) {
+            this.props.uploadFinish(this.imageURL, this.publicImageURL, this.thumbnailImageURL, this.publicThumbnailImagURL);
+        }
+    });
+}
 
   handleClickOpen(){
     if(this.props.path != null) {
@@ -116,24 +123,19 @@ class UploadImageButton extends Component {
     // delete
     // Delete the file
     if(this.imageUrlRef != null) {
-      this.imageUrlRef.delete().then(function() {
-        this.imageUrlRef = null;
-        this.thumbnailImageURLRef.delete().then(function() {
-          this.thumbnailImageURLRef = null;
-          if(this.props.uploadFinish != null) {
-            this.props.uploadFinish(null, null, null, null);
-          }
-        }).catch(function(error) {
-          // Uh-oh, an error occurred!
-        });
-        // File deleted successfully
-      }).catch(function(error) {
-        // Uh-oh, an error occurred!
-      });
+      console.log('delete image: '+ this.imageUrlRef);
+      this.imageUrlRef.delete();
+      this.imageUrlRef = null;
     }
-    
-    this.setState({ disableSumbit: true, disableDelete: true});     
-    this.setState({ open: false });
+    if(this.thumbnailImageURLRef != null) {
+      console.log('delete thumbnailImage: '+ this.thumbnailImageURLRef);
+      this.thumbnailImageURLRef.delete();
+      this.thumbnailImageURLRef = null;
+    }
+    if(this.props.uploadFinish != null) {
+      this.props.uploadFinish(null, null, null, null);
+    }
+    this.setState({ disableSumbit: true, disableDelete: true, publicThumbnailImagURL: null, open: false });     
   };  
 
   handleRequestClose(){
@@ -143,7 +145,7 @@ class UploadImageButton extends Component {
   onSubmit(){
     this.setState({ open: false });
     if(this.props.path != null) {
-        this.postImage(this.path, this.file.files[0]);
+        this.postImage();
     }
   };
 
@@ -164,11 +166,11 @@ class UploadImageButton extends Component {
     }
     return (
       <div>
-        {thumbnail}
         <Button variant="raised" color="primary" className={classes.uploadButton} raised={true} onClick={() => this.handleClickOpen()}>
             <FileUploadIcon />
                 上載相片
         </Button>
+        {thumbnail}
         <Dialog
           open={this.state.open}
           onRequestClose={() => this.handleRequestClose()}
