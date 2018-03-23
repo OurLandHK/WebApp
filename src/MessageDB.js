@@ -48,7 +48,7 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
     }
  }
 
- function addMessage(message, currentUser, file, tags, geolocation, streetAddress, start, duration, interval, link, status) {
+ function addMessage(key, message, currentUser, tags, geolocation, streetAddress, start, duration, interval, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status) {
     var now = Date.now();
     if(start === "")
     {
@@ -56,7 +56,6 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
       duration = null;
       interval = null;
     }
-    var key = uuid.v4();
     var messageRecord = {
         hide: false,
         name: currentUser.displayName,
@@ -74,8 +73,9 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
         duration: duration,
         interval: interval,
         link: link,
-        publicImageURL: null,
-        imageUrl: null,
+        imageUrl, publicImageURL, 
+        thumbnailImageURL, 
+        thumbnailPublicImageURL,
         status: status
       };
     // Use firestore
