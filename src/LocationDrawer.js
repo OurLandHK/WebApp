@@ -13,10 +13,11 @@ import NearMeIcon from 'material-ui-icons/NearMe';
 import AddLocationIcon from 'material-ui-icons/AddLocation';
 import PlaceIcon from 'material-ui-icons/Place';
 import AddIcon from 'material-ui-icons/Add';
+import ArrowIcon from 'material-ui-icons/ArrowDropDownCircle';
 import WorkIcon from 'material-ui-icons/Work';
 import HomeIcon from 'material-ui-icons/Home';
 import LocationIcon from 'material-ui-icons/LocationOn';
-import blue from 'material-ui/colors/blue';
+import green from 'material-ui/colors/green';
 import config,  {constant, addressEnum} from './config/default';
 import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
 import geoString from './GeoLocationString';
@@ -27,7 +28,7 @@ import {
   updateFilterWithCurrentLocation,
   toggleAddressDialog,
 } from './actions';
-import {connect} from "react-redux";
+import {connect} from 'react-redux';
 
 
 const styles = theme => ({
@@ -41,16 +42,33 @@ const styles = theme => ({
     width: 'auto',
   },
   white: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
   },
-  chip: {
+  button: {
+    border: '2px solid' ,
+    borderColor: green[200],
+    width: '100%',
     fontWeight: 'bold',
     fontSize: '0.8rem',
     margin: theme.spacing.unit,
-    background: blue[800],
     color: '#FFFFFF',
+    textAlign: 'left',
+    backgroundColor: green[500],
     boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-  },  
+    display:'flex',
+  },
+  buttonContainer: {
+    flex: '1 0 auto',
+  },
+  buttonRightContainer: {
+    flex: '1 0 auto',
+    textAlign: 'right',
+    fontStyle: 'italic',
+    fontSize: '1.0rem',
+  },
+  container: {
+    width: '98vw'
+  } 
 });
 
 
@@ -59,7 +77,7 @@ class LocationDrawer extends React.Component {
       super(props);
       this.state = {
         open: false,
-        locationName: "現在位置",
+        locationName: '現在位置',
         isUsingCurrentLocation: true,
         distance: this.props.filter.distance,
       };
@@ -98,7 +116,7 @@ class LocationDrawer extends React.Component {
   setLocation(text, distance, coords, isUsingCurrentLocation=false) {
       this.geolocation = coords;
       this.setState({...this.state, isUsingCurrentLocation: isUsingCurrentLocation})
-      console.log("set " + text + "(" + this.geolocation.latitude + "," +  this.geolocation.longitude + ")");
+      console.log('set ' + text + '(' + this.geolocation.latitude + ',' +  this.geolocation.longitude + ')');
       this.setState({locationName: text, distance: distance, geolocation: coords});
       this.toggleDrawer(false);
       const { updateFilterLocation } = this.props;
@@ -121,9 +139,9 @@ class LocationDrawer extends React.Component {
           distance = address.distance;
         }
         if (address.streetAddress != null) {
-          locationString =  address.streetAddress + " (" + geoString(geolocation.latitude, geolocation.longitude) + ")";
+          locationString =  address.streetAddress + ' (' + geoString(geolocation.latitude, geolocation.longitude) + ')';
         } else {
-          locationString = "近" + geoString(geolocation.latitude, geolocation.longitude);      
+          locationString = '近' + geoString(geolocation.latitude, geolocation.longitude);      
         } 
       }
       switch(type) {
@@ -164,19 +182,28 @@ class LocationDrawer extends React.Component {
   render() {
       const { classes } = this.props;      
       return (
-      <div>
-          <Chip
-            avatar={<LocationIcon className={classes.white}/>}
+      <div className={classes.container}>
+          <Button
             onClick={() => {this.toggleDrawer(true)}}
-            label={`在${this.state.isUsingCurrentLocation ? constant.currentLocation : this.state.locationName}的${this.state.distance}公里內`}
-            className={classes.chip}
-          />
-          <Drawer anchor="bottom"
+            className={classes.button}
+          >
+            <div className={classes.buttonContainer}>
+              <LocationIcon className={classes.white}/>
+                &nbsp;
+                {`在${this.state.isUsingCurrentLocation ? constant.currentLocation
+                          : this.state.locationName}的${this.state.distance}公里內`}
+            </div>
+            <div className={classes.buttonRightContainer}>
+              <ArrowIcon className={classes.white}/>
+              更改
+            </div>
+          </Button>
+          <Drawer anchor='bottom'
               open={this.state.open}
               onClose={() => {this.toggleDrawer(false)}}
               unmountOnExit>
               <div tabIndex={0}
-                  role="button"
+                  role='button'
                   className={classes.fullList}>
                   <List>
                       <ListItem>
