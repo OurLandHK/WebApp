@@ -70,6 +70,8 @@ class UploadImageButton extends Component {
     this.pushOriginal = this.pushOriginal.bind(this);
     this.pushThumbnail = this.pushThumbnail.bind(this);
     this.onDelete = this.onDelete.bind(this);
+    this.defaultOriginal = "original.jpg";
+    this.defaultThumbnail = "thumbnail.jpg";
   }
 
   postImage() {
@@ -87,7 +89,8 @@ class UploadImageButton extends Component {
   };
 
 pushOriginal(blob) {
-    uploadImage(this.props.path, "original.jpg", blob).then((snapshot) =>  {
+    var file = (this.props.original==null? this.defaultOriginal: this.props.original);
+    uploadImage(this.props.path, file, blob).then((snapshot) =>  {
         var fullPath = snapshot.metadata.fullPath;
         this.imageUrlRef = firebase.storage().ref(fullPath);
         var firebaseImageURL = firebase.storage().ref(fullPath).toString();
@@ -99,7 +102,8 @@ pushOriginal(blob) {
 };
 
   pushThumbnail(blob) {
-    uploadImage(this.props.path, "thumbnail.jpg", blob).then((snapshot) =>  {
+    var file = (this.props.thumbnail==null? this.defaultThumbnail: this.props.thumbnail);
+    uploadImage(this.props.path, file, blob).then((snapshot) =>  {
         var thumbnailFullPath = snapshot.metadata.fullPath;
         this.thumbnailImageURLRef = firebase.storage().ref(thumbnailFullPath);
         var thumbnailFirebaseImageURL = firebase.storage().ref(thumbnailFullPath).toString();
