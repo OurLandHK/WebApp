@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import List, { ListItem, ListItemText } from 'material-ui/List';
+import green from 'material-ui/colors/green';
 import Menu, { MenuItem } from 'material-ui/Menu';
 
 
@@ -52,6 +53,11 @@ class SelectedMenu extends Component {
       <div>
         <List>
           <ListItem
+            borderColor='green[200]'
+            width='100%'
+            fontWeight='bold'
+            color='#FFFFFF'
+            backgroundColor='green[500]'
             button
             aria-haspopup="true"
             aria-controls="lock-menu"

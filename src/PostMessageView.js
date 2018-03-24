@@ -90,7 +90,7 @@ class PostMessageView extends Component {
 
   static defaultProps = {
     intervalOptions : ['一次', '每週', '每兩週','每月'],
-    durationOptions : ['0:30', '1:00', '1:30','2:00','3:00'],    
+    durationOptions : ['0:30', '1:00', '1:30','2:00','3:00','4:00','6:00','8:00','10:00','12:00','18:00','一天','兩天','三天','四天','五天','六天','一週'],    
   }
 
   componentDidMount() {
