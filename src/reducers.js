@@ -9,6 +9,7 @@ import {
   TOGGLE_ADDRESS_DIALOG,
   TOGGLE_NEARBYEVENT_DIALOG,
   TOGGLE_LEADER_BOARD,
+  FETCH_TOP_TWENTY,
 } from './actions/types';
 
 
@@ -77,10 +78,12 @@ function nearbyEventDialogReducer(state={open: false}, action) {
   }
 }
 
-function leaderBoardReducer(state={open: false}, action) {
+function leaderBoardReducer(state={open: false, topTwenty:[]}, action) {
   switch (action.type) {
     case TOGGLE_LEADER_BOARD:
       return {...state, open: action.open};
+    case FETCH_TOP_TWENTY:
+      return {...state, topTwenty: action.users};
     default:
       return state;
   }

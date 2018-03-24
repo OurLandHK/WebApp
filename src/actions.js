@@ -9,6 +9,7 @@ import {
   TOGGLE_ADDRESS_DIALOG,
   TOGGLE_NEARBYEVENT_DIALOG,
   TOGGLE_LEADER_BOARD,
+  FETCH_TOP_TWENTY,
 } from './actions/types';
 import * as firebase from 'firebase';
 import config, {constant} from './config/default';
@@ -212,3 +213,8 @@ export function updateRecentMessage(eventId, openRecent) {
 
 }
 
+export function fetchTopTwenty() {
+  return dispatch => {
+    dispatch(() => ({type: FETCH_TOP_TWENTY, users:[]})) ;
+  }
+}
