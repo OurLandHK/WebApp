@@ -12,11 +12,13 @@ import ChatBubbleIcon from 'material-ui-icons/ChatBubbleOutline';
 import PersonIcon from 'material-ui-icons/Person';
 import UserProfileView from './UserProfileView';
 import AddressDialog from './address/AddressDialog';
+import LeaderBoard from './LeaderBoard';
 import {connect} from "react-redux";
 import Divider from 'material-ui/Divider';
 import {
   fetchLocation,
   toggleAddressDialog,
+  toggleLeaderBoard,
 } from "./actions";
 import { constant } from './config/default';
 import AboutDialog from './AboutDialog';
@@ -50,6 +52,12 @@ class DrawerMenu extends Component {
     this.handleClose();
     this.props.toggleAddressDialog(true);
   }
+
+  leaderBoardClick(){
+    this.handleClose();
+    this.props.toggleLeaderBoard(true);
+  }
+
 
   showAbout() {
     this.handleClose();
@@ -90,6 +98,7 @@ class DrawerMenu extends Component {
         </IconButton>
         <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>        
         <AddressDialog ref={(addressDialog) => {this.addressDialog = addressDialog;}} openDialog={openDialog => this.openAddressDialog = openDialog}/>        
+        <LeaderBoard />
         <AboutDialog openDialog={f => this.openAboutDialog = f}/>        
         <Drawer
           open={this.state.open}
@@ -113,7 +122,7 @@ class DrawerMenu extends Component {
                 <ListItemIcon>
                   <StarIcon />
                 </ListItemIcon>
-                <ListItemText primary="人氣排名榜" onClick={() => this.handleClose()}/>
+                <ListItemText primary={constant.leaderBoardLabel} onClick={() => this.leaderBoardClick()}/>
               </ListItem>
               <ListItem button>
                 <ListItemIcon>
@@ -152,7 +161,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchLocation: () => dispatch(fetchLocation()),
     toggleAddressDialog: flag => dispatch(toggleAddressDialog(flag)),
-
+    toggleLeaderBoard: flag => dispatch(toggleLeaderBoard(flag)),
   }
 };
 
