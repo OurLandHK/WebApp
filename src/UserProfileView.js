@@ -22,6 +22,8 @@ import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import geoString from './GeoLocationString';
 import {getUserProfile, updateUserLocation, getUserRecords} from './UserProfile';
+import UploadImageButton from './UploadImageButton';
+import uuid from 'js-uuid';
 import  {constant} from './config/default';
 
 function Transition(props) {
@@ -46,9 +48,17 @@ const styles = {
 class UserProfileView extends React.Component {
     constructor(props) {
         super(props);
+        var id = uuid.v4();
         this.state = {
             open: false,
-            user: null
+            user: null, 
+            path: '/',
+            imageURL: null, 
+            publicImageURL: null, 
+            thumbnailImageURL: null, 
+            thumbnailPublicImageURL: null,
+            originalFile: 'profile_' + id + '.jpg',
+            thumbnailFile: this.originalFile
         };
         this.openDialog = this.openDialog.bind(this);
         this.props.openDialog(this.openDialog);
@@ -128,6 +138,12 @@ class UserProfileView extends React.Component {
             </Button>
           </Toolbar>
         </AppBar>
+
+        <FormGroup>  
+          <br/>
+          <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} original={this.state.originalFile} thumbnail={this.state.thumbnailFile} path={this.state.path} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
+        </FormGroup>
+       
         <List>
           <ListItem >
             <ListItemText primary={displayRole} />
