@@ -8,6 +8,7 @@ import {
   FETCH_ADDRESS_BOOK,
   TOGGLE_ADDRESS_DIALOG,
   TOGGLE_NEARBYEVENT_DIALOG,
+  TOGGLE_LEADER_BOARD,
 } from './actions/types';
 
 
@@ -76,6 +77,15 @@ function nearbyEventDialogReducer(state={open: false}, action) {
   }
 }
 
+function leaderBoardReducer(state={open: false}, action) {
+  switch (action.type) {
+    case TOGGLE_LEADER_BOARD:
+      return {...state, open: action.open};
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({  
   geoLocation: geoLocationReducer,
   user: userReducer,
@@ -83,6 +93,7 @@ const rootReducer = combineReducers({
   addressBook: addressBookReducer,
   addressDialog: addressDialogReducer,
   nearbyEventDialog: nearbyEventDialogReducer,
+  leaderBoard: leaderBoardReducer,
 });
 
 

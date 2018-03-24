@@ -8,6 +8,7 @@ import {
   FETCH_RECENT_MESSAGE,
   TOGGLE_ADDRESS_DIALOG,
   TOGGLE_NEARBYEVENT_DIALOG,
+  TOGGLE_LEADER_BOARD,
 } from './actions/types';
 import * as firebase from 'firebase';
 import config, {constant} from './config/default';
@@ -21,6 +22,10 @@ function dispatchToggleNearbyEventDialog(flag) {
 
 function dispatchToggleAddressBook(flag) {
   return {type: TOGGLE_ADDRESS_DIALOG, open: flag};
+}
+
+function dispatchToggleLeaderBoard(flag) {
+  return {type: TOGGLE_LEADER_BOARD, open: flag};
 }
 
 function receiveLocation(pos, label=currentLocationLabel){
@@ -195,6 +200,12 @@ export function toggleNearbyEventDialog(flag) {
   return dispatch => {
     dispatch(dispatchToggleNearbyEventDialog(flag));
   };
+}
+
+export function toggleLeaderBoard(flag) {
+  return dispatch => {
+    dispatch(dispatchToggleLeaderBoard(flag));
+  }
 }
 
 export function updateRecentMessage(eventId, openRecent) {
