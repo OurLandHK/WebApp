@@ -79,12 +79,26 @@ function fetchMessagesBaseOnGeo(geocode, distance, numberOfMessage, callback) {
         status: status
       };
     // Use firestore
-    var db = firebase.firestore();
-    var collectionRef = db.collection(config.messageDB);  
-    return collectionRef.doc(key).set(messageRecord).then(function(userRecordRef) {
+    const db = firebase.firestore();
+    const messageRef = db.collection(config.messageDB).doc(key);
+    const userRef = db.collection(config.userDB).doc(currentUser.uid);
+    return db.runTransaction(transaction => {
+      return transaction.get(userRef).then(userDoc => {
+        let publishMessages = userDoc.publishMessages;
+        if (publishMessages == null) {
+          publishMessages = [key]
+        } else {
+          publishMessages.push(key);
+        }
+        transaction.set(messageRef, messageRecord);
+        transaction.update(userRef, {
+          publishMessages: publishMessages,
+          publishMessagesCount: publishMessages.length,
+        });
         console.log("Document written with ID: ", key);
-        return(key);
-    })        
+        return (key);
+      });
+    });
 };
   
 
