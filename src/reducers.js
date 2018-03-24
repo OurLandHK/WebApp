@@ -79,6 +79,7 @@ function nearbyEventDialogReducer(state={open: false}, action) {
 }
 
 function leaderBoardReducer(state={open: false, topTwenty:[]}, action) {
+  console.log(action);
   switch (action.type) {
     case TOGGLE_LEADER_BOARD:
       return {...state, open: action.open};

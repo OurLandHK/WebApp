@@ -215,6 +215,18 @@ export function updateRecentMessage(eventId, openRecent) {
 
 export function fetchTopTwenty() {
   return dispatch => {
-    dispatch(() => ({type: FETCH_TOP_TWENTY, users:[]})) ;
+    console.log('fetchTopTwenty');
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.userDB).orderBy('publishMessagesCount', 'desc').limit(20);
+    collectionRef.onSnapshot(function() {})         
+    collectionRef.get().then(function(querySnapshot) {
+       const users = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
+       console.log(users);
+       dispatch({type: FETCH_TOP_TWENTY, users: users}) ;
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+
   }
 }

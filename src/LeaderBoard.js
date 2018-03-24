@@ -15,6 +15,8 @@ import Slide from 'material-ui/transitions/Slide';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import {connect} from "react-redux";
 import Tabs, { Tab } from 'material-ui/Tabs';
+import Avatar from 'material-ui/Avatar';
+import Card, { CardActions, CardContent, CardHeader } from 'material-ui/Card';
 import {
   toggleLeaderBoard,
   fetchTopTwenty,
@@ -41,7 +43,7 @@ class LeaderBoard extends React.Component {
   }    
 
   componentWillMount() {
-  
+    this.props.fetchTopTwenty(); 
   }
 
   handleRequestClose = () => {
@@ -52,9 +54,31 @@ class LeaderBoard extends React.Component {
     this.setState({ value });
   }
 
+  renderUser(user, rank) {
+    const { classes } = this.props;
+    return (
+      <div>
+        <Card className={classes.card}>
+          <CardHeader
+            avatar={
+              <Avatar
+                className={classes.avatar}
+              >
+                R
+              </Avatar>
+            }
+            title={`第${rank}名`}
+            subheader={user.displayName}
+          />
+        </Card>
+      </div>
+    );
+  }
+
   renderTopTwenty() {
     return (
       <div>
+        {this.props.topTwenty.map((t, i) => this.renderUser(t, i + 1))}
       </div>  
     );
   }
