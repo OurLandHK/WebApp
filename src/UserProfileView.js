@@ -21,7 +21,7 @@ import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import geoString from './GeoLocationString';
-import {getUserProfile, updateUserLocation, getUserRecords} from './UserProfile';
+import {getUserProfile, updateUserLocation, getUserRecords, updateUserProfileImageURL} from './UserProfile';
 import UploadImageButton from './UploadImageButton';
 import uuid from 'js-uuid';
 import  {constant} from './config/default';
@@ -58,7 +58,7 @@ class UserProfileView extends React.Component {
             thumbnailImageURL: null, 
             thumbnailPublicImageURL: null,
             originalFile: 'profile_' + id + '.jpg',
-            thumbnailFile: this.originalFile
+            isOriginalOnly: true
         };
         this.openDialog = this.openDialog.bind(this);
         this.props.openDialog(this.openDialog);
@@ -87,11 +87,13 @@ class UserProfileView extends React.Component {
 
   onSubmit() {
     this.setState({ open: false });
-    // TOADA nothing to submit now
+    /*
+      Updating User Profile Image in DB
+    */
+    console.log(this.thumbnailImageURL);
+    updateUserProfileImageURL(this.state.user, this.thumbnailImageURL);
   }
   
-  
-
   render() {
     const { classes } = this.props;
     var imgURL = '/images/profile_placeholder.png';
@@ -141,7 +143,7 @@ class UserProfileView extends React.Component {
 
         <FormGroup>  
           <br/>
-          <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} original={this.state.originalFile} thumbnail={this.state.thumbnailFile} path={this.state.path} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
+          <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} original={this.state.originalFile} isOriginalOnly={this.state.isOriginalOnly} path={this.state.path} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
         </FormGroup>
        
         <List>
