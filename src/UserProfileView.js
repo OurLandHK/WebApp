@@ -73,8 +73,6 @@ class UserProfileView extends React.Component {
     this.setState({ open: false });
   };
 
-  
-
   componentDidMount() {
     var auth = firebase.auth();
     auth.onAuthStateChanged((user) => {
@@ -90,10 +88,18 @@ class UserProfileView extends React.Component {
     /*
       Updating User Profile Image in DB
     */
-    console.log(this.thumbnailImageURL);
-    updateUserProfileImageURL(this.state.user, this.thumbnailImageURL);
+    updateUserProfileImageURL(this.state.user, this.state.publicImageURL);
   }
-  
+
+  uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {  
+    this.setState({
+      imageURL: imageURL, 
+      publicImageURL: publicImageURL, 
+      thumbnailImageURL: thumbnailImageURL, 
+      thumbnailPublicImageURL: thumbnailPublicImageURL
+    });
+    }
+
   render() {
     const { classes } = this.props;
     var imgURL = '/images/profile_placeholder.png';
