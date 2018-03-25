@@ -57,9 +57,8 @@ class UserProfileView extends React.Component {
             thumbnailImageURL: null, 
             thumbnailPublicImageURL: null
         };
-        this.path = '/';
-        this.originalFile = 'profile_' + id + '.jpg';
-        this.isOriginalOnly = true;
+        this.path = 'UserProfile';
+        this.thumbnailFilename = 'profile_' + id + '.jpg';
         this.openDialog = this.openDialog.bind(this);
         this.props.openDialog(this.openDialog);
     }    
@@ -88,17 +87,14 @@ class UserProfileView extends React.Component {
     /*
       Updating User Profile Image in DB
     */
-    
-    var rv = updateUserProfile(this.state.user, {
-      photoURL: this.state.publicImageURL
-    });
+    var userProfile = this.state.userProfile;
+    if(this.state.thumbnailPublicImageURL != null) {
+      userProfile.photoURL = this.state.thumbnailPublicImageURL;
+    }
+    var rv = updateUserProfile(this.state.user, userProfile);
 
     if(rv){
-      this.setState({
-        user: {
-          photoURL: this.state.publicImageURL
-        }
-      });
+      this.setState({userProfile: userProfile});
     }
   }
 
@@ -123,7 +119,8 @@ class UserProfileView extends React.Component {
     var homeLocation = constant.addressNotSet;
     let dialogHtml = null;
     if (this.state.user != null) {
-        imgURL = this.state.user.photoURL;
+        imgURL = this.state.userProfile.photoURL;
+        this.path = "UserProfile/" + this.state.user.uid + "/";
         displayName = this.state.userProfile.displayName;
         displayRole += this.state.userProfile.role;
         if(this.state.userProfile != null)
@@ -160,7 +157,7 @@ class UserProfileView extends React.Component {
 
         <FormGroup>  
           <br/>
-          <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} original={this.originalFile} isOriginalOnly={this.isOriginalOnly} path={this.path} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
+          <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} thumbnailFilename={this.thumbnailFilename} isThumbnailOnly={true} path={this.path} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
         </FormGroup>
        
         <List>

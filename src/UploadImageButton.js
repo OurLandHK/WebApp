@@ -76,14 +76,26 @@ class UploadImageButton extends Component {
     this.onDelete = this.onDelete.bind(this);
     this.defaultOriginal = "original.jpg";
     this.defaultThumbnail = "thumbnail.jpg";
-    this.isOriginalOnly = true;
+    this.isOriginalOnly = false;
+    this.isThumbnailOnly = false;
+    if(this.props.isOriginalOnly == true) {
+      this.isOriginalOnly = true;
+    }
+    if(this.props.isThumbnailOnly == true) {
+      this.isThumbnailOnly = true;
+    }
+    
   }
 
   postImage() {
     if (validateFile(this.file.files[0])) {
       this.thumbnailFile = this.file.files[0];
         // Upload Event Full Image
-        imageResizer(this.file.files[0], 1280, 1280, "image/jpeg", 0.5, this.pushOriginal);
+        if(this.isThumbnailOnly){
+          imageResizer(this.thumbnailFile, 128, 128, "image/jpeg", 0.5, this.pushThumbnail); 
+        } else {
+          imageResizer(this.file.files[0], 1280, 1280, "image/jpeg", 0.5, this.pushOriginal);
+        }
     } else  {
         console.log("Not Image/No Image");
         this.imageURL = null;
@@ -94,7 +106,7 @@ class UploadImageButton extends Component {
   };
 
 pushOriginal(blob) {
-    var file = (this.props.original==null? this.defaultOriginal: this.props.original);
+    var file = (this.props.originalFilename==null? this.defaultOriginal: this.props.originalFilename);
     uploadImage(this.props.path, file, blob).then((snapshot) =>  {
         var fullPath = snapshot.metadata.fullPath;
         this.imageUrlRef = firebase.storage().ref(fullPath);
@@ -102,7 +114,7 @@ pushOriginal(blob) {
         var publicImageURL = snapshot.downloadURL;
         this.imageURL = firebaseImageURL;
         this.publicImageURL = publicImageURL;
-        if(!(this.props.isOriginalOnly || this.isOriginalOnly)){
+        if(!this.isOriginalOnly){
           imageResizer(this.thumbnailFile, 128, 128, "image/jpeg", 0.5, this.pushThumbnail);
         }else{
           this.setState({publicThumbnailImagURL: this.publicImageURL});
@@ -114,8 +126,8 @@ pushOriginal(blob) {
 };
 
   pushThumbnail(blob) {
-    var file = (this.props.thumbnail==null? this.defaultThumbnail: this.props.thumbnail);
-    uploadImage(this.props.path, file, blob).then((snapshot) =>  {
+    var filename = (this.props.thumbnailFilename==null? this.defaultThumbnail: this.props.thumbnailFilename);
+    uploadImage(this.props.path, filename, blob).then((snapshot) =>  {
         var thumbnailFullPath = snapshot.metadata.fullPath;
         this.thumbnailImageURLRef = firebase.storage().ref(thumbnailFullPath);
         var thumbnailFirebaseImageURL = firebase.storage().ref(thumbnailFullPath).toString();
