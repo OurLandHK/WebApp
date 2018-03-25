@@ -21,6 +21,10 @@ const styles = theme => ({
     },
     dialogTitle: {
       background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'  
+    },
+    previewThumbnail: {
+      width: '128px',
+      height: '128px'
     }
   });
 
@@ -100,6 +104,11 @@ pushOriginal(blob) {
         this.publicImageURL = publicImageURL;
         if(!(this.props.isOriginalOnly || this.isOriginalOnly)){
           imageResizer(this.thumbnailFile, 128, 128, "image/jpeg", 0.5, this.pushThumbnail);
+        }else{
+          this.setState({publicThumbnailImagURL: this.publicImageURL});
+          if(this.props.uploadFinish != null) {
+            this.props.uploadFinish(this.imageURL, this.publicImageURL, this.thumbnailImageURL, this.publicThumbnailImagURL);
+          }
         }
     });
 };
@@ -169,7 +178,7 @@ pushOriginal(blob) {
     const { classes, theme } = this.props;
     let thumbnail = "沒有相片";
     if(this.state.publicThumbnailImagURL != null) {
-      thumbnail = <img src={this.state.publicThumbnailImagURL}/>
+      thumbnail = <img src={this.state.publicThumbnailImagURL} className={classes.previewThumbnail}/>
     }
     return (
       <div>
