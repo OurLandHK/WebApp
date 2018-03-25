@@ -21,7 +21,9 @@ import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import geoString from './GeoLocationString';
-import {getUserProfile, updateUserLocation, getUserRecords} from './UserProfile';
+import {getUserProfile, updateUserLocation, getUserRecords, updateUserProfile} from './UserProfile';
+import UploadImageButton from './UploadImageButton';
+import uuid from 'js-uuid';
 import  {constant} from './config/default';
 
 function Transition(props) {
@@ -46,10 +48,18 @@ const styles = {
 class UserProfileView extends React.Component {
     constructor(props) {
         super(props);
+        var id = uuid.v4();
         this.state = {
             open: false,
-            user: null
+            user: null, 
+            imageURL: null, 
+            publicImageURL: null, 
+            thumbnailImageURL: null, 
+            thumbnailPublicImageURL: null
         };
+        this.path = '/';
+        this.originalFile = 'profile_' + id + '.jpg';
+        this.isOriginalOnly = true;
         this.openDialog = this.openDialog.bind(this);
         this.props.openDialog(this.openDialog);
     }    
@@ -63,8 +73,6 @@ class UserProfileView extends React.Component {
     this.setState({ open: false });
   };
 
-  
-
   componentDidMount() {
     var auth = firebase.auth();
     auth.onAuthStateChanged((user) => {
@@ -77,10 +85,31 @@ class UserProfileView extends React.Component {
 
   onSubmit() {
     this.setState({ open: false });
-    // TOADA nothing to submit now
+    /*
+      Updating User Profile Image in DB
+    */
+    
+    var rv = updateUserProfile(this.state.user, {
+      photoURL: this.state.publicImageURL
+    });
+
+    if(rv){
+      this.setState({
+        user: {
+          photoURL: this.state.publicImageURL
+        }
+      });
+    }
   }
-  
-  
+
+  uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {  
+    this.setState({
+      imageURL: imageURL, 
+      publicImageURL: publicImageURL, 
+      thumbnailImageURL: thumbnailImageURL, 
+      thumbnailPublicImageURL: thumbnailPublicImageURL
+    });
+    }
 
   render() {
     const { classes } = this.props;
@@ -128,6 +157,12 @@ class UserProfileView extends React.Component {
             </Button>
           </Toolbar>
         </AppBar>
+
+        <FormGroup>  
+          <br/>
+          <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} original={this.originalFile} isOriginalOnly={this.isOriginalOnly} path={this.path} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
+        </FormGroup>
+       
         <List>
           <ListItem >
             <ListItemText primary={displayRole} />

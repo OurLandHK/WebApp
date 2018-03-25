@@ -21,6 +21,10 @@ const styles = theme => ({
     },
     dialogTitle: {
       background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'  
+    },
+    previewThumbnail: {
+      width: '128px',
+      height: '128px'
     }
   });
 
@@ -70,6 +74,9 @@ class UploadImageButton extends Component {
     this.pushOriginal = this.pushOriginal.bind(this);
     this.pushThumbnail = this.pushThumbnail.bind(this);
     this.onDelete = this.onDelete.bind(this);
+    this.defaultOriginal = "original.jpg";
+    this.defaultThumbnail = "thumbnail.jpg";
+    this.isOriginalOnly = true;
   }
 
   postImage() {
@@ -87,19 +94,28 @@ class UploadImageButton extends Component {
   };
 
 pushOriginal(blob) {
-    uploadImage(this.props.path, "original.jpg", blob).then((snapshot) =>  {
+    var file = (this.props.original==null? this.defaultOriginal: this.props.original);
+    uploadImage(this.props.path, file, blob).then((snapshot) =>  {
         var fullPath = snapshot.metadata.fullPath;
         this.imageUrlRef = firebase.storage().ref(fullPath);
         var firebaseImageURL = firebase.storage().ref(fullPath).toString();
         var publicImageURL = snapshot.downloadURL;
         this.imageURL = firebaseImageURL;
         this.publicImageURL = publicImageURL;
-        imageResizer(this.thumbnailFile, 128, 128, "image/jpeg", 0.5, this.pushThumbnail);                
+        if(!(this.props.isOriginalOnly || this.isOriginalOnly)){
+          imageResizer(this.thumbnailFile, 128, 128, "image/jpeg", 0.5, this.pushThumbnail);
+        }else{
+          this.setState({publicThumbnailImagURL: this.publicImageURL});
+          if(this.props.uploadFinish != null) {
+            this.props.uploadFinish(this.imageURL, this.publicImageURL, this.thumbnailImageURL, this.publicThumbnailImagURL);
+          }
+        }
     });
 };
 
   pushThumbnail(blob) {
-    uploadImage(this.props.path, "thumbnail.jpg", blob).then((snapshot) =>  {
+    var file = (this.props.thumbnail==null? this.defaultThumbnail: this.props.thumbnail);
+    uploadImage(this.props.path, file, blob).then((snapshot) =>  {
         var thumbnailFullPath = snapshot.metadata.fullPath;
         this.thumbnailImageURLRef = firebase.storage().ref(thumbnailFullPath);
         var thumbnailFirebaseImageURL = firebase.storage().ref(thumbnailFullPath).toString();
@@ -162,7 +178,7 @@ pushOriginal(blob) {
     const { classes, theme } = this.props;
     let thumbnail = "沒有相片";
     if(this.state.publicThumbnailImagURL != null) {
-      thumbnail = <img src={this.state.publicThumbnailImagURL}/>
+      thumbnail = <img src={this.state.publicThumbnailImagURL} className={classes.previewThumbnail}/>
     }
     return (
       <div>
