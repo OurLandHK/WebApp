@@ -165,19 +165,26 @@ function addPublishMessagesKeyToUserProfile(user, messageUUID) {
     });
 }
 
-function updateUserProfileImageURL(user, imageURL){
+/*
+    Update a user's profile
+*/
+function updateUserProfile(user, userProfile){
     return getUserProfile(user).then((userRecord) => {
         var rv = null;
-        if(imageURL != null && imageURL != userRecord.photoURL){
-            userRecord.photoURL = imageURL;
-            return updateUserRecords(user.uid, userRecord).then(function(userRecordRef){
-                rv = true;
-                return rv;
-            });
-        }
+        user.updateProfile(userProfile).then(function() {
+            // Update successful.
+            rv = true;
+            return rv;
+        }).catch(function(error) {
+          // An error happened.
+          alert(error);
+          rv = false;
+          return rv;
+        });
+
         return rv;
     });
 }
 
-export {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfileImageURL};
+export {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile};
 
