@@ -171,7 +171,7 @@ function addPublishMessagesKeyToUserProfile(user, messageUUID) {
 function updateUserProfile(user, userProfile){
     return getUserProfile(user).then((userRecord) => {
         var rv = null;
-        user.updateProfile(userProfile).then(function() {
+        updateUserRecords(user.uid, userProfile).then(function() {
             // Update successful.
             rv = true;
             return rv;
