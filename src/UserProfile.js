@@ -165,6 +165,15 @@ function addPublishMessagesKeyToUserProfile(user, messageUUID) {
     });
 }
 
+function updateUserProfileImageURL(user, imageURL){
+    return getUserProfile(user).then((userRecord) => {
+        if(imageURL != null && imageURL != userRecord.photoURL){
+            userRecord.photoURL = imageURL;
+        }
+        return updateUserRecords(user.uid, userRecord);
+    });
+}
 
-export {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage};
+
+export {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfileImageURL};
 
