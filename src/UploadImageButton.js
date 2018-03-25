@@ -72,6 +72,7 @@ class UploadImageButton extends Component {
     this.onDelete = this.onDelete.bind(this);
     this.defaultOriginal = "original.jpg";
     this.defaultThumbnail = "thumbnail.jpg";
+    this.isOriginalOnly = true;
   }
 
   postImage() {
@@ -97,7 +98,9 @@ pushOriginal(blob) {
         var publicImageURL = snapshot.downloadURL;
         this.imageURL = firebaseImageURL;
         this.publicImageURL = publicImageURL;
-        imageResizer(this.thumbnailFile, 128, 128, "image/jpeg", 0.5, this.pushThumbnail);                
+        if(!(this.props.isOriginalOnly || this.isOriginalOnly)){
+          imageResizer(this.thumbnailFile, 128, 128, "image/jpeg", 0.5, this.pushThumbnail);
+        }
     });
 };
 
