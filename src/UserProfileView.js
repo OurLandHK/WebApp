@@ -88,7 +88,14 @@ class UserProfileView extends React.Component {
     /*
       Updating User Profile Image in DB
     */
-    updateUserProfileImageURL(this.state.user, this.state.publicImageURL);
+    var rv = updateUserProfileImageURL(this.state.user, this.state.publicImageURL);
+    if(rv){
+      this.setState({
+        user: {
+          photoURL: this.state.publicImageURL
+        }
+      });
+    }
   }
 
   uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {  
