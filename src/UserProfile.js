@@ -167,13 +167,17 @@ function addPublishMessagesKeyToUserProfile(user, messageUUID) {
 
 function updateUserProfileImageURL(user, imageURL){
     return getUserProfile(user).then((userRecord) => {
+        var rv = null;
         if(imageURL != null && imageURL != userRecord.photoURL){
             userRecord.photoURL = imageURL;
+            return updateUserRecords(user.uid, userRecord).then(function(userRecordRef){
+                rv = true;
+                return rv;
+            });
         }
-        return updateUserRecords(user.uid, userRecord);
+        return rv;
     });
 }
-
 
 export {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfileImageURL};
 
