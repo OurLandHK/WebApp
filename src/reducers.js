@@ -5,6 +5,7 @@ import {
   DISABLE_LOCATION,
   UPDATE_FILTER_LOCATION,
   UPDATE_FILTER,
+  UPDATE_FILTER_DEFAULT,
   FETCH_ADDRESS_BOOK,
   FETCH_PUBLIC_ADDRESS_BOOK,
   TOGGLE_ADDRESS_DIALOG,
@@ -48,18 +49,40 @@ function addressBookReducer(state={addresses:[], publicAddress:[]}, action) {
   }
 }
 
-function filterReducer(state={eventNumber: 20, geolocation: null, distance: 1}, action) {
+function filterReducer(state={defaultEventNumber: 20, eventNumber: 20, geolocation: null, distance: 1, defaultDistance: 1}, action) {
   switch (action.type) {
-    case UPDATE_FILTER:
+    case UPDATE_FILTER_DEFAULT:
       return {
+        defaultEventNumber: action.eventNumber,
         eventNumber: action.eventNumber,
         geolocation: action.geolocation,
-        distance: action.distance
+        distance: action.distance,
+        defaultDistance: action.distance,
+      };    
+    case UPDATE_FILTER:
+      var distance = action.distance;
+      if(state.defaultDistance > distance) {
+        distance = state.defaultDistance;
+      }
+      var eventNumber = action.eventNumber;
+      if(state.defaultEventNumber > eventNumber) {
+        eventNumber = state.defaultEventNumber;
+      }
+      return {
+        ...state,
+        eventNumber: eventNumber,
+        geolocation: action.geolocation,
+        distance: distance
       };
-    case UPDATE_FILTER_LOCATION:
+      case UPDATE_FILTER_LOCATION:
+      var distance = action.distance;
+      if(state.defaultDistance > distance || distance == undefined) {
+        distance = state.defaultDistance;
+      }    
       return {
         ...state,
         geolocation: action.geolocation,
+        distance: distance
       }
     default:
       return state;

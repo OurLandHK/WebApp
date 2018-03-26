@@ -44,7 +44,7 @@ class MessageList extends Component {
     if (filter == null) {
       filter = this.props.filter;
     }
-    console.log('filter', filter);
+//    console.log('filter', filter);
     const { user } = this.props;
     if (user.user) {
       this.fetchMessages(user.user, filter); 
@@ -75,7 +75,6 @@ class MessageList extends Component {
     } = filter;
     this.setState({geolocation: geolocation});
     if(geolocation != constant.invalidLocation) {
-      console.log("FetchMessage: " + geolocation);
       this.clear();
       fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, this.setMessage);
     }

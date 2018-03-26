@@ -125,7 +125,7 @@ class LocationDrawer extends React.Component {
   setLocation(text, distance, coords, isUsingCurrentLocation=false) {
       this.geolocation = coords;
       this.setState({...this.state, isUsingCurrentLocation: isUsingCurrentLocation})
-      console.log('set ' + text + '(' + this.geolocation.latitude + ',' +  this.geolocation.longitude + ')');
+      console.log('set ' + text + '(' + this.geolocation.latitude + ',' +  this.geolocation.longitude + ') radius' + distance);
       this.setState({locationName: text, distance: distance, geolocation: coords});
       this.toggleDrawer(false);
       const { updateFilterLocation } = this.props;
@@ -143,7 +143,7 @@ class LocationDrawer extends React.Component {
       let type = address.type;
       let text = address.text;
       let locationString = constant.addressNotSet;
-      let distance = this.props.filter.distance;
+      let distance = this.props.filter.defaultDistance;
       let geolocation = null;
       if (address.geolocation != null) {
         geolocation = {latitude :address.geolocation.latitude,
@@ -187,7 +187,7 @@ class LocationDrawer extends React.Component {
 
   currentLocationOnClick() {
     this.setState({...this.state, isUsingCurrentLocation: true});
-    this.setState({distance: this.props.filter.distance});
+    this.setState({distance: this.props.filter.defaultDistance});
     this.props.updateFilterWithCurrentLocation();
     this.toggleDrawer(false);
   }

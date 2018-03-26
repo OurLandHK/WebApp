@@ -5,7 +5,7 @@ import PostMessageView from './PostMessageView';
 import MessageDialog from './MessageDialog';
 import PublicProfile from './PublicProfile';
 import MessageView from './MessageView';
-import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
+import {getMessage} from './MessageDB';
 import React, { Component } from 'react';
 import config, {constant} from './config/default';
 
