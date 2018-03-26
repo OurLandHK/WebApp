@@ -6,8 +6,10 @@ import {
   UPDATE_FILTER_LOCATION,
   UPDATE_FILTER,
   FETCH_ADDRESS_BOOK,
+  FETCH_PUBLIC_ADDRESS_BOOK,
   TOGGLE_ADDRESS_DIALOG,
   TOGGLE_NEARBYEVENT_DIALOG,
+  TOGGLE_REGIONEVENT_DIALOG,
   TOGGLE_LEADER_BOARD,
   FETCH_TOP_TWENTY,
 } from './actions/types';
@@ -33,10 +35,12 @@ function userReducer(state={user: null, loading: true}, action) {
   }
 }
 
-function addressBookReducer(state={addresses:[]}, action) {
+function addressBookReducer(state={addresses:[], publicAddress:[]}, action) {
   switch (action.type) {
     case FETCH_ADDRESS_BOOK:
       return {addresses: action.addresses}
+    case FETCH_PUBLIC_ADDRESS_BOOK:
+      return {publicAddresses: action.addresses}
     default:
       return state;
   }
@@ -78,6 +82,15 @@ function nearbyEventDialogReducer(state={open: false}, action) {
   }
 }
 
+function regionEventDialogReducer(state={open: false}, action) {
+  switch (action.type) {
+    case TOGGLE_REGIONEVENT_DIALOG:
+      return {...state, open: action.open};
+    default:
+      return state;
+  }
+}
+
 function leaderBoardReducer(state={open: false, topTwenty:[]}, action) {
   console.log(action);
   switch (action.type) {
@@ -97,6 +110,7 @@ const rootReducer = combineReducers({
   addressBook: addressBookReducer,
   addressDialog: addressDialogReducer,
   nearbyEventDialog: nearbyEventDialogReducer,
+  regionEventDialog: regionEventDialogReducer,
   leaderBoard: leaderBoardReducer,
 });
 

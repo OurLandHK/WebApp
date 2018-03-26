@@ -5,9 +5,11 @@ import {
   DISABLE_LOCATION,
   FETCH_LOCATION,
   FETCH_ADDRESS_BOOK,
+  FETCH_PUBLIC_ADDRESS_BOOK,  
   FETCH_RECENT_MESSAGE,
   TOGGLE_ADDRESS_DIALOG,
   TOGGLE_NEARBYEVENT_DIALOG,
+  TOGGLE_REGIONEVENT_DIALOG,
   TOGGLE_LEADER_BOARD,
   FETCH_TOP_TWENTY,
 } from './actions/types';
@@ -19,6 +21,10 @@ const currentLocationLabel = "現在位置";
 
 function dispatchToggleNearbyEventDialog(flag) {
   return {type: TOGGLE_NEARBYEVENT_DIALOG, open: flag};
+}
+
+function dispatchToggleRegionEventDialog(flag) {
+  return {type: TOGGLE_REGIONEVENT_DIALOG, open: flag};
 }
 
 function dispatchToggleAddressBook(flag) {
@@ -39,6 +45,10 @@ function disableLocation() {
 
 function fetchAddressBook(address) {
   return {type: FETCH_ADDRESS_BOOK, addresses: address};
+}
+
+function fetchPublicAddressBook(address) {
+  return {type: FETCH_PUBLIC_ADDRESS_BOOK, addresses: address};
 }
 
 function fetchUser(user, loading=false) {
@@ -153,6 +163,23 @@ export function fetchAddressBookByUser(user) {
   };
 }
 
+export function fetchAddressBookFromOurLand() {
+  return dispatch => {
+    var db = firebase.firestore();
+    /// Use the UID for Ourland HK's account
+    var collectionRef = db.collection(config.userDB).doc("mUQgwxkmPBfVA47d9lHzB482Nmp1").collection("AddressBook");
+    collectionRef.onSnapshot(function() {})         
+    collectionRef.get().then(function(querySnapshot) {
+       const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
+       dispatch(fetchPublicAddressBook(addresses));
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+  };  
+}
+
+
 export function upsertAddress(user, key, type, text, geolocation, streetAddress) {
   return dispatch => {
     var now = Date.now();
@@ -200,6 +227,12 @@ export function toggleAddressDialog(flag) {
 export function toggleNearbyEventDialog(flag) {
   return dispatch => {
     dispatch(dispatchToggleNearbyEventDialog(flag));
+  };
+}
+
+export function toggleRegionEventDialog(flag) {
+  return dispatch => {
+    dispatch(dispatchToggleRegionEventDialog(flag));
   };
 }
 
