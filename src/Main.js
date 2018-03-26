@@ -1,5 +1,6 @@
 import { withStyles } from 'material-ui/styles';
 import NearbyEventDialog from './NearbyEventDialog';
+import RegionEventDialog from './RegionEventDialog';
 import PostMessageView from './PostMessageView';
 import MessageDialog from './MessageDialog';
 import PublicProfile from './PublicProfile';
@@ -71,6 +72,11 @@ class Main extends Component {
           distance={distance}
           geolocation={geolocation}
         />
+        <RegionEventDialog 
+          eventNumber={eventNumber}
+          distance={distance}
+          geolocation={geolocation}
+        />        
         <PostMessageView />
       </div>
     );

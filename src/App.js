@@ -15,6 +15,7 @@ import {connect} from "react-redux";
 import rootReducer from './reducers';
 import {
   fetchAddressBookByUser,
+  fetchAddressBookFromOurLand,
   updateFilter,
   checkAuthState
 } from './actions';
@@ -53,11 +54,12 @@ class App extends Component {
 
   componentWillMount() {
     this.props.checkAuthState();
+    this.props.fetchAddressBookFromOurLand();
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.user != this.props.user && this.props.user.user) {
-      this.props.fetchAddressBookByUser(this.props.user.user); 
+      this.props.fetchAddressBookByUser(this.props.user.user);    
     }
   }
 
@@ -98,6 +100,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchAddressBookByUser:
       user =>
         dispatch(fetchAddressBookByUser(user)),
+    fetchAddressBookFromOurLand:
+      () => dispatch(fetchAddressBookFromOurLand()),            
   }
 };
 

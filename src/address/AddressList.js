@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import config from '../config/default';
 import AddressView from './AddressView';
-import { fetchAddressBookByUser } from '../actions';
+import { fetchAddressBookByUser, fetchAddressBookFromOurLand } from '../actions';
 import {connect} from "react-redux";
 
 
 class AddressList extends Component {
   componentWillMount() {
     this.props.fetchAddressBookByUser(this.props.user.user);
+    this.props.fetchAddressBookFromOurLand();
   }
   
   render() {
@@ -31,6 +32,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchAddressBookFromOurLand:
+      () => dispatch(fetchAddressBookFromOurLand()),    
     fetchAddressBookByUser:
       user =>
         dispatch(fetchAddressBookByUser(user)),
