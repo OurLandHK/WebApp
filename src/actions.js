@@ -1,5 +1,6 @@
 import {
   UPDATE_FILTER,
+  UPDATE_FILTER_DEFAULT,
   UPDATE_FILTER_LOCATION,
   FETCH_USER,
   DISABLE_LOCATION,
@@ -57,6 +58,11 @@ function fetchUser(user, loading=false) {
 
 function fetchRecentMessage(recentMessage, openRecent) {
   return {type: FETCH_RECENT_MESSAGE, recentMessage: recentMessage, openRecent: openRecent};
+}
+
+
+function dispatchFilterDefault(eventNumber, distance, geolocation) {
+  return {type: UPDATE_FILTER_DEFAULT, eventNumber: eventNumber, geolocation: geolocation, distance: distance}
 }
 
 function dispatchFilter(eventNumber, distance, geolocation) {
@@ -132,6 +138,13 @@ export function updateFilter(eventNumber, distance, geolocation) {
     dispatch(dispatchFilter(eventNumber, distance, geolocation));
   };
 }
+
+export function updateFilterDefault(eventNumber, distance, geolocation) {
+  return dispatch => {
+    dispatch(dispatchFilterDefault(eventNumber, distance, geolocation));
+  };
+}
+
 
 export function updateFilterLocation(geolocation, distance) {
   return dispatch => {
