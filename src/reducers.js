@@ -38,9 +38,11 @@ function userReducer(state={user: null, loading: true}, action) {
 function addressBookReducer(state={addresses:[], publicAddress:[]}, action) {
   switch (action.type) {
     case FETCH_ADDRESS_BOOK:
-      return {addresses: action.addresses}
+      return {...state,
+            addresses: action.addresses}
     case FETCH_PUBLIC_ADDRESS_BOOK:
-      return {publicAddresses: action.addresses}
+      return {...state,
+              publicAddresses: action.addresses}
     default:
       return state;
   }
