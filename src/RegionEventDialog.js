@@ -15,7 +15,7 @@ import Slide from 'material-ui/transitions/Slide';
 import Card, { CardActions, CardContent, CardMedia } from 'material-ui/Card';
 import MessageList from './MessageList';
 import {connect} from "react-redux";
-import { toggleNearbyEventDialog } from './actions';
+import { toggleRegionEventDialog } from './actions';
 import FilterBar from './FilterBar';
 
 function Transition(props) {
@@ -57,11 +57,11 @@ class RegionEventDialog extends React.Component {
 
   handleRequestOpen(evt) {
     evt.preventDefault();
-    this.props.toggleNearbyEventDialog(true);
+    this.props.toggleRegionEventDialog(true);
   }
 
   handleRequestClose = () => {
-    this.props.toggleNearbyEventDialog(false);
+    this.props.toggleRegionEventDialog(false);
   };
 
   renderMessages() {
@@ -87,7 +87,7 @@ class RegionEventDialog extends React.Component {
       <CardMedia
         className={classes.media}
         image="/images/ssp.jpg"
-        title={constant.nearbyEventLabel}
+        title={constant.regionEventLabel}
       >
         <div
           className={classes.mediaCredit}
@@ -106,10 +106,10 @@ class RegionEventDialog extends React.Component {
                 {cardImage}
                 <CardContent>
                 <Typography variant="headline" component="h2">
-                    {constant.nearbyEventLabel}
+                    {constant.regionEventLabel}
                 </Typography>
                 <Typography component="p">
-                    查詢現在身處位置或地址簿中1公里範圍的社區人和事
+                    查詢現在身處位置或十八社區的人和事
                 </Typography>
                 </CardContent>
             </Card>
@@ -119,9 +119,9 @@ class RegionEventDialog extends React.Component {
                         <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                             <CloseIcon />
                         </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>{constant.nearbyEventLabel}</Typography>           
+                        <Typography variant="title" color="inherit" className={classes.flex}>{constant.regionEventLabel}</Typography>           
                     </Toolbar>
-                    <FilterBar />           
+                    <FilterBar isUsePublicAddressBook={true}/>           
                 </AppBar>
                 {messageHtml}
             </Dialog>
@@ -135,14 +135,14 @@ RegionEventDialog.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    open: state.nearbyEventDialog.open,
+    open: state.regionEventDialog.open,
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleNearbyEventDialog: flag => 
-      dispatch(toggleNearbyEventDialog(flag)),
+    toggleRegionEventDialog: flag => 
+      dispatch(toggleRegionEventDialog(flag)),
   }
 };
 

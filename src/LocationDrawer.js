@@ -25,6 +25,7 @@ import {
   fetchLocation,
   updateFilterLocation,
   fetchAddressBookByUser,
+  fetchAddressBookFromOurLand,
   updateFilterWithCurrentLocation,
   toggleAddressDialog,
 } from './actions';
@@ -81,6 +82,10 @@ class LocationDrawer extends React.Component {
         isUsingCurrentLocation: true,
         distance: this.props.filter.distance,
       };
+      this.isUsePublicAddressBook = false;
+      if(this.props.isUsePublicAddressBook == true) {
+        this.isUsePublicAddressBook = true;
+      }
       this.geolocation = null;
       this.currentLocationOnClick = this.currentLocationOnClick.bind(this);
       this.addLocationOnClick = this.addLocationOnClick.bind(this);
@@ -110,13 +115,17 @@ class LocationDrawer extends React.Component {
       
   fetchAddress(user) {
     this.setState({user:user});
-    this.props.fetchAddressBookByUser(user);
+    if(!this.isUsePublicAddressBook) {
+      this.props.fetchAddressBookByUser(user);
+    } else {
+      this.props.fetchAddressBookFromOurLand();
+    }
   }
   
   setLocation(text, distance, coords, isUsingCurrentLocation=false) {
       this.geolocation = coords;
       this.setState({...this.state, isUsingCurrentLocation: isUsingCurrentLocation})
-      console.log('set ' + text + '(' + this.geolocation.latitude + ',' +  this.geolocation.longitude + ')');
+      console.log('set ' + text + '(' + this.geolocation.latitude + ',' +  this.geolocation.longitude + ') radius' + distance);
       this.setState({locationName: text, distance: distance, geolocation: coords});
       this.toggleDrawer(false);
       const { updateFilterLocation } = this.props;
@@ -125,12 +134,16 @@ class LocationDrawer extends React.Component {
 
   renderAddressBook() {
     const { classes, addressBook, geolocation } = this.props;
-    return addressBook.addresses.map(address => {
+    var addressList=addressBook.addresses;
+    if(this.isUsePublicAddressBook) {
+      addressList=addressBook.publicAddresses;
+    }
+    return addressList.map(address => {
       let icons = <PlaceIcon />;
       let type = address.type;
       let text = address.text;
       let locationString = constant.addressNotSet;
-      let distance = this.props.filter.distance;
+      let distance = this.props.filter.defaultDistance;
       let geolocation = null;
       if (address.geolocation != null) {
         geolocation = {latitude :address.geolocation.latitude,
@@ -174,12 +187,30 @@ class LocationDrawer extends React.Component {
 
   currentLocationOnClick() {
     this.setState({...this.state, isUsingCurrentLocation: true});
-    this.setState({distance: this.props.filter.distance});
+    this.setState({distance: this.props.filter.defaultDistance});
     this.props.updateFilterWithCurrentLocation();
     this.toggleDrawer(false);
   }
 
+  renderFirstListItem() {
+    var addAddress = null;
+    if(!this.isUsePublicAddressBook) {
+      addAddress = <Button onClick={this.addLocationOnClick}>
+                      <AddIcon />
+                      {constant.addAddressLabel}
+                    </Button>
+    }
+    return (<ListItem>
+              <Button onClick={this.currentLocationOnClick}>
+               <NearMeIcon />
+               {constant.currentLocation}
+              </Button>
+              {addAddress}
+            </ListItem>);
+  }
+
   render() {
+      let firstItem = this.renderFirstListItem();
       const { classes } = this.props;      
       return (
       <div className={classes.container}>
@@ -206,16 +237,7 @@ class LocationDrawer extends React.Component {
                   role='button'
                   className={classes.fullList}>
                   <List>
-                      <ListItem>
-                          <Button onClick={this.currentLocationOnClick}>
-                              <NearMeIcon />
-                              {constant.currentLocation}
-                          </Button>
-                          <Button onClick={this.addLocationOnClick}>
-                              <AddIcon />
-                              {constant.addAddressLabel}
-                          </Button>
-                      </ListItem>
+                      {firstItem}
                       <Divider />
                       {this.renderAddressBook()}
                   </List>
@@ -243,6 +265,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchAddressBookByUser:
       user =>
         dispatch(fetchAddressBookByUser(user)),
+    fetchAddressBookFromOurLand:
+      () => dispatch(fetchAddressBookFromOurLand()),
     updateFilterLocation:
       (geolocation, distance) =>
         dispatch(updateFilterLocation(geolocation, distance)),

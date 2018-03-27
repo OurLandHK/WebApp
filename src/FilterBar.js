@@ -26,6 +26,10 @@ const styles = {
 class FilterBar extends  Component {
   constructor(props) {
     super(props);
+    this.isUsePublicAddressBook = false;
+    if(this.props.isUsePublicAddressBook == true) {
+      this.isUsePublicAddressBook = true;
+    }
   }
 
 
@@ -39,7 +43,7 @@ class FilterBar extends  Component {
   render() {
     const classes = this.props.classes;
     return (<Toolbar>
-                  <LocationDrawer />
+                  <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook}/>
                 </Toolbar>);
   }
 }

@@ -39,7 +39,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
     var collectionRef = db.collection(config.messageDB);
     collectionRef.onSnapshot(function() {})         
     if(geocode != null && geocode != NaN && geocode.latitude != undefined) {
-        console.log("Get message base on Location: (" + geocode.latitude + " ," + geocode.longitude + ")");
+//        console.log("Get message base on Location: (" + geocode.latitude + " ," + geocode.longitude + ") with Radius: " + radius);
 //        boundingBoxCoordinates(center, radius) {
             const KM_PER_DEGREE_LATITUDE = 110.574;
             const latDegrees = radius / KM_PER_DEGREE_LATITUDE;

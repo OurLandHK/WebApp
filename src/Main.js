@@ -1,10 +1,11 @@
 import { withStyles } from 'material-ui/styles';
 import NearbyEventDialog from './NearbyEventDialog';
+import RegionEventDialog from './RegionEventDialog';
 import PostMessageView from './PostMessageView';
 import MessageDialog from './MessageDialog';
 import PublicProfile from './PublicProfile';
 import MessageView from './MessageView';
-import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
+import {getMessage} from './MessageDB';
 import React, { Component } from 'react';
 import config, {constant} from './config/default';
 
@@ -71,6 +72,11 @@ class Main extends Component {
           distance={distance}
           geolocation={geolocation}
         />
+        <RegionEventDialog 
+          eventNumber={eventNumber}
+          distance={distance}
+          geolocation={geolocation}
+        />        
         <PostMessageView />
       </div>
     );

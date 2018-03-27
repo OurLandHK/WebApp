@@ -61,8 +61,6 @@ class MessageView extends Component {
     if(imageUrl == null) {
       imageUrl = m.photoUrl;
     }
-    console.log(m + m.thumbnailPublicImageURL + m.photoUrl + imageUrl)
-    //var openDialog = this.props.openDialog;
     var o = false;
     if(this.props.openDialogDefault) {
       o = true;
