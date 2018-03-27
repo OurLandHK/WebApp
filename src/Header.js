@@ -48,11 +48,11 @@ class Header extends  Component {
     return (<div className={classes.root}>
               <AppBar position="fixed">
                 <Toolbar>
-                  <DrawerMenu header={this} ref={(drawerMenu) => {this.drawerMenu = drawerMenu;}} />
+                  <SignInButton/>
                   <Typography variant="title" color="inherit" className={classes.flex}>
                     我地
                   </Typography>
-                  <SignInButton/>
+                  <DrawerMenu header={this} ref={(drawerMenu) => {this.drawerMenu = drawerMenu;}} />
                 </Toolbar>  
               </AppBar>      
             </div>);

@@ -5,7 +5,7 @@ import IconButton from 'material-ui/IconButton';
 import InboxIcon from 'material-ui-icons/Inbox';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import Icon from 'material-ui/Icon';
-import MenuIcon from 'material-ui-icons/Menu';
+import MoreVertIcon from 'material-ui-icons/MoreVert';
 import StarIcon from 'material-ui-icons/Star';
 import LocationOn from 'material-ui-icons/LocationOn';
 import ChatBubbleIcon from 'material-ui-icons/ChatBubbleOutline';
@@ -22,6 +22,7 @@ import {
 } from "./actions";
 import { constant } from './config/default';
 import AboutDialog from './AboutDialog';
+import SignOutButton from './SignOutButton';
 
 const currentLocationLabel = "現在位置";
 const officeLocationLabel = "辦公室位置";
@@ -82,25 +83,29 @@ class DrawerMenu extends Component {
 
   render() {
     let userSection = (<div></div>);
-
+    let signOutSection = null;
     const { user } = this.props;
 
     if (user) {
       var imgURL = (user.photoURL || '/images/profile_placeholder.png');
       userSection = (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{user.displayName}&nbsp;&nbsp;</div>);
-
+      signOutSection = (<ListItem><SignOutButton/></ListItem>);
     }
 
     return (
       <div>
-        <IconButton onClick={() => this.handleToggle()}>
-          <MenuIcon />
+        <IconButton 
+          aria-label="More"
+          aria-haspopup="true"
+          onClick={() => this.handleToggle()}>
+          <MoreVertIcon />
         </IconButton>
         <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>        
         <AddressDialog ref={(addressDialog) => {this.addressDialog = addressDialog;}} openDialog={openDialog => this.openAddressDialog = openDialog}/>        
         <LeaderBoard />
         <AboutDialog openDialog={f => this.openAboutDialog = f}/>        
         <Drawer
+          anchor="right" 
           open={this.state.open}
           onClose={() => this.handleClose()}
         >
@@ -109,6 +114,7 @@ class DrawerMenu extends Component {
               <ListItem>
               {userSection}
               </ListItem>
+              {signOutSection}
             </List>
             <Divider/>
             <List disablePadding>

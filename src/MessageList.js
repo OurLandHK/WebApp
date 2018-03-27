@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import config, {constant} from './config/default';
 import MessageView from './MessageView';
+import distance from './Distance';
 import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
 import { updateFilter } from './actions';
 import {connect} from "react-redux";
@@ -55,8 +56,18 @@ class MessageList extends Component {
 
   setMessage(doc) {
     var val = doc.data();
-    this.state.data.push(val);
-    this.setState({data:this.state.data});
+    if(this.props.filter.geolocation != constant.invalidLocation && val != null) {
+      var lon = this.props.filter.geolocation.longitude;
+      var lat = this.props.filter.geolocation.latitude;
+      var dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
+      if(dis < this.props.filter.distance) {
+        this.state.data.push(val);
+        this.setState({data:this.state.data});    
+      }
+    } else {
+      this.state.data.push(val);
+      this.setState({data:this.state.data});
+    }
   };
 
   clear() {
