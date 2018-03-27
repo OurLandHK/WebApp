@@ -195,7 +195,7 @@ class MessageDetailView extends Component {
                </AppBar>
              </div>
              {tab == 0 && <div><PostCommentView messageUUID={m.key}/><CommentList messageUUID={m.key}/></div>}
-             {tab == 1 && <MessageDetailViewImage url={m.publicImageURL}/>}
+             {tab == 1 && <MessageDetailViewImage url={m.publicImageURL} messageUUID={m.key}/>}
              {tab == 2 && <EventMap center={geolocation} zoom={zoom}/>}
              <div className={classes.rightButtonsContainer}>
                <div className={classes.rightButton}>
