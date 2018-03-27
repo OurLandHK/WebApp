@@ -15,6 +15,7 @@ class MessageDetailViewImage extends Component {
         var key = uuid.v4();
         this.state = {
             key: key,
+            url: null,
             imageURL: null, 
             publicImageURL: null, 
             thumbnailImageURL: null, 
@@ -32,12 +33,14 @@ class MessageDetailViewImage extends Component {
    }
 
    onSubmit(){
+    if(this.props.messageUUID != null && this.state.imageURL != null && this.state.publicImageURL){
       updateMessageImageURL(this.props.messageUUID, this.state.imageURL, this.state.publicImageURL);
+      this.setState({url: this.state.publicImageURL});
+    }
    }
 
   render() {
-    
-    const { url } = this.props;
+    var url = (this.state.url || this.props.url);
     if(url != null) {
       return (<ProgressiveCardImg gs_src={url}/>);
     }
@@ -51,9 +54,7 @@ class MessageDetailViewImage extends Component {
           <br/>
           <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.key} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
           </FormGroup>
-          <Button color="contrast" onClick={() => this.onSubmit()}>
-            提交
-          </Button>
+          <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>提交</Button> 
         </center>
       </div>
     );
