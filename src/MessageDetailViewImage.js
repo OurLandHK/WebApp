@@ -12,7 +12,7 @@ import uuid from 'js-uuid';
 class MessageDetailViewImage extends Component {
    constructor(props) {
         super(props);
-        var key = uuid.v4();
+        var key = this.props.messageUUID;
         this.state = {
             key: key,
             url: null,
@@ -34,7 +34,7 @@ class MessageDetailViewImage extends Component {
 
    onSubmit(){
     if(this.props.messageUUID != null && this.state.imageURL != null && this.state.publicImageURL){
-      updateMessageImageURL(this.props.messageUUID, this.state.imageURL, this.state.publicImageURL);
+      updateMessageImageURL(this.props.messageUUID, this.state.imageURL, this.state.publicImageURL, this.state.thumbnailImageURL, this.state.thumbnailPublicImageURL);
       this.setState({url: this.state.publicImageURL});
     }
    }
