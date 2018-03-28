@@ -6,6 +6,7 @@ import {
   UPDATE_FILTER_LOCATION,
   UPDATE_FILTER,
   UPDATE_FILTER_DEFAULT,
+  UPDATE_RECENT_MESSAGE,
   FETCH_ADDRESS_BOOK,
   FETCH_PUBLIC_ADDRESS_BOOK,
   TOGGLE_ADDRESS_DIALOG,
@@ -128,6 +129,16 @@ function leaderBoardReducer(state={open: false, topTwenty:[]}, action) {
   }
 }
 
+function recentMessageReducer(state={open: false, id: ""}, action) {
+  switch (action.type) {
+    case UPDATE_RECENT_MESSAGE:
+      return {open: action.open, id: action.id};
+    default:
+      return state;
+  }
+}
+
+
 const rootReducer = combineReducers({  
   geoLocation: geoLocationReducer,
   user: userReducer,
@@ -137,6 +148,7 @@ const rootReducer = combineReducers({
   nearbyEventDialog: nearbyEventDialogReducer,
   regionEventDialog: regionEventDialogReducer,
   leaderBoard: leaderBoardReducer,
+  recentMessage: recentMessageReducer,
 });
 
 

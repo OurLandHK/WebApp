@@ -39,7 +39,7 @@ function postMessage(key, message,tags, geolocation, streetAddress, start, durat
   var auth = firebase.auth();
   var currentUser = auth.currentUser;     
   var mapString = "\nhttps://www.google.com.hk/maps/place/"+ geoString(geolocation.latitude, geolocation.longitude) + "/@" + geolocation.latitude + "," + geolocation.longitude + ",18z/";
-  addMessage(key, message, currentUser, tags, geolocation, streetAddress,
+  return addMessage(key, message, currentUser, tags, geolocation, streetAddress,
     // activites 
     start, duration, interval, link, 
     // images

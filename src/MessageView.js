@@ -7,6 +7,9 @@ import { withStyles } from 'material-ui/styles';
 import red from 'material-ui/colors/red';
 import MessageDialog from './MessageDialog';
 import Typography from 'material-ui/Typography';
+import {
+  updateRecentMessage,
+} from './actions';
 import {connect} from "react-redux";
 
 const styles = theme => ({
@@ -48,6 +51,10 @@ class MessageView extends Component {
   }
 
   handleClick() {
+    const { updateRecentMessage } = this.props;
+    if(this.props.message.key != null && this.props.message.key != "") {
+      updateRecentMessage(this.props.message.key, false);
+    }
     this.openDialog();
   };
 
@@ -119,9 +126,12 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    updateRecentMessage:
+      (recentMessageID, open) =>
+        dispatch(updateRecentMessage(recentMessageID, open)),
   }
 };
 
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(MessageView));
-//export default MessageView;
+

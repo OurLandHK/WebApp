@@ -8,6 +8,10 @@ import MessageView from './MessageView';
 import {getMessage} from './MessageDB';
 import React, { Component } from 'react';
 import config, {constant} from './config/default';
+import {
+  updateRecentMessage,
+} from './actions';
+import {connect} from 'react-redux';
 
 const styles = () => ({
   container: {
@@ -18,18 +22,17 @@ class Main extends Component {
   constructor(props) {
     super(props);
     let geolocation = this.props.geolocation;
+    const { updateRecentMessage } = this.props;
     if(geolocation == null) {
       geolocation = constant.invalidLocation;
     }
-    var openRecent = false;
     if(this.props.eventId != "") {
-      openRecent = true;
+      updateRecentMessage(this.props.eventId, true);
     }
     this.state = {
         eventId: this.props.eventId,
         eventNumber: this.props.eventNumber,
         distance: this.props.distance, 
-        openRecent: openRecent,
         geolocation: this.props.geolocation
       };
     
@@ -39,10 +42,16 @@ class Main extends Component {
     this.openDialog();
   };
 
-  componentDidMount() {
-    if(this.state.eventId != "") {
-      console.log("eventID: " + this.state.eventId);
-      getMessage(this.state.eventId).then((message) => {this.setState({queryMessage: message})});
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.recentMessage != prevProps.recentMessage) {
+      this.refreshQueryMessage();
+    }
+  }
+
+  refreshQueryMessage() {
+    if(this.props.recentMessage.id != "") {
+      console.log("eventID: " + this.props.recentMessage.id);
+      getMessage(this.props.recentMessage.id).then((message) => {this.setState({queryMessage: message})});
     } else {
       this.queryMessage = null;
     }
@@ -50,7 +59,8 @@ class Main extends Component {
 
   renderMessageFrontPage() {
     let recentMessage = null;
-    const { eventNumber, distance, geolocation, eventId, queryMessage, openRecent} = this.state;
+    const { eventNumber, distance, geolocation, eventId, queryMessage} = this.state;
+    const {open: openRecent} = this.props.recentMessage;
     let linebreak = <div><br/><br/></div>;
     const { classes } = this.props; 
 
@@ -100,4 +110,23 @@ class Main extends Component {
   }
 }
 
-export default withStyles(styles)(Main);
+const mapStateToProps = (state, ownProps) => {
+  return {
+    recentMessage : state.recentMessage,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateRecentMessage:
+      (recentMessageID, open) =>
+        dispatch(updateRecentMessage(recentMessageID, open)),
+  }
+};
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
+(withStyles(styles)(Main));

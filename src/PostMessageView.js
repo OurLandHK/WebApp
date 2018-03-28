@@ -29,6 +29,9 @@ import ReactDOM from 'react-dom';
 import CustomTags from './CustomTags';
 import UploadImageButton from './UploadImageButton';
 import uuid from 'js-uuid';
+import {
+  updateRecentMessage,
+} from './actions';
 import {connect} from "react-redux";
 
 
@@ -178,7 +181,12 @@ class PostMessageView extends Component {
         postMessage(this.state.key, this.state.summary, tags, this.locationButton.geolocation, this.locationButton.streetAddress, 
           startTimeInMs, duration, interval, this.state.link, 
           imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
-          this.state.status);
+          this.state.status).then((messageKey) => {
+            const { updateRecentMessage } = this.props;
+            if(messageKey != null && messageKey != "") {
+              updateRecentMessage(messageKey, false);
+            }
+          });
         this.setState({popoverOpen: false});
       }
     }
@@ -350,6 +358,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    updateRecentMessage:
+      (recentMessageID, open) =>
+        dispatch(updateRecentMessage(recentMessageID, open)),
   }
 };
 
