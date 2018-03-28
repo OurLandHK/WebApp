@@ -13,7 +13,7 @@ const styles = theme => ({
   },
 });
 
-class SignInButton extends  Component {
+class SignOutButton extends  Component {
   constructor(props) {
     super(props);
     this.state = {loading: true};
@@ -27,7 +27,16 @@ class SignInButton extends  Component {
     }
 
     if (user.user) {
-      return (null);
+      return (
+        <Button
+          variant="raised"
+          color="secondary"
+          onClick={signOut}
+        >
+          <ExitToApp />&nbsp;&nbsp;
+          登出
+        </Button>
+      );
     }
     else
     {
@@ -50,7 +59,7 @@ class SignInButton extends  Component {
   }
 }
 
-SignInButton.propTypes = {
+SignOutButton.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
@@ -68,4 +77,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SignInButton));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SignOutButton));
