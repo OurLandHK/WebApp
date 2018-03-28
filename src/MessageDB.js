@@ -181,14 +181,20 @@ function updateMessage(messageKey, messageRecord, path) {
 }
 
 
-function updateMessageImageURL(messageKey, firebaseImageURL, publicImageURL) {
+function updateMessageImageURL(messageKey, imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {
     return getMessage(messageKey).then((messageRecord) => {
-        if(firebaseImageURL != messageRecord.imageUrl) {
-            messageRecord.imageUrl = firebaseImageURL;
+        if(imageURL != messageRecord.imageUrl) {
+            messageRecord.imageUrl = imageURL;
         }
         if(publicImageURL != messageRecord.publicImageURL) {
             messageRecord.publicImageURL = publicImageURL;
-        }        
+        } 
+        if(thumbnailImageURL != messageRecord.thumbnailImageURL) {
+            messageRecord.thumbnailImageURL = thumbnailImageURL;
+        }
+        if(thumbnailPublicImageURL != messageRecord.thumbnailPublicImageURL) {
+            messageRecord.thumbnailPublicImageURL = thumbnailPublicImageURL;
+        }       
         var path = "";
         return updateMessage(messageKey, messageRecord, path);
     });
