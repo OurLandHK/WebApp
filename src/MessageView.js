@@ -8,6 +8,7 @@ import red from 'material-ui/colors/red';
 import MessageDialog from './MessageDialog';
 import Typography from 'material-ui/Typography';
 import {connect} from "react-redux";
+import {updateViewCount} from './MessageDB';
 
 const styles = theme => ({
   card: {
@@ -44,13 +45,33 @@ const styles = theme => ({
 class MessageView extends Component {
   constructor(props) {
     super(props);
+    let v;
+    if(typeof this.props.message.view === "undefined" || this.props.message.view == null){
+      v = [];
+    }else{
+      v = this.props.message.view;
+    }    
+
     this.handleClick = this.handleClick.bind(this);
+    this.state = {
+      view: v.length || 0,
+    }
   }
 
   handleClick() {
+    this.updateViewCnt();
     this.openDialog();
   };
 
+  updateViewCnt(){
+    const {message, user} = this.props;
+    var v = this.state.view;
+    updateViewCount(message.key, user.uid).then((rv) => {
+      if(rv){
+        this.setState({view: v + 1 });
+      }
+    });
+  }
 
   render() {
     const classes = this.props.classes;
@@ -85,7 +106,10 @@ class MessageView extends Component {
     if(m.tag != null && m.tag.length > 1) {
       tag = ' #' + m.tag[0];
     }
-    var subtitle = distanceSpan + ' 現況: ' + m.status + tag;
+
+    var v = this.state.view;
+
+    var subtitle = distanceSpan + ' 現況: ' + m.status + tag + ' 觀看次數: ' + v;
 //    let summary = <CardHeader title={m.text}  subheader={subtitle}  onClick={() => this.handleClick()}>  </CardHeader>
     let summary = <div className={classes.details}>
                     <CardContent className={classes.content} onClick={() => this.handleClick()}>
