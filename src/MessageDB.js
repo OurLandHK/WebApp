@@ -118,7 +118,8 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
         imageUrl, publicImageURL, 
         thumbnailImageURL, 
         thumbnailPublicImageURL,
-        status: status
+        status: status,
+        view: []
       };
     // Use firestore
     const db = firebase.firestore();
@@ -301,4 +302,23 @@ function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
     });
 }
 
-export {fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, addMessageFB_Post, updateMessageImageURL, getMessage, updateMessageConcernUser};
+function updateViewCount(messageKey, userId){
+    return getMessage(messageKey).then((messageRecord) => {
+        var rv = false;
+        if(typeof messageRecord.view === "undefined" || messageRecord.view == null){
+            messageRecord.view = [];
+        }
+
+        if(messageRecord.view.indexOf(userId) == -1){
+            messageRecord.view.push(userId);
+
+            var path = "";
+            updateMessage(messageKey, messageRecord, path);
+            rv = true;
+        }
+
+        return rv;
+    });
+}
+
+export {fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, addMessageFB_Post, updateMessageImageURL, getMessage, updateMessageConcernUser, updateViewCount};
