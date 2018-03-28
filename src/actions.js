@@ -2,12 +2,12 @@ import {
   UPDATE_FILTER,
   UPDATE_FILTER_DEFAULT,
   UPDATE_FILTER_LOCATION,
+  UPDATE_RECENT_MESSAGE,
   FETCH_USER,
   DISABLE_LOCATION,
   FETCH_LOCATION,
   FETCH_ADDRESS_BOOK,
   FETCH_PUBLIC_ADDRESS_BOOK,  
-  FETCH_RECENT_MESSAGE,
   TOGGLE_ADDRESS_DIALOG,
   TOGGLE_NEARBYEVENT_DIALOG,
   TOGGLE_REGIONEVENT_DIALOG,
@@ -56,8 +56,8 @@ function fetchUser(user, loading=false) {
   return {type: FETCH_USER, user: user, loading: loading};
 }
 
-function fetchRecentMessage(recentMessage, openRecent) {
-  return {type: FETCH_RECENT_MESSAGE, recentMessage: recentMessage, openRecent: openRecent};
+function dispatchRecentMessage(id, open) {
+  return {type: UPDATE_RECENT_MESSAGE, id: id, open: open};
 }
 
 
@@ -132,6 +132,13 @@ export function signOut() {
     dispatch(fetchUser(null)); 
   }
 }
+
+export function updateRecentMessage(id, open) {
+  return dispatch => {
+    dispatch(dispatchRecentMessage(id, open));
+  };
+}
+
 
 export function updateFilter(eventNumber, distance, geolocation) {
   return dispatch => {
@@ -253,10 +260,6 @@ export function toggleLeaderBoard(flag) {
   return dispatch => {
     dispatch(dispatchToggleLeaderBoard(flag));
   }
-}
-
-export function updateRecentMessage(eventId, openRecent) {
-
 }
 
 export function fetchTopTwenty() {
