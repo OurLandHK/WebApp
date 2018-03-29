@@ -164,11 +164,11 @@ class MessageDetailView extends Component {
     }
     
     const author = this.renderAuthor();
-    let baseHtml = <Grid container> {this.renderLocation()}{linkHtml}</Grid>;
+    let baseHtml = <Grid container spacing={0}> {this.renderLocation()}{linkHtml}</Grid>;
 
     let dateHtml = null;
     if(dateTimeString != null) { 
-        dateHtml = <Grid container>
+        dateHtml = <Grid container spacing={0}>
                         <Grid item><CardContent><Typography component='p'> 開始: {dateTimeString}</Typography> </CardContent> </Grid>  
                         <Grid item><CardContent><Typography component='p'> 為期: {duration} </Typography> </CardContent> </Grid>
                         <Grid item><CardContent><Typography component='p'> 週期: {interval} </Typography> </CardContent> </Grid>                
