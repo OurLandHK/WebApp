@@ -60,6 +60,9 @@ const styles = theme => ({
     display: 'block',
     marginBottom: '1rem',
   },
+  container: {
+    overflowY: 'auto'
+  }
 });
 
 
@@ -177,7 +180,7 @@ class MessageDetailView extends Component {
 
     const tab = this.state.tab;
 
-    return(<div>
+    return(<div className={classes.container}>
              {author}
              <ChipArray chipData={chips} />
              {baseHtml}

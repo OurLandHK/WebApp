@@ -34,6 +34,9 @@ const styles = {
   flex: {
     flex: 1,
   },
+  container: {
+    overflowY: 'auto'
+  }
 };
 
 class LeaderBoard extends React.Component {
@@ -76,8 +79,9 @@ class LeaderBoard extends React.Component {
   }
 
   renderTopTwenty() {
+    const { classes } = this.props;
     return (
-      <div>
+      <div className={classes.container}>
         {this.props.topTwenty.map((t, i) => this.renderUser(t, i + 1))}
       </div>  
     );

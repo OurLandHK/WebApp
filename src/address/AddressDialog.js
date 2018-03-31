@@ -30,6 +30,9 @@ const styles = {
   flex: {
     flex: 1,
   },
+  container: {
+   overflowY: 'auto'
+  }
 };
 
 class AddressDialog extends React.Component {
@@ -55,8 +58,10 @@ class AddressDialog extends React.Component {
                     <Typography variant="title" color="inherit" className={classes.flex}>{constant.addressBookLabel}</Typography>           
                 </Toolbar>
             </AppBar>
+            <div className={classes.container}>
             <AddressList/>
             <AddressView/>
+            </div>
         </Dialog>);
   }
 }
