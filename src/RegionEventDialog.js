@@ -31,6 +31,7 @@ const styles = {
       flex: 1,
     },
     container: {
+       overflowY: 'auto'
     },
     media: {
       color: '#fff',
