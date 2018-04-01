@@ -19,6 +19,9 @@ const styles = {
   flex: {
     flex: 1,
   },
+  container: {
+    overflowY: 'auto'
+  }
 };
 
 
@@ -51,6 +54,7 @@ class AboutDialog extends Component {
             <Typography variant="title" color="inherit" className={classes.flex}>關於</Typography>           
           </Toolbar>
         </AppBar>
+        <div className={classes.container}>
         <p>
         <b>我地(ourland)</b> 係一個社區(事件，資源) 跟進系統。用家可以查詢現在身處位置或地址簿中1公里範圍的社區人和事。</p>
         <p>利用我地去活化社區及埋班係我地想見到，社區參與者可以透過我地去:</p>
@@ -58,6 +62,7 @@ class AboutDialog extends Component {
         <p>攪活動通知其他社區參與者</p>
         <p>甚至成為地膽把自已的聯絡方法放喺我地度俾人揾。 </p>
         <p>當區選發生時，大家可以利用我地去列出自已的社區參與紀錄, 去選或都推薦其他社區參與者去選。</p>
+        </div>
       </Dialog>
     );
   };

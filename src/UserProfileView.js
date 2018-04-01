@@ -43,6 +43,9 @@ const styles = {
   flex: {
     flex: 1,
   },
+  container: {
+    overflowY: 'auto'
+  }
 };
 
 class UserProfileView extends React.Component {
@@ -155,25 +158,27 @@ class UserProfileView extends React.Component {
           </Toolbar>
         </AppBar>
 
-        <FormGroup>  
-          <br/>
-          <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} thumbnailFilename={this.thumbnailFilename} isThumbnailOnly={true} path={this.path} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
-        </FormGroup>
-       
-        <List>
-          <ListItem >
-            <ListItemText primary={displayRole} />
-          </ListItem>          
-          <ListItem button>
-            <ListItemText primary="發表事件: " secondary={publish} />
-          </ListItem>            
-          <ListItem button>
-            <ListItemText primary="關注事件: " secondary={concern} />
-          </ListItem>                        
-          <ListItem button>
-            <ListItemText primary="完成事件: " secondary={complete} />
-          </ListItem>                                   
-        </List>
+         <div className={classes.container}>
+          <FormGroup>  
+            <br/>
+            <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} thumbnailFilename={this.thumbnailFilename} isThumbnailOnly={true} path={this.path} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
+          </FormGroup>
+         
+          <List>
+            <ListItem >
+              <ListItemText primary={displayRole} />
+            </ListItem>          
+            <ListItem button>
+              <ListItemText primary="發表事件: " secondary={publish} />
+            </ListItem>            
+            <ListItem button>
+              <ListItemText primary="關注事件: " secondary={concern} />
+            </ListItem>                        
+            <ListItem button>
+              <ListItemText primary="完成事件: " secondary={complete} />
+            </ListItem>                                   
+          </List>
+        </div>
         </Dialog>
     );
   }

@@ -31,6 +31,7 @@ const styles = {
     flex: 1,
   },
   container: {
+    overflowY: 'auto'
   },
   media: {
     color: '#fff',
@@ -114,7 +115,7 @@ class NearbyEventDialog extends React.Component {
                 </CardContent>
             </Card>
             <Dialog fullScreen  open={open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
-                <AppBar className={classes.appBar} >
+                <AppBar className={classes.appBar}>
                     <Toolbar>
                         <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                             <CloseIcon />
