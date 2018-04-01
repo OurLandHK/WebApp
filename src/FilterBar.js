@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SignInButton from './SignInButton';
 import DrawerMenu from './Drawer';
 import LocationDrawer from './LocationDrawer';
+import TagDrawer from './TagDrawer';
 import UserProfileView from './UserProfileView'
 import UserProfile from './UserProfile';
 import AppBar from 'material-ui/AppBar';
@@ -43,7 +44,7 @@ class FilterBar extends  Component {
   render() {
     const classes = this.props.classes;
     return (<Toolbar>
-                  <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook}/>
+                  在 <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook}/> 的 <TagDrawer />
                 </Toolbar>);
   }
 }

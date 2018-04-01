@@ -45,8 +45,10 @@ class AddressView extends Component {
         if(this.props.address != null) {
             var c = this.props.address;
             text = c.text;
-            geolocation = {latitude :c.geolocation.latitude,
+            if(c.geolocation != null) {
+                geolocation = {latitude :c.geolocation.latitude,
                 longitude: c.geolocation.longitude};
+            }
             streetAddress = c.streetAddress;
             type = c.type;
             if(c.distance != null) {
@@ -73,8 +75,10 @@ class AddressView extends Component {
         if(this.props.address != null) {
             var c = this.props.address;
             text = c.text;
-            geolocation = {latitude :c.geolocation.latitude,
-                            longitude: c.geolocation.longitude};
+            if(c.geolocation != null) {
+                geolocation = {latitude :c.geolocation.latitude,
+                                longitude: c.geolocation.longitude};
+            }
             streetAddress = c.streetAddress;
             type = c.type;
             if(c.distance != null) {
@@ -135,6 +139,7 @@ class AddressView extends Component {
         let streetAddress = null;
         let type = addressEnum.other;  
         let icons = <PlaceIcon />;
+        let disableValue = false;
         if(this.props.address != null) {
             var c = this.props.address;
             var text = c.text;
@@ -144,9 +149,11 @@ class AddressView extends Component {
             switch(type) {
                 case addressEnum.home:
                     icons = <HomeIcon />;
+                    disableValue = true;
                     break;
                 case addressEnum.office:
                     icons = <WorkIcon />;
+                    disableValue = true;
                     break;
             }
             if(c.geolocation != null) {
@@ -176,7 +183,7 @@ class AddressView extends Component {
                         <DialogTitle id="form-dialog-title">{titleText}</DialogTitle>
                         <DialogContent>
                             {icons}
-                            <TextField autoFocus required id="message" fullWidth margin="normal" helperText="名稱" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>
+                            <TextField disable={disableValue} autoFocus required id="message" fullWidth margin="normal" helperText="名稱" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>
                             <LocationButton autoFocus geolocation={geolocation} streetAddress={streetAddress} ref={(locationButton) => {this.locationButton = locationButton;}}/>                   
                         </DialogContent>  
                         <DialogActions>

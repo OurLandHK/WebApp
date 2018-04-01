@@ -118,7 +118,7 @@ class UserProfileView extends React.Component {
     var officeLocation = constant.addressNotSet;
     var homeLocation = constant.addressNotSet;
     let dialogHtml = null;
-    if (this.state.user != null) {
+    if (this.state.user != null && this.state.userProfile != null) {
         imgURL = this.state.userProfile.photoURL;
         this.path = "UserProfile/" + this.state.user.uid + "/";
         displayName = this.state.userProfile.displayName;
