@@ -48,7 +48,7 @@ const styles = theme => ({
   button: {
     border: '2px solid' ,
     borderColor: green[200],
-    width: '100%',
+//    width: '100%',
     fontWeight: 'bold',
     fontSize: '0.8rem',
     margin: theme.spacing.unit,
@@ -199,14 +199,21 @@ class LocationDrawer extends React.Component {
                       <AddIcon />
                       {constant.addAddressLabel}
                     </Button>
-    }
-    return (<ListItem>
+      return (<ListItem>
               <Button onClick={this.currentLocationOnClick}>
                <NearMeIcon />
-               {constant.currentLocation}
+               
               </Button>
               {addAddress}
             </ListItem>);
+   } else {
+      return (<ListItem button onClick={this.currentLocationOnClick}>
+      <ListItemIcon>
+      <NearMeIcon />
+      </ListItemIcon> 
+      <ListItemText primary={constant.currentLocation} />
+    </ListItem>);
+   }
   }
 
   render() {
@@ -219,14 +226,11 @@ class LocationDrawer extends React.Component {
             className={classes.button}
           >
             <div className={classes.buttonContainer}>
-              <LocationIcon className={classes.white}/>
-                &nbsp;
-                {`在${this.state.isUsingCurrentLocation ? constant.currentLocation
-                          : this.state.locationName}的${this.state.distance}公里內`}
+                {`${this.state.isUsingCurrentLocation ? constant.currentLocation
+                          : this.state.locationName}${this.state.distance}公里內`}
             </div>
             <div className={classes.buttonRightContainer}>
               <ArrowIcon className={classes.white}/>
-              更改
             </div>
           </Button>
           <Drawer anchor='bottom'

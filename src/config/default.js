@@ -15,12 +15,14 @@ let config = {
   fbGroupId: '244493866025075', // Production https://www.facebook.com/groups/OurLandHK/?fref=nf
   messageDB: 'message', // Production
   userDB: 'userProfile', // Production
-  photoDB: 'photo'
+  photoDB: 'photo',
 /*/
   fbGroupId: '264191847414716', // For Development https://www.facebook.com/groups/264191847414716/ 
   messageDB: 'messageTest', // For development.
   userDB: 'userProfileTest', // For developments.
-  photoDB: 'photoTest' // For developments.
+  photoDB: 'photoTest', // For developments.
+
+  addressBook: "AddressBook"
 };
 
 let constant = {
@@ -36,7 +38,10 @@ let constant = {
   regionEventLabel: "十八社區",
   recentEventLabel: "最近查看",
   leaderBoardLabel: "人氣排名榜",
+  noTagLabel: "所有事件",
+  defaultEventNumber: 100.
 }
+
 
 let addressEnum = {
   home: "住宅",

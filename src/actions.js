@@ -2,6 +2,9 @@ import {
   UPDATE_FILTER,
   UPDATE_FILTER_DEFAULT,
   UPDATE_FILTER_LOCATION,
+  UPDATE_FILTER_TAG_LIST,
+  RESET_FILTER_TAGS,
+  UPDATE_FILTER_TAG,
   UPDATE_RECENT_MESSAGE,
   FETCH_USER,
   DISABLE_LOCATION,
@@ -71,6 +74,19 @@ function dispatchFilter(eventNumber, distance, geolocation) {
 
 function dispatchFilterLocation(geolocation, distance) {
   return {type: UPDATE_FILTER_LOCATION, geolocation: geolocation, distance: distance};
+}
+
+
+function dispatchFilterTagList(tagList) {
+  return {type: UPDATE_FILTER_TAG_LIST, tagList: tagList}
+}
+
+function dispatchTagsRest() {
+  return {type: RESET_FILTER_TAGS}
+}
+
+function dispatchSelectedTag(selectedTag) {
+  return {type: UPDATE_FILTER_TAG, selectedTag: selectedTag}
 }
 
 
@@ -159,6 +175,24 @@ export function updateFilterLocation(geolocation, distance) {
   };
 }
 
+export function updateFilterTagList(tagList) {
+  return dispatch => {
+    dispatch(dispatchFilterTagList(tagList));
+  };
+}
+
+export function resetTagList() {
+  return dispatch => {
+    dispatch(dispatchTagsRest());
+  };
+}
+
+export function selectedTag(selectedTag) {
+  return dispatch => {
+    dispatch(dispatchSelectedTag(selectedTag));
+  };
+}
+
 export function updateFilterWithCurrentLocation() {
   return dispatch => {
     dispatch(fetchLocation(geolocation => {
@@ -171,8 +205,8 @@ export function updateFilterWithCurrentLocation() {
 export function fetchAddressBookByUser(user) {
   return dispatch => {
     var db = firebase.firestore();
-    var collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
-    collectionRef.onSnapshot(function() {})         
+    var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
+    collectionRef.onSnapshot(function() {});
     collectionRef.get().then(function(querySnapshot) {
        const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
        dispatch(fetchAddressBook(addresses));
@@ -187,7 +221,7 @@ export function fetchAddressBookFromOurLand() {
   return dispatch => {
     var db = firebase.firestore();
     /// Use the UID for Ourland HK's account
-    var collectionRef = db.collection(config.userDB).doc("mUQgwxkmPBfVA47d9lHzB482Nmp1").collection("AddressBook");
+    var collectionRef = db.collection(config.userDB).doc("mUQgwxkmPBfVA47d9lHzB482Nmp1").collection(config.addressBook);
     collectionRef.onSnapshot(function() {})         
     collectionRef.get().then(function(querySnapshot) {
        const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
@@ -202,18 +236,22 @@ export function fetchAddressBookFromOurLand() {
 
 export function upsertAddress(user, key, type, text, geolocation, streetAddress) {
   return dispatch => {
+    var geoPoint = null;
+    if(geolocation != null) {
+      geoPoint = new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude);
+    }
     var now = Date.now();
     var addressRecord = {
         type: type,
         updateAt: new Date(now),
         text: text,
-        geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
+        geolocation: geoPoint,
         streetAddress: streetAddress
     }; 
     console.log(addressRecord);
     // Use firestore
     var db = firebase.firestore();
-    var collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
+    var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
     if(key != null) {
         collectionRef.doc(key).set(addressRecord).then(function() {
           dispatch(fetchAddressBookByUser(user))
@@ -230,7 +268,7 @@ export function upsertAddress(user, key, type, text, geolocation, streetAddress)
 export function deleteAddress(user, key) {
   return dispatch => {
     const db = firebase.firestore();
-    const collectionRef = db.collection(config.userDB).doc(user.uid).collection("AddressBook");
+    const collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
     collectionRef.doc(key).delete().then(() => {
       dispatch(fetchAddressBookByUser(user))
     });

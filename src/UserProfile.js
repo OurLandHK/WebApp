@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import * as firestore from 'firebase/firestore';
-import config, {constant} from './config/default';
+import config, {constant, addressEnum} from './config/default';
 
 function getUserProfile(user) {
     // Use firestore
@@ -14,8 +14,6 @@ function getUserProfile(user) {
             var userRecord = {
                 displayName: user.displayName,
                 photoURL: user.photoURL,
-                officeLocation: constant.invalidLocation, 
-                homeLocation: constant.invalidLocation,
                 role: constant.user,
                 publishMessages: [],
                 concernMessages: [],
@@ -23,7 +21,11 @@ function getUserProfile(user) {
             };
             collectionRef.doc(user.uid).set(userRecord).then(function(userRecordRef) {
                 console.log("Document written with ID: ", user.uid);
-                return(userRecordRef.data);
+                upsertAddress(user, "0", addressEnum.home, addressEnum.home, null, null).then(function() {
+                    upsertAddress(user, "1", addressEnum.office, addressEnum.office, null, null).then(function() {
+                        return(userRecord);
+                    });
+                });         
             })
             .catch(function(error) {
                 console.error("Error adding document: ", error);
@@ -34,6 +36,35 @@ function getUserProfile(user) {
         console.log("Error getting document:", error);
         return(null);
     });
+}
+
+function upsertAddress(user, key, type, text, geolocation, streetAddress) {
+    var geoPoint = null;
+    if(geolocation != null) {
+    geoPoint = new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude);
+    }
+    var now = Date.now();
+    var addressRecord = {
+        type: type,
+        updateAt: new Date(now),
+        text: text,
+        geolocation: geoPoint,
+        streetAddress: streetAddress
+    }; 
+    console.log(addressRecord);
+    // Use firestore
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
+    if(key != null) {
+        return collectionRef.doc(key).set(addressRecord).then(function() {
+            return;
+        });
+    } else {
+        return collectionRef.add(addressRecord).then(function(docRef) {
+            console.log("comment written with ID: ", docRef.id);
+            return;
+        });
+    }  
 }
 
 function getUserConcernMessages(user) {
@@ -139,18 +170,6 @@ function updateUserRecords(userid, userRecord) {
     }) 
 }
 
-function updateUserLocation(user, officeLocationLatitude, officeLocationLongitude, homeLocationLatitude, homeLocationLongitude) {
-    return getUserProfile(user).then((userRecord) => {
-        if(homeLocationLatitude != userRecord.homeLocation.latitude && homeLocationLongitude != userRecord.homeLocation.longitude)   {
-            userRecord.homeLocation = new firebase.firestore.GeoPoint(homeLocationLatitude, homeLocationLongitude);
-        }
-        if(officeLocationLatitude != userRecord.officeLocation.latitude && officeLocationLongitude != userRecord.officeLocation.longitude)  {
-            userRecord.homeLocation = new firebase.firestore.GeoPoint(homeLocationLatitude, homeLocationLongitude);
-        }
-        return updateUserRecords(user.uid, userRecord);
-    });
-}
-
 function addPublishMessagesKeyToUserProfile(user, messageUUID) {
     return getUserProfile(user).then((userRecord) => {
         if(userRecord.publishMessages != null)
@@ -186,5 +205,5 @@ function updateUserProfile(user, userProfile){
     });
 }
 
-export {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, updateUserLocation, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile};
+export {upsertAddress, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile};
 

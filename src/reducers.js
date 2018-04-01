@@ -1,4 +1,5 @@
-import { combineReducers } from 'redux';  
+import { combineReducers } from 'redux'; 
+import { constant } from './config/default';
 import {
   FETCH_USER,
   FETCH_LOCATION,
@@ -6,6 +7,9 @@ import {
   UPDATE_FILTER_LOCATION,
   UPDATE_FILTER,
   UPDATE_FILTER_DEFAULT,
+  UPDATE_FILTER_TAG_LIST,
+  RESET_FILTER_TAGS,
+  UPDATE_FILTER_TAG,  
   UPDATE_RECENT_MESSAGE,
   FETCH_ADDRESS_BOOK,
   FETCH_PUBLIC_ADDRESS_BOOK,
@@ -50,10 +54,12 @@ function addressBookReducer(state={addresses:[], publicAddress:[]}, action) {
   }
 }
 
-function filterReducer(state={defaultEventNumber: 20, eventNumber: 20, geolocation: null, distance: 1, defaultDistance: 1}, action) {
+function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, eventNumber: constant.defaultEventNumber, geolocation: null, distance: 1, defaultDistance: 1, selectedTag: null, tagList: []}, action) {
   switch (action.type) {
     case UPDATE_FILTER_DEFAULT:
       return {
+        selectedTag: null, 
+        tagList: [],
         defaultEventNumber: action.eventNumber,
         eventNumber: action.eventNumber,
         geolocation: action.geolocation,
@@ -71,20 +77,51 @@ function filterReducer(state={defaultEventNumber: 20, eventNumber: 20, geolocati
       }
       return {
         ...state,
+        selectedTag: null, 
+        tagList: [],
         eventNumber: eventNumber,
         geolocation: action.geolocation,
         distance: distance
       };
-      case UPDATE_FILTER_LOCATION:
+    case UPDATE_FILTER_LOCATION:
       var distance = action.distance;
       if(state.defaultDistance > distance || distance == undefined) {
         distance = state.defaultDistance;
       }    
       return {
         ...state,
+        selectedTag: null, 
+        tagList: [],
         geolocation: action.geolocation,
         distance: distance
       }
+    case UPDATE_FILTER_TAG_LIST:
+      var tagList = state.tagList;
+      var newTagList = action.tagList;
+      if(newTagList != null) {
+        newTagList.map((tag) => {
+          if(!tagList.includes(tag)) {
+            tagList.push(tag);
+          }
+        });
+      }
+      //console.log("update Tag List" + tagList.join());
+      return {
+        ...state,
+        selectedTag: null, 
+        tagList: tagList,
+      };   
+    case RESET_FILTER_TAGS:
+      return {
+        ...state,
+        selectedTag: null, 
+        tagList: []
+      };   
+    case UPDATE_FILTER_TAG:    
+      return {
+        ...state,
+        selectedTag: action.selectedTag
+      };  
     default:
       return state;
   }

@@ -19,6 +19,7 @@ import {
   updateFilterDefault,
   checkAuthState
 } from './actions';
+import {constant} from './config/default';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);  
 const store = createStoreWithMiddleware(rootReducer);
@@ -38,7 +39,7 @@ class App extends Component {
       eventId = "";
     }
     if(eventNumber == null) {
-      eventNumber = 20;
+      eventNumber = constant.defaultEventNumber;
     }
     // distance in KM
     if(distance == null) {

@@ -4,7 +4,7 @@ import config, {constant} from './config/default';
 import MessageView from './MessageView';
 import distance from './Distance';
 import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
-import { updateFilter } from './actions';
+import { updateFilter, updateFilterTagList} from './actions';
 import {connect} from "react-redux";
 
 
@@ -21,7 +21,8 @@ class MessageList extends Component {
       distance: this.props.distance, 
       geolocation: geolocation,
       userId: this.props.userId,
-      data:[]
+      data:[], 
+      selectedTag: null
     };
     this.updateFilter = this.updateFilter.bind(this);
     this.setMessage = this.setMessage.bind(this);
@@ -29,8 +30,15 @@ class MessageList extends Component {
   }
  
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.user != this.props.user || this.props.filter != prevProps.filter) {
+    if (prevProps.user != this.props.user || 
+      this.props.filter.geolocation != prevProps.filter.geolocation ||
+      this.props.filter.distance != prevProps.filter.distance) {
       this.refreshMessageList();
+    } else {
+      if(this.props.filter.selectedTag != undefined && 
+            this.props.filter.selectedTag != prevProps.filter.selectedTag) {
+        this.setState({selectedTag: this.props.filter.selectedTag});
+      }
     }
   }
 
@@ -45,7 +53,7 @@ class MessageList extends Component {
     if (filter == null) {
       filter = this.props.filter;
     }
-//    console.log('filter', filter);
+    this.setState({selectedTag: null});
     const { user } = this.props;
     if (user.user) {
       this.fetchMessages(user.user, filter); 
@@ -62,9 +70,15 @@ class MessageList extends Component {
       var dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
       if(dis < this.props.filter.distance) {
         this.state.data.push(val);
-        this.setState({data:this.state.data});    
+        this.setState({data:this.state.data});
+        if(val.tag != null && val.tag.length > 1) {      
+          this.props.updateFilterTagList(val.tag);
+        }    
       }
     } else {
+      if(val.tag != null && val.tag.length > 1) {      
+        this.props.updateFilterTagList(val.tag);
+      }
       this.state.data.push(val);
       this.setState({data:this.state.data});
     }
@@ -104,7 +118,12 @@ class MessageList extends Component {
     }
     
     elements = this.state.data.map((message) => {
-      return (<MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat}/>);
+      if(this.state.selectedTag != null && !message.tag.includes(this.state.selectedTag)) {
+        // filter by selected tag.
+        return null;
+      } else {
+        return (<MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat}/>);
+      }
     });
     return (<div>{elements}</div>);
   }
@@ -123,6 +142,9 @@ const mapDispatchToProps = (dispatch) => {
     updateFilter:
       (eventNumber, distance, geolocation) =>
         dispatch(updateFilter(eventNumber, distance, geolocation)),
+    updateFilterTagList:
+        (tagList) =>
+          dispatch(updateFilterTagList(tagList)),
   }
 };
 
