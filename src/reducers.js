@@ -105,7 +105,7 @@ function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, e
           }
         });
       }
-      console.log("update Tag List" + tagList.join());
+      //console.log("update Tag List" + tagList.join());
       return {
         ...state,
         selectedTag: null, 

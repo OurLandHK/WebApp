@@ -87,7 +87,7 @@ class RegionEventDialog extends React.Component {
     const cardImage = (
       <CardMedia
         className={classes.media}
-        image="/images/ssp.jpg"
+        image="/images/fromPeak.jpg"
         title={constant.regionEventLabel}
       >
         <div
@@ -103,6 +103,7 @@ class RegionEventDialog extends React.Component {
     }
     return (
         <span>
+            <br/>
             <Card onClick={(evt) => this.handleRequestOpen(evt)}>
                 {cardImage}
                 <CardContent>

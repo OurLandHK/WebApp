@@ -183,11 +183,11 @@ class AddressView extends Component {
                         <DialogTitle id="form-dialog-title">{titleText}</DialogTitle>
                         <DialogContent>
                             {icons}
-                            <TextField disable={disableValue} autoFocus required id="message" fullWidth margin="normal" helperText="名稱" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>
+                            <TextField disabled={disableValue} autoFocus required id="message" fullWidth margin="normal" helperText="名稱" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>
                             <LocationButton autoFocus geolocation={geolocation} streetAddress={streetAddress} ref={(locationButton) => {this.locationButton = locationButton;}}/>                   
                         </DialogContent>  
                         <DialogActions>
-                            <Button color="secondary" onClick={() => this.onDelete()} >刪除</Button>
+                            <Button disabled={disableValue} color="secondary" onClick={() => this.onDelete()} >刪除</Button>
                             <Button color="primary" onClick={() => this.handleRequestClose()} >取消</Button>
                             <Button color="primary" onClick={() => this.onSubmit()}>提交</Button> 
                         </DialogActions>          

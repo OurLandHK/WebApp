@@ -22,7 +22,7 @@ let config = {
   userDB: 'userProfileTest', // For developments.
   photoDB: 'photoTest', // For developments.
 
-  addressBook: "AddressBook",
+  addressBook: "AddressBook"
 };
 
 let constant = {
