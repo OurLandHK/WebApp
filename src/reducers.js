@@ -16,6 +16,8 @@ import {
   TOGGLE_ADDRESS_DIALOG,
   TOGGLE_NEARBYEVENT_DIALOG,
   TOGGLE_REGIONEVENT_DIALOG,
+  UPDATE_PUBLIC_PROFILE_DIALOG,
+  TOGGLE_PUBLIC_PROFILE_DIALOG,  
   TOGGLE_LEADER_BOARD,
   FETCH_TOP_TWENTY,
 } from './actions/types';
@@ -175,6 +177,17 @@ function recentMessageReducer(state={open: false, id: ""}, action) {
   }
 }
 
+function publicProfileDialogReducer(state={open: false, id: ""}, action) {
+  console.log(action);
+  switch (action.type) {
+    case UPDATE_PUBLIC_PROFILE_DIALOG:
+      return {open: action.open, id: action.id};
+    case TOGGLE_PUBLIC_PROFILE_DIALOG:
+      return {...state, open: action.open};
+    default:
+      return state;
+  }
+}
 
 const rootReducer = combineReducers({  
   geoLocation: geoLocationReducer,
@@ -186,6 +199,7 @@ const rootReducer = combineReducers({
   regionEventDialog: regionEventDialogReducer,
   leaderBoard: leaderBoardReducer,
   recentMessage: recentMessageReducer,
+  publicProfileDialog: publicProfileDialogReducer,
 });
 
 

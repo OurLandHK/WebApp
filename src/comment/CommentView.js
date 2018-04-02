@@ -6,6 +6,11 @@ import timeOffsetStringInChinese from '../TimeString';
 import { withStyles } from 'material-ui/styles';
 import red from 'material-ui/colors/red';
 import geoString from '../GeoLocationString';
+import {
+    updateRecentMessage,
+    updatePublicProfileDialog,
+  } from '../actions';
+  import {connect} from 'react-redux';
 
 const styles = theme => ({
     card: {
@@ -27,8 +32,18 @@ const styles = theme => ({
 class CommentView extends Component {
   constructor(props) {
     super(props);
+    this.handleAuthorClick = this.handleAuthorClick.bind(this);
   }
 
+
+  handleAuthorClick() {
+    const {comment, updatePublicProfileDialog} = this.props;
+    if (comment.uid) {
+      updatePublicProfileDialog(comment.uid, true)
+    } else {
+        console.log("no uid");
+    }
+  };
 
   render() {
     const { classes, theme } = this.props;
@@ -61,6 +76,7 @@ class CommentView extends Component {
                     className={classes.cover}
                     image={c.photoUrl}
                     title={c.name}
+                    onClick={() => this.handleAuthorClick()}
                 />                 
                 <div className={classes.details}>
                     <CardContent className={classes.content}>
@@ -78,5 +94,27 @@ CommentView.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
   };
+
+  const mapStateToProps = (state, ownProps) => {
+    return {
+      recentMessage : state.recentMessage,
+    };
+  }
   
-export default withStyles(styles, { withTheme: true })(CommentView);
+  const mapDispatchToProps = (dispatch) => {
+    return {
+      updateRecentMessage:
+        (recentMessageID, open) =>
+          dispatch(updateRecentMessage(recentMessageID, open)),
+      updatePublicProfileDialog:
+        (userId, open) =>
+          dispatch(updatePublicProfileDialog(userId, open)),
+    }
+  };
+  
+  
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+    )
+    (withStyles(styles, { withTheme: true })(CommentView));
