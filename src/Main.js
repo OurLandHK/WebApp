@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import config, {constant} from './config/default';
 import {
   updateRecentMessage,
+  updatePublicProfileDialog,
 } from './actions';
 import {connect} from 'react-redux';
 
@@ -22,14 +23,18 @@ class Main extends Component {
   constructor(props) {
     super(props);
     let geolocation = this.props.geolocation;
-    const { updateRecentMessage } = this.props;
+    const { updateRecentMessage, updatePublicProfileDialog } = this.props;
     if(geolocation == null) {
       geolocation = constant.invalidLocation;
     }
+    if(this.props.userId != "") {
+      updatePublicProfileDialog(this.props.userId, true);
+    }    
     if(this.props.eventId != "") {
       updateRecentMessage(this.props.eventId, true);
     }
     this.state = {
+        userId: this.props.userId,
         eventId: this.props.eventId,
         eventNumber: this.props.eventNumber,
         distance: this.props.distance, 
@@ -93,18 +98,12 @@ class Main extends Component {
   }
 
   render() {
-    let pubilcProfileHtml = null;
-    let messageHtml = null;
-    if(this.state.userId != null && this.state.userId != "") {
-      pubilcProfileHtml = <PublicProfile id={this.state.userId}/>;
-    } else {
-      messageHtml = this.renderMessageFrontPage();
-    }
+    let messageHtml = this.renderMessageFrontPage();
     return (
       <div>
         <br/>
-          {pubilcProfileHtml}
           {messageHtml}
+          <PublicProfile />
       </div>
     );
   }
@@ -121,6 +120,9 @@ const mapDispatchToProps = (dispatch) => {
     updateRecentMessage:
       (recentMessageID, open) =>
         dispatch(updateRecentMessage(recentMessageID, open)),
+    updatePublicProfileDialog:
+      (userId, open) =>
+        dispatch(updatePublicProfileDialog(userId, open)),
   }
 };
 

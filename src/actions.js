@@ -10,7 +10,9 @@ import {
   DISABLE_LOCATION,
   FETCH_LOCATION,
   FETCH_ADDRESS_BOOK,
-  FETCH_PUBLIC_ADDRESS_BOOK,  
+  FETCH_PUBLIC_ADDRESS_BOOK,
+  UPDATE_PUBLIC_PROFILE_DIALOG,
+  TOGGLE_PUBLIC_PROFILE_DIALOG,  
   TOGGLE_ADDRESS_DIALOG,
   TOGGLE_NEARBYEVENT_DIALOG,
   TOGGLE_REGIONEVENT_DIALOG,
@@ -61,6 +63,14 @@ function fetchUser(user, loading=false) {
 
 function dispatchRecentMessage(id, open) {
   return {type: UPDATE_RECENT_MESSAGE, id: id, open: open};
+}
+
+function dispatchPublicProfile(id, open) {
+  return {type: UPDATE_PUBLIC_PROFILE_DIALOG, id: id, open: open};
+}
+
+function dispatchTogglePublicProfile(flag) {
+  return {type: TOGGLE_PUBLIC_PROFILE_DIALOG, open: flag};
 }
 
 
@@ -155,6 +165,17 @@ export function updateRecentMessage(id, open) {
   };
 }
 
+export function updatePublicProfileDialog(id, open) {
+  return dispatch => {
+    dispatch(dispatchPublicProfile(id, open));
+  };
+}
+
+export function togglePublicProfileDialog(flag) {
+  return dispatch => {
+    dispatch(dispatchTogglePublicProfile(flag));
+  };
+}
 
 export function updateFilter(eventNumber, distance, geolocation) {
   return dispatch => {
