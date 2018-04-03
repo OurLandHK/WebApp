@@ -165,7 +165,7 @@ class MessageDetailView extends Component {
     }
     let linkHtml = null;
     if (link != null && link != "") {
-      linkHtml = <CardContent> <Typography component='p'> 外部連結： {link} </Typography> </CardContent>;
+      linkHtml = <CardContent> <Typography component='p'> 外部連結： <a href={link} target="_blank">{link}</a> </Typography> </CardContent>;
     }    
     const author = this.renderAuthor();
     let baseHtml = <Grid container spacing={0}> {this.renderLocation()}{linkHtml}</Grid>;
