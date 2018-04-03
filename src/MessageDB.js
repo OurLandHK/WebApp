@@ -126,7 +126,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
     const userRef = db.collection(config.userDB).doc(currentUser.uid);
     return db.runTransaction(transaction => {
       return transaction.get(userRef).then(userDoc => {
-        let publishMessages = userDoc.publishMessages;
+        let publishMessages = userDoc.data().publishMessages;
         if (publishMessages == null) {
           publishMessages = [key]
         } else {
