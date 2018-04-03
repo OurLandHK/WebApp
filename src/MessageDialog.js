@@ -12,6 +12,8 @@ import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import MessageDetailView from './MessageDetailView';
 import {getMessage} from './MessageDB';
+import ShareDrawer from './ShareDrawer';
+import FavoriteButton from './FavoriteButton';
 
 const styles = theme => ({
   appBar: {
@@ -32,7 +34,10 @@ const styles = theme => ({
   },
   dialogTitle: {
     position: 'relative',
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'  
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
+  },
+  root: {
+     paddingRight: 0
   }
   
 });
@@ -102,11 +107,14 @@ class MessageDialog extends React.Component {
           unmountOnExit
         >      
           <AppBar className={classes.dialogTitle}>
-            <Toolbar>
+            <Toolbar className={classes.root}>
               <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
-              {titleHtml}      
+              {titleHtml}
+
+               <FavoriteButton message={m} user={user} />
+               <ShareDrawer message={m}/>      
             </Toolbar>
           </AppBar>
           {detailView}
