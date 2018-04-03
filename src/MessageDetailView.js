@@ -132,6 +132,15 @@ class MessageDetailView extends Component {
     );
   }
 
+  validateExternalLink(link){
+    if(link == null || link == ""){
+      return false;
+    }
+
+    var rv = link.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    return (rv==null? false: true);
+  }
+
   render() {
     const classes = this.props.classes;
     var m = this.props.message;
@@ -164,11 +173,13 @@ class MessageDetailView extends Component {
       photoUrl = m.photoUrl;
     }
     let linkHtml = null;
-    if (link != null && link != "") {
-      linkHtml = <CardContent> <Typography component='p'> 外部連結： <a href={link} target="_blank">{link}</a> </Typography> </CardContent>;
+    if (this.validateExternalLink(link)) {
+      linkHtml = <Grid container spacing={0}>
+        <Grid item>
+        <CardContent> <Typography component='p'> 外部連結： <a href={link} target="_blank">前往</a> </Typography> </CardContent></Grid></Grid>;
     }    
     const author = this.renderAuthor();
-    let baseHtml = <Grid container spacing={0}> {this.renderLocation()}{linkHtml}</Grid>;
+    let baseHtml = <Grid container spacing={0}> {this.renderLocation()}</Grid>;
 
     let dateHtml = null;
     if(dateTimeString != null) { 
@@ -185,6 +196,7 @@ class MessageDetailView extends Component {
              {author}
              <ChipArray chipData={chips} />
              {baseHtml}
+             {linkHtml}
              {dateHtml}
              <br/>
              <br/>
