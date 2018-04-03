@@ -133,7 +133,10 @@ class ShareDrawer extends React.Component {
                 "<meta property=\"og:title\"              content=\"" + message.text + "\" />" +
                 "<meta property=\"og:description\"        content=\"Location"  +  "" + "\" />";
 */
-    var quote = message.text;
+    var quote = "";
+    if(message != null) {
+      quote = message.text;
+    }
     return quote;    
   }
 
@@ -192,10 +195,14 @@ class ShareDrawer extends React.Component {
 
   render() {
     const { classes } = this.props;
-    var m = this.facebookQuote(this.props.message);
-    var hashtag = this.facebookHashTag(this.props.message.tag);
-    var shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + this.props.message.key;
- 
+    var m = "";
+    var hashtag = "";
+    var shareUrl = window.location.protocol + "//" + window.location.hostname;
+    if(this.props.message != undefined) {
+      m = this.facebookQuote(this.props.message);
+      hashtag = this.facebookHashTag(this.props.message.tag);
+      shareUrl = shareUrl + "/?eventid=" + this.props.message.key;
+    }
     return (
       <span>
         <Button
