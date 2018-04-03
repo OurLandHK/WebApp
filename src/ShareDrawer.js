@@ -54,6 +54,9 @@ const styles = theme => ({
   shareButton: {
     margin: 0,
     backgroundColor: purple[500],
+    borderRadius: 0,
+    width: '64px',
+    height: '64px'
   },
   avatar: {
     backgroundColor: red[500],
