@@ -21,8 +21,6 @@ import geoString from './GeoLocationString';
 import PostCommentView from './comment/PostCommentView';
 import Avatar from 'material-ui/Avatar';
 import green from 'material-ui/colors/green';
-import ShareDrawer from './ShareDrawer';
-import FavoriteButton from './FavoriteButton';
 import {
   updateRecentMessage,
   updatePublicProfileDialog,
@@ -50,20 +48,6 @@ const styles = theme => ({
   cover: {
     width: 64,
     height: 64,
-  },
-  rightButtonsContainer: {
-    marginLeft: '0.5rem',
-    top: '80',
-    left: 'auto',
-    bottom: 'auto',
-    right: '5',
-    zIndex: '100',
-    position: 'fixed',
-    display: 'inline-block',
-  },
-  rightButton: {
-    display: 'block',
-    marginBottom: '1rem',
   },
   container: {
     overflowY: 'auto'
@@ -213,19 +197,6 @@ class MessageDetailView extends Component {
              {tab == 0 && <div><PostCommentView messageUUID={m.key}/><CommentList messageUUID={m.key}/></div>}
              {tab == 1 && <MessageDetailViewImage url={m.publicImageURL} messageUUID={m.key}/>}
              {tab == 2 && <EventMap center={geolocation} zoom={zoom}/>}
-             <div className={classes.rightButtonsContainer}>
-               <div className={classes.rightButton}>
-                 <FavoriteButton
-                   message={this.props.message}
-                   user={this.props.user}
-                 />
-               </div>
-               <div className={classes.rightButton}>
-                 <ShareDrawer
-                   message={this.props.message}
-                 />
-               </div>
-             </div>
          </div>);
 
     }

@@ -13,11 +13,16 @@ import {
 
 
 const styles = () => ({
+  base: {
+    borderRadius: 0,
+    width: '64px',
+    height: '64px'
+  },
   on: {
-    backgroundColor: red[500],
+    backgroundColor: red[500]
   },
   off: {
-    backgroundColor: green[500],
+    backgroundColor: green[500]
   }
 });
 
@@ -54,13 +59,14 @@ class FavoriteButton extends Component {
     const { classes } = this.props;
     const { favor } = this.state;
     console.log(this.state);
-    const className = favor ? classes.on : classes.off;
+    const favorClass = favor ? classes.on : classes.off;
+    const baseClass = classes.base;
     return (
       <Button
         variant="fab"
         color="primary"
         raised={true}
-        className={className}
+        className={`${baseClass} ${favorClass}`}
         onClick={() => this.handleFavorClick()}
       >
         <FavoriteIcon />
