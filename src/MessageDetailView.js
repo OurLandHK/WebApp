@@ -23,6 +23,11 @@ import Avatar from 'material-ui/Avatar';
 import green from 'material-ui/colors/green';
 import ShareDrawer from './ShareDrawer';
 import FavoriteButton from './FavoriteButton';
+import {
+  updateRecentMessage,
+  updatePublicProfileDialog,
+} from './actions';
+import {connect} from 'react-redux';
 
 const styles = theme => ({
   authorContainer: {
@@ -71,6 +76,7 @@ class MessageDetailView extends Component {
     super(props);
     this.state = {expanded: false, rotate: 'rotate(0deg)', tab: 0};
     this.handleChangeTab = this.handleChangeTab.bind(this);
+    this.handleAuthorClick = this.handleAuthorClick.bind(this);
   }
 
   handleExpandClick() {
@@ -82,16 +88,18 @@ class MessageDetailView extends Component {
      this.setState({...this.state, tab: value});
   }
 
+  handleAuthorClick() {
+    const {message, updatePublicProfileDialog} = this.props;
+    if (message.uid) {
+      updatePublicProfileDialog(message.uid, true)
+    }
+  };
+
 
   renderAuthor() {
-    const { message, classes } = this.props;
+    const { message, classes} = this.props;
     const photoUrl = message.photoUrl || '/images/profile_placeholder.png';
-    let fbProfileImage = <Avatar src={photoUrl} />;
-    let fbProfileLink = null;
-    if (message.uid) {
-      let fbProfileLink = '/?userid=' + message.uid;
-      fbProfileImage = <a href={fbProfileLink}>{fbProfileImage}</a>;
-    }
+    let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     return (
       <div className={classes.authorContainer}>
         <div className={classes.authorColumn}>
@@ -157,15 +165,8 @@ class MessageDetailView extends Component {
     }
     let linkHtml = null;
     if (link != null && link != "") {
-      linkHtml = <CardContent> <Typography component='p'> 外部連結： <a href={link} target="_blank">{link}</a> </Typography> </CardContent>;
-    }
-    let fbProfileImage = <img src={photoUrl} />;
-    let fbProfileLink = null;
-    if (m.uid) {
-      let fbProfileLink = '/?userid=' + m.uid;
-      fbProfileImage = <a href={fbProfileLink}>{fbProfileImage}</a>;
-    }
-    
+      linkHtml = <CardContent> <Typography component='p'> 外部連結： {link} </Typography> </CardContent>;
+    }    
     const author = this.renderAuthor();
     let baseHtml = <Grid container spacing={0}> {this.renderLocation()}{linkHtml}</Grid>;
 
@@ -218,4 +219,26 @@ class MessageDetailView extends Component {
     }
 }
 
-export default withStyles(styles) (MessageDetailView);
+const mapStateToProps = (state, ownProps) => {
+  return {
+    recentMessage : state.recentMessage,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    updateRecentMessage:
+      (recentMessageID, open) =>
+        dispatch(updateRecentMessage(recentMessageID, open)),
+    updatePublicProfileDialog:
+      (userId, open) =>
+        dispatch(updatePublicProfileDialog(userId, open)),
+  }
+};
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
+(withStyles(styles)((MessageDetailView)));

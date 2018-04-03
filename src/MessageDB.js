@@ -258,6 +258,7 @@ function addComment(messageUUID, currentUser, photo, commentText, tags, geolocat
     var commentRecord = {
         hide: false,
         name: currentUser.displayName,
+        uid: currentUser.uid,
         photoUrl: currentUser.providerData[0].photoURL || '/images/profile_placeholder.png',
         createdAt: new Date(now),
         lastUpdate: null,
