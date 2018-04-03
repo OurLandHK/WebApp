@@ -65,8 +65,8 @@ function dispatchRecentMessage(id, open) {
   return {type: UPDATE_RECENT_MESSAGE, id: id, open: open};
 }
 
-function dispatchPublicProfile(id, open) {
-  return {type: UPDATE_PUBLIC_PROFILE_DIALOG, id: id, open: open};
+function dispatchPublicProfile(id, fbId, open) {
+  return {type: UPDATE_PUBLIC_PROFILE_DIALOG, id: id, fbId: fbId, open: open};
 }
 
 function dispatchTogglePublicProfile(flag) {
@@ -165,9 +165,9 @@ export function updateRecentMessage(id, open) {
   };
 }
 
-export function updatePublicProfileDialog(id, open) {
+export function updatePublicProfileDialog(id, fbId, open) {
   return dispatch => {
-    dispatch(dispatchPublicProfile(id, open));
+    dispatch(dispatchPublicProfile(id, fbId, open));
   };
 }
 

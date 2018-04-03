@@ -39,6 +39,7 @@ let constant = {
   recentEventLabel: "最近查看",
   leaderBoardLabel: "人氣排名榜",
   noTagLabel: "所有事件",
+  publicProfileLabel: "簡介",
   defaultEventNumber: 100.
 }
 
