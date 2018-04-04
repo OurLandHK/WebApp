@@ -6,6 +6,8 @@ import config, {constant} from './config/default';
 import Button from 'material-ui/Button';
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
 import IconButton from 'material-ui/IconButton';
+import InboxIcon from 'material-ui-icons/Inbox';
+import Divider from 'material-ui/Divider';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
@@ -13,6 +15,7 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
+import EventListDialog from './EventListDialog';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import {connect} from "react-redux";
 import { togglePublicProfileDialog } from './actions';
@@ -90,10 +93,17 @@ class PublicProfile extends React.Component {
     var displayName = "...";
     var facebookLink = "...";
     let imageHtml = "等一下";
+    let concernMessage = null;
+    let publishMessage = null;
+    let completeMessage = null;
     let facebookhtml = "暫無";
     if(this.state.userProfile != null) {
       displayName = this.state.userProfile.displayName;
       imageHtml =         <img src={this.state.userProfile.photoURL}/>;
+      publishMessage = <EventListDialog title="發表事件: " messageIds={this.publishMessages}/>
+      concernMessage = <EventListDialog title="關注事件: " messageIds={this.concernMessages}/>  
+      completeMessage = <EventListDialog title="完成事件: " messageIds={this.completeMessages}/> 
+      
     }    
 
     if(this.props.fbId){
@@ -115,24 +125,18 @@ class PublicProfile extends React.Component {
               </AppBar>
               <div className={classes.container}>
           <br/>
-            <List>
+          <List disablePadding>
             <ListItem >
               <ListItemText> 名字: {displayName} <br/> {imageHtml} </ListItemText>
             </ListItem>   
             <ListItem button >
               <ListItemText> 臉書連結: <br/> {facebookhtml}</ListItemText>
             </ListItem>        
-            <ListItem button>
-              <ListItemText> 關注事件: <br/> {this.concernMessages} </ListItemText>
-            </ListItem>    
-            <ListItem button>
-              <ListItemText> 發佈事件: <br/> {this.publishMessages}</ListItemText>
-            </ListItem>    
-            <ListItem button>
-              <ListItemText>完成事件: <br/> {this.completeMessages} </ListItemText>
-            </ListItem>                                     
-          </List>
-
+            <Divider/>            
+            {publishMessage}
+            {concernMessage}
+            {completeMessage}                                                         
+            </List> 
           </div>
         </Dialog>
       </div>);

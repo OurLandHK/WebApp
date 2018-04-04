@@ -15,6 +15,11 @@ class MessageList extends Component {
     if(geolocation == null) {
       geolocation = constant.invalidLocation;
     }
+    var messageIds = [];
+//    console.log("Message List" + this.props.messageIds);
+    if(this.props.messageIds != null) {  
+      messageIds = this.props.messageIds;
+    }
     this.state = {
 //      eventId: this.props.eventId,
       eventNumber: this.props.eventNumber,
@@ -22,11 +27,19 @@ class MessageList extends Component {
       geolocation: geolocation,
       userId: this.props.userId,
       data:[], 
+      messageIds: messageIds,
       selectedTag: null
     };
     this.updateFilter = this.updateFilter.bind(this);
     this.setMessage = this.setMessage.bind(this);
+    this.setMessageRef = this.setMessageRef.bind(this);
     this.clear = this.clear.bind(this);
+  }
+
+  componentDidMount() {
+    if(this.state.messageIds.length != 0) {
+      this.updateFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
+    }
   }
  
   componentDidUpdate(prevProps, prevState) {
@@ -43,7 +56,7 @@ class MessageList extends Component {
   }
 
   updateFilter(eventNumber, distance, geolocation) {
-    console.log("ML Update Filter: " + geolocation);
+    //console.log("ML Update Filter: " + geolocation);
     const { updateFilter } = this.props;
     updateFilter(eventNumber, distance, geolocation);
     this.refreshMessageList();
@@ -62,26 +75,26 @@ class MessageList extends Component {
     }
   }
 
-  setMessage(doc) {
-    var val = doc.data();
+  setMessageRef(messageRef) {
+    var val = messageRef.data();
     if(this.props.filter.geolocation != constant.invalidLocation && val != null) {
       var lon = this.props.filter.geolocation.longitude;
       var lat = this.props.filter.geolocation.latitude;
       var dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
       if(dis < this.props.filter.distance) {
-        this.state.data.push(val);
-        this.setState({data:this.state.data});
-        if(val.tag != null && val.tag.length > 1) {      
-          this.props.updateFilterTagList(val.tag);
-        }    
+        this.setMessage(val)  
       }
     } else {
-      if(val.tag != null && val.tag.length > 1) {      
-        this.props.updateFilterTagList(val.tag);
-      }
-      this.state.data.push(val);
-      this.setState({data:this.state.data});
+      this.setMessage(val)
     }
+  }
+
+  setMessage(val) {
+    if(val.tag != null && val.tag.length > 1) {      
+      this.props.updateFilterTagList(val.tag);
+    }
+    this.state.data.push(val);
+    this.setState({data:this.state.data});
   };
 
   clear() {
@@ -99,9 +112,16 @@ class MessageList extends Component {
      geolocation,
     } = filter;
     this.setState({geolocation: geolocation});
-    if(geolocation != constant.invalidLocation) {
+    //console.log("Fetch MessageIDs: " + this.state.messageIds);
+    if(this.state.messageIds.length != 0) {
       this.clear();
-      fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, this.setMessage);
+      this.state.messageIds.map((Ids) => {
+        //console.log("Ids:" + Ids);
+        getMessage(Ids).then((message) => {this.setMessage(message)});
+      });
+    } else if(geolocation != constant.invalidLocation) {
+      this.clear();
+      fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, this.setMessageRef);
     }
   }
 
@@ -112,7 +132,7 @@ class MessageList extends Component {
     let lon = 0; 
     let lat = 0;
     
-    if(this.state.geolocation != constant.invalidLocation) {
+    if(this.state.geolocation != null && this.state.geolocation != constant.invalidLocation) {
       lon = this.state.geolocation.longitude;
       lat = this.state.geolocation.latitude;
     }

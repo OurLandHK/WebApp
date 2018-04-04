@@ -73,8 +73,8 @@ class MessageView extends Component {
       o = true;
     }
 
-    var distanceSpan = "距離: ";
-    if (m.geolocation.latitude) {
+    var distanceSpan = "";
+    if (m.geolocation.latitude && (this.props.lon != 0 || this.props.lat != 0)) {
       if (this.props.lat) {
         var dis = distance(m.geolocation.longitude,m.geolocation.latitude,this.props.lon,this.props.lat);
         var dist;
@@ -82,7 +82,7 @@ class MessageView extends Component {
           dist = Math.round(dis) + "km";
         else
           dist = Math.round(dis * 1000) + "m";
-        distanceSpan += dist;
+        distanceSpan = "距離: " + dist;
       }
     }
     var timeOffset = Date.now() - m.createdAt;
