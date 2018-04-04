@@ -28,7 +28,7 @@ class Main extends Component {
       geolocation = constant.invalidLocation;
     }
     if(this.props.userId != "") {
-      updatePublicProfileDialog(this.props.userId, true);
+      updatePublicProfileDialog(this.props.userId, "", true);
     }    
     if(this.props.eventId != "") {
       updateRecentMessage(this.props.eventId, true);
