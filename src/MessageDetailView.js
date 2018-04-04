@@ -74,8 +74,8 @@ class MessageDetailView extends Component {
 
   handleAuthorClick() {
     const {message, updatePublicProfileDialog} = this.props;
-    if (message.uid) {
-      updatePublicProfileDialog(message.uid, true)
+    if (message.uid && message.fbuid) {
+      updatePublicProfileDialog(message.uid, message.fbuid, true)
     }
   };
 
@@ -214,8 +214,8 @@ const mapDispatchToProps = (dispatch) => {
       (recentMessageID, open) =>
         dispatch(updateRecentMessage(recentMessageID, open)),
     updatePublicProfileDialog:
-      (userId, open) =>
-        dispatch(updatePublicProfileDialog(userId, open)),
+      (userId, fbuid, open) =>
+        dispatch(updatePublicProfileDialog(userId, fbuid, open)),
   }
 };
 

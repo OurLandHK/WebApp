@@ -91,10 +91,12 @@ class PublicProfile extends React.Component {
   
   render() {
     var displayName = "...";
+    var facebookLink = "...";
     let imageHtml = "等一下";
     let concernMessage = null;
     let publishMessage = null;
     let completeMessage = null;
+    let facebookhtml = "暫無";
     if(this.state.userProfile != null) {
       displayName = this.state.userProfile.displayName;
       imageHtml =         <img src={this.state.userProfile.photoURL}/>;
@@ -103,6 +105,11 @@ class PublicProfile extends React.Component {
       completeMessage = <EventListDialog title="完成事件: " messageIds={this.completeMessages}/> 
       
     }    
+
+    if(this.props.fbId){
+     facebookhtml = <a href={"https://www.facebook.com/" + this.props.fbId} target="_blank">前往</a>;
+    }
+
     const { classes, open } = this.props;
     return (
       <div>
@@ -113,24 +120,23 @@ class PublicProfile extends React.Component {
                       <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                           <CloseIcon />
                       </IconButton>
-                      <Typography variant="title" color="inherit" className={classes.flex}>{constant.addressBookLabel}</Typography>           
+                      <Typography variant="title" color="inherit" className={classes.flex}>{constant.publicProfileLabel}</Typography>           
                   </Toolbar>
               </AppBar>
               <div className={classes.container}>
           <br/>
-            <h2>簡介</h2>
-            <List disablePadding>
-              <ListItem >
-                名字: {displayName} <br/>
-                {imageHtml}
-              </ListItem>
-            </List>
-            <Divider/>
-            <List disablePadding>
-              {publishMessage}
-              {concernMessage}
-              {completeMessage}                                                         
-            </List>    
+          <List disablePadding>
+            <ListItem >
+              <ListItemText> 名字: {displayName} <br/> {imageHtml} </ListItemText>
+            </ListItem>   
+            <ListItem button >
+              <ListItemText> 臉書連結: <br/> {facebookhtml}</ListItemText>
+            </ListItem>        
+            <Divider/>            
+            {publishMessage}
+            {concernMessage}
+            {completeMessage}                                                         
+            </List> 
           </div>
         </Dialog>
       </div>);
@@ -144,7 +150,8 @@ PublicProfile.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   return {
     open: state.publicProfileDialog.open,
-    id: state.publicProfileDialog.id
+    id: state.publicProfileDialog.id,
+    fbId: state.publicProfileDialog.fbId
   };
 }
 

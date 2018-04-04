@@ -177,11 +177,11 @@ function recentMessageReducer(state={open: false, id: ""}, action) {
   }
 }
 
-function publicProfileDialogReducer(state={open: false, id: ""}, action) {
-  //console.log(action);
+function publicProfileDialogReducer(state={open: false, id: "", fbId: ""}, action) {
+//  console.log(action);
   switch (action.type) {
     case UPDATE_PUBLIC_PROFILE_DIALOG:
-      return {open: action.open, id: action.id};
+      return {open: action.open, id: action.id, fbId: action.fbId};
     case TOGGLE_PUBLIC_PROFILE_DIALOG:
       if(action.open == false) {
         return {...state, id: "", open: action.open};
