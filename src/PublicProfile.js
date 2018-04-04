@@ -6,6 +6,8 @@ import config, {constant} from './config/default';
 import Button from 'material-ui/Button';
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
 import IconButton from 'material-ui/IconButton';
+import InboxIcon from 'material-ui-icons/Inbox';
+import Divider from 'material-ui/Divider';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
@@ -109,15 +111,33 @@ class PublicProfile extends React.Component {
               <div className={classes.container}>
           <br/>
             <h2>簡介</h2>
-            名字: {displayName} <br/>
-            {imageHtml}
-            <br/>
-            關注事件: <br/>
-            {this.concernMessages} <br/>
-            發佈事件: <br/>
-            {this.publishMessages} <br/>
-            完成事件: <br/>
-            {this.completeMessages} <br/>   
+            <List disablePadding>
+              <ListItem >
+                名字: {displayName} <br/>
+                {imageHtml}
+              </ListItem>
+            </List>
+            <Divider/>
+            <List disablePadding>    
+              <ListItem button>
+                <ListItemIcon>
+                    <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="發表事件: " secondary={this.publishMessages} />
+              </ListItem>            
+              <ListItem button>
+                <ListItemIcon>
+                    <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="關注事件: " secondary={this.concernMessages} />          
+              </ListItem>                        
+              <ListItem button>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="完成事件: " secondary={this.completeMessages} />          
+              </ListItem>                                   
+            </List>    
           </div>
         </Dialog>
       </div>);
