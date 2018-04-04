@@ -157,7 +157,7 @@ function regionEventDialogReducer(state={open: false}, action) {
 }
 
 function leaderBoardReducer(state={open: false, topTwenty:[]}, action) {
-  console.log(action);
+  //console.log(action);
   switch (action.type) {
     case TOGGLE_LEADER_BOARD:
       return {...state, open: action.open};
@@ -178,12 +178,16 @@ function recentMessageReducer(state={open: false, id: ""}, action) {
 }
 
 function publicProfileDialogReducer(state={open: false, id: ""}, action) {
-  console.log(action);
+  //console.log(action);
   switch (action.type) {
     case UPDATE_PUBLIC_PROFILE_DIALOG:
       return {open: action.open, id: action.id};
     case TOGGLE_PUBLIC_PROFILE_DIALOG:
-      return {...state, open: action.open};
+      if(action.open == false) {
+        return {...state, id: "", open: action.open};
+      } else {
+        return {...state, open: action.open};
+      }
     default:
       return state;
   }

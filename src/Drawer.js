@@ -71,15 +71,6 @@ class DrawerMenu extends Component {
     this.handleClose();
   }  
 
-  homeClick() {
-    this.props.setHomeLocation();
-    this.handleClose();
-  }  
-
-  officeClick() {
-    this.props.setOfficeLocation();
-    this.handleClose();
-  }  
 
   render() {
     let userSection = (<div></div>);

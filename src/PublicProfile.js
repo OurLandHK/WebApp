@@ -15,6 +15,7 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
+import EventListDialog from './EventListDialog';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import {connect} from "react-redux";
 import { togglePublicProfileDialog } from './actions';
@@ -91,9 +92,16 @@ class PublicProfile extends React.Component {
   render() {
     var displayName = "...";
     let imageHtml = "等一下";
+    let concernMessage = null;
+    let publishMessage = null;
+    let completeMessage = null;
     if(this.state.userProfile != null) {
       displayName = this.state.userProfile.displayName;
       imageHtml =         <img src={this.state.userProfile.photoURL}/>;
+      publishMessage = <EventListDialog title="發表事件: " messageIds={this.publishMessages}/>
+      concernMessage = <EventListDialog title="關注事件: " messageIds={this.concernMessages}/>  
+      completeMessage = <EventListDialog title="完成事件: " messageIds={this.completeMessages}/> 
+      
     }    
     const { classes, open } = this.props;
     return (
@@ -118,25 +126,10 @@ class PublicProfile extends React.Component {
               </ListItem>
             </List>
             <Divider/>
-            <List disablePadding>    
-              <ListItem button>
-                <ListItemIcon>
-                    <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="發表事件: " secondary={this.publishMessages} />
-              </ListItem>            
-              <ListItem button>
-                <ListItemIcon>
-                    <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="關注事件: " secondary={this.concernMessages} />          
-              </ListItem>                        
-              <ListItem button>
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="完成事件: " secondary={this.completeMessages} />          
-              </ListItem>                                   
+            <List disablePadding>
+              {publishMessage}
+              {concernMessage}
+              {completeMessage}                                                         
             </List>    
           </div>
         </Dialog>

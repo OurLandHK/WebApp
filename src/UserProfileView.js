@@ -21,6 +21,7 @@ import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import geoString from './GeoLocationString';
+import EventListDialog from './EventListDialog';
 import {getUserProfile, updateUserLocation, getUserRecords, updateUserProfile} from './UserProfile';
 import UploadImageButton from './UploadImageButton';
 import uuid from 'js-uuid';
@@ -118,8 +119,9 @@ class UserProfileView extends React.Component {
     var publish = 0;
     var concern = 0;
     var complete = 0;
-    var officeLocation = constant.addressNotSet;
-    var homeLocation = constant.addressNotSet;
+    let concernMessage = null;
+    let publishMessage = null;
+    let completeMessage = null; 
     let dialogHtml = null;
     if (this.state.user != null && this.state.userProfile != null) {
         imgURL = this.state.userProfile.photoURL;
@@ -128,18 +130,9 @@ class UserProfileView extends React.Component {
         displayRole += this.state.userProfile.role;
         if(this.state.userProfile != null)
         {
-          if(this.state.userProfile.publishMessages != null)
-          {
-            publish = this.state.userProfile.publishMessages.length;
-          }
-          if(this.state.userProfile.completeMessages != null)
-          {
-            complete = this.state.userProfile.completeMessages.length;
-          }
-          if(this.state.userProfile.concernMessages != null)
-          {
-            concern = this.state.userProfile.concernMessages.length;
-          }                
+          publishMessage = <EventListDialog title="發表事件: " messageIds={this.state.userProfile.publishMessages}/>
+          completeMessage = <EventListDialog title="完成事件: " messageIds={this.state.userProfile.completeMessages}/> 
+          concernMessage = <EventListDialog title="關注事件: " messageIds={this.state.userProfile.concernMessages}/>          
         }
     }
     return (
@@ -168,15 +161,9 @@ class UserProfileView extends React.Component {
             <ListItem >
               <ListItemText primary={displayRole} />
             </ListItem>          
-            <ListItem button>
-              <ListItemText primary="發表事件: " secondary={publish} />
-            </ListItem>            
-            <ListItem button>
-              <ListItemText primary="關注事件: " secondary={concern} />
-            </ListItem>                        
-            <ListItem button>
-              <ListItemText primary="完成事件: " secondary={complete} />
-            </ListItem>                                   
+            {publishMessage}
+            {concernMessage}
+            {completeMessage}                                  
           </List>
         </div>
         </Dialog>

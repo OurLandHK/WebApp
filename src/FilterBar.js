@@ -28,8 +28,13 @@ class FilterBar extends  Component {
   constructor(props) {
     super(props);
     this.isUsePublicAddressBook = false;
-    if(this.props.isUsePublicAddressBook == true) {
-      this.isUsePublicAddressBook = true;
+    this.disableLocationDrawer = false;
+    if(this.props.disableLocationDrawer == true) {
+      this.disableLocationDrawer = true;
+    } else {
+      if(this.props.isUsePublicAddressBook == true) {
+        this.isUsePublicAddressBook = true;
+      }
     }
   }
 
@@ -43,9 +48,15 @@ class FilterBar extends  Component {
 
   render() {
     const classes = this.props.classes;
-    return (<Toolbar>
+    if(this.disableLocationDrawer) {
+      return (<Toolbar>
+         <TagDrawer />
+      </Toolbar>);
+    } else {
+      return (<Toolbar>
                   在 <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook}/> 的 <TagDrawer />
                 </Toolbar>);
+    }
   }
 }
 
