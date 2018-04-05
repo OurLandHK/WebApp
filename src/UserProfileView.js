@@ -1,6 +1,5 @@
 /*global FB*/
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
 import { Form, FormGroup, Label, Input} from 'reactstrap';
 import { FormText, FormControl } from 'material-ui/Form';
 import LocationButton from './LocationButton';
@@ -25,6 +24,11 @@ import EventListDialog from './EventListDialog';
 import {getUserProfile, updateUserLocation, getUserRecords, updateUserProfile} from './UserProfile';
 import UploadImageButton from './UploadImageButton';
 import uuid from 'js-uuid';
+import thunk from 'redux-thunk';  
+import {connect} from "react-redux";
+import {
+  checkAuthState
+} from './actions';
 import  {constant} from './config/default';
 
 function Transition(props) {
@@ -76,14 +80,16 @@ class UserProfileView extends React.Component {
     this.setState({ open: false });
   };
 
-  componentDidMount() {
-    var auth = firebase.auth();
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        getUserProfile(user).then((userProfile)=>{
-            this.setState({user: user, userProfile: userProfile});});
+
+  componentDidUpdate(prevProps, prevState) {
+    if ((this.props.user.user != null && this.state.user == null) ||  (prevProps.user != this.props.user)) {
+      const {user} = this.props;
+      if (user.user) {
+        this.setState({user: user.user, userProfile: user.userProfile});
+      } else {
+        this.setState({user: null, userProfile: null});
       }
-    });
+    }
   }
 
   onSubmit() {
@@ -175,5 +181,19 @@ UserProfileView.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(UserProfileView);
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user: state.user,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    checkAuthState:
+      () => dispatch(checkAuthState()),
+  }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(UserProfileView));
 

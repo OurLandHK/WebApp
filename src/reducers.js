@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { constant } from './config/default';
 import {
   FETCH_USER,
+  FETCH_USER_PROFILE,
   FETCH_LOCATION,
   DISABLE_LOCATION,
   UPDATE_FILTER_LOCATION,
@@ -34,10 +35,12 @@ function geoLocationReducer(state={pos: null, enabled: true}, action) {
   }
 }
 
-function userReducer(state={user: null, loading: true}, action) {
+function userReducer(state={user: null, userProfile: null, loading: true}, action) {
   switch (action.type) {
     case FETCH_USER:
-      return {user: action.user, loading: action.loading};
+      return {...state, user: action.user, loading: action.loading};
+    case FETCH_USER_PROFILE:
+      return {...state, userProfile: action.userProfile};
     default:
       return state;
   }

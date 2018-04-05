@@ -41,6 +41,9 @@ const styles = {
 class PublicProfile extends React.Component {
   constructor(props) {
     super(props);
+    if(this.props.fbId) {
+      this.fbId = this.props.fbId;
+    }
     this.state = {userProfile: null};
     this.concernMessages = null;
     this.publishMessages = null;
@@ -103,13 +106,18 @@ class PublicProfile extends React.Component {
       publishMessage = <EventListDialog title="發表事件: " messageIds={this.publishMessages}/>
       concernMessage = <EventListDialog title="關注事件: " messageIds={this.concernMessages}/>  
       completeMessage = <EventListDialog title="完成事件: " messageIds={this.completeMessages}/> 
-      
+      if(this.state.userProfile.fbuid) {
+        this.fbId=this.state.userProfile.fbuid;
+      }
     }    
 
-    if(this.props.fbId){
-     facebookhtml = <a href={"https://www.facebook.com/" + this.props.fbId} target="_blank">前往</a>;
+
+
+    if(this.fbId){
+     facebookhtml = <a href={"https://www.facebook.com/" + this.fbId} target="_blank">前往</a>;
     }
 
+    
     const { classes, open } = this.props;
     return (
       <div>
