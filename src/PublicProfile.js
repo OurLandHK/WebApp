@@ -98,7 +98,7 @@ class PublicProfile extends React.Component {
     let completeMessage = null;
     let facebookhtml = "暫無";
     if(this.state.userProfile != null) {
-      displayName = this.state.userProfile.displayName;
+      displayName = "名字:" + this.state.userProfile.displayName;
       imageHtml =         <img src={this.state.userProfile.photoURL}/>;
       publishMessage = <EventListDialog title="發表事件: " messageIds={this.publishMessages}/>
       concernMessage = <EventListDialog title="關注事件: " messageIds={this.concernMessages}/>  
@@ -116,21 +116,22 @@ class PublicProfile extends React.Component {
         <br/>
         <Dialog fullScreen  open={open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
           <AppBar className={classes.appBar}>
-              <Toolbar>
-                      <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
-                          <CloseIcon />
-                      </IconButton>
-                      <Typography variant="title" color="inherit" className={classes.flex}>{constant.publicProfileLabel}</Typography>           
-                  </Toolbar>
-              </AppBar>
-              <div className={classes.container}>
+            <Toolbar>
+              <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
+                  <CloseIcon />
+              </IconButton>
+              <Typography variant="title" color="inherit" className={classes.flex}>{constant.publicProfileLabel}</Typography>           
+            </Toolbar>
+          </AppBar>
+          <div className={classes.container}>
           <br/>
-          <List disablePadding>
+          <br/>
+          <List>
             <ListItem >
-              <ListItemText> 名字: {displayName} <br/> {imageHtml} </ListItemText>
+              <ListItemText primary={displayName}/> <br/> {imageHtml} 
             </ListItem>   
             <ListItem button >
-              <ListItemText> 臉書連結: <br/> {facebookhtml}</ListItemText>
+              <ListItemText primary="臉書連結:"/> {facebookhtml}
             </ListItem>        
             <Divider/>            
             {publishMessage}
