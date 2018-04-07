@@ -99,10 +99,16 @@ class PublicProfile extends React.Component {
     let concernMessage = null;
     let publishMessage = null;
     let completeMessage = null;
+    let desc = null;
     let facebookhtml = "暫無";
     if(this.state.userProfile != null) {
       displayName = "名字:" + this.state.userProfile.displayName;
       imageHtml =         <img src={this.state.userProfile.photoURL}/>;
+      if(this.state.userProfile.desc != null && this.state.userProfile.desc != "") {
+        desc = <ListItem >
+          <ListItemText primary={"簡介: " + this.state.userProfile.desc}/> 
+        </ListItem> 
+      }
       publishMessage = <EventListDialog title="發表事件: " messageIds={this.publishMessages}/>
       concernMessage = <EventListDialog title="關注事件: " messageIds={this.concernMessages}/>  
       completeMessage = <EventListDialog title="完成事件: " messageIds={this.completeMessages}/> 
@@ -137,7 +143,8 @@ class PublicProfile extends React.Component {
           <List>
             <ListItem >
               <ListItemText primary={displayName}/> <br/> {imageHtml} 
-            </ListItem>   
+            </ListItem> 
+            {desc}  
             <ListItem button >
               <ListItemText primary="臉書連結:"/> {facebookhtml}
             </ListItem>        

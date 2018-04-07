@@ -260,14 +260,24 @@ function updateMessageConcernUser(messageUuid, user, isConcern) {
 }
 
 /// All about comment
-function addComment(messageUUID, currentUser, photo, commentText, tags, geolocation, streetAddress, link, status) {
+function addComment(messageUUID, currentUser, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status) {
     var now = Date.now();
     var fireBaseGeo = null;
+
+    var photoUrl = currentUser.providerData[0].photoURL || '/images/profile_placeholder.png';
+    if(userProfile.photoURL != null) {
+        photoUrl = userProfile.photoURL;
+    }
+    var displayName = currentUser.displayName;
+    if(userProfile.displayName != null) {
+        displayName = userProfile.displayName;
+    }
+
     var commentRecord = {
         hide: false,
-        name: currentUser.displayName,
+        name: displayName,
         uid: currentUser.uid,
-        photoUrl: currentUser.providerData[0].photoURL || '/images/profile_placeholder.png',
+        photoUrl: photoUrl,
         createdAt: new Date(now),
         lastUpdate: null,
     }; 

@@ -29,6 +29,10 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ReactDOM from 'react-dom';
 import {addComment} from '../MessageDB';
 import { geocode } from '@google/maps/lib/apis/geocode';
+import {
+  checkAuthState,
+} from '../actions';
+import {connect} from 'react-redux';
 
 
 const styles = theme => ({
@@ -86,14 +90,23 @@ class PostCommentView extends Component {
   }
 
   componentDidMount() {
-    var auth = firebase.auth();
-    auth.onAuthStateChanged((user) => {
+    if (this.props.user != null && this.props.user.user != null) {
+      console.log("DidMount Enable Post");
+      this.setState({buttonShow: true});
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.user != this.props.user && this.props.user != null) {
+      console.log("DidUpdate Enable Post");
+      const {user} = this.props.user;
       if (user) {
         this.setState({buttonShow: true});
+      } else {
+        this.setState({buttonShow: false});
       }
-    });
-  }
-  
+    }
+  }  
 
   handleRequestOpen(evt) {
     evt.preventDefault();
@@ -118,39 +131,37 @@ class PostCommentView extends Component {
   };
 
   onSubmit() {
-    var auth = firebase.auth();
-    auth.onAuthStateChanged((user) => {
-        if (user) {
-            var photo = null;
-            var commentText = null;
-            var tags = null;
-            var geolocation = null;
-            var streetAddress = null;
-            var link = null;
-            var status = null;
-            switch(this.state.commentSelection) {
-                case  "發表回應":
-                    commentText = this.state.text;
-                    break;
-                case "要求更改現況": 
-                    status = this.state.changeStatus;
-                    break;
-                case "要求更改地點": 
-                    geolocation = this.locationButton.geolocation;
-                    streetAddress = this.locationButton.streetAddress;
-                    break;
-                case "要求更改外部連結":
-                    link = this.state.link;
-                    break;
-            }
-            this.setState({popoverOpen: false});
-            addComment(this.props.messageUUID, user, photo, commentText, tags, geolocation, streetAddress, link, status).then(function(commentId){           
-                return commentId;
-            })
+    if (this.props.user != null) {
+      const {user, userProfile} = this.props.user;
+      if (user) {
+        var photo = null;
+        var commentText = null;
+        var tags = null;
+        var geolocation = null;
+        var streetAddress = null;
+        var link = null;
+        var status = null;
+        switch(this.state.commentSelection) {
+            case  "發表回應":
+                commentText = this.state.text;
+                break;
+            case "要求更改現況": 
+                status = this.state.changeStatus;
+                break;
+            case "要求更改地點": 
+                geolocation = this.locationButton.geolocation;
+                streetAddress = this.locationButton.streetAddress;
+                break;
+            case "要求更改外部連結":
+                link = this.state.link;
+                break;
         }
         this.setState({popoverOpen: false});
-        return null;
-    });
+        return addComment(this.props.messageUUID, user, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status).then(function(commentId){return commentId;});
+      }
+    }
+    this.setState({popoverOpen: false});
+    return null;
   }
 
   commentOptionSelection(selectedValue) {
@@ -203,5 +214,22 @@ class PostCommentView extends Component {
   }
 };
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user          :   state.user,
+  };
+}
 
-export default withStyles(styles, { withTheme: true })(PostCommentView);
+const mapDispatchToProps = (dispatch) => {
+  return {
+      checkAuthState:
+          () => 
+              dispatch(checkAuthState()),   
+  }
+};
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles, { withTheme: true })(PostCommentView));

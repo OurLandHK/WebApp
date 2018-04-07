@@ -98,14 +98,14 @@ class PostMessageView extends Component {
   }
 
   componentDidMount() {
-    if (this.props.user.user != null) {
+    if (this.props.user != null && this.props.user.user != null) {
       console.log("DidMount Enable Post");
       this.setState({buttonShow: true});
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.user != this.props.user) {
+    if (prevProps.user != this.props.user && this.props.user != null) {
       console.log("DidUpdate Enable Post");
       const {user} = this.props.user;
       if (user) {
