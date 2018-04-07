@@ -5,8 +5,10 @@ import Typography from 'material-ui/Typography';
 import timeOffsetStringInChinese from '../TimeString';
 import { withStyles } from 'material-ui/styles';
 import red from 'material-ui/colors/red';
+import Avatar from 'material-ui/Avatar';
 import geoString from '../GeoLocationString';
 import {
+    checkAuthState,
     updateRecentMessage,
     updatePublicProfileDialog,
   } from '../actions';
@@ -39,7 +41,7 @@ class CommentView extends Component {
   handleAuthorClick() {
     const {comment, updatePublicProfileDialog} = this.props;
     if (comment.uid) {
-      updatePublicProfileDialog(comment.uid, true)
+      updatePublicProfileDialog(comment.uid, "", true)
     } else {
         console.log("no uid");
     }
@@ -71,13 +73,17 @@ class CommentView extends Component {
     var timeOffset = Date.now() - c.createdAt;
     var timeOffsetString = timeOffsetStringInChinese(timeOffset);
     var subtitle = '張貼於： ' + timeOffsetString + '前';
+    let fbProfileImage = <Avatar src={c.photoUrl} onClick={() => this.handleAuthorClick()} />;
+/*
+    let fbProfileImage = <CardMedia
+                            className={classes.cover}
+                            image={c.photoUrl}
+                            title={c.name}
+                            onClick={() => this.handleAuthorClick()}
+                            />  
+*/
     return (<Card className={classes.card}>
-                <CardMedia
-                    className={classes.cover}
-                    image={c.photoUrl}
-                    title={c.name}
-                    onClick={() => this.handleAuthorClick()}
-                />                 
+                {fbProfileImage}               
                 <div className={classes.details}>
                     <CardContent className={classes.content}>
                         <Typography variant="subheading">{text}</Typography>
@@ -97,22 +103,22 @@ CommentView.propTypes = {
 
   const mapStateToProps = (state, ownProps) => {
     return {
-      recentMessage : state.recentMessage,
+      user          :   state.user,
     };
   }
   
   const mapDispatchToProps = (dispatch) => {
     return {
-      updateRecentMessage:
-        (recentMessageID, open) =>
-          dispatch(updateRecentMessage(recentMessageID, open)),
-      updatePublicProfileDialog:
-        (userId, open) =>
-          dispatch(updatePublicProfileDialog(userId, open)),
+        updatePublicProfileDialog:
+            (userId, fbuid, open) =>
+                dispatch(updatePublicProfileDialog(userId, fbuid, open)),
+        checkAuthState:
+            () => 
+                dispatch(checkAuthState()),   
     }
   };
   
-  
+
   export default connect(
     mapStateToProps,
     mapDispatchToProps

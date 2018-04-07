@@ -30,6 +30,7 @@ import CustomTags from './CustomTags';
 import UploadImageButton from './UploadImageButton';
 import uuid from 'js-uuid';
 import {
+  checkAuthState,
   updateRecentMessage,
 } from './actions';
 import {connect} from "react-redux";
@@ -97,14 +98,22 @@ class PostMessageView extends Component {
   }
 
   componentDidMount() {
-    console.log('Found user login'); 
-    var auth = firebase.auth();
-    auth.onAuthStateChanged((user) => {
+    if (this.props.user != null && this.props.user.user != null) {
+      console.log("DidMount Enable Post");
+      this.setState({buttonShow: true});
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.user != this.props.user && this.props.user != null) {
+      console.log("DidUpdate Enable Post");
+      const {user} = this.props.user;
       if (user) {
-        console.log('Login'); 
         this.setState({buttonShow: true});
+      } else {
+        this.setState({buttonShow: false});
       }
-    });
+    }
   }
   
 
@@ -178,7 +187,7 @@ class PostMessageView extends Component {
         //console.log("Submit: " + imageURL + " " + publicImageURL+ " " + thumbnailImageURL+ " " + thumbnailPublicImageURL)
         
         var tags = this.state.tags.map((tag) => tag.text);
-        postMessage(this.state.key, this.state.summary, tags, this.locationButton.geolocation, this.locationButton.streetAddress, 
+        postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.locationButton.geolocation, this.locationButton.streetAddress, 
           startTimeInMs, duration, interval, this.state.link, 
           imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
           this.state.status).then((messageKey) => {
@@ -353,6 +362,7 @@ class PostMessageView extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     geoLocation : state.geoLocation,
+    user:         state.user,
   };
 }
 
@@ -361,8 +371,9 @@ const mapDispatchToProps = (dispatch) => {
     updateRecentMessage:
       (recentMessageID, open) =>
         dispatch(updateRecentMessage(recentMessageID, open)),
+    checkAuthState:
+      () => dispatch(checkAuthState()),    
   }
 };
-
 
 export default withStyles(styles) (connect(mapStateToProps, mapDispatchToProps)(PostMessageView));
