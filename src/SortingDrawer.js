@@ -1,0 +1,175 @@
+import React from 'react';
+import * as firebase from 'firebase';
+import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
+import Drawer from 'material-ui/Drawer';
+import IconButton from 'material-ui/IconButton';
+import classnames from 'classnames';
+import Chip from 'material-ui/Chip';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import Divider from 'material-ui/Divider';
+import Button from 'material-ui/Button';
+import LabelIcon from 'material-ui-icons/LabelOutline';
+import AllIcon from 'material-ui-icons/AllInclusive';
+import ArrowIcon from 'material-ui-icons/ArrowDropDownCircle';
+import green from 'material-ui/colors/green';
+import config,  {constant, addressEnum} from './config/default';
+import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
+import geoString from './GeoLocationString';
+
+import {
+  selectedSorting
+} from './actions';
+import {connect} from 'react-redux';
+
+
+const styles = theme => ({
+  flexGrow: {
+    flex: '1 1 auto',
+  },
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: 'auto',
+  },
+  white: {
+    color: '#FFFFFF',
+  },
+  button: {
+    border: '2px solid' ,
+    borderColor: green[200],
+//    width: '100%',
+    fontWeight: 'bold',
+    fontSize: '0.8rem',
+    margin: theme.spacing.unit,
+    color: '#FFFFFF',
+    textAlign: 'left',
+    backgroundColor: green[500],
+    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+    display:'flex',
+  },
+  buttonContainer: {
+    flex: '1 0 auto',
+  },
+  buttonRightContainer: {
+    flex: '1 0 auto',
+    textAlign: 'right',
+    fontStyle: 'italic',
+    fontSize: '1.0rem',
+  },
+  container: {
+    width: '98vw'
+  } 
+});
+
+
+class SortingDrawer extends React.Component {
+  constructor(props) {
+      super(props);
+      this.state = {
+        open: false,
+        selectedSorting: null,
+        isSortByLastUpdate: true,
+      };
+  }    
+
+  toggleDrawer(open){
+    this.setState({open: open});
+  };
+
+  setSorting(sorting){
+  	 if(sorting == null) {
+      this.setState({
+        selectedSorting: null,
+        isSortByLastUpdate: true
+      });
+    } else {
+      this.setState({
+        selectedSorting: sorting,
+        isSortByLastUpdate: false
+      });
+    }
+    this.toggleDrawer(false);
+    const { selectedSorting } = this.props;
+    selectedSorting(sorting);
+  }
+
+  renderSortByLastUpdate() {
+    return (<ListItem button onClick={() => {this.setSorting(null)}}>
+              <ListItemIcon>
+               <AllIcon />
+               </ListItemIcon> 
+               <ListItemText primary={constant.sortByLastUpdateLabel} />
+            </ListItem>);
+  }
+
+  renderSortByDistance(){
+  	return (<ListItem button onClick={() => {this.setSorting('sortByDistance')}}>
+              <ListItemIcon>
+               <AllIcon />
+               </ListItemIcon> 
+               <ListItemText primary={constant.sortByDistanceLabel} />
+            </ListItem>);
+  }
+
+  render() {
+  	  let sortByLastUpdate = this.renderSortByLastUpdate();
+  	  let sortByDistance = this.renderSortByDistance();
+      const { classes } = this.props;      
+      return (
+      <div className={classes.container}>
+          <Button
+            onClick={() => {this.toggleDrawer(true)}}
+            className={classes.button}
+          >
+            <div className={classes.buttonContainer}>
+                {`${this.state.isSortByLastUpdate ? constant.sortByLastUpdateLabel
+                          : constant.sortByDistanceLabel}`}
+            </div>
+            <div className={classes.buttonRightContainer}>
+              <ArrowIcon className={classes.white}/>
+            </div>
+          </Button>
+          <Drawer anchor='bottom'
+              open={this.state.open}
+              onClose={() => {this.toggleDrawer(false)}}
+              unmountOnExit>
+              <div tabIndex={0}
+                  role='button'
+                  className={classes.fullList}>
+                  <List>
+                  	{sortByLastUpdate}
+                  	<Divider />
+                  	{sortByDistance}
+                  </List>
+              </div>
+          </Drawer>
+      </div>);
+  }
+}
+
+SortingDrawer.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    filter : state.filter
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+  	selectedSorting:
+      sorting =>
+        dispatch(selectedSorting(sorting)),
+  }
+};
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
+(withStyles(styles)(SortingDrawer));
