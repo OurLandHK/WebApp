@@ -20,6 +20,7 @@ import {
   TOGGLE_PUBLIC_PROFILE_DIALOG,  
   TOGGLE_LEADER_BOARD,
   FETCH_TOP_TWENTY,
+  UPDATE_FILTER_SORTING
 } from './actions/types';
 
 
@@ -61,6 +62,7 @@ function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, e
     case UPDATE_FILTER_DEFAULT:
       return {
         selectedTag: null, 
+        selectedSorting: null,
         tagList: [],
         defaultEventNumber: action.eventNumber,
         eventNumber: action.eventNumber,
@@ -124,6 +126,11 @@ function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, e
         ...state,
         selectedTag: action.selectedTag
       };  
+    case UPDATE_FILTER_SORTING:
+      return {
+        ...state,
+        selectedSorting: action.selectedSorting
+      };
     default:
       return state;
   }
