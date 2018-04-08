@@ -7,6 +7,7 @@ import {
   UPDATE_FILTER_TAG,
   UPDATE_RECENT_MESSAGE,
   FETCH_USER,
+  FETCH_USER_PROFILE,
   DISABLE_LOCATION,
   FETCH_LOCATION,
   FETCH_ADDRESS_BOOK,
@@ -60,6 +61,10 @@ function fetchPublicAddressBook(address) {
 
 function fetchUser(user, loading=false) {
   return {type: FETCH_USER, user: user, loading: loading};
+}
+
+function fetchUserProfile(userProfile) {
+  return {type: FETCH_USER_PROFILE, userProfile: userProfile};
 }
 
 function dispatchRecentMessage(id, open) {
@@ -133,8 +138,17 @@ export function checkAuthState() {
     dispatch(fetchUser(null, true));
     auth.onAuthStateChanged((user) => {
       dispatch(fetchUser(user));
+      getUserProfile(user).then((userProfile)=>{
+        dispatch(fetchUserProfile(userProfile))});
     });
   };
+}
+
+export function refreshUserProfile(user) {
+  return dispatch => {
+    getUserProfile(user).then((userProfile)=>{
+      dispatch(fetchUserProfile(userProfile))});
+  }  
 }
 
 export function signIn() {

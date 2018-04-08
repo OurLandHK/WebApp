@@ -41,6 +41,9 @@ const styles = {
 class PublicProfile extends React.Component {
   constructor(props) {
     super(props);
+    if(this.props.fbId) {
+      this.fbId = this.props.fbId;
+    }
     this.state = {userProfile: null};
     this.concernMessages = null;
     this.publishMessages = null;
@@ -96,20 +99,31 @@ class PublicProfile extends React.Component {
     let concernMessage = null;
     let publishMessage = null;
     let completeMessage = null;
+    let desc = null;
     let facebookhtml = "暫無";
     if(this.state.userProfile != null) {
       displayName = "名字:" + this.state.userProfile.displayName;
       imageHtml =         <img src={this.state.userProfile.photoURL}/>;
+      if(this.state.userProfile.desc != null && this.state.userProfile.desc != "") {
+        desc = <ListItem >
+          <ListItemText primary={"簡介: " + this.state.userProfile.desc}/> 
+        </ListItem> 
+      }
       publishMessage = <EventListDialog title="發表事件: " messageIds={this.publishMessages}/>
       concernMessage = <EventListDialog title="關注事件: " messageIds={this.concernMessages}/>  
       completeMessage = <EventListDialog title="完成事件: " messageIds={this.completeMessages}/> 
-      
+      if(this.state.userProfile.fbuid) {
+        this.fbId=this.state.userProfile.fbuid;
+      }
     }    
 
-    if(this.props.fbId){
-     facebookhtml = <a href={"https://www.facebook.com/" + this.props.fbId} target="_blank">前往</a>;
+
+
+    if(this.fbId){
+     facebookhtml = <a href={"https://www.facebook.com/" + this.fbId} target="_blank">前往</a>;
     }
 
+    
     const { classes, open } = this.props;
     return (
       <div>
@@ -129,7 +143,8 @@ class PublicProfile extends React.Component {
           <List>
             <ListItem >
               <ListItemText primary={displayName}/> <br/> {imageHtml} 
-            </ListItem>   
+            </ListItem> 
+            {desc}  
             <ListItem button >
               <ListItemText primary="臉書連結:"/> {facebookhtml}
             </ListItem>        

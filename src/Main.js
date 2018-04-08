@@ -121,8 +121,8 @@ const mapDispatchToProps = (dispatch) => {
       (recentMessageID, open) =>
         dispatch(updateRecentMessage(recentMessageID, open)),
     updatePublicProfileDialog:
-      (userId, open) =>
-        dispatch(updatePublicProfileDialog(userId, open)),
+      (userId, fbuid, open) =>
+        dispatch(updatePublicProfileDialog(userId, fbuid, open)),
   }
 };
 

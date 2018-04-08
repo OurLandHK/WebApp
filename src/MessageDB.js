@@ -69,7 +69,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, sorting, callb
     }  
  }
 
- function addMessage(key, message, currentUser, tags, geolocation, streetAddress, start, duration, interval, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status) {
+ function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, start, duration, interval, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status) {
     var now = Date.now();
     if(start === "")
     {
@@ -77,11 +77,19 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, sorting, callb
       duration = null;
       interval = null;
     }
+    var photoUrl = currentUser.providerData[0].photoURL;
+    if(userProfile.photoURL != null) {
+        photoUrl = userProfile.photoURL;
+    }
+    var displayName = currentUser.displayName;
+    if(userProfile.displayName != null) {
+        displayName = userProfile.displayName;
+    }
     var messageRecord = {
         hide: false,
-        name: currentUser.displayName,
+        name: displayName,
         text: message,
-        photoUrl: currentUser.providerData[0].photoURL || '/images/profile_placeholder.png',
+        photoUrl: photoUrl || '/images/profile_placeholder.png',
         geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
         streetAddress: streetAddress,
         tag: tags,
@@ -231,14 +239,24 @@ function updateMessageConcernUser(messageUuid, user, isConcern) {
 }
 
 /// All about comment
-function addComment(messageUUID, currentUser, photo, commentText, tags, geolocation, streetAddress, link, status) {
+function addComment(messageUUID, currentUser, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status) {
     var now = Date.now();
     var fireBaseGeo = null;
+
+    var photoUrl = currentUser.providerData[0].photoURL || '/images/profile_placeholder.png';
+    if(userProfile.photoURL != null) {
+        photoUrl = userProfile.photoURL;
+    }
+    var displayName = currentUser.displayName;
+    if(userProfile.displayName != null) {
+        displayName = userProfile.displayName;
+    }
+
     var commentRecord = {
         hide: false,
-        name: currentUser.displayName,
+        name: displayName,
         uid: currentUser.uid,
-        photoUrl: currentUser.providerData[0].photoURL || '/images/profile_placeholder.png',
+        photoUrl: photoUrl,
         createdAt: new Date(now),
         lastUpdate: null,
     }; 

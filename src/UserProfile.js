@@ -15,6 +15,7 @@ function getUserProfile(user) {
                 displayName: user.displayName,
                 photoURL: user.photoURL,
                 fbuid: user.providerData[0].uid,
+                desc: "",
                 role: constant.user,
                 publishMessages: [],
                 concernMessages: [],
