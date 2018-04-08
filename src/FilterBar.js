@@ -3,6 +3,7 @@ import SignInButton from './SignInButton';
 import DrawerMenu from './Drawer';
 import LocationDrawer from './LocationDrawer';
 import TagDrawer from './TagDrawer';
+import SortingDrawer from './SortingDrawer';
 import UserProfileView from './UserProfileView'
 import UserProfile from './UserProfile';
 import AppBar from 'material-ui/AppBar';
@@ -54,7 +55,7 @@ class FilterBar extends  Component {
       </Toolbar>);
     } else {
       return (<Toolbar>
-                  在 <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook}/> 的 <TagDrawer />
+                  在 <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook}/> 的 <TagDrawer /> 按 <SortingDrawer/>
                 </Toolbar>);
     }
   }
