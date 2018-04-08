@@ -40,6 +40,8 @@ let constant = {
   leaderBoardLabel: "人氣排名榜",
   noTagLabel: "所有事件",
   publicProfileLabel: "簡介",
+  sortByLastUpdateLabel: "按最近更新排序",
+  sortByDistanceLabel: "按距離排序",
   defaultEventNumber: 100.
 }
 
