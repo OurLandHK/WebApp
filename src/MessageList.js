@@ -28,7 +28,8 @@ class MessageList extends Component {
       userId: this.props.userId,
       data:[], 
       messageIds: messageIds,
-      selectedTag: null
+      selectedTag: null,
+      selectedSorting: null
     };
     this.updateFilter = this.updateFilter.bind(this);
     this.setMessage = this.setMessage.bind(this);
@@ -45,12 +46,17 @@ class MessageList extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.user != this.props.user || 
       this.props.filter.geolocation != prevProps.filter.geolocation ||
-      this.props.filter.distance != prevProps.filter.distance) {
+      this.props.filter.distance != prevProps.filter.distance ||
+      this.props.filter.selectedSorting != prevProps.filter.selectedSorting) {
       this.refreshMessageList();
     } else {
       if(this.props.filter.selectedTag != undefined && 
             this.props.filter.selectedTag != prevProps.filter.selectedTag) {
         this.setState({selectedTag: this.props.filter.selectedTag});
+      }
+
+      if(this.props.filter.sorting != undefined &&  this.props.filter.sorting != prevProps.filter.sorting){
+        this.setState({selectedSorting: this.props.filter.selectedSorting});
       }
     }
   }
@@ -67,6 +73,7 @@ class MessageList extends Component {
       filter = this.props.filter;
     }
     this.setState({selectedTag: null});
+    this.setState({selectedSorting: null});
     const { user } = this.props;
     if (user.user) {
       this.fetchMessages(user.user, filter); 
@@ -110,6 +117,7 @@ class MessageList extends Component {
      eventNumber: numberOfMessage,
      distance,
      geolocation,
+     selectedSorting
     } = filter;
     this.setState({geolocation: geolocation});
     //console.log("Fetch MessageIDs: " + this.state.messageIds);
@@ -121,7 +129,7 @@ class MessageList extends Component {
       });
     } else if(geolocation != constant.invalidLocation) {
       this.clear();
-      fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, this.setMessageRef);
+      fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, selectedSorting, this.setMessageRef);
     }
   }
 
