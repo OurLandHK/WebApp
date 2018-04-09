@@ -9,11 +9,16 @@ import Toolbar from 'material-ui/Toolbar';
 import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import CloseIcon from 'material-ui-icons/Close';
+import DeleteIcon from 'material-ui-icons/Delete';
 import Slide from 'material-ui/transitions/Slide';
 import MessageDetailView from './MessageDetailView';
-import {getMessage} from './MessageDB';
+import {getMessage, dropMessage} from './MessageDB';
 import ShareDrawer from './ShareDrawer';
 import FavoriteButton from './FavoriteButton';
+import {
+  checkAuthState,
+} from './actions';
+import {connect} from 'react-redux';
 
 const styles = theme => ({
   appBar: {
@@ -80,12 +85,20 @@ class MessageDialog extends React.Component {
     this.setState({ open: false });
   };
 
+  handleRequestDelete = () => {
+    return dropMessage(this.props.uuid).then((value) => {
+      this.setState({ open: false });
+    });
+  };
+
   render() {
     const { classes } = this.props;
-    var user = this.props.user;
+    var user = null;
     var uuid = this.props.uuid;
     let titleHtml = null;
     let detailView = null;
+    let deleteButton = null;
+    let favoriteButton = null;
     var shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + uuid;
     var title = "";
     var imageUrl = "";
@@ -96,8 +109,21 @@ class MessageDialog extends React.Component {
       titleHtml = <Typography variant="title" color="inherit" className={classes.flex}>
             {m.text}
           </Typography>;
+      var now = Date.now();
+      var nowDateTime = new Date(now);
+      if(this.props.user != null && this.props.user.user != null) {
+        user = this.props.user.user;
+        favoriteButton = <FavoriteButton message={m} user={user} />
+        // 5 minutes
+        if(user.uid == m.uid && (m.createdAt.getTime() + 10 * 60 * 1000) > nowDateTime.getTime()) {
+          deleteButton = <IconButton color="contrast" onClick={this.handleRequestDelete} aria-label="Close">
+                            <DeleteIcon />
+                          </IconButton>
+        }
+      }
       detailView = <MessageDetailView message={m} user={user}/>;
     }
+
     return (
         <Dialog
           fullScreen
@@ -112,9 +138,9 @@ class MessageDialog extends React.Component {
                 <CloseIcon />
               </IconButton>
               {titleHtml}
-
-               <FavoriteButton message={m} user={user} />
-               <ShareDrawer message={m}/>      
+              {deleteButton}
+              {favoriteButton}
+              <ShareDrawer message={m}/>      
             </Toolbar>
           </AppBar>
           {detailView}
@@ -127,4 +153,22 @@ MessageDialog.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MessageDialog);
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user          :   state.user,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+      checkAuthState:
+          () => 
+              dispatch(checkAuthState()),   
+  }
+};
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(MessageDialog));

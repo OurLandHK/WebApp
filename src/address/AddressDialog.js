@@ -19,7 +19,7 @@ import {connect} from "react-redux";
 import { toggleAddressDialog } from '../actions';
 
 function Transition(props) {
-  return <Slide direction="right" {...props} />;
+  return <Slide direction="left" {...props} />;
 }
 
 

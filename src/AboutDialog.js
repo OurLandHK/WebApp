@@ -9,7 +9,7 @@ import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 
 const Transition = props => {
-  return <Slide direction="right" {...props} />;
+  return <Slide direction="left" {...props} />;
 };
 
 const styles = {
@@ -60,8 +60,8 @@ class AboutDialog extends Component {
         <p>利用我地去活化社區及埋班係我地想見到，社區參與者可以透過我地去:</p>
         <p>匯報社區問題，或跟進解決</p>
         <p>攪活動通知其他社區參與者</p>
-        <p>甚至成為地膽把自已的聯絡方法放喺我地度俾人揾。 </p>
-        <p>當區選發生時，大家可以利用我地去列出自已的社區參與紀錄, 去選或都推薦其他社區參與者去選。</p>
+        <p>甚至成為社區幹事把自已的聯絡方法放喺我地度俾人揾。 </p>
+        <p>我地會把大家的社區參與紀錄列出, 方便其他社區參與者參考及鼓勵大家作出行動。</p>
         </div>
       </Dialog>
     );

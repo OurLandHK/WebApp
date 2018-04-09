@@ -75,12 +75,34 @@ class DrawerMenu extends Component {
   render() {
     let userSection = (<div></div>);
     let signOutSection = null;
+    let userLoginDisplay =  null;
+    let userProfileView = userProfileView = <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>;
     const { user } = this.props;
 
-    if (user) {
-      var imgURL = (user.photoURL || '/images/profile_placeholder.png');
-      userSection = (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{user.displayName}&nbsp;&nbsp;</div>);
-      signOutSection = (<ListItem><SignOutButton/></ListItem>);
+    if(this.state.open) {
+      if (user && user.user) {
+        var imgURL = (user.userProfile.photoURL || '/images/profile_placeholder.png');
+        userSection = (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{user.userProfile.displayName}&nbsp;&nbsp;</div>);
+        signOutSection = (<ListItem><SignOutButton/></ListItem>);
+        userLoginDisplay = (<div><ListItem button>
+                            <ListItemIcon>
+                                <InboxIcon />
+                              </ListItemIcon>
+                              <ListItemText primary="關注" onClick={() => this.handleClose()}/>
+                            </ListItem>  
+                            <ListItem button>
+                              <ListItemIcon>
+                                <PersonIcon />
+                              </ListItemIcon>
+                              <ListItemText primary="使用者設定" onClick={() => this.userProfileClick()}/>
+                            </ListItem>
+                            <ListItem button>
+                              <ListItemIcon>
+                                <LocationOn />
+                              </ListItemIcon>
+                              <ListItemText primary={constant.addressBookLabel} onClick={() => this.addressDialogClick()}/>
+                            </ListItem></div>);
+      }
     }
 
     return (
@@ -91,7 +113,7 @@ class DrawerMenu extends Component {
           onClick={() => this.handleToggle()}>
           <MoreVertIcon />
         </IconButton>
-        <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>        
+        {userProfileView}
         <AddressDialog ref={(addressDialog) => {this.addressDialog = addressDialog;}} openDialog={openDialog => this.openAddressDialog = openDialog}/>        
         <LeaderBoard />
         <AboutDialog openDialog={f => this.openAboutDialog = f}/>        
@@ -108,31 +130,14 @@ class DrawerMenu extends Component {
               {signOutSection}
             </List>
             <Divider/>
-            <List disablePadding>
-              <ListItem button>
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="關注" onClick={() => this.handleClose()}/>
-              </ListItem>              
+            <List disablePadding>            
               <ListItem button>
                 <ListItemIcon>
                   <StarIcon />
                 </ListItemIcon>
                 <ListItemText primary={constant.leaderBoardLabel} onClick={() => this.leaderBoardClick()}/>
               </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <PersonIcon />
-                </ListItemIcon>
-                <ListItemText primary="使用者設定" onClick={() => this.userProfileClick()}/>
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <LocationOn />
-                </ListItemIcon>
-                <ListItemText primary={constant.addressBookLabel} onClick={() => this.addressDialogClick()}/>
-              </ListItem>                                                        
+              {userLoginDisplay}                                                      
               <ListItem button>
                 <ListItemIcon>
                   <ChatBubbleIcon />

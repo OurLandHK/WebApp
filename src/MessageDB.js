@@ -150,6 +150,57 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
       });
     });
 };
+
+function dropMessage(key) {
+    // Drop comment
+    // Drop message
+    // Drop publishMessages and reduce
+    return getMessage(key).then(function(message) {
+        if(message != null) {
+            const uid = message.uid;
+            var storage = firebase.storage();
+            if(message.imageUrl != null) {
+                console.log("Document image: " + message.imageUrl);
+                storage.refFromURL(message.imageUrl).delete();
+            }
+            if(message.thumbnailImageURL != null) {
+                console.log("Document thumbnail image: " + message.imageUrl);
+                storage.refFromURL(message.thumbnailImageURL).delete();
+            }
+            const db = firebase.firestore();
+            var messageRef = db.collection(config.messageDB).doc(key);
+            var userRef = db.collection(config.userDB).doc(uid);
+            var commentRef = messageRef.collection(config.commentDB);
+            return commentRef.get().then(function(querySnapshot) {
+                var batch = db.batch();
+                querySnapshot.forEach(function(doc) {
+                    var ref = commentRef.doc(doc.id);
+                    batch.delete(ref);
+                });
+                return batch.commit().then(function() {
+                    return db.runTransaction(transaction => {
+                        return transaction.get(userRef).then(userDoc => {
+                            let publishMessages = userDoc.data().publishMessages;
+                            if (publishMessages != null) {
+                                var index = publishMessages.indexOf(key);
+                                if (index !== -1) publishMessages.splice(index, 1);
+                            }
+                            transaction.delete(messageRef);
+                            transaction.update(userRef, {
+                                publishMessages: publishMessages,
+                                publishMessagesCount: publishMessages.length,
+                                });
+                            console.log("Document written with ID: ", key);
+                            return true;
+                        });
+                    });    
+                });
+            });            
+        } else {
+            return false;
+        }
+    });
+}
   
 
 function getMessage(uuid) {
@@ -307,7 +358,7 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
     // Use firestore
     var db = firebase.firestore();
     var collectionRef = db.collection(config.messageDB);  
-    return collectionRef.doc(messageUUID).collection("comment").add(commentRecord).then(function(docRef) {
+    return collectionRef.doc(messageUUID).collection(config.commentDB).add(commentRecord).then(function(docRef) {
         console.log("comment written with ID: ", docRef.id);
         return(docRef.id);
     });  
@@ -315,7 +366,7 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
 
 function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
     var db = firebase.firestore();
-    var collectionRef = db.collection(config.messageDB).doc(messageUUID).collection("comment");
+    var collectionRef = db.collection(config.messageDB).doc(messageUUID).collection(config.commentDB);
     collectionRef.onSnapshot(function() {})         
     // Use firestore
     collectionRef.where("hide", "==", false).get().then(function(querySnapshot) {
@@ -326,4 +377,4 @@ function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
     });
 }
 
-export {fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, addMessageFB_Post, updateMessageImageURL, getMessage, updateMessageConcernUser};
+export {dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, addMessageFB_Post, updateMessageImageURL, getMessage, updateMessageConcernUser};

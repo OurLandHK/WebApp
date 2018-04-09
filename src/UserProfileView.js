@@ -32,7 +32,7 @@ import {
 import  {constant} from './config/default';
 
 function Transition(props) {
-  return <Slide direction="right" {...props} />;
+  return <Slide direction="left" {...props} />;
 }
 
 /* eslint-disable flowtype/require-valid-file-annotation */
