@@ -23,7 +23,7 @@ import {
 } from './actions';
 
 function Transition(props) {
-  return <Slide direction="right" {...props} />;
+  return <Slide direction="left" {...props} />;
 }
 
 

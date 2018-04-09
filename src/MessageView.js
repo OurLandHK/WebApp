@@ -63,7 +63,6 @@ class MessageView extends Component {
     const classes = this.props.classes;
     var m = this.props.message;
     var uuid = this.props.message.key;
-    var user = this.props.user;
     var imageUrl = m.thumbnailPublicImageURL;
     if(imageUrl == null) {
       imageUrl = m.photoUrl;
@@ -109,7 +108,7 @@ class MessageView extends Component {
                 {thumbnail}
                 {summary}
               </Card>
-              <MessageDialog uuid={uuid} user={user} open={o} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
+              <MessageDialog uuid={uuid} open={o} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
             </div>);
   }
 }

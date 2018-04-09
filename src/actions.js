@@ -133,8 +133,10 @@ export function checkAuthState() {
     dispatch(fetchUser(null, true));
     auth.onAuthStateChanged((user) => {
       dispatch(fetchUser(user));
-      getUserProfile(user).then((userProfile)=>{
-        dispatch(fetchUserProfile(userProfile))});
+      if(user!=null) {
+        getUserProfile(user).then((userProfile)=>{
+          dispatch(fetchUserProfile(userProfile))});
+      }
     });
   };
 }
