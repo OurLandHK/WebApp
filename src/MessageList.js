@@ -116,8 +116,7 @@ class MessageList extends Component {
     const {
      eventNumber: numberOfMessage,
      distance,
-     geolocation,
-     selectedSorting
+     geolocation
     } = filter;
     this.setState({geolocation: geolocation});
     //console.log("Fetch MessageIDs: " + this.state.messageIds);
@@ -129,7 +128,7 @@ class MessageList extends Component {
       });
     } else if(geolocation != constant.invalidLocation) {
       this.clear();
-      fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, selectedSorting, this.setMessageRef);
+      fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, this.setMessageRef);
     }
   }
 
@@ -143,6 +142,14 @@ class MessageList extends Component {
     if(this.state.geolocation != null && this.state.geolocation != constant.invalidLocation) {
       lon = this.state.geolocation.longitude;
       lat = this.state.geolocation.latitude;
+    }
+
+    let sorting = this.props.filter.selectedSorting;
+    if(sorting == 'sortByLastUpdate'){
+      this.state.data.sort((i, j) => (i.lastUpdate==null?i.createdAt:i.lastUpdate) < (j.lastUpdate==null?j.createdAt:j.lastUpdate));
+    }else if(sorting == 'sortByDistance'){
+      this.state.data.sort((i, j) => (distance(i.geolocation.longitude,i.geolocation.latitude,lon,lat)) 
+        > (distance(j.geolocation.longitude,j.geolocation.latitude,lon,lat)));
     }
     
     elements = this.state.data.map((message) => {
