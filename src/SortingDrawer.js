@@ -70,7 +70,9 @@ class SortingDrawer extends React.Component {
       this.state = {
         open: false,
         selectedSorting: null,
-        isSortByLastUpdate: true,
+        isSortByDefault: true,
+        isSortByLastUpdate: false,
+        isSortByDistance: false
       };
   }    
 
@@ -82,21 +84,42 @@ class SortingDrawer extends React.Component {
   	 if(sorting == null) {
       this.setState({
         selectedSorting: null,
-        isSortByLastUpdate: true
+        isSortByDefault: true,
+        isSortByLastUpdate: false,
+        isSortByDistance: false
       });
-    } else {
+    } else if(sorting == 'sortByLastUpdate'){
       this.setState({
         selectedSorting: sorting,
-        isSortByLastUpdate: false
+        isSortByLastUpdate: true,
+        isSortByDefault: false,
+        isSortByDistance: false
+      });
+    } else if(sorting == 'sortByDistance'){
+      this.setState({
+        selectedSorting: sorting,
+        isSortByDistance: true,
+        isSortByLastUpdate: false,
+        isSortByDefault: false
       });
     }
+
     this.toggleDrawer(false);
     const { selectedSorting } = this.props;
     selectedSorting(sorting);
   }
 
-  renderSortByLastUpdate() {
+  renderSortByDefault(){
     return (<ListItem button onClick={() => {this.setSorting(null)}}>
+              <ListItemIcon>
+               <AllIcon />
+               </ListItemIcon> 
+               <ListItemText primary={constant.sortByDefaultLabel} />
+            </ListItem>);
+  }
+
+  renderSortByLastUpdate() {
+    return (<ListItem button onClick={() => {this.setSorting('sortByLastUpdate')}}>
               <ListItemIcon>
                <AllIcon />
                </ListItemIcon> 
@@ -113,9 +136,25 @@ class SortingDrawer extends React.Component {
             </ListItem>);
   }
 
+  renderSortBtnLabel(){
+    let label = constant.sortByDefaultLabel;
+
+    if(this.state.isSortByLastUpdate){
+      label = constant.sortByLastUpdateLabel;
+    }
+
+    if(this.state.isSortByDistance){
+      label = constant.sortByDistanceLabel;
+    }
+
+    return label;
+  }
+
   render() {
+      let sortByDefault = this.renderSortByDefault();
   	  let sortByLastUpdate = this.renderSortByLastUpdate();
   	  let sortByDistance = this.renderSortByDistance();
+      let sortBtnLabel = this.renderSortBtnLabel();
       const { classes } = this.props;      
       return (
       <div className={classes.container}>
@@ -124,8 +163,7 @@ class SortingDrawer extends React.Component {
             className={classes.button}
           >
             <div className={classes.buttonContainer}>
-                {`${this.state.isSortByLastUpdate ? constant.sortByLastUpdateLabel
-                          : constant.sortByDistanceLabel}`}
+                {sortBtnLabel}
             </div>
             <div className={classes.buttonRightContainer}>
               <ArrowIcon className={classes.white}/>
@@ -139,6 +177,8 @@ class SortingDrawer extends React.Component {
                   role='button'
                   className={classes.fullList}>
                   <List>
+                    {sortByDefault}
+                    <Divider />
                   	{sortByLastUpdate}
                   	<Divider />
                   	{sortByDistance}
