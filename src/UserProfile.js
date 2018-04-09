@@ -4,6 +4,9 @@ import config, {constant, addressEnum} from './config/default';
 
 function getUserProfile(user) {
     // Use firestore
+    if(user==null) {
+        return null;
+    }
     var db = firebase.firestore();
     var collectionRef = db.collection(config.userDB);
     var docRef = collectionRef.doc(user.uid);
