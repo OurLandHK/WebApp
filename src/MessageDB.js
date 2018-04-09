@@ -33,20 +33,14 @@ function wrapLongitude(longitude) {
     return 180 - (-adjusted % 360);
 }
 
-function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, sorting, callback) {
+function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
+
     var db = firebase.firestore();
     var collectionRef = db.collection(config.messageDB);
-
-    if(sorting == null){ 
-        // Use firestore
-        collectionRef.where("hide", "==", false).orderBy("createdAt", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
-            querySnapshot.forEach(callback);
-        })
-        .catch(function(error) {
-            console.log("Error getting documents: ", error);
-        });
-    }else if(sorting == 'sortByDistance'){
-         if(geocode != null && geocode != NaN && geocode.latitude != undefined) {
+    collectionRef.onSnapshot(function() {})         
+    if(geocode != null && geocode != NaN && geocode.latitude != undefined) {
+//        console.log("Get message base on Location: (" + geocode.latitude + " ," + geocode.longitude + ") with Radius: " + radius);
+//        boundingBoxCoordinates(center, radius) {
             const KM_PER_DEGREE_LATITUDE = 110.574;
             const latDegrees = radius / KM_PER_DEGREE_LATITUDE;
             const latitudeNorth = Math.min(90, geocode.latitude + latDegrees);
@@ -55,18 +49,45 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, sorting, callb
             const longDegsNorth = metersToLongitudeDegrees(radius, latitudeNorth);
             const longDegsSouth = metersToLongitudeDegrees(radius, latitudeSouth);
             const longDegs = Math.max(longDegsNorth, longDegsSouth);
+/*            
+            return {
+              swCorner: { // bottom-left (SW corner)
+                latitude: latitudeSouth,
+                longitude: wrapLongitude(center.longitude - longDegs),
+              },
+              neCorner: { // top-right (NE corner)
+                latitude: latitudeNorth,
+                longitude: wrapLongitude(center.longitude + longDegs),
+              },
+            };
+          }
+*/
+        let lesserGeopoint = new firebase.firestore.GeoPoint(latitudeSouth, wrapLongitude(geocode.longitude - longDegs));
+        let greaterGeopoint = new firebase.firestore.GeoPoint(latitudeNorth, wrapLongitude(geocode.longitude + longDegs));
 
-            let lesserGeopoint = new firebase.firestore.GeoPoint(latitudeSouth, wrapLongitude(geocode.longitude - longDegs));
-            let greaterGeopoint = new firebase.firestore.GeoPoint(latitudeNorth, wrapLongitude(geocode.longitude + longDegs));
+        // Use firestore
 
-            collectionRef.where("hide", "==", false).where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "asc").limit(numberOfMessage).get().then(function(querySnapshot) {
-                querySnapshot.forEach(callback);
-            })
-            .catch(function(error) {
-                console.log("Error getting documents: ", error);
-            });
-         }
-    }  
+        collectionRef.where("hide", "==", false).where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
+            querySnapshot.forEach(callback);
+        })
+        .catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
+        collectionRef.where("hide", "==", false).where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).onSnapshot(function(querySnapshot) {
+            querySnapshot.forEach(callback);
+        })       
+    } else {
+        // Use firestore
+        collectionRef.where("hide", "==", false).orderBy("createdAt", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
+            querySnapshot.forEach(callback);
+        })
+        .catch(function(error) {
+            console.log("Error getting documents: ", error);
+        });
+        collectionRef.where("hide", "==", false).onSnapshot(function(querySnapshot) {
+            querySnapshot.forEach(callback);
+        })       
+    }
  }
 
  function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, start, duration, interval, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status) {
