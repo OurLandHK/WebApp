@@ -115,7 +115,7 @@ class MessageDialog extends React.Component {
         user = this.props.user.user;
         favoriteButton = <FavoriteButton message={m} user={user} />
         // 5 minutes
-        if(user.uid == m.uid && (m.createdAt.getTime() + 10 * 60 * 1000) > nowDateTime.getTime()) {
+        if(user.uid == m.uid && (nowDateTime - m.createdAt < (10 * 60 * 1000))) {
           deleteButton = <IconButton color="contrast" onClick={this.handleRequestDelete} aria-label="Close">
                             <DeleteIcon />
                           </IconButton>
