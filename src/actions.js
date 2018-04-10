@@ -19,6 +19,7 @@ import {
   TOGGLE_REGIONEVENT_DIALOG,
   TOGGLE_LEADER_BOARD,
   FETCH_TOP_TWENTY,
+  UPDATE_FILTER_SORTING
 } from './actions/types';
 import * as firebase from 'firebase';
 import config, {constant} from './config/default';
@@ -104,13 +105,17 @@ function dispatchSelectedTag(selectedTag) {
   return {type: UPDATE_FILTER_TAG, selectedTag: selectedTag}
 }
 
+function dispatchSelectedSorting(selectedSorting){
+  return {type: UPDATE_FILTER_SORTING, selectedSorting: selectedSorting}
+}
+
 
 export function fetchLocation(callback=receiveLocation) {
   return dispatch => {
     if(navigator.geolocation) {
       var options = {
         enableHighAccuracy: true,
-        timeout: 5000,
+        timeout: 50000,
         maximumAge: 0
       }; 
       navigator.geolocation.getCurrentPosition((geoLocation) => {
@@ -227,6 +232,12 @@ export function resetTagList() {
 export function selectedTag(selectedTag) {
   return dispatch => {
     dispatch(dispatchSelectedTag(selectedTag));
+  };
+}
+
+export function selectedSorting(selectedSorting) {
+  return dispatch => {
+    dispatch(dispatchSelectedSorting(selectedSorting));
   };
 }
 

@@ -28,7 +28,8 @@ class MessageList extends Component {
       userId: this.props.userId,
       data:[], 
       messageIds: messageIds,
-      selectedTag: null
+      selectedTag: null,
+      selectedSorting: null
     };
     this.updateFilter = this.updateFilter.bind(this);
     this.setMessage = this.setMessage.bind(this);
@@ -45,12 +46,17 @@ class MessageList extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.user != this.props.user || 
       this.props.filter.geolocation != prevProps.filter.geolocation ||
-      this.props.filter.distance != prevProps.filter.distance) {
+      this.props.filter.distance != prevProps.filter.distance ||
+      this.props.filter.selectedSorting != prevProps.filter.selectedSorting) {
       this.refreshMessageList();
     } else {
       if(this.props.filter.selectedTag != undefined && 
             this.props.filter.selectedTag != prevProps.filter.selectedTag) {
         this.setState({selectedTag: this.props.filter.selectedTag});
+      }
+
+      if(this.props.filter.sorting != undefined &&  this.props.filter.sorting != prevProps.filter.sorting){
+        this.setState({selectedSorting: this.props.filter.selectedSorting});
       }
     }
   }
@@ -67,6 +73,7 @@ class MessageList extends Component {
       filter = this.props.filter;
     }
     this.setState({selectedTag: null});
+    this.setState({selectedSorting: null});
     const { user } = this.props;
     if (user.user) {
       this.fetchMessages(user.user, filter); 
@@ -109,7 +116,7 @@ class MessageList extends Component {
     const {
      eventNumber: numberOfMessage,
      distance,
-     geolocation,
+     geolocation
     } = filter;
     this.setState({geolocation: geolocation});
     //console.log("Fetch MessageIDs: " + this.state.messageIds);
@@ -135,6 +142,14 @@ class MessageList extends Component {
     if(this.state.geolocation != null && this.state.geolocation != constant.invalidLocation) {
       lon = this.state.geolocation.longitude;
       lat = this.state.geolocation.latitude;
+    }
+
+    let sorting = this.props.filter.selectedSorting;
+    if(sorting == 'sortByLastUpdate'){
+      this.state.data.sort((i, j) => (i.lastUpdate==null?i.createdAt:i.lastUpdate) < (j.lastUpdate==null?j.createdAt:j.lastUpdate));
+    }else if(sorting == 'sortByDistance'){
+      this.state.data.sort((i, j) => (distance(i.geolocation.longitude,i.geolocation.latitude,lon,lat)) 
+        > (distance(j.geolocation.longitude,j.geolocation.latitude,lon,lat)));
     }
     
     elements = this.state.data.map((message) => {
