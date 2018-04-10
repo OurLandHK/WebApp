@@ -359,8 +359,10 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
     var db = firebase.firestore();
     var collectionRef = db.collection(config.messageDB);  
     return collectionRef.doc(messageUUID).collection(config.commentDB).add(commentRecord).then(function(docRef) {
-        console.log("comment written with ID: ", docRef.id);
-        return(docRef.id);
+        return getMessage(messageUUID).then((messageRecord) => {
+            var path = "";
+            return updateMessage(messageUUID, messageRecord, path);
+        });
     });  
 }
 
