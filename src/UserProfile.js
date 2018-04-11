@@ -125,7 +125,7 @@ function toggleConcernMessage(user, messageUUID) {
         var rv = true;
         if(userRecord.concernMessages != null)
         {
-            console.log("concernMessages:" + userRecord.concernMessages);            
+//            console.log("concernMessages:" + userRecord.concernMessages);            
             var index = userRecord.concernMessages.indexOf(messageUUID);
             if(index == -1)
             {
@@ -143,7 +143,7 @@ function toggleConcernMessage(user, messageUUID) {
             userRecord.concernMessages = [messageUUID];
         }
         var path = "";
-        console.log("UserRecord.concernMessages" + userRecord.concernMessages);        
+//        console.log("UserRecord.concernMessages" + userRecord.concernMessages);        
         return updateUserRecords(user.uid, userRecord).then(function(userRecordRef){
             return rv;
         });
@@ -170,7 +170,7 @@ function updateUserRecords(userid, userRecord) {
     var db = firebase.firestore();
     var collectionRef = db.collection(config.userDB);    
     return collectionRef.doc(userid).set(userRecord).then(function(userRecordRef) {
-        console.log("Document written with ID: ", userid);
+//        console.log("Document written with ID: ", userid);
         return(userRecordRef);
     }) 
 }

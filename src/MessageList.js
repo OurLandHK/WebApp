@@ -25,7 +25,6 @@ class MessageList extends Component {
       eventNumber: this.props.eventNumber,
       distance: this.props.distance, 
       geolocation: geolocation,
-      userId: this.props.userId,
       data:[], 
       messageIds: messageIds,
       selectedTag: null,
@@ -44,8 +43,7 @@ class MessageList extends Component {
   }
  
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.user != this.props.user || 
-      this.props.filter.geolocation != prevProps.filter.geolocation ||
+    if (this.props.filter.geolocation != prevProps.filter.geolocation ||
       this.props.filter.distance != prevProps.filter.distance ||
       this.props.filter.selectedSorting != prevProps.filter.selectedSorting) {
       this.refreshMessageList();
@@ -74,12 +72,7 @@ class MessageList extends Component {
     }
     this.setState({selectedTag: null});
     this.setState({selectedSorting: null});
-    const { user } = this.props;
-    if (user.user) {
-      this.fetchMessages(user.user, filter); 
-    } else {
-      this.fetchMessages(null, filter); 
-    }
+    this.fetchMessages(filter); 
   }
 
   setMessageRef(messageRef) {
@@ -109,10 +102,7 @@ class MessageList extends Component {
   }  
 
 
-  fetchMessages(user, filter) {
-    if (user) {
-      this.setState({user:user});     
-    }
+  fetchMessages(filter) {
     const {
      eventNumber: numberOfMessage,
      distance,
@@ -157,7 +147,7 @@ class MessageList extends Component {
         // filter by selected tag.
         return null;
       } else {
-        return (<MessageView message={message} key={message.key} user={this.state.user} lon={lon} lat={lat}/>);
+        return (<MessageView message={message} key={message.key} lon={lon} lat={lat}/>);
       }
     });
     return (<div>{elements}</div>);
@@ -168,7 +158,6 @@ const mapStateToProps = (state, ownProps) => {
   return {
     filter : state.filter,
     geolocation: state.geolocation,
-    user: state.user,
   };
 }
 

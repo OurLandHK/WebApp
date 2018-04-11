@@ -12,6 +12,7 @@ import ChatBubbleIcon from 'material-ui-icons/ChatBubbleOutline';
 import PersonIcon from 'material-ui-icons/Person';
 import UserProfileView from './UserProfileView';
 import AddressDialog from './address/AddressDialog';
+import EventListDialog from './EventListDialog';
 import LeaderBoard from './LeaderBoard';
 import {connect} from "react-redux";
 import Divider from 'material-ui/Divider';
@@ -71,11 +72,24 @@ class DrawerMenu extends Component {
     this.handleClose();
   }  
 
+  componentDidMount() {
+    if(this.props.user && this.props.user.userProfile) {
+      this.setState({concernMessages: this.props.user.userProfile.concernMessages});
+    }
+  }
+ 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.user != this.props.user &&  this.props.user && this.props.user.userProfile) {
+      this.setState({concernMessages: this.props.user.userProfile.concernMessages});
+    } 
+  }  
+
 
   render() {
     let userSection = (<div></div>);
     let signOutSection = null;
     let userLoginDisplay =  null;
+    let concernMessage = null;
     let userProfileView = userProfileView = <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>;
     const { user } = this.props;
 
@@ -84,12 +98,10 @@ class DrawerMenu extends Component {
         var imgURL = (user.userProfile.photoURL || '/images/profile_placeholder.png');
         userSection = (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{user.userProfile.displayName}&nbsp;&nbsp;</div>);
         signOutSection = (<ListItem><SignOutButton/></ListItem>);
-        userLoginDisplay = (<div><ListItem button>
-                            <ListItemIcon>
-                                <InboxIcon />
-                              </ListItemIcon>
-                              <ListItemText primary="關注" onClick={() => this.handleClose()}/>
-                            </ListItem>  
+        if(this.state.concernMessages) {
+          concernMessage = <EventListDialog title="關注" messageIds={this.state.concernMessages}/> 
+        }
+        userLoginDisplay = (<span>
                             <ListItem button>
                               <ListItemIcon>
                                 <PersonIcon />
@@ -101,7 +113,7 @@ class DrawerMenu extends Component {
                                 <LocationOn />
                               </ListItemIcon>
                               <ListItemText primary={constant.addressBookLabel} onClick={() => this.addressDialogClick()}/>
-                            </ListItem></div>);
+                            </ListItem></span>);
       }
     }
 
@@ -137,6 +149,7 @@ class DrawerMenu extends Component {
                 </ListItemIcon>
                 <ListItemText primary={constant.leaderBoardLabel} onClick={() => this.leaderBoardClick()}/>
               </ListItem>
+              {concernMessage}
               {userLoginDisplay}                                                      
               <ListItem button>
                 <ListItemIcon>

@@ -99,14 +99,14 @@ class PostMessageView extends Component {
 
   componentDidMount() {
     if (this.props.user != null && this.props.user.user != null) {
-      console.log("DidMount Enable Post");
+//      console.log("DidMount Enable Post");
       this.setState({buttonShow: true});
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.user != this.props.user && this.props.user != null) {
-      console.log("DidUpdate Enable Post");
+//      console.log("DidUpdate Enable Post");
       const {user} = this.props.user;
       if (user) {
         this.setState({buttonShow: true});
@@ -191,9 +191,10 @@ class PostMessageView extends Component {
           startTimeInMs, duration, interval, this.state.link, 
           imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
           this.state.status).then((messageKey) => {
-            const { updateRecentMessage } = this.props;
+            const { updateRecentMessage, checkAuthState} = this.props;
             if(messageKey != null && messageKey != "") {
               updateRecentMessage(messageKey, false);
+              checkAuthState();
             }
           });
         this.setState({popoverOpen: false});

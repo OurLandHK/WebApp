@@ -49,6 +49,7 @@ const styles = {
 
 class EventListDialog extends React.Component {
   constructor(props) {
+//    console.log("createEventListDialog");
     super(props);
     var messageIds = [];
     if(this.props.messageIds != null) {  
@@ -99,7 +100,6 @@ class EventListDialog extends React.Component {
     }
     return (
         <span>
-            <br/>
             <ListItem button onClick={(evt) => this.handleRequestOpen(evt)}>
                 <ListItemIcon>
                     <InboxIcon />
