@@ -6,7 +6,7 @@ import { FormGroup, FormControlLabel, FormText, FormControl } from 'material-ui/
 import Checkbox from 'material-ui/Checkbox';
 import LocationButton from '../LocationButton';
 import SelectedMenu from '../SelectedMenu';
-import config from '../config/default';
+import config, {constant} from '../config/default';
 import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 import Dialog, { 
@@ -28,6 +28,7 @@ import Slide from 'material-ui/transitions/Slide';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import ReactDOM from 'react-dom';
 import {addComment} from '../MessageDB';
+import CustomTags from '../CustomTags';
 import { geocode } from '@google/maps/lib/apis/geocode';
 import {
   checkAuthState,
@@ -73,6 +74,11 @@ function Transition(props) {
 class PostCommentView extends Component {
   constructor(props) {
     super(props);
+    var tags = [];
+    if(this.props.message.tag) {
+      tags = this.tagTextToTags(this.props.message.tag);
+    }
+
     this.state = {popoverOpen: false, buttonShow: false, 
       // comment
       commentSelection: '發表回應',
@@ -81,12 +87,11 @@ class PostCommentView extends Component {
       streetAddress: null,
       changeStatus: null,
       createdAt: null,
-      link: null};
-  }
-
-  static defaultProps = {
-    commentOptions : ['發表回應', '要求更改地點', '要求更改現況', '要求更改外部連結'],    
-    statusOptions : ['開放', '完結', '政府跟進中', '虛假訊息', '不恰當訊息']
+      link: null,
+      tags: tags};
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleAddition = this.handleAddition.bind(this);
+    this.handleDrag = this.handleDrag.bind(this);      
   }
 
   componentDidMount() {
@@ -110,6 +115,10 @@ class PostCommentView extends Component {
 
   handleRequestOpen(evt) {
     evt.preventDefault();
+    var tags = [];
+    if(this.props.message.tag) {
+      tags = this.tagTextToTags(this.props.message.tag);
+    }
     console.log("Request for open " + this.state.popoverOpen);
     this.setState({
      // Comment
@@ -121,6 +130,7 @@ class PostCommentView extends Component {
         createdAt: null,
         hide: false,
         link: null,
+        tags: tags,
         popoverOpen: true,
         anchorEl: evt.currentTarget
     });
@@ -129,6 +139,15 @@ class PostCommentView extends Component {
   handleClose() {
     this.setState({popoverOpen: false});
   };
+
+  tagTextToTags(tag) {
+    var rv = [];
+    tag.map((text) => {
+      var id = rv.length;
+      rv.push({id:id, text:text});
+    });
+    return rv
+  }
 
   onSubmit() {
     if (this.props.user != null) {
@@ -142,18 +161,21 @@ class PostCommentView extends Component {
         var link = null;
         var status = null;
         switch(this.state.commentSelection) {
-            case  "發表回應":
+            case  constant.commentOptions[0]: //"發表回應":
                 commentText = this.state.text;
                 break;
-            case "要求更改現況": 
+            case constant.commentOptions[2]: //"要求更改現況": 
                 status = this.state.changeStatus;
                 break;
-            case "要求更改地點": 
+            case constant.commentOptions[1]: //"要求更改地點": 
                 geolocation = this.locationButton.geolocation;
                 streetAddress = this.locationButton.streetAddress;
                 break;
-            case "要求更改外部連結":
+            case constant.commentOptions[3]: //"要求更改外部連結":
                 link = this.state.link;
+                break;
+            case constant.commentOptions[4]: //"要求更改分類"
+                tags = this.state.tags.map((tag) => tag.text);
                 break;
         }
         this.setState({popoverOpen: false});
@@ -168,22 +190,59 @@ class PostCommentView extends Component {
       this.setState({commentSelection: selectedValue});
   }
 
+  handleDelete(i) {
+    let tags = this.state.tags;
+    tags.splice(i, 1);
+    this.setState({tags: tags});
+}
+
+handleAddition(tag) {
+let tags = this.state.tags;
+tags.push({
+id: tags.length + 1,
+text: tag
+});
+this.setState({tags: tags});
+}
+
+handleDrag(tag, currPos, newPos) {
+let tags = this.state.tags;
+
+// mutate array
+tags.splice(currPos, 1);
+tags.splice(newPos, 0, tag);
+
+// re-render
+this.setState({ tags: tags });
+}
+
+
+
   render() {
     const classes = this.props.classes;
+    const { tags } = this.state; 
     if(this.state.buttonShow) {
         let inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="更新事件進度及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
-        if(this.state.commentSelection != "發表回應") {
+        if(this.state.commentSelection != constant.commentOptions[0]) { //"發表回應"
             switch(this.state.commentSelection) {
-                case "要求更改現況":
-                    inputHtml = <SelectedMenu autoFocus label="" options={this.props.statusOptions} changeSelection={(selectedValue) => this.setState({changeStatus: selectedValue})} ref={(statusSelection) => {this.statusSelection = statusSelection}}/>;
-                    break;
-                case "要求更改地點":
-                    inputHtml = <LocationButton autoFocus ref={(locationButton) => {this.locationButton = locationButton;}}/>;
-                    break;
-                case "要求更改外部連結":
-                    inputHtml = <TextField autoFocus id="link" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>;
-                    break;
-            }
+              case constant.commentOptions[1]: //"要求更改地點"
+                inputHtml = <LocationButton autoFocus ref={(locationButton) => {this.locationButton = locationButton;}}/>;
+                break;              
+              case constant.commentOptions[2]: // "要求更改現況"
+                inputHtml = <SelectedMenu autoFocus label="" options={constant.statusOptions} changeSelection={(selectedValue) => this.setState({changeStatus: selectedValue})} ref={(statusSelection) => {this.statusSelection = statusSelection}}/>;
+                break;
+              case constant.commentOptions[3]: //"要求更改外部連結"
+                inputHtml = <TextField autoFocus id="link" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>;
+                break;
+              case constant.commentOptions[4]: //"要求更改分類"
+                inputHtml = <CustomTags tags={tags}
+                  inline={false}
+                  placeholder="新增標籤"
+                  handleDelete={this.handleDelete}
+                  handleAddition={this.handleAddition}
+                  handleDrag={this.handleDrag} /> ;
+                break;
+              }
         }
       return (
         <span>
@@ -198,7 +257,7 @@ class PostCommentView extends Component {
                 <DialogTitle id="form-dialog-title">更新參與進度</DialogTitle>
                 <DialogContent>
                     <DialogContentText>選擇更新範圍</DialogContentText>
-                    <SelectedMenu label="" options={this.props.commentOptions} changeSelection={(selectedValue) => this.commentOptionSelection(selectedValue)} ref={(commentSelection) => {this.commentSelection = commentSelection}}/>
+                    <SelectedMenu label="" options={constant.commentOptions} changeSelection={(selectedValue) => this.commentOptionSelection(selectedValue)} ref={(commentSelection) => {this.commentSelection = commentSelection}}/>
                     {inputHtml}
                 </DialogContent>  
                 <DialogActions>

@@ -7,12 +7,14 @@ import { withStyles } from 'material-ui/styles';
 import red from 'material-ui/colors/red';
 import Avatar from 'material-ui/Avatar';
 import geoString from '../GeoLocationString';
+import config, {constant} from '../config/default';
 import {
     checkAuthState,
     updateRecentMessage,
     updatePublicProfileDialog,
   } from '../actions';
-  import {connect} from 'react-redux';
+import {connect} from 'react-redux';
+
 
 const styles = theme => ({
     card: {
@@ -59,13 +61,18 @@ class CommentView extends Component {
               } else {
                 locationString = "近" + geoString(c.geolocation.latitude, c.geolocation.longitude);      
               } 
-            text = "要求更改地點: " + locationString;
+            text = constant.commentOptions[1] + locationString;
         } else {
             if(c.changeStatus != null) {
-                text = "要求更改現況: " + c.changeStatus;
+                text = constant.commentOptions[2] + c.changeStatus;
             } else {
                 if(c.link != null) {
-                    text = "要求更改外部連結: " + c.link;
+                    text = constant.commentOptions[3] + c.link;
+                } else {
+                    if(c.tags != null) {
+                        var tagText = c.tags.map((text) => {return ('#'+text+' ')});
+                        text = constant.commentOptions[4] + ': ' + tagText;
+                    }
                 }
             }          
         }
