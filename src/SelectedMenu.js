@@ -51,7 +51,7 @@ class SelectedMenu extends Component {
     } 
     return (
       <div>
-        <List>
+        <List borderColor='green[200]' backgroundColor='green[500]'>
           <ListItem
             borderColor='green[200]'
             width='100%'
