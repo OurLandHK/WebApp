@@ -20,6 +20,7 @@ import Card, { CardActions, CardContent, CardHeader } from 'material-ui/Card';
 import {
   toggleLeaderBoard,
   fetchTopTwenty,
+  updatePublicProfileDialog,
 } from './actions';
 
 function Transition(props) {
@@ -43,6 +44,7 @@ class LeaderBoard extends React.Component {
   constructor(props) {
     super(props);
     this.state = { value: 0};
+    this.openPublicProfileDialog = this.openPublicProfileDialog.bind(this);
   }    
 
   componentWillMount() {
@@ -55,7 +57,14 @@ class LeaderBoard extends React.Component {
 
   handleChange = (event, value) => {
     this.setState({ value });
-  }
+  };
+
+   openPublicProfileDialog(uid, fbuid) {
+    const {updatePublicProfileDialog} = this.props;
+    if (uid) {
+      updatePublicProfileDialog(uid, fbuid, true)
+    }
+  };
 
   renderUser(user, rank) {
     const { classes } = this.props;
@@ -66,12 +75,12 @@ class LeaderBoard extends React.Component {
             avatar={
               <Avatar
                 className={classes.avatar}
-              >
-                R
-              </Avatar>
+                src={user.photoURL}
+              />
             }
             title={`第${rank}名`}
             subheader={user.displayName}
+            onClick={() => this.openPublicProfileDialog(user.id, user.fbuid)}
           />
         </Card>
       </div>
@@ -136,6 +145,9 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(toggleLeaderBoard(flag)),
     fetchTopTwenty: () =>
       dispatch(fetchTopTwenty()),
+    updatePublicProfileDialog:
+      (userId, fbuid, open) =>
+        dispatch(updatePublicProfileDialog(userId, fbuid, open)),
   }
 };
 
