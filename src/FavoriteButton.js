@@ -10,6 +10,10 @@ import {
   isConcernMessage, 
   toggleConcernMessage
 } from './UserProfile';
+import {connect} from "react-redux";
+import {
+  checkAuthState
+} from './actions';
 
 
 const styles = () => ({
@@ -40,9 +44,9 @@ class FavoriteButton extends Component {
 
   componentDidMount() {
     const { user, message } = this.props;
-    if(user && message)
+    if(user && user.user && message)
     {
-      isConcernMessage(user, message.key).then((favor) => {
+      isConcernMessage(user.user, message.key).then((favor) => {
         this.setState({favor: favor});
       });
     }
@@ -50,10 +54,11 @@ class FavoriteButton extends Component {
 
   handleFavorClick() {
     const { user, message } = this.props;
-    if(user && message)
+    if(user && user.user && message)
     {
-      toggleConcernMessage(user, message.key).then((favor) => {
-        updateMessageConcernUser(message.key, user, favor).then(() => {
+      toggleConcernMessage(user.user, message.key).then((favor) => {
+        updateMessageConcernUser(message.key, user.user, favor).then(() => {
+          this.props.checkAuthState();
           this.setState({ favor: favor });
         });
       });
@@ -81,5 +86,18 @@ class FavoriteButton extends Component {
   }
 }
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user: state.user,
+  };
+}
 
-export default  withStyles(styles)(FavoriteButton);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    checkAuthState:
+      () => dispatch(checkAuthState()),         
+  }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(FavoriteButton));

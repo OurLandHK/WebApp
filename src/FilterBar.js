@@ -51,7 +51,7 @@ class FilterBar extends  Component {
     const classes = this.props.classes;
     if(this.disableLocationDrawer) {
       return (<Toolbar>
-         <TagDrawer />
+         <TagDrawer /> 按 <SortingDrawer/>
       </Toolbar>);
     } else {
       return (<Toolbar>

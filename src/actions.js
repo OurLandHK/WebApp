@@ -133,15 +133,17 @@ export function fetchLocation(callback=receiveLocation) {
 }
 
 export function checkAuthState() {
+  console.log("checkAuthState");
   return dispatch => {
     var auth = firebase.auth();
     dispatch(fetchUser(null, true));
-    auth.onAuthStateChanged((user) => {
+    return auth.onAuthStateChanged((user) => {
       dispatch(fetchUser(user));
       if(user!=null) {
-        getUserProfile(user).then((userProfile)=>{
-          dispatch(fetchUserProfile(userProfile))});
+        return getUserProfile(user).then((userProfile)=>{
+          return dispatch(fetchUserProfile(userProfile))});
       }
+      return null;
     });
   };
 }
