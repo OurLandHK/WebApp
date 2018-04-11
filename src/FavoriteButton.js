@@ -19,10 +19,16 @@ const styles = () => ({
     height: '64px'
   },
   on: {
-    backgroundColor: red[500]
+    backgroundColor: red[500],
+    '&:hover': {
+       backgroundColor: red[500]
+    }
   },
   off: {
-    backgroundColor: green[500]
+    backgroundColor: green[500],
+    '&:hover': {
+       backgroundColor: green[500]
+    }
   }
 });
 
@@ -63,8 +69,8 @@ class FavoriteButton extends Component {
     const baseClass = classes.base;
     return (
       <Button
-        variant="fab"
         color="primary"
+        variant="fab"
         raised={true}
         className={`${baseClass} ${favorClass}`}
         onClick={() => this.handleFavorClick()}
