@@ -8,12 +8,18 @@ import red from 'material-ui/colors/red';
 import Avatar from 'material-ui/Avatar';
 import geoString from '../GeoLocationString';
 import config, {constant} from '../config/default';
+import ThumbUpIcon from 'material-ui-icons/ThumbUp';
+import ThumbDownIcon from 'material-ui-icons/ThumbDown';
 import {
     checkAuthState,
     updateRecentMessage,
     updatePublicProfileDialog,
   } from '../actions';
+
+import {updateCommentApproveStatus, getMessage, updateMessage} from '../MessageDB';
+import {addCompleteMessage} from '../UserProfile';
 import {connect} from 'react-redux';
+import { Button } from 'material-ui';
 
 
 const styles = theme => ({
@@ -37,11 +43,97 @@ class CommentView extends Component {
   constructor(props) {
     super(props);
     this.handleAuthorClick = this.handleAuthorClick.bind(this);
+    this.approve = this.approve.bind(this);
+    this.reject = this.reject.bind(this);
+    this.commentOption = constant.commentOptions[0];
   }
 
+  approve() {
+    const {messageUUID, commentRef, user} = this.props;
+    const {geolocation, streetAddress, changeStatus, link, tags} = commentRef.data();
+    let isCommplete = false;
+    return getMessage(messageUUID).then((messageRecord) => {
+        let messageuid=messageRecord.uid;
+        switch(this.commentOption) {
+        case  constant.commentOptions[0]: //"發表回應":
+            console.log('Option: ' + constant.commentOptions[0]);
+            messageRecord = null; // for update time
+            break;
+        case constant.commentOptions[2]: //"要求更改現況": 
+            console.log('Option: ' + constant.commentOptions[2]);
+            switch(changeStatus) {
+              case constant.statusOptions[0]: //'開放'
+              case constant.statusOptions[2]: //'政府跟進中'
+                messageRecord.status=changeStatus;
+                break;
+              case constant.statusOptions[1]: //'完結'
+                messageRecord.status=changeStatus;
+                isCommplete = true;
+                break;
+              case constant.statusOptions[3]: //'虛假訊息'
+              case constant.statusOptions[4]: //'不恰當訊息',
+                messageRecord.hide = true;
+                break;
+            }
+            break;
+        case constant.commentOptions[1]: //"要求更改地點": 
+            console.log('Option: ' + constant.commentOptions[1]);
+            messageRecord.geolocation = geolocation;
+            messageRecord.streetAddress = streetAddress;
+            break;
+        case constant.commentOptions[3]: //"要求更改外部連結":
+            console.log('Option: ' + constant.commentOptions[3]);
+            messageRecord.link = link;
+            break;
+        case constant.commentOptions[4]: //"要求更改分類"
+            console.log('Option: ' + constant.commentOptions[4]);
+            messageRecord.tag = tags;
+            break;
+        }
+        return updateMessage(messageUUID, messageRecord).then(() => {
+            let now = Date.now();
+            let approvedStatus = {
+                createdAt: new Date(now),
+                name: user.userProfile.displayName,
+                fbuid: user.userProfile.fbuid,
+                isConfirm: constant.approveOptions[0],
+            }
+            if(isCommplete) {
+                let commentUser = {uid: commentRef.data().uid};
+                return addCompleteMessage(commentUser, messageUUID).then(() => {
+                    return updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus).then((ref) => {
+                        if(messageuid != commentUser.uid) {
+                            let messageUser = {uid: messageuid};
+                            return addCompleteMessage(messageUser, messageUUID).then(() => {
+                                return ref;
+                            })
+                        } else {
+                            return ref;
+                        }
+                    });
+                })
+            } else {
+                return updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus);
+            }
+        })
+    })
+  }
+
+  reject() {
+    const {messageUUID, commentRef, user} = this.props;
+    let now = Date.now();
+    let approvedStatus = {
+        createdAt: new Date(now),
+        name: user.userProfile.displayName,
+        fbuid: user.userProfile.fbuid,
+        isConfirm: constant.approveOptions[1],
+    }
+    updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus);
+  }
 
   handleAuthorClick() {
-    const {comment, updatePublicProfileDialog} = this.props;
+    const {commentRef, updatePublicProfileDialog} = this.props;
+    const comment = commentRef.data();
     if (comment.uid) {
       updatePublicProfileDialog(comment.uid, "", true)
     } else {
@@ -50,45 +142,63 @@ class CommentView extends Component {
   };
 
   render() {
-    const { classes, theme } = this.props;
-    var c = this.props.comment;
-    var text = c.text;
+    const { classes, theme, user, commentRef } = this.props;
+    const comment = commentRef.data();
+    const {approvedStatus, geolocation, streetAddress, changeStatus, link, tags, createdAt, photoUrl} = comment;
+    let text = comment.text;
     if(text == null) {
-        if(c.geolocation != null) {
+        if(geolocation != null) {
             var locationString = null;
-            if(c.streetAddress != null) {
-                locationString =  c.streetAddress + " (" + geoString(c.geolocation.latitude, c.geolocation.longitude) + ")";
+            if(streetAddress != null) {
+                locationString =  streetAddress + " (" + geoString(geolocation.latitude, geolocation.longitude) + ")";
               } else {
-                locationString = "近" + geoString(c.geolocation.latitude, c.geolocation.longitude);      
+                locationString = "近" + geoString(geolocation.latitude, geolocation.longitude);      
               } 
             text = constant.commentOptions[1] + locationString;
+            this.commentOption = constant.commentOptions[1];
         } else {
-            if(c.changeStatus != null) {
-                text = constant.commentOptions[2] + c.changeStatus;
+            if(changeStatus != null) {
+                text = constant.commentOptions[2] + changeStatus;
+                this.commentOption = constant.commentOptions[2];
             } else {
-                if(c.link != null) {
-                    text = constant.commentOptions[3] + c.link;
+                if(link != null) {
+                    text = constant.commentOptions[3] + link;
+                    this.commentOption = constant.commentOptions[3];
                 } else {
-                    if(c.tags != null) {
-                        var tagText = c.tags.map((text) => {return ('#'+text+' ')});
+                    if(tags != null) {
+                        var tagText = tags.map((text) => {return ('#'+text+' ')});
                         text = constant.commentOptions[4] + ': ' + tagText;
+                        this.commentOption = constant.commentOptions[4];
                     }
                 }
             }          
         }
     }
-    var timeOffset = Date.now() - c.createdAt;
-    var timeOffsetString = timeOffsetStringInChinese(timeOffset);
-    var subtitle = '張貼於： ' + timeOffsetString + '前';
-    let fbProfileImage = <Avatar src={c.photoUrl} onClick={() => this.handleAuthorClick()} />;
-/*
-    let fbProfileImage = <CardMedia
-                            className={classes.cover}
-                            image={c.photoUrl}
-                            title={c.name}
-                            onClick={() => this.handleAuthorClick()}
-                            />  
-*/
+    let approvedButton = null;
+    let approvedLog = "";    
+    if(approvedStatus == null) {
+      if(user != null && user.userProfile != null && user.userProfile.role === constant.admin) {
+        approvedButton = <div>
+                            <Button variant="raised" color="primary" className={classes.uploadButton} raised={true} onClick={() => this.approve()}>
+                                <ThumbUpIcon />
+                                    {constant.approveOptions[0]}
+                            </Button>
+                            <Button variant="raised" color="primary" className={classes.uploadButton} raised={true} onClick={() => this.reject()}>
+                                <ThumbDownIcon />
+                                    {constant.approveOptions[1]}
+                            </Button>                            
+                        </div>
+      }
+    } else {
+        let approvedTimeOffset = Date.now() - approvedStatus.createdAt;
+        let approvedTimeOffsetString = timeOffsetStringInChinese(approvedTimeOffset); 
+        approvedLog ='由' + approvedStatus.name + '於 ' + approvedTimeOffsetString + ' 前 ' + approvedStatus.isConfirm;
+    }
+
+    let timeOffset = Date.now() - createdAt;
+    let timeOffsetString = timeOffsetStringInChinese(timeOffset);
+    let subtitle = '張貼於：' + timeOffsetString + '前 ' + approvedLog;
+    let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     return (<Card className={classes.card}>
                 {fbProfileImage}               
                 <div className={classes.details}>
@@ -99,6 +209,7 @@ class CommentView extends Component {
                         </Typography>
                     </CardContent>
                 </div>
+                {approvedButton}
             </Card>);
   }
 }

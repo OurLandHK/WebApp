@@ -25,9 +25,8 @@ class CommentList extends Component {
   }
 
   setComment(doc) {
-    var val = doc.data();
 //    var val = doc.data;
-    this.state.data.push(val);
+    this.state.data.push(doc);
     this.setState({data:this.state.data});
   };
 
@@ -41,8 +40,9 @@ class CommentList extends Component {
 
   render() {
     let elements = null;
-    elements = this.state.data.reverse().map((comment) => {
-        return (<CommentView comment={comment}/>);
+    const {messageUUID} = this.props;
+    elements = this.state.data.reverse().map((commentRef) => {
+        return (<CommentView messageUUID={messageUUID} commentRef={commentRef}/>);
       });      
     if(this.state.data.length !=0) {
       return (<div width="100%">{elements}</div>);

@@ -1,6 +1,8 @@
 # OurLand
 
 This folder contains the final prototype code
+For Coding style, please refer to following guide for any new/modified code
+https://google.github.io/styleguide/jsguide.html
 
 ## Project Setup
 1. Create a Firebase project and Facebook App and Set up your app

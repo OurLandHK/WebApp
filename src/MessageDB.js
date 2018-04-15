@@ -91,20 +91,23 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
  }
 
  function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, start, duration, interval, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status) {
-    var now = Date.now();
+    let now = Date.now();
     if(start === "")
     {
       start = null;
       duration = null;
       interval = null;
     }
-    var photoUrl = currentUser.providerData[0].photoURL;
-    if(userProfile.photoURL != null) {
-        photoUrl = userProfile.photoURL;
-    }
-    var displayName = currentUser.displayName;
-    if(userProfile.displayName != null) {
-        displayName = userProfile.displayName;
+    let photoUrl = currentUser.providerData[0].photoURL;
+    let displayName = currentUser.displayName;
+
+    if(userProfile !=null) {
+        if(userProfile.photoURL != null) {
+            photoUrl = userProfile.photoURL;
+        }
+        if(userProfile.displayName != null) {
+            displayName = userProfile.displayName;
+        }
     }
     var messageRecord = {
         hide: false,
@@ -218,13 +221,13 @@ function getMessage(uuid) {
     });     
 }
 
-function updateMessage(messageKey, messageRecord, path) {
+function updateMessage(messageKey, messageRecord) {
     var db = firebase.firestore();
     var now = Date.now();
     var collectionRef = db.collection(config.messageDB);
     if(messageRecord == null) {
         messageRecord.lastUpdate = new Date(now);
-        collectionRef.doc(messageKey).update({
+        return collectionRef.doc(messageKey).update({
             lastUpdate: new Date(now)
         }).then(function(messageRecordRef) {
             console.log("Document written with ID: ", messageKey);
@@ -232,7 +235,7 @@ function updateMessage(messageKey, messageRecord, path) {
         }) 
     } else {
         messageRecord.lastUpdate = new Date(now);
-        collectionRef.doc(messageKey).set(messageRecord).then(function(messageRecordRef) {
+        return collectionRef.doc(messageKey).set(messageRecord).then(function(messageRecordRef) {
             console.log("Document written with ID: ", messageKey);
             return(messageRecordRef);
         })      
@@ -254,23 +257,7 @@ function updateMessageImageURL(messageKey, imageURL, publicImageURL, thumbnailIm
         if(thumbnailPublicImageURL != messageRecord.thumbnailPublicImageURL) {
             messageRecord.thumbnailPublicImageURL = thumbnailPublicImageURL;
         }       
-        var path = "";
-        return updateMessage(messageKey, messageRecord, path);
-    });
-}
-
-function  addMessageFB_Post(messageKey, fbpost) {
-    return getMessage(messageKey).then((messageRecord) => {
-        if(messageRecord.fbpost != null)
-        {
-            messageRecord.fbpost.push(fbpost);
-        }
-        else
-        {
-            messageRecord.fbpost = [fbpost];
-        }
-        var path = "";
-        return updateMessage(messageKey, messageRecord, path);
+        return updateMessage(messageKey, messageRecord);
     });
 }
 
@@ -284,15 +271,13 @@ function updateMessageConcernUser(messageUuid, user, isConcern) {
                 if(index == -1 && isConcern)
                 {
                     messageRecord.concernRecord.push(user.uid);
-                    var path = "";
-                    return updateMessage(messageUuid, messageRecord, path);
+                    return updateMessage(messageUuid, messageRecord);
                 }
                 else
                 {
                     if(!isConcern) {
                         messageRecord.concernRecord.splice(index, 1);
-                        var path = "";
-                        return updateMessage(messageUuid, messageRecord, path);
+                        return updateMessage(messageUuid, messageRecord);
                     }
                 }
             } else {
@@ -300,8 +285,7 @@ function updateMessageConcernUser(messageUuid, user, isConcern) {
                 {
                     console.log("message Uuid " + messageUuid + " User Id " + user.uid)
                     messageRecord.concernRecord = [user.uid];
-                    var path = "";
-                    return updateMessage(messageUuid, messageRecord, path); 
+                    return updateMessage(messageUuid, messageRecord); 
                 }
             }
         } else {
@@ -360,10 +344,19 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
     var collectionRef = db.collection(config.messageDB);  
     return collectionRef.doc(messageUUID).collection(config.commentDB).add(commentRecord).then(function(docRef) {
         return getMessage(messageUUID).then((messageRecord) => {
-            var path = "";
-            return updateMessage(messageUUID, messageRecord, path);
+            return updateMessage(messageUUID, messageRecord);
         });
     });  
+}
+
+function updateCommentApproveStatus(messageUUID, commentid, approvedStatus){
+    let db = firebase.firestore();
+    let collectionRef = db.collection(config.messageDB);  
+    let field = {approvedStatus: approvedStatus};
+    return collectionRef.doc(messageUUID).collection(config.commentDB).doc(commentid).update(field).then(function(commentRecordRef) {
+        console.log("Document written with ID: ", commentid);
+        return(commentRecordRef);
+    })
 }
 
 function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
@@ -379,4 +372,4 @@ function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
     });
 }
 
-export {dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, addMessageFB_Post, updateMessageImageURL, getMessage, updateMessageConcernUser};
+export {updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser};

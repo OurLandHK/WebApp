@@ -159,46 +159,47 @@ class PostMessageView extends Component {
     var startTimeInMs = "";
     if(this.state.start !== "") {
       startTimeInMs = Date.parse(this.state.start);
+      console.log('Now Time ' + startTimeInMs+ ' ' + this.state.start);
+//      startTimeInMs = Date.parse('2018年4月15日 下午2:50');
+//      console.log('Chinese Time ' + startTimeInMs);
+//      startTimeInMs = new Date('2018年4月15日 下午2:50');
+//      console.log('New Date Time ' + startTimeInMs);
     }
-    if (this.state.summary.length == 0) {
+    if (this.state.summary == null || this.state.summary.length == 0) {
       this.summaryTextField.select();
     } else if (this.locationButton.geolocation == null) {
       this.locationButton.handleClickOpen();
     } else {
-      if(this.state.summary == null) {
-        console.log('Unknown Input');
-      } else {
-        var imageURL = null;
-        var publicImageURL = null;
-        var thumbnailImageURL = null;
-        var thumbnailPublicImageURL = null;
-        if(this.state.imageURL != null) {
-          imageURL = this.state.imageURL;
-        }
-        if(this.state.publicImageURL != null) {
-          publicImageURL = this.state.publicImageURL;
-        }
-        if(this.state.thumbnailImageURL != null) {
-          thumbnailImageURL = this.state.thumbnailImageURL;
-        }
-        if(this.state.thumbnailPublicImageURL != null) {
-          thumbnailPublicImageURL = this.state.thumbnailPublicImageURL;
-        }      
-        //console.log("Submit: " + imageURL + " " + publicImageURL+ " " + thumbnailImageURL+ " " + thumbnailPublicImageURL)
-        
-        var tags = this.state.tags.map((tag) => tag.text);
-        postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.locationButton.geolocation, this.locationButton.streetAddress, 
-          startTimeInMs, duration, interval, this.state.link, 
-          imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
-          this.state.status).then((messageKey) => {
-            const { updateRecentMessage, checkAuthState} = this.props;
-            if(messageKey != null && messageKey != "") {
-              updateRecentMessage(messageKey, false);
-              checkAuthState();
-            }
-          });
-        this.setState({popoverOpen: false});
+      var imageURL = null;
+      var publicImageURL = null;
+      var thumbnailImageURL = null;
+      var thumbnailPublicImageURL = null;
+      if(this.state.imageURL != null) {
+        imageURL = this.state.imageURL;
       }
+      if(this.state.publicImageURL != null) {
+        publicImageURL = this.state.publicImageURL;
+      }
+      if(this.state.thumbnailImageURL != null) {
+        thumbnailImageURL = this.state.thumbnailImageURL;
+      }
+      if(this.state.thumbnailPublicImageURL != null) {
+        thumbnailPublicImageURL = this.state.thumbnailPublicImageURL;
+      }      
+      //console.log("Submit: " + imageURL + " " + publicImageURL+ " " + thumbnailImageURL+ " " + thumbnailPublicImageURL)
+      
+      var tags = this.state.tags.map((tag) => tag.text);
+      postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.locationButton.geolocation, this.locationButton.streetAddress, 
+        startTimeInMs, duration, interval, this.state.link, 
+        imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
+        this.state.status).then((messageKey) => {
+          const { updateRecentMessage, checkAuthState} = this.props;
+          if(messageKey != null && messageKey != "") {
+            updateRecentMessage(messageKey, false);
+            checkAuthState();
+          }
+        });
+      this.setState({popoverOpen: false});
     }
   }
 
