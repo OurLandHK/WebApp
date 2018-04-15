@@ -77,15 +77,17 @@ class MessageList extends Component {
 
   setMessageRef(messageRef) {
     var val = messageRef.data();
-    if(this.props.filter.geolocation != constant.invalidLocation && val != null) {
-      var lon = this.props.filter.geolocation.longitude;
-      var lat = this.props.filter.geolocation.latitude;
-      var dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
-      if(dis < this.props.filter.distance) {
-        this.setMessage(val)  
+    if(val) {
+      if(this.props.filter.geolocation != constant.invalidLocation) {
+        var lon = this.props.filter.geolocation.longitude;
+        var lat = this.props.filter.geolocation.latitude;
+        var dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
+        if(dis < this.props.filter.distance) {
+          this.setMessage(val)  
+        }
+      } else {
+        this.setMessage(val)
       }
-    } else {
-      this.setMessage(val)
     }
   }
 

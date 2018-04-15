@@ -22,7 +22,7 @@ function getUserProfile(user) {
                 role: constant.user,
                 publishMessages: [],
                 concernMessages: [],
-                completeMessage: []
+                completeMessages: []
             };
             collectionRef.doc(user.uid).set(userRecord).then(function(userRecordRef) {
                 console.log("Document written with ID: ", user.uid);
@@ -110,13 +110,42 @@ function getUserCompleteMessages(user) {
     var docRef = collectionRef.doc(user.uid);
     return docRef.get().then(function(doc) {
         if (doc.exists) {
-            return(doc.data().completeMessage);
+            return(doc.data().completeMessages);
         } else {
             return(null);
         }
     }).catch(function(error) {
         console.log("Error getting document:", error);
         return(null);
+    });
+}
+
+function addCompleteMessage(user, messageUUID) {
+    return getUserProfile(user).then((userRecord) => {
+        var rv = true;
+        if(userRecord.completeMessages != null)
+        {
+//            console.log("concernMessages:" + userRecord.concernMessages);            
+            var index = userRecord.completeMessages.indexOf(messageUUID);
+            if(index == -1)
+            {
+                userRecord.completeMessages.push(messageUUID);
+            }
+            else
+            {
+                rv = false;   
+            }
+        }
+        else
+        {
+            userRecord.completeMessages = [messageUUID];
+        }
+        if(rv) {      
+            return updateUserRecords(user.uid, userRecord).then(() =>{
+                return rv;
+            });
+        }
+        return rv;
     });
 }
 
@@ -210,5 +239,5 @@ function updateUserProfile(user, userProfile){
     });
 }
 
-export {upsertAddress, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile};
+export {addCompleteMessage, upsertAddress, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile};
 
