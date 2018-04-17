@@ -20,6 +20,7 @@ import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import {connect} from "react-redux";
 import { togglePublicProfileDialog } from './actions';
 import {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile} from './UserProfile';
+import ShareDrawer from './ShareDrawer';
 
 function Transition(props) {
   return <Slide direction="right" {...props} />;
@@ -102,7 +103,8 @@ class PublicProfile extends React.Component {
     let desc = null;
     let facebookhtml = "暫無";
     if(this.state.userProfile != null) {
-      displayName = "名字:" + this.state.userProfile.displayName;
+      displayName = this.state.userProfile.displayName;
+      var displayNameLabel = "名字:" + displayName;
       imageHtml =         <img src={this.state.userProfile.photoURL}/>;
       if(this.state.userProfile.desc != null && this.state.userProfile.desc != "") {
         desc = <ListItem >
@@ -124,7 +126,7 @@ class PublicProfile extends React.Component {
     }
 
     
-    const { classes, open } = this.props;
+    const { classes, open, id } = this.props;
     return (
       <div>
         <br/>
@@ -135,6 +137,7 @@ class PublicProfile extends React.Component {
                   <CloseIcon />
               </IconButton>
               <Typography variant="title" color="inherit" className={classes.flex}>{constant.publicProfileLabel}</Typography>           
+              <ShareDrawer uid={id} displayName={displayName}/>  
             </Toolbar>
           </AppBar>
           <div className={classes.container}>
@@ -142,7 +145,7 @@ class PublicProfile extends React.Component {
           <br/>
           <List>
             <ListItem >
-              <ListItemText primary={displayName}/> <br/> {imageHtml} 
+              <ListItemText primary={displayNameLabel}/> <br/> {imageHtml} 
             </ListItem> 
             {desc}  
             <ListItem button >
