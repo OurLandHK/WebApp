@@ -20,6 +20,7 @@ import {
   checkAuthState
 } from './actions';
 import {constant} from './config/default';
+import CssBaseline from 'material-ui/CssBaseline';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);  
 const store = createStoreWithMiddleware(rootReducer);
@@ -72,6 +73,7 @@ class App extends Component {
     //injectTapEventPlugin();   
     return (
         <div>
+          <CssBaseline />
           <Header />
           <Main
             eventId={this.state.eventId}
