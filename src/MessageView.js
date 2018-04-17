@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Card, { CardMedia, CardHeader, CardContent} from 'material-ui/Card';
+import Grid from 'material-ui/Grid'
 import distance from './Distance';
 import timeOffsetStringInChinese from './TimeString.js';
 import { withStyles } from 'material-ui/styles';
@@ -15,6 +16,7 @@ import {connect} from "react-redux";
 const styles = theme => ({
   card: {
     display: 'flex',
+    alignItems: 'center'
 },  
   avatar: {
     backgroundColor: red[500],
@@ -104,7 +106,7 @@ class MessageView extends Component {
                       className={classes.cover}
                       image={imageUrl}/>
     return (<div>
-              <Card className={classes.card}>
+              <Card container className={classes.card}>
                 {thumbnail}
                 {summary}
               </Card>

@@ -25,6 +25,7 @@ import { Button } from 'material-ui';
 const styles = theme => ({
     card: {
         display: 'flex',
+        alignItems: 'center'
     },
     details: {
         display: 'flex',
@@ -199,11 +200,11 @@ class CommentView extends Component {
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     let subtitle = '張貼於：' + timeOffsetString + '前 ' + approvedLog;
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
-    return (<Card className={classes.card}>
+    return (<Card container className={classes.card}>
                 {fbProfileImage}               
                 <div className={classes.details}>
-                    <CardContent className={classes.content}>
-                        <Typography variant="subheading">{text}</Typography>
+                    <CardContent className={classes.content} zeroMinWidth>
+                        <Typography variant="subheading" noWrap>{text}</Typography>
                         <Typography variant="caption" color="textSecondary">
                         {subtitle}
                         </Typography>
