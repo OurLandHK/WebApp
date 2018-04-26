@@ -206,7 +206,7 @@ class ShareDrawer extends React.Component {
 
     if(this.props.uid != undefined && this.props.displayName != undefined && this.props.displayName != "..." ){
       m = this.props.displayName;
-      hashtag = "我地";
+      hashtag = "#我地";
       shareUrl = shareUrl + "/?userid=" + this.props.uid;
     }
 

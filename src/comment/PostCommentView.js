@@ -237,7 +237,7 @@ this.setState({ tags: tags });
               case constant.commentOptions[4]: //"要求更改分類"
                 inputHtml = <CustomTags tags={tags}
                   inline={false}
-                  placeholder="新增標籤"
+                  placeholder="新增分類"
                   handleDelete={this.handleDelete}
                   handleAddition={this.handleAddition}
                   handleDrag={this.handleDrag} /> ;

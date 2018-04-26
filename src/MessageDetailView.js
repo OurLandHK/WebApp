@@ -148,8 +148,8 @@ class MessageDetailView extends Component {
             chips.push(chip);
         }
     }
-    var facebookURL = "https://facebook.com/" + m.fbpost;
-    console.log('facebookURL: '+facebookURL);
+//    var facebookURL = "https://facebook.com/" + m.fbpost;
+//    console.log('facebookURL: '+facebookURL);
     var zoom=15;
     var photoUrl = '/images/profile_placeholder.png';
     var geolocation = {lat: m.geolocation.latitude, lng: m.geolocation.longitude};
@@ -161,7 +161,13 @@ class MessageDetailView extends Component {
       linkHtml = <Grid container spacing={0}>
         <Grid item>
         <CardContent> <Typography component='p'> 外部連結： <a href={link} target="_blank">前往</a> </Typography> </CardContent></Grid></Grid>;
-    }    
+    } else {
+      if(link != null && link != "")
+      linkHtml = <Grid container spacing={0}>
+        <Grid item>
+        <CardContent> <Typography component='p'> {link} </Typography> </CardContent></Grid></Grid>;
+      
+    }
     const author = this.renderAuthor();
     let baseHtml = <Grid container spacing={0}> {this.renderLocation()}</Grid>;
 
