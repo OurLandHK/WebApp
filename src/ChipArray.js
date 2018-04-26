@@ -48,7 +48,7 @@ class ChipArray extends Component {
     }
     return (
       <div className={classes.row}>
-        <div className={classes.tagTitle}>標籤:</div><br/>
+        <div className={classes.tagTitle}>分類:</div><br/>
         {chipData.map(data => (
           <Chip
             label={data.label}

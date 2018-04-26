@@ -90,7 +90,7 @@ class MessageView extends Component {
     var timeOffsetString = timeOffsetStringInChinese(timeOffset);
     var auther = m.name + ' 於: ' + timeOffsetString + '前張貼 '
     var tag = '';
-    if(m.tag != null && m.tag.length > 1) {
+    if(m.tag != null && m.tag.length > 0) {
       tag = ' #' + m.tag[0];
     }
     var subtitle = distanceSpan + ' 現況: ' + m.status + tag;
