@@ -17,7 +17,8 @@ import {
   fetchAddressBookByUser,
   fetchAddressBookFromOurLand,
   updateFilterDefault,
-  checkAuthState
+  checkAuthState,
+  init3rdPartyLibraries
 } from './actions';
 import {constant} from './config/default';
 import CssBaseline from 'material-ui/CssBaseline';
@@ -28,6 +29,7 @@ const store = createStoreWithMiddleware(rootReducer);
 class App extends Component {
   constructor(props) {
     super(props);
+    init3rdPartyLibraries();
     let params = (new URL(document.location)).searchParams;
     let eventId = params.get("eventid");
     let userId = params.get("userid");

@@ -35,7 +35,9 @@ function wrapLongitude(longitude) {
 
 function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
 
-    var db = firebase.firestore();
+    const db = firebase.firestore();
+    
+    
     var collectionRef = db.collection(config.messageDB);
     collectionRef.onSnapshot(function() {})         
     if(geocode != null && geocode != NaN && geocode.latitude != undefined) {
@@ -68,7 +70,11 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
         // Use firestore
 
         collectionRef.where("hide", "==", false).where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
-            querySnapshot.forEach(callback);
+            if(querySnapshot.empty) {
+                callback(null);
+            } else { 
+                querySnapshot.forEach(callback);
+            }
         })
         .catch(function(error) {
             console.log("Error getting documents: ", error);
@@ -133,6 +139,8 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
       };
     // Use firestore
     const db = firebase.firestore();
+    
+    
     const messageRef = db.collection(config.messageDB).doc(key);
     const userRef = db.collection(config.userDB).doc(currentUser.uid);
     return db.runTransaction(transaction => {
@@ -171,6 +179,8 @@ function dropMessage(key) {
                 storage.refFromURL(message.thumbnailImageURL).delete();
             }
             const db = firebase.firestore();
+            
+            
             var messageRef = db.collection(config.messageDB).doc(key);
             var userRef = db.collection(config.userDB).doc(uid);
             var commentRef = messageRef.collection(config.commentDB);
@@ -210,6 +220,8 @@ function getMessage(uuid) {
     // firestore
     // Use firestore
     var db = firebase.firestore();
+    
+    
     var collectionRef = db.collection(config.messageDB);
     var docRef = collectionRef.doc(uuid);
     return docRef.get().then(function(doc) {
@@ -223,6 +235,8 @@ function getMessage(uuid) {
 
 function updateMessage(messageKey, messageRecord) {
     var db = firebase.firestore();
+    
+    
     var now = Date.now();
     var collectionRef = db.collection(config.messageDB);
     if(messageRecord == null) {
@@ -340,7 +354,9 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
     }
     console.log(commentRecord);
     // Use firestore
-    var db = firebase.firestore();
+    const db = firebase.firestore();
+    
+    
     var collectionRef = db.collection(config.messageDB);  
     return collectionRef.doc(messageUUID).collection(config.commentDB).add(commentRecord).then(function(docRef) {
         return getMessage(messageUUID).then((messageRecord) => {
@@ -350,7 +366,9 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
 }
 
 function updateCommentApproveStatus(messageUUID, commentid, approvedStatus){
-    let db = firebase.firestore();
+    const db = firebase.firestore();
+    
+    
     let collectionRef = db.collection(config.messageDB);  
     let field = {approvedStatus: approvedStatus};
     return collectionRef.doc(messageUUID).collection(config.commentDB).doc(commentid).update(field).then(function(commentRecordRef) {
@@ -360,7 +378,9 @@ function updateCommentApproveStatus(messageUUID, commentid, approvedStatus){
 }
 
 function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
-    var db = firebase.firestore();
+    const db = firebase.firestore();
+    
+    
     var collectionRef = db.collection(config.messageDB).doc(messageUUID).collection(config.commentDB);
     collectionRef.onSnapshot(function() {})         
     // Use firestore

@@ -15,11 +15,13 @@ class MessageList extends Component {
     if(geolocation == null) {
       geolocation = constant.invalidLocation;
     }
-    var messageIds = [];
+    let messageIds = [];
+    let statusMessage = constant.messageListReadingLocation;
 //    console.log("Message List" + this.props.messageIds);
     if(this.props.messageIds != null) {  
       messageIds = this.props.messageIds;
-    }
+      statusMessage = constant.messageListLoadingStatus;
+    } 
     this.state = {
 //      eventId: this.props.eventId,
       eventNumber: this.props.eventNumber,
@@ -28,7 +30,8 @@ class MessageList extends Component {
       data:[], 
       messageIds: messageIds,
       selectedTag: null,
-      selectedSorting: null
+      selectedSorting: null,
+      statusMessage: statusMessage
     };
     this.updateFilter = this.updateFilter.bind(this);
     this.setMessage = this.setMessage.bind(this);
@@ -76,6 +79,10 @@ class MessageList extends Component {
   }
 
   setMessageRef(messageRef) {
+    if(messageRef == null) {
+      this.setState({statusMessage: constant.messageListNoMessage});
+      return;
+    }
     var val = messageRef.data();
     if(val) {
       if(this.props.filter.geolocation != constant.invalidLocation) {
@@ -84,6 +91,8 @@ class MessageList extends Component {
         var dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
         if(dis < this.props.filter.distance) {
           this.setMessage(val)  
+        } else {
+          this.setState({statusMessage: constant.messageListNoMessage});
         }
       } else {
         this.setMessage(val)
@@ -92,11 +101,13 @@ class MessageList extends Component {
   }
 
   setMessage(val) {
-    if(val.tag != null && val.tag.length > 1) {      
+    if(val.tag != null && val.tag.length > 0) {      
       this.props.updateFilterTagList(val.tag);
     }
-    this.state.data.push(val);
-    this.setState({data:this.state.data});
+    if(val != null) {
+      this.state.data.push(val);
+      this.setState({data:this.state.data});
+    } 
   };
 
   clear() {
@@ -110,7 +121,7 @@ class MessageList extends Component {
      distance,
      geolocation
     } = filter;
-    this.setState({geolocation: geolocation});
+    this.setState({geolocation: geolocation, statusMessage: constant.messageListLoadingStatus});
     //console.log("Fetch MessageIDs: " + this.state.messageIds);
     if(this.state.messageIds.length != 0) {
       this.clear();
@@ -118,9 +129,19 @@ class MessageList extends Component {
         //console.log("Ids:" + Ids);
         getMessage(Ids).then((message) => {this.setMessage(message)});
       });
-    } else if(geolocation != constant.invalidLocation) {
+    } else {
       this.clear();
-      fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, this.setMessageRef);
+      switch (geolocation) {
+        case constant.invalidLocation:
+          this.setState({statusMessage: constant.messageListBlockLocation});
+          break;
+        case constant.timeoutLocation:
+          this.setState({statusMessage: constant.messageListTimeOut});
+          break;
+        default:
+          fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, this.setMessageRef);
+          break;
+      }
     }
   }
 
@@ -144,15 +165,20 @@ class MessageList extends Component {
         - (distance(j.geolocation.longitude,j.geolocation.latitude,lon,lat)));
     }
     
-    elements = this.state.data.map((message) => {
-      if(this.state.selectedTag != null && !message.tag.includes(this.state.selectedTag)) {
-        // filter by selected tag.
-        return null;
-      } else {
-        return (<MessageView message={message} key={message.key} lon={lon} lat={lat}/>);
-      }
-    });
-    return (<div>{elements}</div>);
+    if(this.state.data.length == 0) {
+      let statusMessage = this.state.statusMessage;
+      return(<div><center><br/><h2>{statusMessage}</h2></center></div>);
+    } else {
+      elements = this.state.data.map((message) => {
+        if(this.state.selectedTag != null && !message.tag.includes(this.state.selectedTag)) {
+          // filter by selected tag.
+          return null;
+        } else {
+          return (<MessageView message={message} key={message.key} lon={lon} lat={lat}/>);
+        }
+      });
+      return (<div>{elements}</div>);
+    }
   }
 };
 
