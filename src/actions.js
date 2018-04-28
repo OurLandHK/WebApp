@@ -109,13 +109,18 @@ function dispatchSelectedSorting(selectedSorting){
   return {type: UPDATE_FILTER_SORTING, selectedSorting: selectedSorting}
 }
 
+export function init3rdPartyLibraries() {
+  const db = firebase.firestore();
+  const settings = {/* your settings... */ timestampsInSnapshots: true};  
+  db.settings(settings);
+}
 
 export function fetchLocation(callback=receiveLocation) {
   return dispatch => {
     if(navigator.geolocation) {
       var options = {
         enableHighAccuracy: true,
-        timeout: 50000,
+        timeout: 5000,
         maximumAge: 0
       }; 
       navigator.geolocation.getCurrentPosition((geoLocation) => {
@@ -124,10 +129,18 @@ export function fetchLocation(callback=receiveLocation) {
       },
       (error) => {
         console.log(error);
+        let coords = constant.timeoutLocation;
+        if(error.code == 1) {
+          coords = constant.invalidLocation;
+        }
+        let geoLocation = {coords: coords};
+        callback(geoLocation)
       }, options);
     } else {
       alert('Location not supported!');
-      dispatch(disableLocation())
+      let blockLocation = {coords: constant.invalidLocation};
+      callback(blockLocation);
+      //dispatch(disableLocation())
     }
   }
 }
@@ -254,7 +267,9 @@ export function updateFilterWithCurrentLocation() {
 
 export function fetchAddressBookByUser(user) {
   return dispatch => {
-    var db = firebase.firestore();
+    const db = firebase.firestore();
+    
+    
     var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
     collectionRef.onSnapshot(function() {});
     collectionRef.get().then(function(querySnapshot) {
@@ -300,7 +315,9 @@ export function upsertAddress(user, key, type, text, geolocation, streetAddress)
     }; 
     console.log(addressRecord);
     // Use firestore
-    var db = firebase.firestore();
+    const db = firebase.firestore();
+    
+    
     var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
     if(key != null) {
         collectionRef.doc(key).set(addressRecord).then(function() {
@@ -318,6 +335,8 @@ export function upsertAddress(user, key, type, text, geolocation, streetAddress)
 export function deleteAddress(user, key) {
   return dispatch => {
     const db = firebase.firestore();
+    
+    
     const collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
     collectionRef.doc(key).delete().then(() => {
       dispatch(fetchAddressBookByUser(user))
@@ -353,7 +372,9 @@ export function toggleLeaderBoard(flag) {
 export function fetchTopTwenty() {
   return dispatch => {
     console.log('fetchTopTwenty');
-    var db = firebase.firestore();
+    const db = firebase.firestore();
+    
+    
     var collectionRef = db.collection(config.userDB).orderBy('publishMessagesCount', 'desc').limit(20);
     collectionRef.onSnapshot(function() {})         
     collectionRef.get().then(function(querySnapshot) {

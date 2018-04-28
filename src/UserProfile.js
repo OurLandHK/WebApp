@@ -7,7 +7,9 @@ function getUserProfile(user) {
     if(user==null) {
         return null;
     }
-    var db = firebase.firestore();
+    const db = firebase.firestore();
+    
+    
     var collectionRef = db.collection(config.userDB);
     var docRef = collectionRef.doc(user.uid);
     return docRef.get().then(function(doc) {
@@ -58,8 +60,10 @@ function upsertAddress(user, key, type, text, geolocation, streetAddress) {
     }; 
     console.log(addressRecord);
     // Use firestore
-    var db = firebase.firestore();
-    var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
+    const db = firebase.firestore();
+    
+    
+    let collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
     if(key != null) {
         return collectionRef.doc(key).set(addressRecord).then(function() {
             return;
@@ -73,9 +77,11 @@ function upsertAddress(user, key, type, text, geolocation, streetAddress) {
 }
 
 function getUserConcernMessages(user) {
-    var db = firebase.firestore();
-    var collectionRef = db.collection(config.userDB);
-    var docRef = collectionRef.doc(user.uid);
+    const db = firebase.firestore();
+    
+    
+    const collectionRef = db.collection(config.userDB);
+    const docRef = collectionRef.doc(user.uid);
     return docRef.get().then(function(doc) {
         if (doc.exists) {
             return(doc.data().concernMessages);
@@ -89,9 +95,11 @@ function getUserConcernMessages(user) {
 }
 
 function getUserPublishMessages(user) {
-    var db = firebase.firestore();
-    var collectionRef = db.collection(config.userDB);
-    var docRef = collectionRef.doc(user.uid);
+    const db = firebase.firestore();
+    
+    
+    let collectionRef = db.collection(config.userDB);
+    let docRef = collectionRef.doc(user.uid);
     return docRef.get().then(function(doc) {
         if (doc.exists) {
             return(doc.data().publishMessages);
@@ -105,9 +113,11 @@ function getUserPublishMessages(user) {
 }
 
 function getUserCompleteMessages(user) {
-    var db = firebase.firestore();
-    var collectionRef = db.collection(config.userDB);
-    var docRef = collectionRef.doc(user.uid);
+    const db = firebase.firestore();
+    
+    
+    let collectionRef = db.collection(config.userDB);
+    let docRef = collectionRef.doc(user.uid);
     return docRef.get().then(function(doc) {
         if (doc.exists) {
             return(doc.data().completeMessages);
@@ -196,8 +206,10 @@ function isConcernMessage(user, messageUUID) {
 
 
 function updateUserRecords(userid, userRecord) {
-    var db = firebase.firestore();
-    var collectionRef = db.collection(config.userDB);    
+    const db = firebase.firestore();
+    
+    
+    let collectionRef = db.collection(config.userDB);    
     return collectionRef.doc(userid).set(userRecord).then(function(userRecordRef) {
 //        console.log("Document written with ID: ", userid);
         return(userRecordRef);

@@ -131,11 +131,16 @@ class MessageDetailView extends Component {
     var tag = m.tag;
     var chips = [];
     var date = null;
-    var dateTimeString = null;
-    if(m.start != null && m.start.getFullYear() > 1970)
+    var dateTimeString = '';
+    if(m.start != null)
     {
-      date = new Date(m.start);
-      dateTimeString = date.toLocaleString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });
+      date = m.start.toDate();
+      if(date.getFullYear() > 1970) {
+        dateTimeString = date.toLocaleString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });
+      } else {
+        console.log(m.start);
+        date = null;
+      }
     }
     var interval = m.interval;
     var duration = m.duration;
