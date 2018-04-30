@@ -86,11 +86,8 @@ class MessageView extends Component {
         distanceSpan = "距離: " + dist;
       }
     }
-    let timeOffset = Date.now() - m.createdAt;
-    if(timeOffset == undefined) {
-      timeOffset = Date.now() - m.createdAt.toDate();
-    }
-    var timeOffsetString = timeOffsetStringInChinese(timeOffset);
+    let timeOffset = Date.now() - m.createdAt.toDate();
+    let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     var auther = m.name + ' 於: ' + timeOffsetString + '前張貼 '
     var tag = '';
     if(m.tag != null && m.tag.length > 0) {
