@@ -42,6 +42,7 @@ let constant = {
   recentEventLabel: "最近查看",
   leaderBoardLabel: "人氣排名榜",
   noTagLabel: "所有事件",
+  viewCountLabel: '觀看次數: ',
   publicProfileLabel: "簡介",
   sortByDefaultLabel: "沒有排序",
   sortByLastUpdateLabel: "最近更新排序",
@@ -55,6 +56,7 @@ let constant = {
   messageListNoMessage: '選擇的位置沒有任何社區事件, 請選擇其他位置',
   messageListBlockLocation: '請解除對Ourland.hk讀取現在位置的封鎖, 或選擇其他位置',
   messageListTimeOut: '未能讀取現在位置, 請選擇其他位置或再試讀取',
+  
 }
 
 

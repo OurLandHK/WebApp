@@ -178,10 +178,16 @@ function leaderBoardReducer(state={open: false, topTwenty:[]}, action) {
   }
 }
 
-function recentMessageReducer(state={open: false, id: ""}, action) {
+function recentMessageReducer(state={open: false, id: "", recentids: []}, action) {
   switch (action.type) {
     case UPDATE_RECENT_MESSAGE:
-      return {open: action.open, id: action.id};
+      let recentids = state.recentids;
+      var index = recentids.indexOf(action.id);
+      if(index == -1)
+      {
+          recentids.push(action.id);
+      }
+      return {open: action.open, id: action.id, recentids: recentids};
     default:
       return state;
   }

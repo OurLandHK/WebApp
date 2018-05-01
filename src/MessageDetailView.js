@@ -26,6 +26,7 @@ import {
   updatePublicProfileDialog,
 } from './actions';
 import {connect} from 'react-redux';
+import { constant } from './config/default';
 
 const styles = theme => ({
   authorContainer: {
@@ -99,18 +100,27 @@ class MessageDetailView extends Component {
     );
   }
 
-  renderLocation() {
-    var locationString = null
+  renderBase() {
+    let locationString = null;
+    let viewCountString = constant.viewCountLabel;
     const { message, classes } = this.props;
     if (message.streetAddress) {
       locationString = `地點: ${message.streetAddress} (${geoString(message.geolocation.latitude, message.geolocation.longitude)})`;
     } else {
       locationString = `地點: 近(${geoString(message.geolocation.latitude, message.geolocation.longitude)})`;
     }
+    if(message.viewCount != null) {
+      viewCountString += message.viewCount;
+    } else {
+      viewCountString += 0;
+    }
     return (
       <CardContent>
         <Typography component='p'>
         {locationString}
+        </Typography>
+        <Typography component='p'>
+        {viewCountString}
         </Typography>
       </CardContent>
     );
@@ -174,10 +184,10 @@ class MessageDetailView extends Component {
       
     }
     const author = this.renderAuthor();
-    let baseHtml = <Grid container spacing={0}> {this.renderLocation()}</Grid>;
+    let baseHtml = <Grid container spacing={0}> {this.renderBase()}</Grid>;
 
     let dateHtml = null;
-    if(dateTimeString != null) { 
+    if(dateTimeString != '') { 
         dateHtml = <Grid container spacing={0}>
                         <Grid item><CardContent><Typography component='p'> 開始: {dateTimeString}</Typography> </CardContent> </Grid>  
                         <Grid item><CardContent><Typography component='p'> 為期: {duration} </Typography> </CardContent> </Grid>
