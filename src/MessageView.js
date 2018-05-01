@@ -8,6 +8,7 @@ import { withStyles } from 'material-ui/styles';
 import red from 'material-ui/colors/red';
 import MessageDialog from './MessageDialog';
 import Typography from 'material-ui/Typography';
+import {incMessageViewCount} from './MessageDB';
 import {
   updateRecentMessage,
 } from './actions';
@@ -55,9 +56,18 @@ class MessageView extends Component {
   handleClick() {
     const { updateRecentMessage } = this.props;
     if(this.props.message.key != null && this.props.message.key != "") {
+      let incViewCount = false;
+      // check the message viewed in this session or not.
+      if(this.props.recentMessage.recentids.indexOf(this.props.message.key) == -1) {
+        incViewCount = true;
+      }
       updateRecentMessage(this.props.message.key, false);
+      this.openDialog();
+      
+      if(incViewCount) {
+        incMessageViewCount(this.props.message.key);
+      }
     }
-    this.openDialog();
   };
 
 
@@ -122,8 +132,10 @@ MessageView.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   return {
     geoLocation : state.geoLocation,
+    recentMessage : state.recentMessage,
   };
 }
+
 
 const mapDispatchToProps = (dispatch) => {
   return {

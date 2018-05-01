@@ -135,7 +135,8 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
         imageUrl, publicImageURL, 
         thumbnailImageURL, 
         thumbnailPublicImageURL,
-        status: status
+        status: status,
+        viewCount: 0,
       };
     // Use firestore
     const db = firebase.firestore();
@@ -215,22 +216,29 @@ function dropMessage(key) {
     });
 }
   
-
-function getMessage(uuid) {
+function getMessageRef(uuid) {
     // firestore
     // Use firestore
     var db = firebase.firestore();
-    
-    
     var collectionRef = db.collection(config.messageDB);
     var docRef = collectionRef.doc(uuid);
     return docRef.get().then(function(doc) {
         if (doc.exists) {
-            return(doc.data());
+            return(doc);
         } else {
             return null;
         }
     });     
+}
+
+function getMessage(uuid) {
+    return getMessageRef(uuid).then(function (messageRef) {
+        if(messageRef != null) {
+            return messageRef.data();
+        } else {
+            return null;
+        }
+    });
 }
 
 function updateMessage(messageKey, messageRecord) {
@@ -255,6 +263,24 @@ function updateMessage(messageKey, messageRecord) {
         })      
     }
 }
+
+function incMessageViewCount(messageKey) {
+    return getMessageRef(messageKey).then(function (messageRef) {
+        if(messageRef != null) {
+            let viewCount = 1;
+            if(messageRef.data().viewCount != null) {
+                viewCount = messageRef.data().viewCount + 1;
+            }
+            const db = firebase.firestore();
+            let collectionRef = db.collection(config.messageDB);
+            let docRef = collectionRef.doc(messageKey);
+            return docRef.update({viewCount: viewCount});
+        } else {
+            return null;
+        }
+    });
+}
+
 
 
 function updateMessageImageURL(messageKey, imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {
@@ -392,4 +418,4 @@ function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
     });
 }
 
-export {updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser};
+export {incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser};
