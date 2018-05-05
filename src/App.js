@@ -16,6 +16,7 @@ import rootReducer from './reducers';
 import {
   fetchAddressBookByUser,
   fetchAddressBookFromOurLand,
+  fetchConcernMessagesFromOurLand,
   updateFilterDefault,
   checkAuthState,
   init3rdPartyLibraries
@@ -59,6 +60,7 @@ class App extends Component {
   componentWillMount() {
     this.props.checkAuthState();
     this.props.fetchAddressBookFromOurLand();
+    this.props.fetchConcernMessagesFromOurLand();
     this.props.updateFilterDefault(this.state.eventNumber, this.state.distance, null);
   }
 
@@ -107,7 +109,9 @@ const mapDispatchToProps = (dispatch) => {
       user =>
         dispatch(fetchAddressBookByUser(user)),
     fetchAddressBookFromOurLand:
-      () => dispatch(fetchAddressBookFromOurLand()),            
+      () => dispatch(fetchAddressBookFromOurLand()),  
+    fetchConcernMessagesFromOurLand:
+      () => dispatch(fetchConcernMessagesFromOurLand()),       
   }
 };
 

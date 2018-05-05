@@ -6,7 +6,19 @@ import distance from './Distance';
 import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
 import { updateFilter, updateFilterTagList} from './actions';
 import {connect} from "react-redux";
+import { withStyles } from 'material-ui/styles';
 
+const styles = theme => ({
+  scrollingWrapper: {
+    overflowX: 'scroll',
+    overflowY: 'hidden',
+    whiteSpace: 'nowrap',
+  },
+  
+  scrollingItem: {
+      display: 'inline-block',
+  },
+});
 
 class MessageList extends Component {
   constructor(props) {
@@ -22,6 +34,10 @@ class MessageList extends Component {
       messageIds = this.props.messageIds;
       statusMessage = constant.messageListLoadingStatus;
     } 
+    this.hori = false;
+    if(this.props.hori == true) {
+      this.hori = true;
+    }
     this.state = {
 //      eventId: this.props.eventId,
       eventNumber: this.props.eventNumber,
@@ -69,7 +85,7 @@ class MessageList extends Component {
     this.refreshMessageList();
   }
 
-  refreshMessageList(filter) {
+  refreshMessageList() {
     if (filter == null) {
       filter = this.props.filter;
     }
@@ -101,7 +117,7 @@ class MessageList extends Component {
   }
 
   setMessage(val) {
-    if(val.tag != null && val.tag.length > 0) {      
+    if(val != null && val.tag != null && val.tag.length > 0) {      
       this.props.updateFilterTagList(val.tag);
     }
     if(val != null) {
@@ -125,8 +141,9 @@ class MessageList extends Component {
     //console.log("Fetch MessageIDs: " + this.state.messageIds);
     if(this.state.messageIds.length != 0) {
       this.clear();
+      console.log("List" + this.state.messageIds);
       this.state.messageIds.map((Ids) => {
-        //console.log("Ids:" + Ids);
+        console.log("Ids:" + Ids);
         getMessage(Ids).then((message) => {this.setMessage(message)});
       });
     } else {
@@ -146,7 +163,7 @@ class MessageList extends Component {
   }
 
   render() {
-    let elements = null;
+    const classes = this.props.classes;
 //    let queryMessage = null;
 //    let linebreak = <div><br/><br/><br/><br/></div>;
     let lon = 0; 
@@ -165,19 +182,30 @@ class MessageList extends Component {
         - (distance(j.geolocation.longitude,j.geolocation.latitude,lon,lat)));
     }
     
+
     if(this.state.data.length == 0) {
       let statusMessage = this.state.statusMessage;
       return(<div><center><br/><h2>{statusMessage}</h2></center></div>);
     } else {
-      elements = this.state.data.map((message) => {
+      let messageList = null;
+      let elements = this.state.data.map((message) => {
         if(this.state.selectedTag != null && !message.tag.includes(this.state.selectedTag)) {
           // filter by selected tag.
           return null;
         } else {
-          return (<MessageView message={message} key={message.key} lon={lon} lat={lat}/>);
+          if(this.hori) {
+            return (<div className={classes.scrollingItem}><MessageView message={message} key={message.key} tile={this.hori} lon={lon} lat={lat}/></div>);
+          } else {
+            return (<MessageView message={message} key={message.key} tile={this.hori} lon={lon} lat={lat}/>);
+          }
         }
       });
-      return (<div>{elements}</div>);
+      if(this.hori) {
+          messageList = <div className={classes.scrollingWrapper}>{elements}</div>;
+      } else {
+        messageList = elements;
+      }
+      return (<div>{messageList}</div>);
     }
   }
 };
@@ -201,4 +229,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(MessageList);
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(MessageList));

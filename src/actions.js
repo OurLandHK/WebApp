@@ -12,6 +12,7 @@ import {
   FETCH_LOCATION,
   FETCH_ADDRESS_BOOK,
   FETCH_PUBLIC_ADDRESS_BOOK,
+  FETCH_FOCUS_MESSAGE,
   UPDATE_PUBLIC_PROFILE_DIALOG,
   TOGGLE_PUBLIC_PROFILE_DIALOG,  
   TOGGLE_ADDRESS_DIALOG,
@@ -57,6 +58,10 @@ function fetchAddressBook(address) {
 
 function fetchPublicAddressBook(address) {
   return {type: FETCH_PUBLIC_ADDRESS_BOOK, addresses: address};
+}
+
+function fetchFocusMessage(message) {
+  return {type: FETCH_FOCUS_MESSAGE, messages: message};
 }
 
 function fetchUser(user, loading=false) {
@@ -297,6 +302,19 @@ export function fetchAddressBookFromOurLand() {
     });
   };  
 }
+
+export function fetchConcernMessagesFromOurLand() {
+  return dispatch => {
+    var db = firebase.firestore();
+    /// Use the UID for Ourland HK's account
+    let user={uid:'mUQgwxkmPBfVA47d9lHzB482Nmp1'}
+    return getUserProfile(user).then((userProfile)=>{
+      const messages = userProfile.concernMessages;
+      return dispatch(fetchFocusMessage(messages));
+    });    
+  };  
+}
+
 
 
 export function upsertAddress(user, key, type, text, geolocation, streetAddress) {

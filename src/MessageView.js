@@ -15,10 +15,19 @@ import {
 import {connect} from "react-redux";
 
 const styles = theme => ({
+  tileCard: {
+    height:196,
+    width:196,
+  },
+  tileMedia: {
+    height: 128,
+    //paddingTop: '56.25%', // 16:9
+  },
+  
   card: {
     display: 'flex',
     alignItems: 'center'
-},  
+  },  
   avatar: {
     backgroundColor: red[500],
   },
@@ -50,6 +59,10 @@ const styles = theme => ({
 class MessageView extends Component {
   constructor(props) {
     super(props);
+    this.tile = false;
+    if(this.props.tile == true) {
+      this.tile = true;
+    }
     this.handleClick = this.handleClick.bind(this);
   }
 
@@ -70,6 +83,36 @@ class MessageView extends Component {
     }
   };
 
+  tileRender(text, auther, imageUrl, subtitle) {
+    const classes = this.props.classes;
+    return (<Card className={classes.tileCard} onClick={() => this.handleClick()}>
+              <CardMedia className={classes.tileMedia} image={imageUrl} title={auther}/>
+              <CardContent>
+                <Typography noWrap='true' gutterBottom variant="headline" component="h2">
+                  {text}
+                </Typography>
+                <Typography component="p">
+                  {subtitle}
+                </Typography>
+              </CardContent>
+            </Card>);
+  };
+
+  sliceRender(text, auther, imageUrl, subtitle) {
+    const classes = this.props.classes;
+    let summary = <div className={classes.details}>
+                    <CardContent className={classes.content} onClick={() => this.handleClick()}>
+                      <Typography className={classes.title}>{auther}</Typography>
+                      <Typography variant="headline" component="h2"> {text}</Typography>
+                      <Typography className={classes.pos}>{subtitle}</Typography>
+                    </CardContent>
+                  </div> 
+    let thumbnail = <CardMedia className={classes.cover}  image={imageUrl}/>
+    return (<Card container className={classes.card}>
+              {thumbnail}
+              {summary}
+            </Card>);
+  }
 
   render() {
     const classes = this.props.classes;
@@ -96,7 +139,12 @@ class MessageView extends Component {
         distanceSpan = "距離: " + dist;
       }
     }
-    let timeOffset = Date.now() - m.createdAt.toDate();
+    let timeOffset = 0;
+    try {
+      timeOffset = Date.now() - m.createdAt.toDate();
+    } catch(error) {
+      timeOffset = Date.now() - m.createdAt;
+    };
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     var auther = m.name + ' 於: ' + timeOffsetString + '前張貼 '
     var tag = '';
@@ -104,22 +152,14 @@ class MessageView extends Component {
       tag = ' #' + m.tag[0];
     }
     var subtitle = distanceSpan + ' 現況: ' + m.status + tag;
-//    let summary = <CardHeader title={m.text}  subheader={subtitle}  onClick={() => this.handleClick()}>  </CardHeader>
-    let summary = <div className={classes.details}>
-                    <CardContent className={classes.content} onClick={() => this.handleClick()}>
-                      <Typography className={classes.title}>{auther}</Typography>
-                        <Typography variant="headline" component="h2"> {m.text}</Typography>
-                      <Typography className={classes.pos}>{subtitle}</Typography>
-                    </CardContent>
-                  </div> 
-    let thumbnail = <CardMedia
-                      className={classes.cover}
-                      image={imageUrl}/>
+    let card = null;
+    if(this.tile) {
+      card = this.tileRender(m.text, auther, imageUrl, subtitle);
+    } else {
+      card = this.sliceRender(m.text, auther, imageUrl, subtitle);
+    }
     return (<div>
-              <Card container className={classes.card}>
-                {thumbnail}
-                {summary}
-              </Card>
+              {card}
               <MessageDialog uuid={uuid} open={o} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
             </div>);
   }
