@@ -56,6 +56,7 @@ class MessageList extends Component {
   }
 
   componentDidMount() {
+    //console.log("componentDidMolunt");
     if(this.state.messageIds.length != 0) {
       this.updateFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
     }
@@ -65,7 +66,10 @@ class MessageList extends Component {
     if (this.props.filter.geolocation != prevProps.filter.geolocation ||
       this.props.filter.distance != prevProps.filter.distance ||
       this.props.filter.selectedSorting != prevProps.filter.selectedSorting) {
-      this.refreshMessageList();
+      if(!this.hori) {
+        //console.log("componentDidUpdate");
+        this.refreshMessageList();
+      }
     } else {
       if(this.props.filter.selectedTag != undefined && 
             this.props.filter.selectedTag != prevProps.filter.selectedTag) {
@@ -86,12 +90,9 @@ class MessageList extends Component {
   }
 
   refreshMessageList() {
-    if (filter == null) {
-      filter = this.props.filter;
-    }
     this.setState({selectedTag: null});
     this.setState({selectedSorting: null});
-    this.fetchMessages(filter); 
+    this.fetchMessages(this.props.filter); 
   }
 
   setMessageRef(messageRef) {
@@ -141,9 +142,9 @@ class MessageList extends Component {
     //console.log("Fetch MessageIDs: " + this.state.messageIds);
     if(this.state.messageIds.length != 0) {
       this.clear();
-      console.log("List" + this.state.messageIds);
+      //console.log("List" + this.state.messageIds);
       this.state.messageIds.map((Ids) => {
-        console.log("Ids:" + Ids);
+        //console.log("Ids:" + Ids);
         getMessage(Ids).then((message) => {this.setMessage(message)});
       });
     } else {
@@ -189,6 +190,7 @@ class MessageList extends Component {
     } else {
       let messageList = null;
       let elements = this.state.data.map((message) => {
+        //console.log('message key: ' + message.key );
         if(this.state.selectedTag != null && !message.tag.includes(this.state.selectedTag)) {
           // filter by selected tag.
           return null;

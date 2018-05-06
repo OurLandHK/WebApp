@@ -75,14 +75,14 @@ class Main extends Component {
     if(queryMessage != null) {      
       let message = queryMessage;
       recentMessage = <div>
-                        {constant.recentEventLabel}
+                        <b><h3>{constant.recentEventLabel}</h3></b>
                         <MessageView message={message} key={message.key} openDialogDefault={openRecent} />
                         <br/>
                       </div>;
     }   
     if(focusMessages.length > 0) {
       focusMessage = <div>
-        {constant.focusMessagesLabel}
+        <b><h3>{constant.focusMessagesLabel}</h3></b>
         <MessageList
           ref={(messageList) => {this.messageList = messageList;}}
           eventNumber={100}

@@ -16,7 +16,7 @@ import {connect} from "react-redux";
 
 const styles = theme => ({
   tileCard: {
-    height:196,
+    height:200,
     width:196,
   },
   tileMedia: {
@@ -88,12 +88,8 @@ class MessageView extends Component {
     return (<Card className={classes.tileCard} onClick={() => this.handleClick()}>
               <CardMedia className={classes.tileMedia} image={imageUrl} title={auther}/>
               <CardContent>
-                <Typography noWrap='true' gutterBottom variant="headline" component="h2">
-                  {text}
-                </Typography>
-                <Typography component="p">
-                  {subtitle}
-                </Typography>
+                <Typography noWrap='true' variant="title">{text}</Typography>
+                <Typography noWrap='true' component="p">{subtitle}</Typography>
               </CardContent>
             </Card>);
   };
@@ -103,7 +99,7 @@ class MessageView extends Component {
     let summary = <div className={classes.details}>
                     <CardContent className={classes.content} onClick={() => this.handleClick()}>
                       <Typography className={classes.title}>{auther}</Typography>
-                      <Typography variant="headline" component="h2"> {text}</Typography>
+                      <Typography noWrap='true' variant="headline"> {text}</Typography>
                       <Typography className={classes.pos}>{subtitle}</Typography>
                     </CardContent>
                   </div> 
@@ -154,6 +150,9 @@ class MessageView extends Component {
     var subtitle = distanceSpan + ' 現況: ' + m.status + tag;
     let card = null;
     if(this.tile) {
+      if(m.publicImageURL != null) {
+        imageUrl = m.publicImageURL;
+      }
       card = this.tileRender(m.text, auther, imageUrl, subtitle);
     } else {
       card = this.sliceRender(m.text, auther, imageUrl, subtitle);

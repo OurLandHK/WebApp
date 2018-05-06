@@ -11,7 +11,7 @@ let config = {
     xfbml: true,
     version: 'v2.10'
   },
- 
+/* 
   fbGroupId: '244493866025075', // Production https://www.facebook.com/groups/OurLandHK/?fref=nf
   messageDB: 'message', // Production
   userDB: 'userProfile', // Production
@@ -21,7 +21,7 @@ let config = {
   messageDB: 'messageTest', // For development.
   userDB: 'userProfileTest', // For developments.
   photoDB: 'photoTest', // For developments.
-*/
+
 
   addressBook: "AddressBook",
   commentDB: "comment"
