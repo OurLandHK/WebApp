@@ -11,7 +11,7 @@ let config = {
     xfbml: true,
     version: 'v2.10'
   },
-/*  
+/* 
   fbGroupId: '244493866025075', // Production https://www.facebook.com/groups/OurLandHK/?fref=nf
   messageDB: 'message', // Production
   userDB: 'userProfile', // Production
@@ -56,7 +56,7 @@ let constant = {
   messageListNoMessage: '選擇的位置沒有任何社區事件, 請選擇其他位置',
   messageListBlockLocation: '請解除對Ourland.hk讀取現在位置的封鎖, 或選擇其他位置',
   messageListTimeOut: '未能讀取現在位置, 請選擇其他位置或再試讀取',
-  
+  focusMessagesLabel: '焦點社區事件'
 }
 
 
