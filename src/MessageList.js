@@ -6,7 +6,19 @@ import distance from './Distance';
 import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
 import { updateFilter, updateFilterTagList} from './actions';
 import {connect} from "react-redux";
+import { withStyles } from 'material-ui/styles';
 
+const styles = theme => ({
+  scrollingWrapper: {
+    overflowX: 'scroll',
+    overflowY: 'hidden',
+    whiteSpace: 'nowrap',
+  },
+  
+  scrollingItem: {
+      display: 'inline-block',
+  },
+});
 
 class MessageList extends Component {
   constructor(props) {
@@ -22,6 +34,10 @@ class MessageList extends Component {
       messageIds = this.props.messageIds;
       statusMessage = constant.messageListLoadingStatus;
     } 
+    this.hori = false;
+    if(this.props.hori == true) {
+      this.hori = true;
+    }
     this.state = {
 //      eventId: this.props.eventId,
       eventNumber: this.props.eventNumber,
@@ -40,6 +56,7 @@ class MessageList extends Component {
   }
 
   componentDidMount() {
+    //console.log("componentDidMolunt");
     if(this.state.messageIds.length != 0) {
       this.updateFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
     }
@@ -49,7 +66,10 @@ class MessageList extends Component {
     if (this.props.filter.geolocation != prevProps.filter.geolocation ||
       this.props.filter.distance != prevProps.filter.distance ||
       this.props.filter.selectedSorting != prevProps.filter.selectedSorting) {
-      this.refreshMessageList();
+      if(!this.hori) {
+        //console.log("componentDidUpdate");
+        this.refreshMessageList();
+      }
     } else {
       if(this.props.filter.selectedTag != undefined && 
             this.props.filter.selectedTag != prevProps.filter.selectedTag) {
@@ -69,13 +89,10 @@ class MessageList extends Component {
     this.refreshMessageList();
   }
 
-  refreshMessageList(filter) {
-    if (filter == null) {
-      filter = this.props.filter;
-    }
+  refreshMessageList() {
     this.setState({selectedTag: null});
     this.setState({selectedSorting: null});
-    this.fetchMessages(filter); 
+    this.fetchMessages(this.props.filter); 
   }
 
   setMessageRef(messageRef) {
@@ -101,7 +118,7 @@ class MessageList extends Component {
   }
 
   setMessage(val) {
-    if(val.tag != null && val.tag.length > 0) {      
+    if(val != null && val.tag != null && val.tag.length > 0) {      
       this.props.updateFilterTagList(val.tag);
     }
     if(val != null) {
@@ -125,6 +142,7 @@ class MessageList extends Component {
     //console.log("Fetch MessageIDs: " + this.state.messageIds);
     if(this.state.messageIds.length != 0) {
       this.clear();
+      //console.log("List" + this.state.messageIds);
       this.state.messageIds.map((Ids) => {
         //console.log("Ids:" + Ids);
         getMessage(Ids).then((message) => {this.setMessage(message)});
@@ -146,7 +164,7 @@ class MessageList extends Component {
   }
 
   render() {
-    let elements = null;
+    const classes = this.props.classes;
 //    let queryMessage = null;
 //    let linebreak = <div><br/><br/><br/><br/></div>;
     let lon = 0; 
@@ -159,25 +177,37 @@ class MessageList extends Component {
 
     let sorting = this.props.filter.selectedSorting;
     if(sorting == 'sortByLastUpdate'){
-      this.state.data.sort((i, j) => (j.lastUpdate==null?j.createdAt:j.lastUpdate) - (i.lastUpdate==null?i.createdAt:i.lastUpdate));
+      this.state.data.sort((i, j) => (j.lastUpdate==null?j.createdAt.toDate():j.lastUpdate.toDate()) - (i.lastUpdate==null?i.createdAt.toDate():i.lastUpdate.toDate()));
     }else if(sorting == 'sortByDistance'){
       this.state.data.sort((i, j) => (distance(i.geolocation.longitude,i.geolocation.latitude,lon,lat)) 
         - (distance(j.geolocation.longitude,j.geolocation.latitude,lon,lat)));
     }
     
+
     if(this.state.data.length == 0) {
       let statusMessage = this.state.statusMessage;
       return(<div><center><br/><h2>{statusMessage}</h2></center></div>);
     } else {
-      elements = this.state.data.map((message) => {
+      let messageList = null;
+      let elements = this.state.data.map((message) => {
+        //console.log('message key: ' + message.key );
         if(this.state.selectedTag != null && !message.tag.includes(this.state.selectedTag)) {
           // filter by selected tag.
           return null;
         } else {
-          return (<MessageView message={message} key={message.key} lon={lon} lat={lat}/>);
+          if(this.hori) {
+            return (<div className={classes.scrollingItem}><MessageView message={message} key={message.key} tile={this.hori} lon={lon} lat={lat}/></div>);
+          } else {
+            return (<MessageView message={message} key={message.key} tile={this.hori} lon={lon} lat={lat}/>);
+          }
         }
       });
-      return (<div>{elements}</div>);
+      if(this.hori) {
+          messageList = <div className={classes.scrollingWrapper}>{elements}</div>;
+      } else {
+        messageList = elements;
+      }
+      return (<div>{messageList}</div>);
     }
   }
 };
@@ -201,4 +231,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(MessageList);
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(MessageList));

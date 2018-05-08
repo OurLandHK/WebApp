@@ -7,6 +7,7 @@ import PublicProfile from './PublicProfile';
 import MessageView from './MessageView';
 import {getMessage} from './MessageDB';
 import React, { Component } from 'react';
+import MessageList from './MessageList';
 import config, {constant} from './config/default';
 import {
   updateRecentMessage,
@@ -66,22 +67,38 @@ class Main extends Component {
     let recentMessage = null;
     const { eventNumber, distance, geolocation, eventId, queryMessage} = this.state;
     const {open: openRecent} = this.props.recentMessage;
+    const {focusMessages} = this.props.ourland;
     let linebreak = <div><br/><br/></div>;
     const { classes } = this.props; 
+    let focusMessage = null
 
     if(queryMessage != null) {      
-      var message = queryMessage;
+      let message = queryMessage;
       recentMessage = <div>
-                        {constant.recentEventLabel}
+                        <b><h3>{constant.recentEventLabel}</h3></b>
                         <MessageView message={message} key={message.key} openDialogDefault={openRecent} />
                         <br/>
                       </div>;
-    }    
+    }   
+    if(focusMessages.length > 0) {
+      focusMessage = <div>
+        <b><h3>{constant.focusMessagesLabel}</h3></b>
+        <MessageList
+          ref={(messageList) => {this.messageList = messageList;}}
+          eventNumber={100}
+          distance={10}
+          messageIds={focusMessages}
+          hori={true}
+        />
+        <br/>
+      </div>
+    } 
 
     return (
       <div className={classes.container}>
         {linebreak}
         {recentMessage}
+        {focusMessage}
         <NearbyEventDialog 
           eventNumber={eventNumber}
           distance={distance}
@@ -112,6 +129,7 @@ class Main extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     recentMessage : state.recentMessage,
+    ourland : state.ourland,
   };
 }
 

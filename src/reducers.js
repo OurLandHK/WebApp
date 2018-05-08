@@ -14,6 +14,7 @@ import {
   UPDATE_RECENT_MESSAGE,
   FETCH_ADDRESS_BOOK,
   FETCH_PUBLIC_ADDRESS_BOOK,
+  FETCH_FOCUS_MESSAGE,
   TOGGLE_ADDRESS_DIALOG,
   TOGGLE_NEARBYEVENT_DIALOG,
   TOGGLE_REGIONEVENT_DIALOG,
@@ -178,10 +179,16 @@ function leaderBoardReducer(state={open: false, topTwenty:[]}, action) {
   }
 }
 
-function recentMessageReducer(state={open: false, id: ""}, action) {
+function recentMessageReducer(state={open: false, id: "", recentids: []}, action) {
   switch (action.type) {
     case UPDATE_RECENT_MESSAGE:
-      return {open: action.open, id: action.id};
+      let recentids = state.recentids;
+      var index = recentids.indexOf(action.id);
+      if(index == -1)
+      {
+          recentids.push(action.id);
+      }
+      return {open: action.open, id: action.id, recentids: recentids};
     default:
       return state;
   }
@@ -203,11 +210,21 @@ function publicProfileDialogReducer(state={open: false, id: "", fbId: ""}, actio
   }
 }
 
+function ourlandReducer(state={focusMessages: []}, action) {
+    switch (action.type) {
+      case FETCH_FOCUS_MESSAGE:
+        return {...state, focusMessages: action.messages};
+      default:
+        return state;
+    }
+  }
+
 const rootReducer = combineReducers({  
   geoLocation: geoLocationReducer,
   user: userReducer,
   filter: filterReducer,
   addressBook: addressBookReducer,
+  ourland: ourlandReducer,
   addressDialog: addressDialogReducer,
   nearbyEventDialog: nearbyEventDialogReducer,
   regionEventDialog: regionEventDialogReducer,

@@ -99,11 +99,11 @@ class MessageDialog extends React.Component {
     let detailView = null;
     let deleteButton = null;
     let favoriteButton = null;
-    var shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + uuid;
-    var title = "";
-    var imageUrl = "";
+    let shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + uuid;
+    let title = "";
+    let imageUrl = "";
+    let m = this.message;
     if(this.state.open) {
-      var m = this.message;
       title = m.text;
       imageUrl = m.publicImageURL
       titleHtml = <Typography variant="title" color="inherit" className={classes.flex}>
@@ -115,13 +115,14 @@ class MessageDialog extends React.Component {
         user = this.props.user.user;
         favoriteButton = <FavoriteButton message={m}/>
         // 5 minutes
-        if(user.uid == m.uid && (nowDateTime - m.createdAt < (10 * 60 * 1000))) {
+        if(user.uid == m.uid && (nowDateTime - m.createdAt.toDate() < (10 * 60 * 1000))) {
           deleteButton = <IconButton color="contrast" onClick={this.handleRequestDelete} aria-label="Close">
                             <DeleteIcon />
                           </IconButton>
         }
       }
       detailView = <MessageDetailView message={m}/>;
+
     }
 
     return (

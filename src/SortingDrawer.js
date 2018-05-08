@@ -111,27 +111,18 @@ class SortingDrawer extends React.Component {
 
   renderSortByDefault(){
     return (<ListItem button onClick={() => {this.setSorting(null)}}>
-              <ListItemIcon>
-               <AllIcon />
-               </ListItemIcon> 
                <ListItemText primary={constant.sortByDefaultLabel} />
             </ListItem>);
   }
 
   renderSortByLastUpdate() {
     return (<ListItem button onClick={() => {this.setSorting('sortByLastUpdate')}}>
-              <ListItemIcon>
-               <AllIcon />
-               </ListItemIcon> 
                <ListItemText primary={constant.sortByLastUpdateLabel} />
             </ListItem>);
   }
 
   renderSortByDistance(){
   	return (<ListItem button onClick={() => {this.setSorting('sortByDistance')}}>
-              <ListItemIcon>
-               <AllIcon />
-               </ListItemIcon> 
                <ListItemText primary={constant.sortByDistanceLabel} />
             </ListItem>);
   }
