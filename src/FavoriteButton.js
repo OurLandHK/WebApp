@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import Button from 'material-ui/Button';
-import FavoriteIcon from 'material-ui-icons/Favorite';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import green from 'material-ui/colors/green';
 import red from 'material-ui/colors/red';
 import { withStyles } from 'material-ui/styles';

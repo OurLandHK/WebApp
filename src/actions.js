@@ -176,10 +176,10 @@ export function refreshUserProfile(user) {
 export function signIn() {
   return dispatch => {
     var provider = new firebase.auth.FacebookAuthProvider();
-    provider.addScope('user_friends');
-    provider.addScope('publish_actions');
-    provider.addScope('user_managed_groups');
-    provider.addScope('user_birthday');
+    //provider.addScope('user_friends');
+    //provider.addScope('publish_actions');
+    //provider.addScope('user_managed_groups');
+    //provider.addScope('user_birthday');
     firebase.auth().signInWithPopup(provider).then(function(result) {
       var token = result.credential.accessToken;
       var user = result.user;
