@@ -8,8 +8,8 @@ import red from 'material-ui/colors/red';
 import Avatar from 'material-ui/Avatar';
 import geoString from '../GeoLocationString';
 import config, {constant} from '../config/default';
-import ThumbUpIcon from 'material-ui-icons/ThumbUp';
-import ThumbDownIcon from 'material-ui-icons/ThumbDown';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import {
     checkAuthState,
     updateRecentMessage,

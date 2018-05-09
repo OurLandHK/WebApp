@@ -219,6 +219,35 @@ function ourlandReducer(state={focusMessages: []}, action) {
     }
   }
 
+  const tagSuggestions = [
+    { label: '公共地方維修' },
+    { label: '兒童遊樂場' },
+    { label: '郵箱' },
+    { label: '活動' },
+    { label: '公共設施' },
+    { label: '假日診所' },
+    { label: '寵物' },
+    { label: '社區規劃' },
+    { label: '社區匯報' },
+    { label: '社區幹事' },
+
+    
+  ].map(suggestion => ({
+    value: suggestion.label,
+    label: suggestion.label,
+  }));
+
+function suggestionReducer(state={tag: tagSuggestions}, action) {
+  switch (action.type) {
+/*
+    case FETCH_FOCUS_MESSAGE:
+      return {...state, focusMessages: action.messages};
+*/      
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({  
   geoLocation: geoLocationReducer,
   user: userReducer,
@@ -231,6 +260,7 @@ const rootReducer = combineReducers({
   leaderBoard: leaderBoardReducer,
   recentMessage: recentMessageReducer,
   publicProfileDialog: publicProfileDialogReducer,
+  suggestions: suggestionReducer,
 });
 
 

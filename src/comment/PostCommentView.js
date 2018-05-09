@@ -8,7 +8,7 @@ import LocationButton from '../LocationButton';
 import SelectedMenu from '../SelectedMenu';
 import config, {constant} from '../config/default';
 import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
+import AddIcon from '@material-ui/icons/Add';
 import Dialog, { 
     DialogActions,
     DialogContent,
@@ -23,9 +23,9 @@ import Collapse from 'material-ui/transitions/Collapse';
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
-import CloseIcon from 'material-ui-icons/Close';
+import CloseIcon from '@material-ui/icons/Close';
 import Slide from 'material-ui/transitions/Slide';
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ReactDOM from 'react-dom';
 import {addComment} from '../MessageDB';
 import CustomTags from '../CustomTags';

@@ -7,7 +7,7 @@ import Dialog, {
   DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
-import LocationIcon from 'material-ui-icons/LocationOn';
+import LocationIcon from '@material-ui/icons/LocationOn';
 import geoString from './GeoLocationString';
 /*
 import {connect} from "react-redux";

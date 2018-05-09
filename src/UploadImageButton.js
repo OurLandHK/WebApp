@@ -12,7 +12,7 @@ import Dialog, {
   DialogContentText,
   DialogTitle,
 } from 'material-ui/Dialog';
-import FileUploadIcon from 'material-ui-icons/FileUpload';
+import FileUploadIcon from '@material-ui/icons/FileUpload';
 import imageResizer from './ImageResizer';
 
 const styles = theme => ({

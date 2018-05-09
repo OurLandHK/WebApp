@@ -4,7 +4,7 @@ import Button from 'material-ui/Button';
 import { connect } from "react-redux";
 import { SocialIcon } from 'react-social-icons';
 import { withStyles } from 'material-ui/styles';
-import ExitToApp from 'material-ui-icons/ExitToApp';
+import ExitToApp from '@material-ui/icons/ExitToApp';
 import { signOut, signIn } from "./actions";
 
 const styles = theme => ({

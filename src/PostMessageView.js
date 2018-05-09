@@ -7,9 +7,9 @@ import Checkbox from 'material-ui/Checkbox';
 import LocationButton from './LocationButton';
 import postMessage from './PostMessage';
 import SelectedMenu from './SelectedMenu';
-import config from './config/default';
+import config, {constant} from './config/default';
 import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
+import AddIcon from '@material-ui/icons/Add';
 import Dialog, { DialogTitle } from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import Chip from 'material-ui/Chip';
@@ -21,13 +21,13 @@ import Collapse from 'material-ui/transitions/Collapse';
 import Typography from 'material-ui/Typography';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
-import CloseIcon from 'material-ui-icons/Close';
-import FileUploadIcon from 'material-ui-icons/FileUpload';
+import CloseIcon from '@material-ui/icons/Close';
+import FileUploadIcon from '@material-ui/icons/FileUpload';
 import Slide from 'material-ui/transitions/Slide';
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ReactDOM from 'react-dom';
-import CustomTags from './CustomTags';
 import UploadImageButton from './UploadImageButton';
+import IntegrationReactSelect from './IntegrationReactSelect';
 import uuid from 'js-uuid';
 import {
   checkAuthState,
@@ -86,9 +86,7 @@ class PostMessageView extends Component {
       tags: []};
     this.handleRequestDelete = this.handleRequestDelete.bind(this);
     this.handleTouchTap = this.handleTouchTap.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.handleAddition = this.handleAddition.bind(this);
-    this.handleDrag = this.handleDrag.bind(this);
+    this.handleTagChange = this.handleTagChange.bind(this);
     this.summaryTextField = null;
   }
 
@@ -219,31 +217,21 @@ class PostMessageView extends Component {
     alert(evt);
   }
 
-  handleDelete(i) {
-        let tags = this.state.tags;
-        tags.splice(i, 1);
-        this.setState({tags: tags});
+  handleTagChange(value) {
+    let tags = [];
+    if(value != null && value != '') {
+      var partsOfStr = value.split(',');
+      let i = 0;
+      partsOfStr.forEach(function(element) {
+        tags.push({
+          id: tags.length + 1,
+          text: element
+        });
+      });
+    } 
+    this.setState({tags: tags});
   }
 
-  handleAddition(tag) {
-	let tags = this.state.tags;
-	tags.push({
-		id: tags.length + 1,
-		text: tag
-	});
-	this.setState({tags: tags});
-  }
-
-  handleDrag(tag, currPos, newPos) {
-	let tags = this.state.tags;
-
-	// mutate array
-	tags.splice(currPos, 1);
-	tags.splice(newPos, 0, tag);
-
-	// re-render
-	this.setState({ tags: tags });
-  }
 
   uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {  
     this.setState({
@@ -297,13 +285,12 @@ class PostMessageView extends Component {
                     onChange={event => this.setState({ summary: event.target.value })}
                     inputRef={(tf) => {this.summaryTextField = tf;}}
                   />
-                  <Label for="tags">分類</Label>
-                  <CustomTags tags={tags}
-                    inline={false}
-                    placeholder="新增分類"
-                    handleDelete={this.handleDelete}
-                    handleAddition={this.handleAddition}
-                    handleDrag={this.handleDrag} /> 
+                  <IntegrationReactSelect 
+                    label={constant.tagLabel}
+                    placeholder={constant.tagPlaceholder}
+                    suggestions={this.props.suggestions.tag}
+                    onChange={(value) => this.handleTagChange(value)}
+                  />
                   <div className={classes.hidden}>
                     <TextField id="status" label="現況" className={classes.textField} disabled value={this.state.status} />                  
                   </div>
@@ -365,6 +352,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     geoLocation : state.geoLocation,
     user:         state.user,
+    suggestions:  state.suggestions,
   };
 }
 
