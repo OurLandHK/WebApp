@@ -12,6 +12,11 @@ https://google.github.io/styleguide/jsguide.html
 		* To let users sign-in on the web app we'll use *Facebook* auth currently, which needs to be enabled.
 		* Follow this guide to setup Facebook App https://firebase.google.com/docs/auth/web/facebook-login		
 		* In the Firebase Console open the Authentication section > SIGN IN METHOD tab (click here to go there) you need to enable the Facebook Sign-in Provider and click SAVE. This will allow users to sign-in the Web app with their Facebook accounts
+	* Restore Database
+		* Install firestore-back-restore https://www.npmjs.com/package/firestore-backup-restore
+		* Retrieving Google Cloud Account Credentials with above link and put into path/to/restore/credentials/file.json
+		* extract the sample/sampledb.zip into ./backups/myDatabase
+		* firestore-backup-restore --backupPath ./backups/myDatabase --restoreAccountCredentials path/to/restore/credentials/file.json
 
 
 2. Install the Firebase Command Line Interface (For windows, please use powershell with administrator right)

@@ -291,7 +291,7 @@ export function fetchAddressBookFromOurLand() {
   return dispatch => {
     var db = firebase.firestore();
     /// Use the UID for Ourland HK's account
-    var collectionRef = db.collection(config.userDB).doc("mUQgwxkmPBfVA47d9lHzB482Nmp1").collection(config.addressBook);
+    var collectionRef = db.collection(config.userDB).doc(config.MasterUID).collection(config.addressBook);
     collectionRef.onSnapshot(function() {})         
     collectionRef.get().then(function(querySnapshot) {
        const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
@@ -307,7 +307,7 @@ export function fetchConcernMessagesFromOurLand() {
   return dispatch => {
     var db = firebase.firestore();
     /// Use the UID for Ourland HK's account
-    let user={uid:'mUQgwxkmPBfVA47d9lHzB482Nmp1'}
+    let user={uid:config.MasterUID}
     return getUserProfile(user).then((userProfile)=>{
       const messages = userProfile.concernMessages;
       return dispatch(fetchFocusMessage(messages));
