@@ -269,8 +269,10 @@ class PostMessageView extends Component {
                 <Typography variant="title" color="inherit" className={classes.flex}>提交</Typography>     
               </Toolbar>
             </AppBar>
-              <br/>
               <div className={classes.dialogContainer}>
+              <br/>
+              <br/>
+              <br/>
               <Form>
                 <FormGroup>           
                   <TextField
