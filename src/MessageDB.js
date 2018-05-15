@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 import uuid from 'js-uuid';
 import config, {constant} from './config/default';
-import { light } from 'material-ui/styles/createPalette';
+import { light } from '@material-ui/core/styles/createPalette';
 
 function degreesToRadians(degrees) {return (degrees * Math.PI)/180;}
 
@@ -124,7 +124,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
         streetAddress: streetAddress,
         tag: tags,
         createdAt: new Date(now),
-        lastUpdate: null,
+        lastUpdate: new Date(now),
         key: key,   
         uid: currentUser.uid,
         fbuid: currentUser.providerData[0].uid,
@@ -256,6 +256,7 @@ function updateMessage(messageKey, messageRecord) {
             return(messageRecordRef);
         }) 
     } else {
+        // we can use this to update the scheme if needed.
         messageRecord.lastUpdate = new Date(now);
         return collectionRef.doc(messageKey).set(messageRecord).then(function(messageRecordRef) {
             console.log("Document written with ID: ", messageKey);

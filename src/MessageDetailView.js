@@ -1,26 +1,26 @@
 import * as firebase from 'firebase';
 import React, { Component } from 'react';
-import Button from 'material-ui/Button';
-import Card, { CardActions, CardContent, CardMedia} from 'material-ui/Card';
+import Button from '@material-ui/core/Button';
+import Card, { CardActions, CardContent, CardMedia} from '@material-ui/core/Card';
 import ProgressiveCardImg from './ProgressiveCardImg';
-import Typography from 'material-ui/Typography';
+import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ForumIcon from '@material-ui/icons/Forum';
-import Grid from 'material-ui/Grid';
+import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
-import red from 'material-ui/colors/red';
+import red from '@material-ui/core/colors/red';
 import EventMap from './REventMap';
 import ChipArray from './ChipArray';
 import MessageDetailViewImage from './MessageDetailViewImage';
-import Tabs, { Tab } from 'material-ui/Tabs';
-import AppBar from 'material-ui/AppBar';
+import Tabs, { Tab } from '@material-ui/core/Tabs';
+import AppBar from '@material-ui/core/AppBar';
 import CommentList from './comment/CommentList';
 import geoString from './GeoLocationString';
 import PostCommentView from './comment/PostCommentView';
-import Avatar from 'material-ui/Avatar';
-import green from 'material-ui/colors/green';
+import Avatar from '@material-ui/core/Avatar';
+import green from '@material-ui/core/colors/green';
 import {
   updateRecentMessage,
   updatePublicProfileDialog,

@@ -2,31 +2,32 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import { Form, Label, Input} from 'reactstrap';
-import { FormGroup, FormControlLabel, FormText, FormControl } from 'material-ui/Form';
-import Checkbox from 'material-ui/Checkbox';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Checkbox from '@material-ui/core/Checkbox';
 import LocationButton from '../LocationButton';
 import SelectedMenu from '../SelectedMenu';
 import config, {constant} from '../config/default';
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog, { 
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle } from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
-import { withStyles } from 'material-ui/styles';
+    DialogTitle } from '@material-ui/core/Dialog';
+import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
-import InputLabel from 'material-ui/Input/InputLabel';
-import IconButton from 'material-ui/IconButton';
-import Collapse from 'material-ui/transitions/Collapse';
-import Typography from 'material-ui/Typography';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
+import InputLabel from '@material-ui/core/InputLabel';
+import IconButton from '@material-ui/core/IconButton';
+import Collapse from '@material-ui/core//Collapse';
+import Typography from '@material-ui/core/Typography';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
-import Slide from 'material-ui/transitions/Slide';
+import Slide from '@material-ui/core//Slide';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ReactDOM from 'react-dom';
 import {addComment} from '../MessageDB';
 import CustomTags from '../CustomTags';
 import { geocode } from '@google/maps/lib/apis/geocode';

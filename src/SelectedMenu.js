@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import List, { ListItem, ListItemText } from 'material-ui/List';
-import green from 'material-ui/colors/green';
-import Menu, { MenuItem } from 'material-ui/Menu';
+import { withStyles } from '@material-ui/core/styles';
+import List, { ListItem, ListItemText } from '@material-ui/core/List';
+import green from '@material-ui/core/colors/green';
+import Menu, { MenuItem } from '@material-ui/core/Menu';
 
 
 class SelectedMenu extends Component {
