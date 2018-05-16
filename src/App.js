@@ -22,7 +22,7 @@ import {
   init3rdPartyLibraries
 } from './actions';
 import {constant} from './config/default';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import CssBaseline from 'material-ui/CssBaseline';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);  
 const store = createStoreWithMiddleware(rootReducer);

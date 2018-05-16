@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 //import 'bootstrap/dist/css/bootstrap.css';
 import { MuiThemeProvider, createMuiTheme }
-  from '@material-ui/core/styles';
+  from 'material-ui/styles';
 import { createStore, applyMiddleware } from 'redux';  
 import thunk from 'redux-thunk';  
 import { Provider } from 'react-redux';  

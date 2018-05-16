@@ -2,21 +2,21 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import config, {constant} from './config/default';
-import Button from '@material-ui/core/Button';
-import Dialog, { DialogTitle } from '@material-ui/core/Dialog';
-import IconButton from '@material-ui/core/IconButton';
+import Button from 'material-ui/Button';
+import Dialog, { DialogTitle } from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import { withStyles } from 'material-ui/styles';
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core//Slide';
-import List, { ListItem, ListItemIcon, ListItemText } from '@material-ui/core/List';
+import Slide from 'material-ui/transitions/Slide';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import {connect} from "react-redux";
-import Tabs, { Tab } from '@material-ui/core/Tabs';
-import Avatar from '@material-ui/core/Avatar';
-import Card, { CardActions, CardContent, CardHeader } from '@material-ui/core/Card';
+import Tabs, { Tab } from 'material-ui/Tabs';
+import Avatar from 'material-ui/Avatar';
+import Card, { CardActions, CardContent, CardHeader } from 'material-ui/Card';
 import {
   toggleLeaderBoard,
   fetchTopTwenty,

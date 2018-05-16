@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 import uuid from 'js-uuid';
 import config, {constant} from './config/default';
-import { light } from '@material-ui/core/styles/createPalette';
+import { light } from 'material-ui/styles/createPalette';
 
 function degreesToRadians(degrees) {return (degrees * Math.PI)/180;}
 

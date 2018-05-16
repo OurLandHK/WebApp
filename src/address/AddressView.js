@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
+import Button from 'material-ui/Button';
 import AddIcon from '@material-ui/icons/Add';
 import PlaceIcon from '@material-ui/icons/Place';
 import WorkIcon from '@material-ui/icons/Work';
 import HomeIcon from '@material-ui/icons/Home';
-import Typography from '@material-ui/core/Typography';
-import List, { ListItem, ListItemIcon, ListItemText } from '@material-ui/core/List';
+import Typography from 'material-ui/Typography';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import LocationButton from '../LocationButton';
 import Dialog, { 
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle } from '@material-ui/core/Dialog';
-import TextField from '@material-ui/core/TextField';
+    DialogTitle } from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
 import {connect} from "react-redux";
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from 'material-ui/styles';
 import timeOffsetStringInChinese from '../TimeString';
 import geoString from '../GeoLocationString';
 import { deleteAddress, upsertAddress } from '../actions';

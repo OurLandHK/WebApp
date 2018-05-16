@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
-import CardMedia from '@material-ui/core/Card';
-import { withStyles } from '@material-ui/core/styles';
+import CardMedia from 'material-ui/Card';
+import { withStyles } from 'material-ui/styles';
 import classnames from 'classnames';
 
 

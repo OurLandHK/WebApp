@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
-import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
+import Drawer from 'material-ui/Drawer';
+import IconButton from 'material-ui/IconButton';
 import InboxIcon from '@material-ui/icons/Inbox';
-import List, { ListItem, ListItemIcon, ListItemText } from '@material-ui/core/List';
-import Icon from '@material-ui/core/Icon';
+import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import Icon from 'material-ui/Icon';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import StarIcon from '@material-ui/icons/Star';
 import LocationOn from '@material-ui/icons/LocationOn';
@@ -15,7 +15,7 @@ import AddressDialog from './address/AddressDialog';
 import EventListDialog from './EventListDialog';
 import LeaderBoard from './LeaderBoard';
 import {connect} from "react-redux";
-import Divider from '@material-ui/core/Divider';
+import Divider from 'material-ui/Divider';
 import {
   fetchLocation,
   toggleAddressDialog,

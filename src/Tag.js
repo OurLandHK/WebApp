@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import { DragSource, DropTarget } from "react-dnd";
 import PropTypes from "prop-types";
 import flow from "lodash/flow";
-import Chip from '@material-ui/core/Chip';
+import Chip from 'material-ui/Chip';
 
 const ItemTypes = { TAG: "tag" };
 

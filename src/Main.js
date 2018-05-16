@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles } from 'material-ui/styles';
 import NearbyEventDialog from './NearbyEventDialog';
 import RegionEventDialog from './RegionEventDialog';
 import PostMessageView from './PostMessageView';

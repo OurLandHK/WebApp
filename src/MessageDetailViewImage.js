@@ -1,10 +1,10 @@
 import ProgressiveCardImg from './ProgressiveCardImg';
-import Grid from '@material-ui/core/Grid';
+import Grid from 'material-ui/Grid';
 import {FormGroup} from 'reactstrap';
 import React, { Component } from 'react';
-import { CardActions, CardContent, CardMedia} from '@material-ui/core/Card';
+import { CardActions, CardContent, CardMedia} from 'material-ui/Card';
 import UploadImageButton from './UploadImageButton';
-import Button from '@material-ui/core/Button';
+import Button from 'material-ui/Button';
 import {updateMessageImageURL} from './MessageDB';
 import uuid from 'js-uuid';
 

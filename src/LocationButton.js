@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import Button  from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
+import Button  from 'material-ui/Button';
+import TextField from 'material-ui/TextField';
 import Dialog, {
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from '@material-ui/core/Dialog';
+} from 'material-ui/Dialog';
 import LocationIcon from '@material-ui/icons/LocationOn';
 import geoString from './GeoLocationString';
 /*

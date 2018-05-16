@@ -4,9 +4,9 @@
   "private": true,
   "dependencies": {
     "@google/maps": "^0.4.6",
-    "@material-ui/core": "^1.0.0-rc.0",
-    "@material-ui/icons": "^1.0.0-rc.0",
-    "babel-core": "^6.26.0",
+    "@material-ui/icons": "^1.0.0-beta.43",
+    "ajv": "^6.0.0",
+    "babel-core": "^6.26.3",
     "bootstrap": "^4.1.0",
     "bootstrap-social": "^5.1.1",
     "firebase": "^4.13.1",
@@ -14,10 +14,11 @@
     "google-maps-react": "^2.0.2",
     "jquery": "^1.12.4",
     "js-uuid": "0.0.6",
+    "material-ui": "^1.0.0-beta.41",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-helmet": "^5.2.0",
-    "react-redux": "^5.0.6",
+    "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-select": "^1.2.1",
@@ -27,12 +28,12 @@
     "react-tap-event-plugin": "^3.0.2",
     "react-transition-group": "^2.3.1",
     "reactstrap": "^6.0.1",
-    "redux": "^3.7.2",
+    "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
-    "webpack": "^2.7.0"
+    "webpack": "^3.1.0"
   },
   "devDependencies": {
-    "react-scripts": "1.0.7"
+    "react-scripts": "1.1.4"
   },
   "scripts": {
     "start": "BROWSER=none react-scripts start",
