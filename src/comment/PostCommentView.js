@@ -2,7 +2,9 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import { Form, Label, Input} from 'reactstrap';
-import { FormGroup, FormControlLabel, FormText, FormControl } from 'material-ui/Form';
+import FormGroup from 'material-ui/Form';
+import FormControlLabel from 'material-ui/Form';
+import FormControl from 'material-ui/Form';
 import Checkbox from 'material-ui/Checkbox';
 import LocationButton from '../LocationButton';
 import SelectedMenu from '../SelectedMenu';
@@ -26,7 +28,6 @@ import Toolbar from 'material-ui/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from 'material-ui/transitions/Slide';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ReactDOM from 'react-dom';
 import {addComment} from '../MessageDB';
 import CustomTags from '../CustomTags';
 import { geocode } from '@google/maps/lib/apis/geocode';

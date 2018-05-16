@@ -10,8 +10,9 @@ function getUserProfile(user) {
     const db = firebase.firestore();
     
     
-    var collectionRef = db.collection(config.userDB);
-    var docRef = collectionRef.doc(user.uid);
+    let collectionRef = db.collection(config.userDB);
+    let docRef = collectionRef.doc(user.uid);
+    let now = Date.now();
     return docRef.get().then(function(doc) {
         if (doc.exists) {
             return(doc.data());
@@ -24,7 +25,8 @@ function getUserProfile(user) {
                 role: constant.user,
                 publishMessages: [],
                 concernMessages: [],
-                completeMessages: []
+                completeMessages: [],
+                lastLogin: new Date(now)
             };
             collectionRef.doc(user.uid).set(userRecord).then(function(userRecordRef) {
                 console.log("Document written with ID: ", user.uid);
@@ -206,14 +208,24 @@ function isConcernMessage(user, messageUUID) {
 
 
 function updateUserRecords(userid, userRecord) {
+    let now = Date.now();
+    let lastLogin = new Date(now);
     const db = firebase.firestore();
-    
-    
-    let collectionRef = db.collection(config.userDB);    
-    return collectionRef.doc(userid).set(userRecord).then(function(userRecordRef) {
-//        console.log("Document written with ID: ", userid);
-        return(userRecordRef);
-    }) 
+    let collectionRef = db.collection(config.userDB);
+    if(userRecord != null) {
+        userRecord.lastLogin = lastLogin;
+        return collectionRef.doc(userid).set(userRecord).then(function(userRecordRef) {
+    //        console.log("Document written with ID: ", userid);
+            return(userRecordRef);
+        }) 
+    } else {
+        return collectionRef.doc(userid).update({
+            lastLogin: lastLogin
+        }).then(function(userRecordRef) {
+    //        console.log("Document written with ID: ", userid);
+            return(userRecordRef);
+        }) 
+    }
 }
 
 function addPublishMessagesKeyToUserProfile(user, messageUUID) {

@@ -25,7 +25,6 @@ https://google.github.io/styleguide/jsguide.html
     * Install create-react-app `npm install -g create-react-app`
 	* Install windows-build-tools on windows envirnoment `npm install --global --production windows-build-tools`
     * Install the following peer Dependencies
-        * `npm install react-tap-event-plugin`
 		* `npm install jquery@^1.9.1`
 		* `npm install webpack@^2.2.0`
     * Checkout the source code and run the following commands

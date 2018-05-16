@@ -1,7 +1,8 @@
 /*global FB*/
 import React, { Component } from 'react';
-import { Form, FormGroup, Label, Input} from 'reactstrap';
-import { FormText, FormControl } from 'material-ui/Form';
+import FormGroup from 'material-ui/Form';
+import FormControlLabel from 'material-ui/Form';
+import FormControl from 'material-ui/Form';
 import LocationButton from './LocationButton';
 import config from './config/default';
 import Button from 'material-ui/Button';

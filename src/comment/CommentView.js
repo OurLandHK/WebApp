@@ -19,7 +19,7 @@ import {
 import {updateCommentApproveStatus, getMessage, updateMessage} from '../MessageDB';
 import {addCompleteMessage} from '../UserProfile';
 import {connect} from 'react-redux';
-import { Button } from 'material-ui';
+import Button from 'material-ui/Button';
 
 
 const styles = theme => ({

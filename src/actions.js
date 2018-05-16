@@ -24,7 +24,7 @@ import {
 } from './actions/types';
 import * as firebase from 'firebase';
 import config, {constant} from './config/default';
-import {getUserProfile} from './UserProfile';
+import {getUserProfile, updateUserProfile} from './UserProfile';
 
 const currentLocationLabel = "現在位置";
 
@@ -159,7 +159,10 @@ export function checkAuthState() {
       dispatch(fetchUser(user));
       if(user!=null) {
         return getUserProfile(user).then((userProfile)=>{
-          return dispatch(fetchUserProfile(userProfile))});
+          return updateUserProfile(user, userProfile).then(()=>{
+            return dispatch(fetchUserProfile(userProfile))
+          });
+        });
       }
       return null;
     });

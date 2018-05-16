@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'bootstrap/dist/css/bootstrap.css';
+//import 'bootstrap/dist/css/bootstrap.css';
 import { MuiThemeProvider, createMuiTheme }
   from 'material-ui/styles';
 import { createStore, applyMiddleware } from 'redux';  
@@ -19,7 +19,6 @@ const theme = createMuiTheme({
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);  
 const store = createStoreWithMiddleware(rootReducer);
-
 
 
 ReactDOM.render(
