@@ -79,9 +79,9 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
         .catch(function(error) {
             console.log("Error getting documents: ", error);
         });
-        collectionRef.where("hide", "==", false).where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).onSnapshot(function(querySnapshot) {
+/*        collectionRef.where("hide", "==", false).where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).onSnapshot(function(querySnapshot) {
             querySnapshot.forEach(callback);
-        })       
+        })       */
     } else {
         // Use firestore
         collectionRef.where("hide", "==", false).orderBy("createdAt", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
@@ -90,9 +90,9 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
         .catch(function(error) {
             console.log("Error getting documents: ", error);
         });
-        collectionRef.where("hide", "==", false).onSnapshot(function(querySnapshot) {
+/*        collectionRef.where("hide", "==", false).onSnapshot(function(querySnapshot) {
             querySnapshot.forEach(callback);
-        })       
+        })  */     
     }
  }
 
