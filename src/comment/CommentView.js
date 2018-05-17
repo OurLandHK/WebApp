@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Card, { CardContent, CardMedia } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
 import timeOffsetStringInChinese from '../TimeString';
-import { withStyles } from 'material-ui/styles';
-import red from 'material-ui/colors/red';
-import Avatar from 'material-ui/Avatar';
+import { withStyles } from '@material-ui/core/styles';
+import red from '@material-ui/core/colors/red';
+import Avatar from '@material-ui/core/Avatar';
 import geoString from '../GeoLocationString';
 import config, {constant} from '../config/default';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
@@ -19,7 +22,7 @@ import {
 import {updateCommentApproveStatus, getMessage, updateMessage} from '../MessageDB';
 import {addCompleteMessage} from '../UserProfile';
 import {connect} from 'react-redux';
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
 
 
 const styles = theme => ({

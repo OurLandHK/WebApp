@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
 import { connect } from "react-redux";
 import { SocialIcon } from 'react-social-icons';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import { signOut, signIn } from "./actions";
 

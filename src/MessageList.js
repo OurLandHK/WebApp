@@ -6,7 +6,7 @@ import distance from './Distance';
 import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
 import { updateFilter, updateFilterTagList} from './actions';
 import {connect} from "react-redux";
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   scrollingWrapper: {
@@ -107,6 +107,7 @@ class MessageList extends Component {
         var lat = this.props.filter.geolocation.latitude;
         var dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
         if(dis < this.props.filter.distance) {
+          //console.log('message key: ' + val.key );
           this.setMessage(val)  
         } else {
           this.setState({statusMessage: constant.messageListNoMessage});
@@ -128,6 +129,7 @@ class MessageList extends Component {
   };
 
   clear() {
+    //console.log("clear  message list")
     this.setState({data: []});
   }  
 
@@ -140,15 +142,14 @@ class MessageList extends Component {
     } = filter;
     this.setState({geolocation: geolocation, statusMessage: constant.messageListLoadingStatus});
     //console.log("Fetch MessageIDs: " + this.state.messageIds);
+    this.clear();
     if(this.state.messageIds.length != 0) {
-      this.clear();
       //console.log("List" + this.state.messageIds);
       this.state.messageIds.map((Ids) => {
         //console.log("Ids:" + Ids);
         getMessage(Ids).then((message) => {this.setMessage(message)});
       });
     } else {
-      this.clear();
       switch (geolocation) {
         case constant.invalidLocation:
           this.setState({statusMessage: constant.messageListBlockLocation});
@@ -157,6 +158,7 @@ class MessageList extends Component {
           this.setState({statusMessage: constant.messageListTimeOut});
           break;
         default:
+          //console.log("fetchMessagesBaseOnGeo");
           fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, this.setMessageRef);
           break;
       }
@@ -190,7 +192,6 @@ class MessageList extends Component {
     } else {
       let messageList = null;
       let elements = this.state.data.map((message) => {
-        //console.log('message key: ' + message.key );
         if(this.state.selectedTag != null && !message.tag.includes(this.state.selectedTag)) {
           // filter by selected tag.
           return null;

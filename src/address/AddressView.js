@@ -1,22 +1,25 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import PropTypes from 'prop-types';
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import PlaceIcon from '@material-ui/icons/Place';
 import WorkIcon from '@material-ui/icons/Work';
 import HomeIcon from '@material-ui/icons/Home';
-import Typography from 'material-ui/Typography';
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText  from '@material-ui/core/ListItemText';
 import LocationButton from '../LocationButton';
-import Dialog, { 
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle } from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import TextField from '@material-ui/core/TextField';
 import {connect} from "react-redux";
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import timeOffsetStringInChinese from '../TimeString';
 import geoString from '../GeoLocationString';
 import { deleteAddress, upsertAddress } from '../actions';

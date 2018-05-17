@@ -2,18 +2,17 @@ import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import config from './config/default';
 import { Form, Label, Input} from 'reactstrap';
-import FormGroup from 'material-ui/Form';
-import FormControlLabel from 'material-ui/Form';
-import FormControl from 'material-ui/Form';
-import Button  from 'material-ui/Button';
-import TextField from 'material-ui/TextField';
-import { withStyles } from 'material-ui/styles';
-import Dialog, {
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from 'material-ui/Dialog';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Button  from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import FileUploadIcon from '@material-ui/icons/FileUpload';
 import imageResizer from './ImageResizer';
 
