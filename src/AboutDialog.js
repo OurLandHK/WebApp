@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import Dialog, { DialogTitle } from 'material-ui/Dialog';
-import { withStyles } from 'material-ui/styles';
-import Slide from 'material-ui/transitions/Slide';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import { withStyles } from '@material-ui/core/styles';
+import Slide from '@material-ui/core/Slide';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
-import Typography from 'material-ui/Typography';
-import IconButton from 'material-ui/IconButton';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 
 const Transition = props => {
   return <Slide direction="left" {...props} />;

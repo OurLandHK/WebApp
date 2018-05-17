@@ -6,7 +6,7 @@ import distance from './Distance';
 import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
 import { updateFilter, updateFilterTagList} from './actions';
 import {connect} from "react-redux";
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   scrollingWrapper: {

@@ -1,24 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Drawer from 'material-ui/Drawer';
-import IconButton from 'material-ui/IconButton';
-import Button from 'material-ui/Button';
+import { withStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import ForumIcon from '@material-ui/icons/Forum';
 import EmailIcon from '@material-ui/icons/Email';
 import classnames from 'classnames';
-import red from 'material-ui/colors/red';
-import Typography from 'material-ui/Typography';
+import red from '@material-ui/core/colors/red';
+import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import MessageDetailView from './MessageDetailView';
 import {updateMessageConcernUser} from './MessageDB';
-import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
-import Grid from 'material-ui/Grid';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import yellow from 'material-ui/colors/yellow';
-import purple from 'material-ui/colors/purple';
+import BottomNavigation, { BottomNavigationAction } from '@material-ui/core/BottomNavigation';
+import Grid from '@material-ui/core/Grid';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import yellow from '@material-ui/core/colors/yellow';
+import purple from '@material-ui/core/colors/purple';
 
 
 import {

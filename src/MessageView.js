@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Card, { CardMedia, CardHeader, CardContent} from 'material-ui/Card';
-import Grid from 'material-ui/Grid'
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Grid from '@material-ui/core/Grid'
 import distance from './Distance';
 import timeOffsetStringInChinese from './TimeString.js';
-import { withStyles } from 'material-ui/styles';
-import red from 'material-ui/colors/red';
+import { withStyles } from '@material-ui/core/styles';
+import red from '@material-ui/core/colors/red';
 import MessageDialog from './MessageDialog';
-import Typography from 'material-ui/Typography';
+import Typography from '@material-ui/core/Typography';
 import {incMessageViewCount} from './MessageDB';
 import {
   updateRecentMessage,
