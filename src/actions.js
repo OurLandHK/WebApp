@@ -23,6 +23,7 @@ import {
   UPDATE_FILTER_SORTING
 } from './actions/types';
 import * as firebase from 'firebase';
+import * as firestore from 'firebase/firestore';
 import config, {constant} from './config/default';
 import {getUserProfile, updateUserProfile} from './UserProfile';
 
@@ -68,8 +69,8 @@ function fetchUser(user, loading=false) {
   return {type: FETCH_USER, user: user, loading: loading};
 }
 
-function fetchUserProfile(userProfile) {
-  return {type: FETCH_USER_PROFILE, userProfile: userProfile};
+function fetchUserProfile(userProfile, lastLogin) {
+  return {type: FETCH_USER_PROFILE, userProfile: userProfile, lastLogin: lastLogin};
 }
 
 function dispatchRecentMessage(id, open) {
@@ -153,14 +154,20 @@ export function fetchLocation(callback=receiveLocation) {
 export function checkAuthState() {
   console.log("checkAuthState");
   return dispatch => {
-    var auth = firebase.auth();
+    let  auth = firebase.auth();
     dispatch(fetchUser(null, true));
     return auth.onAuthStateChanged((user) => {
       dispatch(fetchUser(user));
       if(user!=null) {
         return getUserProfile(user).then((userProfile)=>{
+          let lastLogin = Date.now();
+          if(userProfile.lastLogin != null) {
+            lastLogin = userProfile.lastLogin;
+          }
+          console.log("Last Login: " + lastLogin);
           return updateUserProfile(user, userProfile).then(()=>{
-            return dispatch(fetchUserProfile(userProfile))
+            console.log("Last Login: " + lastLogin);
+            return dispatch(fetchUserProfile(userProfile, lastLogin))
           });
         });
       }
@@ -172,7 +179,7 @@ export function checkAuthState() {
 export function refreshUserProfile(user) {
   return dispatch => {
     getUserProfile(user).then((userProfile)=>{
-      dispatch(fetchUserProfile(userProfile))});
+      dispatch(fetchUserProfile(userProfile, null))});
   }  
 }
 
