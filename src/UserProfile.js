@@ -213,18 +213,19 @@ function updateUserRecords(userid, userRecord) {
     const db = firebase.firestore();
     let collectionRef = db.collection(config.userDB);
     if(userRecord != null) {
+      /* remoe temporary for test new icon */
         userRecord.lastLogin = lastLogin;
+       /* */
         return collectionRef.doc(userid).set(userRecord).then(function(userRecordRef) {
-    //        console.log("Document written with ID: ", userid);
             return(userRecordRef);
         }) 
     } else {
-        return collectionRef.doc(userid).update({
+/*        return collectionRef.doc(userid).update({
             lastLogin: lastLogin
         }).then(function(userRecordRef) {
-    //        console.log("Document written with ID: ", userid);
             return(userRecordRef);
         }) 
+*/        
     }
 }
 
