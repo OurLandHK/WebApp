@@ -24,6 +24,7 @@ import {
   toggleAddressDialog,
   toggleLeaderBoard,
 } from "./actions";
+import {upgradeAllMessage} from './MessageDB';
 import { constant } from './config/default';
 import AboutDialog from './AboutDialog';
 import SignOutButton from './SignOutButton';
@@ -69,6 +70,10 @@ class DrawerMenu extends Component {
     this.openAboutDialog();
   }
 
+  upgrade() {
+    this.handleClose();
+    upgradeAllMessage()
+  }
 
   currentClick() {
     this.props.fetchLocation();
@@ -93,6 +98,7 @@ class DrawerMenu extends Component {
     let signOutSection = null;
     let userLoginDisplay =  null;
     let concernMessage = null;
+    let adminButton = null;
     let userProfileView = userProfileView = <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>;
     const { user } = this.props;
 
@@ -103,7 +109,7 @@ class DrawerMenu extends Component {
         signOutSection = (<ListItem><SignOutButton/></ListItem>);
         if(this.state.concernMessages) {
           concernMessage = <EventListDialog title="關注" messageIds={this.state.concernMessages}/> 
-        }
+        }        
         userLoginDisplay = (<span>
                             <ListItem button>
                               <ListItemIcon>
@@ -117,8 +123,17 @@ class DrawerMenu extends Component {
                               </ListItemIcon>
                               <ListItemText primary={constant.addressBookLabel} onClick={() => this.addressDialogClick()}/>
                             </ListItem></span>);
+        if(user.userProfile != null & user.userProfile.role == constant.admin) {
+          adminButton = <ListItem button>
+            <ListItemIcon>
+              <ChatBubbleIcon />
+            </ListItemIcon>
+            <ListItemText primary="Upgrade" onClick={() => this.upgrade()}/>
+          </ListItem> 
+        }                            
       }
     }
+
 
     return (
       <div>
@@ -159,7 +174,8 @@ class DrawerMenu extends Component {
                   <ChatBubbleIcon />
                 </ListItemIcon>
                 <ListItemText primary="關於" onClick={() => this.showAbout()}/>
-              </ListItem>                                                        
+              </ListItem>
+              {adminButton}                                                        
             </List>
           </div>                  
         </Drawer>
