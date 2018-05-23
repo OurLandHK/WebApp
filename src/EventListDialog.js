@@ -65,9 +65,16 @@ class EventListDialog extends React.Component {
     if(this.props.title != undefined) {
       title = this.props.title;
     }    
+
+    var userName = "";
+    if(this.props.displayName != undefined) {
+      userName = this.props.displayName;
+    }
+
     this.state = {
       messageIds: messageIds,
       title: title,
+      userName: userName,
       open: false,
     };
   }    
@@ -118,7 +125,7 @@ class EventListDialog extends React.Component {
                         <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                             <CloseIcon />
                         </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>{this.state.title}</Typography> 
+                        <Typography variant="title" color="inherit" className={classes.flex}>{this.state.userName} {this.state.title}</Typography> 
                     </Toolbar>
                     <FilterBar disableLocationDrawer={true}/>           
                 </AppBar>
