@@ -109,9 +109,9 @@ class MessageDetailView extends Component {
     let viewCountString = constant.viewCountLabel;
     const { message, classes } = this.props;
     if (message.streetAddress) {
-      locationString = '地點: ${message.streetAddress}'; // (${geoString(message.geolocation.latitude, message.geolocation.longitude)})`;
+      locationString = `地點: ${message.streetAddress}`; // (${geoString(message.geolocation.latitude, message.geolocation.longitude)})`;
     } else {
-      locationString = '地點: 近(${geoString(message.geolocation.latitude, message.geolocation.longitude)})';
+      locationString = `地點: 近(${geoString(message.geolocation.latitude, message.geolocation.longitude)})`;
     }
     if(message.viewCount != null) {
       viewCountString += message.viewCount;

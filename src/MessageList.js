@@ -102,19 +102,7 @@ class MessageList extends Component {
     }
     var val = messageRef.data();
     if(val) {
-      if(this.props.filter.geolocation != constant.invalidLocation) {
-        var lon = this.props.filter.geolocation.longitude;
-        var lat = this.props.filter.geolocation.latitude;
-        var dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
-        if(dis < this.props.filter.distance) {
-          //console.log('message key: ' + val.key );
-          this.setMessage(val)  
-        } else {
-          this.setState({statusMessage: constant.messageListNoMessage});
-        }
-      } else {
-        this.setMessage(val)
-      }
+      this.setMessage(val)
     }
   }
 
@@ -159,7 +147,7 @@ class MessageList extends Component {
           break;
         default:
           //console.log("fetchMessagesBaseOnGeo");
-          fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, this.setMessageRef);
+          fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, null, this.setMessageRef);
           break;
       }
     }

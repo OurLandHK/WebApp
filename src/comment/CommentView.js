@@ -94,7 +94,7 @@ class CommentView extends Component {
             messageRecord.tag = tags;
             break;
         }
-        return updateMessage(messageUUID, messageRecord).then(() => {
+        return updateMessage(messageUUID, messageRecord, true).then(() => {
             let now = Date.now();
             let approvedStatus = {
                 createdAt: new Date(now),

@@ -1,6 +1,7 @@
 import * as firebase from 'firebase';
 import uuid from 'js-uuid';
 import config, {constant} from './config/default';
+import distance from './Distance';
 import { light } from '@material-ui/core/styles/createPalette';
 
 function degreesToRadians(degrees) {return (degrees * Math.PI)/180;}
@@ -33,12 +34,51 @@ function wrapLongitude(longitude) {
     return 180 - (-adjusted % 360);
 }
 
-function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
+function upgradeAllMessage() {
+    const db = firebase.firestore();
+    let collectionRef = db.collection(config.messageDB);
+    collectionRef.onSnapshot(function() {})  
+    collectionRef.get().then(function(querySnapshot) {
+        if(querySnapshot.empty) {
+            return
+        } else { 
+            querySnapshot.forEach(function(messageRef) {
+                var val = messageRef.data();
+                if(val) {
+                    let changeCreatedAt = false;
+                    let change = false;
+                    let before =  val.createdAt;
+                    try {
+                        let createdAt = val.createdAt.toDate();
+                    } catch(error) {
+                        changeCreatedAt = true;
+                    };
+                    if(changeCreatedAt) {
+                        change = true;
+                        val.createdAt = new Date(val.createdAt);
+                        console.log(`Update: ${val.key} ${before} ${val.createdAt}`)
+                    }
+                    if(val.lastUpdate == null) {
+                        change = true;
+                        val.lastUpdate = val.createdAt;
+                    }
+                    if(change) {
+                        return updateMessage(val.key, val, false);
+                    } else {
+                        return;
+                    }
+                }                
+            });
+        }
+    })         
+}
+
+function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, callback) {
 
     const db = firebase.firestore();
     
     
-    var collectionRef = db.collection(config.messageDB);
+    let collectionRef = db.collection(config.messageDB);
     collectionRef.onSnapshot(function() {})         
     if(geocode != null && geocode != NaN && geocode.latitude != undefined) {
 //        console.log("Get message base on Location: (" + geocode.latitude + " ," + geocode.longitude + ") with Radius: " + radius);
@@ -51,29 +91,35 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, callback) {
             const longDegsNorth = metersToLongitudeDegrees(radius, latitudeNorth);
             const longDegsSouth = metersToLongitudeDegrees(radius, latitudeSouth);
             const longDegs = Math.max(longDegsNorth, longDegsSouth);
-/*            
-            return {
-              swCorner: { // bottom-left (SW corner)
-                latitude: latitudeSouth,
-                longitude: wrapLongitude(center.longitude - longDegs),
-              },
-              neCorner: { // top-right (NE corner)
-                latitude: latitudeNorth,
-                longitude: wrapLongitude(center.longitude + longDegs),
-              },
-            };
-          }
-*/
+
         let lesserGeopoint = new firebase.firestore.GeoPoint(latitudeSouth, wrapLongitude(geocode.longitude - longDegs));
         let greaterGeopoint = new firebase.firestore.GeoPoint(latitudeNorth, wrapLongitude(geocode.longitude + longDegs));
 
         // Use firestore
 
-        collectionRef.where("hide", "==", false).where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
+        let query = collectionRef.where("hide", "==", false).where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint);
+        if(lastUpdate != null) {
+            query = query.where("lastUpdate", "<", lastUpdate);
+        }
+        query.orderBy("geolocation", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
             if(querySnapshot.empty) {
                 callback(null);
             } else { 
-                querySnapshot.forEach(callback);
+                querySnapshot.forEach(function(messageRef) {
+                    var val = messageRef.data();
+                    if(val) {
+                        var lon = geocode.longitude;
+                        var lat = geocode.latitude;
+                        var dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
+                        if(dis < radius) {
+                            //console.log('message key: ' + val.key );
+                            callback(messageRef); 
+                        } else {
+                            callback(null);
+                        }
+                    }
+                    
+                });
             }
         })
         .catch(function(error) {
@@ -241,23 +287,26 @@ function getMessage(uuid) {
     });
 }
 
-function updateMessage(messageKey, messageRecord) {
+function updateMessage(messageKey, messageRecord, updateTime) {
     var db = firebase.firestore();
     
     
     var now = Date.now();
     var collectionRef = db.collection(config.messageDB);
     if(messageRecord == null) {
-        messageRecord.lastUpdate = new Date(now);
-        return collectionRef.doc(messageKey).update({
-            lastUpdate: new Date(now)
-        }).then(function(messageRecordRef) {
-            console.log("Document written with ID: ", messageKey);
-            return(messageRecordRef);
-        }) 
+        if(updateTime) {
+            return collectionRef.doc(messageKey).update({
+                lastUpdate: new Date(now)
+            }).then(function(messageRecordRef) {
+                console.log("Document written with ID: ", messageKey);
+                return(messageRecordRef);
+            }) 
+        }
     } else {
         // we can use this to update the scheme if needed.
-        messageRecord.lastUpdate = new Date(now);
+        if(updateTime) {
+            messageRecord.lastUpdate = new Date(now);
+        }
         return collectionRef.doc(messageKey).set(messageRecord).then(function(messageRecordRef) {
             console.log("Document written with ID: ", messageKey);
             return(messageRecordRef);
@@ -298,7 +347,7 @@ function updateMessageImageURL(messageKey, imageURL, publicImageURL, thumbnailIm
         if(thumbnailPublicImageURL != messageRecord.thumbnailPublicImageURL) {
             messageRecord.thumbnailPublicImageURL = thumbnailPublicImageURL;
         }       
-        return updateMessage(messageKey, messageRecord);
+        return updateMessage(messageKey, messageRecord, true);
     });
 }
 
@@ -312,13 +361,13 @@ function updateMessageConcernUser(messageUuid, user, isConcern) {
                 if(index == -1 && isConcern)
                 {
                     messageRecord.concernRecord.push(user.uid);
-                    return updateMessage(messageUuid, messageRecord);
+                    return updateMessage(messageUuid, messageRecord, false);
                 }
                 else
                 {
                     if(!isConcern) {
                         messageRecord.concernRecord.splice(index, 1);
-                        return updateMessage(messageUuid, messageRecord);
+                        return updateMessage(messageUuid, messageRecord, false);
                     }
                 }
             } else {
@@ -326,7 +375,7 @@ function updateMessageConcernUser(messageUuid, user, isConcern) {
                 {
                     console.log("message Uuid " + messageUuid + " User Id " + user.uid)
                     messageRecord.concernRecord = [user.uid];
-                    return updateMessage(messageUuid, messageRecord); 
+                    return updateMessage(messageUuid, messageRecord, false); 
                 }
             }
         } else {
@@ -387,7 +436,7 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
     var collectionRef = db.collection(config.messageDB);  
     return collectionRef.doc(messageUUID).collection(config.commentDB).add(commentRecord).then(function(docRef) {
         return getMessage(messageUUID).then((messageRecord) => {
-            return updateMessage(messageUUID, messageRecord);
+            return updateMessage(messageUUID, messageRecord, true);
         });
     });  
 }
@@ -419,4 +468,4 @@ function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
     });
 }
 
-export {incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser};
+export {upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser};
