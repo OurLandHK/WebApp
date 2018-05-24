@@ -115,9 +115,9 @@ class PublicProfile extends React.Component {
           <ListItemText primary={"簡介: " + this.state.userProfile.desc}/> 
         </ListItem> 
       }
-      publishMessage = <EventListDialog title="發表事件: " messageIds={this.publishMessages}/>
-      concernMessage = <EventListDialog title="關注事件: " messageIds={this.concernMessages}/>  
-      completeMessage = <EventListDialog title="完成事件: " messageIds={this.completeMessages}/> 
+      publishMessage = <EventListDialog title="發表事件: " displayName={displayName} messageIds={this.publishMessages}/>
+      concernMessage = <EventListDialog title="關注事件: " displayName={displayName} messageIds={this.concernMessages}/>  
+      completeMessage = <EventListDialog title="完成事件: " displayName={displayName} messageIds={this.completeMessages}/> 
       if(this.state.userProfile.fbuid) {
         this.fbId=this.state.userProfile.fbuid;
       }
