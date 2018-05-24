@@ -26,7 +26,7 @@ import ListItemText  from '@material-ui/core/ListItemText';
 import FilterBar from './FilterBar';
 
 function Transition(props) {
-  return <Slide direction="right" {...props} />;
+  return <Slide direction="left" {...props} />;
 }
 
 

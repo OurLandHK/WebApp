@@ -23,7 +23,7 @@ import { toggleNearbyEventDialog } from './actions';
 import FilterBar from './FilterBar';
 
 function Transition(props) {
-  return <Slide direction="right" {...props} />;
+  return <Slide direction="up" {...props} />;
 }
 
 
