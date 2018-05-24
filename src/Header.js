@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 import {fetchLocation} from "./actions";
-
+import NotificationsDialog from "./NotificationsDialog";
 
 
 const styles = {
@@ -52,6 +52,7 @@ class Header extends  Component {
                   <Typography variant="title" color="inherit" className={classes.flex}>
                     我地
                   </Typography>
+                  <NotificationsDialog/>
                   <DrawerMenu header={this} ref={(drawerMenu) => {this.drawerMenu = drawerMenu;}} />
                 </Toolbar>  
               </AppBar>      

@@ -74,7 +74,7 @@ class AddressView extends Component {
         var geolocation = null;
         var streetAddress = null; 
         var type = addressEnum.other;   
-        var distance = 1;      
+        var distance = constant.distance;      
         if(this.props.address != null) {
             var c = this.props.address;
             text = c.text;

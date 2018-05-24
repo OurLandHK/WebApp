@@ -24,7 +24,6 @@ let config = {
   photoDB: 'photoTest', // For developments.
   MasterUID: 'mUQgwxkmPBfVA47d9lHzB482Nmp1',
 
-
   addressBook: "AddressBook",
   commentDB: "comment"
 };
@@ -61,6 +60,8 @@ let constant = {
   focusMessagesLabel: '焦點社區事件',
   tagLabel: '分類',
   tagPlaceholder: '新增分類',
+  notificationLabel: '通知',
+  distance: 1,
 }
 
 

@@ -27,7 +27,7 @@ import {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages,
 import ShareDrawer from './ShareDrawer';
 
 function Transition(props) {
-  return <Slide direction="right" {...props} />;
+  return <Slide direction="left" {...props} />;
 }
 
 

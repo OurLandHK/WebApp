@@ -87,6 +87,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ca
             const latDegrees = radius / KM_PER_DEGREE_LATITUDE;
             const latitudeNorth = Math.min(90, geocode.latitude + latDegrees);
             const latitudeSouth = Math.max(-90, geocode.latitude - latDegrees);
+//            console.log(latitudeSouth + ' ' + geocode.latitude + ' ' + latDegrees);
             // calculate longitude based on current latitude
             const longDegsNorth = metersToLongitudeDegrees(radius, latitudeNorth);
             const longDegsSouth = metersToLongitudeDegrees(radius, latitudeSouth);
@@ -97,11 +98,14 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ca
 
         // Use firestore
 
-        let query = collectionRef.where("hide", "==", false).where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint);
+        let query = collectionRef.where("hide", "==", false);
         if(lastUpdate != null) {
-            query = query.where("lastUpdate", "<", lastUpdate);
+            console.log("Last Update: " + lastUpdate.toDate());
+            query = query.where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc");
+        } else {
+            query = query.where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc");
         }
-        query.orderBy("geolocation", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
+        query.limit(numberOfMessage).get().then(function(querySnapshot) {
             if(querySnapshot.empty) {
                 callback(null);
             } else { 
