@@ -100,7 +100,8 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ca
 
         let query = collectionRef.where("hide", "==", false);
         if(lastUpdate != null) {
-            query = query.where("lastUpdate", "<", lastUpdate).orderBy("lastUpdate", "desc");
+            console.log("Last Update: " + lastUpdate.toDate());
+            query = query.where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc");
         } else {
             query = query.where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc");
         }

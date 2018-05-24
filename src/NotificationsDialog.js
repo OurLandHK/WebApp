@@ -64,13 +64,13 @@ class NotificationsDialog extends React.Component {
   }    
 
   componentDidMount() {
-    if(this.props.user && this.props.user.userProfile) {
+    if(this.props.user && this.props.user.lastLogin) {
       this.refreshMessageList();
     }
   }
  
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.user != this.props.user &&  this.props.user && this.props.user.userProfile && this.state.messageIds.length == 0) {
+    if (prevProps.user != this.props.user &&  this.props.user && this.props.user.lastLogin && this.state.messageIds.length == 0) {
       this.refreshMessageList();
     } 
   }    
@@ -105,13 +105,14 @@ class NotificationsDialog extends React.Component {
   fetchMessages() {
     this.clear();
     const { addressBook, user} = this.props;
-    const lastLoginTime = user.userProfile.lastLogin;
+    const lastLoginTime = user.lastLogin;
     addressBook.addresses.map((address) => {
       if(address.geolocation != null && (address.type == addressEnum.home || address.type == addressEnum.office)) {
         let distance = constant.distance;
         if(address.distance != null) {
           distance = address.distance;
         }
+        console.log(address.geolocation);
         fetchMessagesBaseOnGeo(address.geolocation, distance, constant.defaultEventNumber, lastLoginTime, this.setMessageRef);
       }
     });      
