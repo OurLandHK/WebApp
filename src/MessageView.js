@@ -30,9 +30,6 @@ const styles = theme => ({
     height: 128,
     //paddingTop: '56.25%', // 16:9
   },
-  paper: {
-    width: '98%',
-  },
   card: {
     width: '98%',
     display: 'flex',
@@ -70,6 +67,13 @@ const styles = theme => ({
   newIcon: {
     backgroundColor: green,
     color: red
+  },
+  summaryGrid: {
+    display: 'inline-grid',
+    padding: '8px'
+  },
+  thumbnailGrid: {
+    padding: '8px'
   }
 });
 
@@ -138,14 +142,14 @@ class MessageView extends Component {
     if(isUpdate) {
       newIcon = <FiberNewIcon className={classes.newIcon}/>
     }    
-    let summary = <Grid item xs onClick={() => this.handleClick()}>
+    let summary = <Grid className={classes.summaryGrid} item xs onClick={() => this.handleClick()}>
                       <Typography noWrap='true'className={classes.title}>{newIcon}{auther}</Typography>
                       <Typography noWrap='true' variant="title"> {text}</Typography>
                       <Typography noWrap='true' className={classes.pos}>{subtitle}</Typography>
                   </Grid>
-    let thumbnail = <Grid item><CardMedia className={classes.cover}  image={imageUrl}/> </Grid>
+    let thumbnail = <Grid item className={classes.thumbnailGrid}><CardMedia className={classes.cover}  image={imageUrl}/> </Grid>
     return ( <Paper className={classes.paper}>
-              <Grid container wrap="nowrap" spacing={16}>
+              <Grid container wrap="nowrap" spacing={0}>
               {thumbnail}
               {summary}
               </Grid>
