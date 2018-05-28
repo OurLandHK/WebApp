@@ -49,6 +49,7 @@ const styles = theme => ({
     color: '#FFFFFF',
   },
   button: {
+    variant: 'outlined',
     border: '2px solid' ,
     borderColor: green[200],
 //    width: '100%',
@@ -231,9 +232,6 @@ class LocationDrawer extends React.Component {
             <div className={classes.buttonContainer}>
                 {`${this.state.isUsingCurrentLocation ? constant.currentLocation
                           : this.state.locationName}${this.state.distance}公里內`}
-            </div>
-            <div className={classes.buttonRightContainer}>
-              <ArrowIcon className={classes.white}/>
             </div>
           </Button>
           <Drawer anchor='bottom'

@@ -51,11 +51,11 @@ class FilterBar extends  Component {
     const classes = this.props.classes;
     if(this.disableLocationDrawer) {
       return (<Toolbar>
-         <TagDrawer /> 按 <SortingDrawer/>
+         <TagDrawer /> 按 <SortingDrawer/> <div flex={1}/>
       </Toolbar>);
     } else {
       return (<Toolbar>
-                  在 <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook}/> 的 <TagDrawer /> 按 <SortingDrawer/>
+                  在 <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook}/> 的 <TagDrawer /> 按 <SortingDrawer/> <div flex={1}/>
                 </Toolbar>);
     }
   }

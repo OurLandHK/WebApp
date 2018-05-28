@@ -164,24 +164,29 @@ class LocationButton extends Component {
             <DialogContentText>
               請輸入街道地址或使用您當前的位置
             </DialogContentText>
+            <Button variant="outlined" color="primary"  onClick={() => this.handleGetLocation()}>使用您當前的位置</Button> 
+            <DialogContentText>
+              請輸入街道地址或使用您當前的位置
+            </DialogContentText>            
             <TextField
               autoFocus
-              margin="dense"
+              fullWidth
               id="stressAddress"
               label="街道地址"
+              helperText="中/英文均可"
               type="text"
               fullWidth
               value={this.state.streetAddress} onChange={event => this.setState({ streetAddress: event.target.value, disableSumbit: true,  geolocation: null})}
             />
-            <Button variant="raised" primary={true} onClick={() => this.handleGetLocationFromStreetAddress()}>驗證街道地址</Button>
-            <Button variant="raised" primary={true} onClick={() => this.handleGetLocation()}>使用您當前的位置</Button> {locationString}
+            <Button variant="outlined" color="primary"  onClick={() => this.handleGetLocationFromStreetAddress()}>驗證街道地址</Button>
           </DialogContent>
+          {locationString}
           <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
-              Cancel
+            <Button variant="raised" color="secondary" onClick={this.handleClose} >
+              取消
             </Button>
-            <Button disabled={this.state.disableSumbit} onClick={this.handleSubmit} color="primary">
-              Submit
+            <Button variant="raised" color="primary" disabled={this.state.disableSumbit} onClick={this.handleSubmit} >
+              提交
             </Button>
           </DialogActions>
           {this.state.geolocation != null  && <EventMap center={geolocation} zoom={zoom}/>}
