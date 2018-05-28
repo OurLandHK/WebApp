@@ -40,6 +40,7 @@ const styles = theme => ({
     color: '#FFFFFF',
   },
   button: {
+    variant: 'outlined',
     border: '2px solid' ,
     borderColor: green[200],
 //    width: '100%',
@@ -158,9 +159,6 @@ class SortingDrawer extends React.Component {
           >
             <div className={classes.buttonContainer}>
                 {sortBtnLabel}
-            </div>
-            <div className={classes.buttonRightContainer}>
-              <ArrowIcon className={classes.white}/>
             </div>
           </Button>
           <Drawer anchor='bottom'

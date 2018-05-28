@@ -39,6 +39,7 @@ const styles = theme => ({
     color: '#FFFFFF',
   },
   button: {
+    variant: 'outlined',
     border: '2px solid' ,
     borderColor: green[200],
 //    width: '100%',
@@ -140,9 +141,6 @@ class TagDrawer extends React.Component {
             <div className={classes.buttonContainer}>
                 {`${this.state.isSelectedAll ? constant.noTagLabel
                           : this.state.selectedTag}`}
-            </div>
-            <div className={classes.buttonRightContainer}>
-              <ArrowIcon className={classes.white}/>
             </div>
           </Button>
           <Drawer anchor='bottom'
