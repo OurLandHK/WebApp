@@ -166,6 +166,9 @@ class LocationButton extends Component {
             </DialogContentText>
             <Button variant="outlined" color="primary"  onClick={() => this.handleGetLocation()}>使用您當前的位置</Button> 
             <DialogContentText>
+              或
+            </DialogContentText> 
+            <DialogContentText>
               請輸入街道地址或使用您當前的位置
             </DialogContentText>            
             <TextField

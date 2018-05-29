@@ -17,13 +17,18 @@ import {fetchLocation} from "./actions";
 
 const styles = {
   filter: {
-    width: '100%',
+    //width: '100%',
+    borderColor: 'primary',
+    fontWeight: 'bold',
+    fontSize: '0.8rem',
+    textAlign: 'left',
+    //    width: '100%',
+    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
   },
   flex: {
     flex: 1,
   },
 };
-
 
 class FilterBar extends  Component {
   constructor(props) {
@@ -50,12 +55,12 @@ class FilterBar extends  Component {
   render() {
     const classes = this.props.classes;
     if(this.disableLocationDrawer) {
-      return (<Toolbar>
+      return (<Toolbar className={classes.filter}>
          <TagDrawer /> 按 <SortingDrawer/> <div flex={1}/>
       </Toolbar>);
     } else {
-      return (<Toolbar>
-                  在 <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook}/> 的 <TagDrawer /> 按 <SortingDrawer/> <div flex={1}/>
+      return (<Toolbar className={classes.filter}>
+                  <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook}/> 的 <TagDrawer /> 按 <SortingDrawer/> <div flex={1}/>
                 </Toolbar>);
     }
   }

@@ -75,6 +75,7 @@ class RegionEventDialog extends React.Component {
     return (
       <div className={classes.container}>
         <MessageList
+          isUsePublicAddressBook={true}
           ref={(messageList) => {this.messageList = messageList;}}
           eventNumber={eventNumber}
           distance={distance}
@@ -97,7 +98,7 @@ class RegionEventDialog extends React.Component {
         <div
           className={classes.mediaCredit}
         >
-          Photo by Steven Wei on Unsplash
+
         </div>
       </CardMedia>
     );
@@ -126,9 +127,9 @@ class RegionEventDialog extends React.Component {
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="title" color="inherit" className={classes.flex}>{constant.regionEventLabel}</Typography>           
-                    </Toolbar>
-                    <FilterBar isUsePublicAddressBook={true}/>           
+                    </Toolbar>      
                 </AppBar>
+                <FilterBar isUsePublicAddressBook={true}/>     
                 {messageHtml}
             </Dialog>
         </span>);
