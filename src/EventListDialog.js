@@ -95,6 +95,8 @@ class EventListDialog extends React.Component {
     return (
       <div className={classes.container}>
         <MessageList
+          disableLocationDrawer={true}
+          isUsePublicAddressBook={false}
           ref={(messageList) => {this.messageList = messageList;}}
           eventNumber={100}
           distance={10}
@@ -126,9 +128,9 @@ class EventListDialog extends React.Component {
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="title" color="inherit" className={classes.flex}>{this.state.userName} {this.state.title}</Typography> 
-                    </Toolbar>
-                    <FilterBar disableLocationDrawer={true}/>           
+                    </Toolbar>                            
                 </AppBar>
+                <FilterBar disableLocationDrawer={true}/>   
                 {messageHtml}
             </Dialog>
         </span>);

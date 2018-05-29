@@ -125,9 +125,9 @@ class NearbyEventDialog extends React.Component {
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="title" color="inherit" className={classes.flex}>{constant.nearbyEventLabel}</Typography>           
-                    </Toolbar>
-                    <FilterBar />           
+                    </Toolbar>      
                 </AppBar>
+                <FilterBar />     
                 {messageHtml}
             </Dialog>
         </span>);

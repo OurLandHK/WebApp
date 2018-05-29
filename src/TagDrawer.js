@@ -39,21 +39,20 @@ const styles = theme => ({
     color: '#FFFFFF',
   },
   button: {
-    variant: 'outlined',
-    border: '2px solid' ,
-    borderColor: green[200],
-//    width: '100%',
-    fontWeight: 'bold',
-    fontSize: '0.8rem',
-    margin: theme.spacing.unit,
-    color: '#FFFFFF',
-    textAlign: 'left',
-    backgroundColor: green[500],
-    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-    display:'flex',
-  },
+    //    border: '2px solid' ,
+    //    borderColor: green[200],
+    //    width: '100%',
+        fontWeight: 'bold',
+        fontSize: '0.8rem',
+        margin: theme.spacing.unit,
+    //    color: '#FFFFFF',
+        textAlign: 'left',
+    //    backgroundColor: green[500],
+    //    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+    //    display:'flex',
+      },
   buttonContainer: {
-    flex: '1 0 auto',
+  //  flex: '1 0 auto',
   },
   buttonRightContainer: {
     flex: '1 0 auto',
@@ -135,6 +134,7 @@ class TagDrawer extends React.Component {
       return (
       <div className={classes.container}>
           <Button
+          variant="outlined" color="primary" 
             onClick={() => {this.toggleDrawer(true)}}
             className={classes.button}
           >
