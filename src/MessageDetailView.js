@@ -214,8 +214,8 @@ class MessageDetailView extends Component {
                <AppBar position="static" className={classes.appBar}>
                  <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
                    <Tab label="參與紀錄" />
-                   <Tab label="圖片" />
-                   <Tab label="地圖"/>
+                   <Tab label="相關照片" />
+                   <Tab label="準確地點"/>
                  </Tabs>
                </AppBar>
              </div>

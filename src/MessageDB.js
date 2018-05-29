@@ -3,6 +3,7 @@ import uuid from 'js-uuid';
 import config, {constant} from './config/default';
 import distance from './Distance';
 import { light } from '@material-ui/core/styles/createPalette';
+import { getStreetAddressFromGeoLocation} from './Location';
 
 function degreesToRadians(degrees) {return (degrees * Math.PI)/180;}
 
@@ -62,6 +63,17 @@ function upgradeAllMessage() {
                         change = true;
                         val.lastUpdate = val.createdAt;
                     }
+                    if(val.streetAddress == null) {
+                        change = false;
+                        return getStreetAddressFromGeoLocation(val.geolocation, function(err, response){
+                            if (!err) {
+                                console.log(response.json.results);
+                                val.streetAddress = response.json.results[0].formatted_address;
+                                return updateMessage(val.key, val, false);
+                              }
+                        }, null);
+                    }
+                    
                     if(change) {
                         return updateMessage(val.key, val, false);
                     } else {
