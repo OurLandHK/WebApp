@@ -191,6 +191,21 @@ class ShareDrawer extends React.Component {
   
   }
 
+  renderTelegram(shareUrl, m) {
+    const {classes} = this.props;
+    return (
+      <div className={classes.telegram}>
+        <TelegramShareButton
+          url={shareUrl}
+          title={m}
+          className={classes.someNetworkShareButton}>
+          <TelegramIcon round size={'3.3em'} />
+        </TelegramShareButton>
+      </div>
+    );
+  
+  }
+
 
 
   render() {
@@ -243,6 +258,7 @@ class ShareDrawer extends React.Component {
             { this.renderFacebook(shareUrl, m, hashtag) }
             { this.renderWhatsapp(shareUrl, m) }
             { this.renderEmail(shareUrl, m) }
+            { this.renderTelegram(shareUrl, m) }
           </div>
         </Drawer>
       </span>
