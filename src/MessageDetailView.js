@@ -2,12 +2,16 @@ import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import Paper from '@material-ui/core/Paper';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import ProgressiveCardImg from './ProgressiveCardImg';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied'; 
+import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied'; 
 import ForumIcon from '@material-ui/icons/Forum';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
@@ -23,6 +27,7 @@ import AppBar from '@material-ui/core/AppBar';
 import CommentList from './comment/CommentList';
 import geoString from './GeoLocationString';
 import PostCommentView from './comment/PostCommentView';
+import timeOffsetStringInChinese from './TimeString.js';
 import Avatar from '@material-ui/core/Avatar';
 import green from '@material-ui/core/colors/green';
 import {
@@ -33,6 +38,9 @@ import {connect} from 'react-redux';
 import { constant } from './config/default';
 
 const styles = theme => ({
+  paper: {
+
+  },
   authorContainer: {
     display: 'flex',
     alignItems: 'center',
@@ -43,7 +51,16 @@ const styles = theme => ({
   authorColumn2: {
     flex: '1 0 auto',
   },
-
+  summaryGrid: {
+    display: 'inline-grid',
+    padding: '8px',
+  },
+  authorGrid: {
+    alignItems: 'center',
+    alignContent: 'center',
+    
+    padding: '8px'
+  },
   appBar: {
     backgroundColor: theme.palette.secondary['200'],
   },
@@ -85,23 +102,25 @@ class MessageDetailView extends Component {
   };
 
 
-  renderAuthor() {
+  renderTitle() {
     const { message, classes} = this.props;
+    let post = '張貼';
+    let timeOffset = Date.now() - message.createdAt.toDate();
+    let timeOffsetString = timeOffsetStringInChinese(timeOffset);
+    let subheader = `於:${timeOffsetString}前${post}`;
     const photoUrl = message.photoUrl || '/images/profile_placeholder.png';
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     return (
-      <div className={classes.authorContainer}>
-        <div className={classes.authorColumn}>
+      <Grid container spacing={16}>
+        <Grid item className={classes.authorGrid}>
           {fbProfileImage}
-        </div>
-        <div className={classes.authorColumn2}>
-          &nbsp; {message.name}
-        </div>
-        <div className={classes.authorColumn2}>
-           現況: {message.status}
-        </div>
-      </div>
-    );
+          <Typography color='primary' noWrap='true' >{message.name}</Typography>
+          <Typography color='primary' noWrap='true' >{subheader}</Typography>                
+        </Grid>
+        <Grid item xs className={classes.summaryGrid}>
+          <Typography variant="headline">{message.text}</Typography>         
+        </Grid>
+      </Grid>    );
   }
 
   renderBase() {
@@ -119,14 +138,24 @@ class MessageDetailView extends Component {
       viewCountString += 0;
     }
     return (
-      <CardContent>
-        <Typography component='p'>
-        {locationString}
-        </Typography>
-        <Typography component='p'>
-        {viewCountString}
-        </Typography>
-      </CardContent>
+      <Grid container direction='row' spacing={16}>
+        <Grid item xs direction='column'  className={classes.authorGrid}>
+          <Typography variant="subheading">
+          {locationString}
+          </Typography>
+          <Typography variant="subheading">
+          {`現況: ${message.status} ${viewCountString}`}
+          </Typography>                
+        </Grid>
+        <Grid item xs className={classes.summaryGrid}>
+          <Grid item> 
+            <SentimentSatisfiedIcon color='primary' />: 0
+          </Grid> 
+          <Grid item> 
+            <SentimentDissatisfiedIcon color='secondary' />: 0
+          </Grid>   
+        </Grid>
+      </Grid> 
     );
   }
 
@@ -177,39 +206,42 @@ class MessageDetailView extends Component {
     }
     let linkHtml = null;
     if (this.validateExternalLink(link)) {
-      linkHtml = <Grid container spacing={0}>
-        <Grid item>
-        <CardContent> <Typography component='p'> 外部連結： <a href={link} target="_blank">前往</a> </Typography> </CardContent></Grid></Grid>;
+      linkHtml = <Typography variant="subheading"> 外部連結： <a href={link} target="_blank">前往</a> </Typography>
     } else {
       if(link != null && link != "")
-      linkHtml = <Grid container spacing={0}>
-        <Grid item>
-        <CardContent> <Typography component='p'> {link} </Typography> </CardContent></Grid></Grid>;
+      linkHtml = <Typography variant="subheading"> {link} </Typography>;
       
     }
-    const author = this.renderAuthor();
+    const title = this.renderTitle();
     let baseHtml = <Grid container spacing={0}> {this.renderBase()}</Grid>;
 
     let dateHtml = null;
+    let intervalHtml = null;
     if(dateTimeString != '') { 
-        dateHtml = <Grid container spacing={0}>
-                        <Grid item><CardContent><Typography component='p'> 開始: {dateTimeString}</Typography> </CardContent> </Grid>  
-                        <Grid item><CardContent><Typography component='p'> 為期: {duration} </Typography> </CardContent> </Grid>
-                        <Grid item><CardContent><Typography component='p'> 週期: {interval} </Typography> </CardContent> </Grid>                
-                        </Grid>;
+      if(interval && interval != '') {
+        intervalHtml =<Typography variant="subheading"> 週期: {interval} </Typography> 
+      }
+      dateHtml = <Paper className={classes.paper}>
+                  <CardContent>
+                    <Typography variant="subheading"> 開始: {dateTimeString}</Typography>  
+                    <Typography variant="subheading"> 為期: {duration} </Typography>
+                    {intervalHtml}
+                    </CardContent>               
+                  </Paper>
     }
 
     const tab = this.state.tab;
 
     return(<div className={classes.container}>
-             {author}
-             <ChipArray chipData={chips} />
-             {baseHtml}
+            <Paper className={classes.paper}>
+             {title}
+             <CardContent> 
+             {baseHtml}             
+              <ChipArray chipData={chips} />
              {linkHtml}
-             {dateHtml}
-             <br/>
-             <br/>
-             <br/>
+             </CardContent> 
+             </Paper>             
+             {dateHtml}             
              <div>
                <AppBar position="static" className={classes.appBar}>
                  <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>

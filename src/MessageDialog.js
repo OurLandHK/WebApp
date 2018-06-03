@@ -9,6 +9,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
+import { constant } from './config/default';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Slide from '@material-ui/core/Slide';
 import MessageDetailView from './MessageDetailView';
@@ -107,7 +108,7 @@ class MessageDialog extends React.Component {
       title = m.text;
       imageUrl = m.publicImageURL
       titleHtml = <Typography variant="title" color="inherit" className={classes.flex}>
-            {m.text}
+            {constant.messageDialogLabel}
           </Typography>;
       var now = Date.now();
       var nowDateTime = new Date(now);
