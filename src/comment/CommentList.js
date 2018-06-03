@@ -51,7 +51,7 @@ class CommentList extends Component {
       <div>
         <center>
           <br/>
-          <h2>按+成為第一個參與者</h2>
+          <h4>按+成為第一個參與者</h4>
         </center>
       </div>
     );

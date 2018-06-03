@@ -176,7 +176,7 @@ class MessageList extends Component {
 
     if(this.state.data.length == 0) {
       let statusMessage = this.state.statusMessage;
-      return(<div><center><br/><h2>{statusMessage}</h2></center></div>);
+      return(<div><center><br/><h4>{statusMessage}</h4></center></div>);
     } else {
       let messageList = null;
       let elements = this.state.data.map((message) => {

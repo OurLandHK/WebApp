@@ -22,6 +22,9 @@ import green from '@material-ui/core/colors/green';
 
 
 const styles = theme => ({
+  paper: {
+
+  },
   tileCard: {
     height:200,
     width:196,
@@ -192,8 +195,6 @@ class MessageView extends Component {
     } catch(error) {
       createdAt = m.createdAt;
     };
-    timeOffset = Date.now() - createdAt;
-    let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     let isUpdate =false;
     let updateTime = m.createdAt;
     if(m.lastUpdate != null) {
@@ -204,7 +205,15 @@ class MessageView extends Component {
       //console.log('update Time: ' + updateTime + ' ' + lastLoginTime + ' ' + (updateTime > lastLoginTime));
       isUpdate = (updateTime > lastLoginTime);
     } 
-    var auther = m.name + ' 於: ' + timeOffsetString + '前張貼 ';
+    let post = '張貼';
+    timeOffset = Date.now() - m.lastUpdate.toDate();
+    if(m.createdAt != m.lastUpdate) {
+      post = '更新'
+    }
+    
+    let timeOffsetString = timeOffsetStringInChinese(timeOffset);
+    
+    var auther = `${m.name} 於: ${timeOffsetString}前${post}`;
     var tag = '';
     if(m.tag != null && m.tag.length > 0) {
       tag = ' #' + m.tag[0];

@@ -52,6 +52,7 @@ let constant = {
   commentOptions : ['發表回應', '要求更改地點', '要求更改現況', '要求更改外部連結', '要求更改分類'],    
   statusOptions : ['開放', '完結', '政府跟進中', '虛假訊息', '不恰當訊息'],
   approveOptions : ['接納', '駁回'],
+  messageDialogLabel: '社區事件',
   messageListReadingLocation: '讀取現在位置中...',
   messageListLoadingStatus: '讀取社區事件中...',
   messageListNoMessage: '選擇的位置沒有任何社區事件, 請選擇其他位置',
