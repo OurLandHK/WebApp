@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
@@ -18,21 +18,16 @@ import {
 
 const styles = () => ({
   base: {
+    margin: 0,
     borderRadius: 0,
     width: '64px',
     height: '64px'
   },
   on: {
-    backgroundColor: red[500],
-    '&:hover': {
-       backgroundColor: red[500]
-    }
+    color: 'secondary',
   },
   off: {
-    backgroundColor: green[500],
-    '&:hover': {
-       backgroundColor: green[500]
-    }
+    color: null,
   }
 });
 
@@ -68,21 +63,23 @@ class FavoriteButton extends Component {
 
   render() {
     const { classes } = this.props;
-    const { favor } = this.state;
-    console.log(this.state);
-    const favorClass = favor ? classes.on : classes.off;
+    const { favor } = this.state
+    const favorClass = favor ? 'secondary' : '';
     const baseClass = classes.base;
-    return (
-      <Button
-        color="primary"
-        variant="fab"
-        raised={true}
-        className={`${baseClass} ${favorClass}`}
-        onClick={() => this.handleFavorClick()}
-      >
-        <FavoriteIcon />
-      </Button>
-    );
+    console.log(favorClass);
+    let disable = true;
+    if(this.props.user != null && this.props.user.user != null) {
+      disable = false;
+    }
+    let outputHtml = <IconButton
+                        className={baseClass}
+                        disabled={disable}
+                        color={favorClass}
+                        onClick={() => this.handleFavorClick()}
+                        >
+                      <FavoriteIcon />
+                    </IconButton>
+    return (outputHtml);
   }
 }
 
