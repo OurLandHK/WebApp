@@ -11,6 +11,7 @@ let config = {
     xfbml: true,
     version: 'v2.10'
   },
+  userAction: 'userAction',
 /*
   fbGroupId: '244493866025075', // Production https://www.facebook.com/groups/OurLandHK/?fref=nf
   messageDB: 'message', // Production
@@ -65,6 +66,11 @@ let constant = {
   distance: 1,
 }
 
+let happyAndSadEnum = {
+  happy: 1,
+  sad: -1,
+  nothing: 0
+}
 
 let addressEnum = {
   home: "住宅",
@@ -74,4 +80,4 @@ let addressEnum = {
 
 
 export  default config;
-export {constant, addressEnum};
+export {constant, addressEnum, happyAndSadEnum};

@@ -9,13 +9,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-import { constant } from './config/default';
+import { constant, happyAndSadEnum } from './config/default';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Slide from '@material-ui/core/Slide';
 import MessageDetailView from './MessageDetailView';
-import {getMessage, dropMessage} from './MessageDB';
+import {getMessage, dropMessage, getHappyAndSad} from './MessageDB';
 import ShareDrawer from './ShareDrawer';
-import FavoriteButton from './FavoriteButton';
 import {
   checkAuthState,
 } from './actions';
@@ -56,7 +55,8 @@ class MessageDialog extends React.Component {
   constructor(props) {
       super(props);
       this.state = {open: false};
-      this.message = null;                
+      this.message = null;
+      this.happyAndSad = happyAndSadEnum.nothing; // (1 = happy, -1 = sad)                
       this.openDialog = this.openDialog.bind(this);
       this.props.openDialog(this.openDialog);  
   }
@@ -65,20 +65,42 @@ class MessageDialog extends React.Component {
     if(this.props.open) {
       console.log("openDialog uuid: " + uuid);
       var uuid = this.props.uuid;
-      getMessage(uuid).then((message) => {
+      return getMessage(uuid).then((message) => {
         console.log("Message: " + message);            
         this.message = message;   
-        this.setState({open: true });          
+
+        if(this.props.user != null && this.props.user.user) {
+          // get sad and happy inital value
+          return getHappyAndSad(uuid, this.props.user.uid).then((data) => {
+            console.log("Data: " + data);
+            if(data != null) {
+              this.happyAndSad = data.happyAndSad;
+            }
+            this.setState({open: true }); 
+          });
+        } else {
+          this.setState({open: true });   
+        }       
       });
     }
   }
 
   openDialog(){
-//    console.log("openDialog new UUID: " + newUUid);
     var uuid = this.props.uuid;
     return getMessage(uuid).then((message) => {
       this.message = message;   
-      this.setState({open: true });         
+      if(this.props.user != null && this.props.user.user) {
+        // get sad and happy inital value
+        return getHappyAndSad(uuid, this.props.user.user).then((data) => {
+          console.log("Data: " + data);
+          if(data != null) {
+            this.happyAndSad = data;
+          }
+          this.setState({open: true }); 
+        });
+      } else {
+        this.setState({open: true });   
+      }        
     });
   };
 
@@ -99,7 +121,6 @@ class MessageDialog extends React.Component {
     let titleHtml = null;
     let detailView = null;
     let deleteButton = null;
-    let favoriteButton = null;
     let shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + uuid;
     let title = "";
     let imageUrl = "";
@@ -114,7 +135,6 @@ class MessageDialog extends React.Component {
       var nowDateTime = new Date(now);
       if(this.props.user != null && this.props.user.user != null) {
         user = this.props.user.user;
-        favoriteButton = <FavoriteButton message={m}/>
         // 10 minutes
         let eventCreateTimeDiff = 0;
         try {
@@ -128,7 +148,7 @@ class MessageDialog extends React.Component {
                           </IconButton>
         }
       }
-      detailView = <MessageDetailView message={m}/>;
+      detailView = <MessageDetailView message={m}  happyAndSad={this.happyAndSad}/>;
 
     }
 
@@ -147,7 +167,6 @@ class MessageDialog extends React.Component {
               </IconButton>
               {titleHtml}
               {deleteButton}
-              {favoriteButton}
               <ShareDrawer message={m}/>      
             </Toolbar>
           </AppBar>

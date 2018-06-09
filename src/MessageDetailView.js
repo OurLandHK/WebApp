@@ -10,8 +10,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import ProgressiveCardImg from './ProgressiveCardImg';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied'; 
-import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied'; 
+import IconButton from '@material-ui/core/IconButton';
 import ForumIcon from '@material-ui/icons/Forum';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
@@ -21,13 +20,14 @@ import red from '@material-ui/core/colors/red';
 import EventMap from './REventMap';
 import ChipArray from './ChipArray';
 import MessageDetailViewImage from './MessageDetailViewImage';
+import MessageAction from './MessageAction';
 import Tab  from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import AppBar from '@material-ui/core/AppBar';
 import CommentList from './comment/CommentList';
 import geoString from './GeoLocationString';
 import PostCommentView from './comment/PostCommentView';
-import timeOffsetStringInChinese from './TimeString.js';
+import timeOffsetStringInChinese from './TimeString';
 import Avatar from '@material-ui/core/Avatar';
 import green from '@material-ui/core/colors/green';
 import {
@@ -38,6 +38,11 @@ import {connect} from 'react-redux';
 import { constant } from './config/default';
 
 const styles = theme => ({
+  button: {
+    borderRadius: 0,
+    width: '64px',
+    height: '64px'
+  },
   paper: {
 
   },
@@ -67,20 +72,25 @@ const styles = theme => ({
   avatar: {
     backgroundColor: red[500],
   },
-  cover: {
-    width: 64,
-    height: 64,
-  },
   container: {
     overflowY: 'auto'
-  }
+  },
+  actionContainer: {
+    display: 'flex',
+    height: '5rem',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 
 class MessageDetailView extends Component {
   constructor(props) {
     super(props);
-    this.state = {expanded: false, rotate: 'rotate(0deg)', tab: 0};
+    this.state = {expanded: false, 
+        rotate: 'rotate(0deg)', 
+        tab: 0, 
+      };
     this.handleChangeTab = this.handleChangeTab.bind(this);
     this.handleAuthorClick = this.handleAuthorClick.bind(this);
   }
@@ -89,6 +99,7 @@ class MessageDetailView extends Component {
     this.setState({ expanded: !this.state.expanded });
 
   };
+
 
   handleChangeTab(evt, value) {
      this.setState({...this.state, tab: value});
@@ -123,6 +134,8 @@ class MessageDetailView extends Component {
       </Grid>    );
   }
 
+
+
   renderBase() {
     let locationString = null;
     let viewCountString = constant.viewCountLabel;
@@ -139,21 +152,13 @@ class MessageDetailView extends Component {
     }
     return (
       <Grid container direction='row' spacing={16}>
-        <Grid item xs direction='column'  className={classes.authorGrid}>
+        <Grid item xs direction='column' className={classes.summaryGrid} >
           <Typography variant="subheading">
           {locationString}
           </Typography>
           <Typography variant="subheading">
           {`現況: ${message.status} ${viewCountString}`}
           </Typography>                
-        </Grid>
-        <Grid item xs className={classes.summaryGrid}>
-          <Grid item> 
-            <SentimentSatisfiedIcon color='primary' />: 0
-          </Grid> 
-          <Grid item> 
-            <SentimentDissatisfiedIcon color='secondary' />: 0
-          </Grid>   
         </Grid>
       </Grid> 
     );
@@ -170,11 +175,11 @@ class MessageDetailView extends Component {
 
   render() {
     const classes = this.props.classes;
-    var m = this.props.message;
-    var tag = m.tag;
-    var chips = [];
-    var date = null;
-    var dateTimeString = '';
+    let m = this.props.message;
+    let tag = m.tag;
+    let chips = [];
+    let date = null;
+    let dateTimeString = '';
     if(m.start != null)
     {
       date = m.start.toDate();
@@ -188,7 +193,6 @@ class MessageDetailView extends Component {
     var interval = m.interval;
     var duration = m.duration;
     var link = m.link;
-    console.log(link);
     if(Array.isArray(tag))
     {
         for (var i = 0; i < tag.length; i++) { 
@@ -229,6 +233,7 @@ class MessageDetailView extends Component {
                     </CardContent>               
                   </Paper>
     }
+    
 
     const tab = this.state.tab;
 
@@ -241,7 +246,8 @@ class MessageDetailView extends Component {
              {linkHtml}
              </CardContent> 
              </Paper>             
-             {dateHtml}             
+             {dateHtml}
+             <MessageAction message={m} happyAndSad={this.props.happyAndSad}/>        
              <div>
                <AppBar position="static" className={classes.appBar}>
                  <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
@@ -262,6 +268,7 @@ class MessageDetailView extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     recentMessage : state.recentMessage,
+    user: state.user,
   };
 }
 

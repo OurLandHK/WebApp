@@ -61,9 +61,6 @@ const styles = theme => ({
   avatar: {
     backgroundColor: red[500],
   },
-  flexGrow: {
-    flex: '1 1 auto',
-  },
   someNetwork: someNetwork,
   someNetworkShareCount: {
     color: 'white',
