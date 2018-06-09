@@ -24,7 +24,7 @@ import {
 } from './actions/types';
 import * as firebase from 'firebase';
 import * as firestore from 'firebase/firestore';
-import config, {constant, addressEnum} from './config/default';
+import config, {constant} from './config/default';
 import {getUserProfile, updateUserProfile} from './UserProfile';
 
 const currentLocationLabel = "現在位置";
@@ -304,15 +304,8 @@ export function fetchAddressBookFromOurLand() {
     var collectionRef = db.collection(config.userDB).doc(config.MasterUID).collection(config.addressBook);
     collectionRef.onSnapshot(function() {})         
     collectionRef.get().then(function(querySnapshot) {
-       const addresses = querySnapshot.docs.map((d) => {
-        if(d.data().type != addressEnum.home) {
-          // filter by selected tag.
-          return d.data();
-        } else {
-          return null;
-        }
-      });
-      dispatch(fetchPublicAddressBook(addresses));
+       const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
+       dispatch(fetchPublicAddressBook(addresses));
     })
     .catch(function(error) {
         console.log("Error getting documents: ", error);

@@ -142,8 +142,11 @@ class LocationDrawer extends React.Component {
       addressList=addressBook.publicAddresses;
     }
     return addressList.map(address => {
-      let icons = <PlaceIcon />;
       let type = address.type;
+      if(this.isUsePublicAddressBook && (type == addressEnum.home || type == addressEnum.office)) {
+        return null;
+      }
+      let icons = <PlaceIcon />;
       let text = address.text;
       let locationString = constant.addressNotSet;
       let distance = this.props.filter.defaultDistance;
