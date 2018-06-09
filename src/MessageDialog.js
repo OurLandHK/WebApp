@@ -9,11 +9,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-import { constant } from './config/default';
+import { constant, happyAndSadEnum } from './config/default';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Slide from '@material-ui/core/Slide';
 import MessageDetailView from './MessageDetailView';
-import {getMessage, dropMessage} from './MessageDB';
+import {getMessage, dropMessage, getHappyAndSad} from './MessageDB';
 import ShareDrawer from './ShareDrawer';
 import {
   checkAuthState,
@@ -56,7 +56,7 @@ class MessageDialog extends React.Component {
       super(props);
       this.state = {open: false};
       this.message = null;
-      this.happyAndSad = 0; // (1 = happy, -1 = sad)                
+      this.happyAndSad = happyAndSadEnum.nothing; // (1 = happy, -1 = sad)                
       this.openDialog = this.openDialog.bind(this);
       this.props.openDialog(this.openDialog);  
   }
@@ -65,13 +65,19 @@ class MessageDialog extends React.Component {
     if(this.props.open) {
       console.log("openDialog uuid: " + uuid);
       var uuid = this.props.uuid;
-      getMessage(uuid).then((message) => {
+      return getMessage(uuid).then((message) => {
         console.log("Message: " + message);            
         this.message = message;   
 
         if(this.props.user != null && this.props.user.user) {
           // get sad and happy inital value
-          this.setState({open: true }); 
+          return getHappyAndSad(uuid, this.props.user.uid).then((data) => {
+            console.log("Data: " + data);
+            if(data != null) {
+              this.happyAndSad = data.happyAndSad;
+            }
+            this.setState({open: true }); 
+          });
         } else {
           this.setState({open: true });   
         }       
@@ -80,11 +86,21 @@ class MessageDialog extends React.Component {
   }
 
   openDialog(){
-//    console.log("openDialog new UUID: " + newUUid);
     var uuid = this.props.uuid;
     return getMessage(uuid).then((message) => {
       this.message = message;   
-      this.setState({open: true });         
+      if(this.props.user != null && this.props.user.user) {
+        // get sad and happy inital value
+        return getHappyAndSad(uuid, this.props.user.user).then((data) => {
+          console.log("Data: " + data);
+          if(data != null) {
+            this.happyAndSad = data;
+          }
+          this.setState({open: true }); 
+        });
+      } else {
+        this.setState({open: true });   
+      }        
     });
   };
 

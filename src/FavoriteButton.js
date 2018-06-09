@@ -1,7 +1,8 @@
 import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import IconButton from '@material-ui/core/IconButton';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+import PlayListAddIcon from '@material-ui/icons/PlayListAdd';
+import PlayListAddCheckIcon from '@material-ui/icons/PlayListAddCheck';
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 import { withStyles } from '@material-ui/core/styles';
@@ -66,7 +67,7 @@ class FavoriteButton extends Component {
     const { favor } = this.state
     const favorClass = favor ? 'secondary' : '';
     const baseClass = classes.base;
-    console.log(favorClass);
+    const iconHtml = favor ? <PlayListAddCheckIcon/> : <PlayListAddIcon/>;
     let disable = true;
     if(this.props.user != null && this.props.user.user != null) {
       disable = false;
@@ -77,7 +78,7 @@ class FavoriteButton extends Component {
                         color={favorClass}
                         onClick={() => this.handleFavorClick()}
                         >
-                      <FavoriteIcon />
+                      {iconHtml}
                     </IconButton>
     return (outputHtml);
   }

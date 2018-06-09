@@ -5,6 +5,7 @@ import config, {constant} from './config/default';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
+import PlayListPlayIcon from '@material-ui/icons/PlayListPlay';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -117,7 +118,7 @@ class EventListDialog extends React.Component {
         <span>
             <ListItem button onClick={(evt) => this.handleRequestOpen(evt)}>
                 <ListItemIcon>
-                    <InboxIcon />
+                    <PlayListPlayIcon/>
                 </ListItemIcon>
                 <ListItemText primary={titleText} />
             </ListItem>  

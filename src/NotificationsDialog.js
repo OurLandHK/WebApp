@@ -112,6 +112,9 @@ class NotificationsDialog extends React.Component {
         if(address.distance != null) {
           distance = address.distance;
         }
+        if(user.userProfile.role == constant.admin) {
+          distance = 100;
+        }
         console.log(address.geolocation);
         fetchMessagesBaseOnGeo(address.geolocation, distance, constant.defaultEventNumber, lastLoginTime, this.setMessageRef);
       }
@@ -167,8 +170,8 @@ class NotificationsDialog extends React.Component {
                         </IconButton>
                         <Typography variant="title" color="inherit" className={classes.flex}>{constant.notificationLabel}</Typography> 
                     </Toolbar>
-                    <FilterBar disableLocationDrawer={true}/>           
                 </AppBar>
+                <FilterBar disableLocationDrawer={true}/>                           
                 {messageHtml}
             </Dialog>
         </span>;

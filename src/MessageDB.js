@@ -400,6 +400,55 @@ function updateMessageConcernUser(messageUuid, user, isConcern) {
     });        
 }
 
+function getHappyAndSad(messageUuid, user) {
+    const db = firebase.firestore();
+    let collectionRef = db.collection(config.messageDB).doc(messageUuid).collection(config.userAction);
+    if(user != null && collectionRef) {
+        return collectionRef.doc(user.uid).get().then(function(doc) {
+            if(doc.exists) {
+                let userAction = doc.data();
+                let rv = 0;
+                if(userAction.happAndSad != null) {
+                    rv = userAction.happAndSad;
+                }
+                return rv;
+            } else {
+                return 0;
+            }
+        });
+    } else {
+        return 0
+        ;
+    } 
+}
+
+function setHappyAndSad(messageUuid, happyCount, sadCount, happAndSad, user) {
+    if(user == null) {
+        return null;
+    }
+    const db = firebase.firestore();
+    const messageCollectionRef = db.collection(config.messageDB);
+    const messageRef = messageCollectionRef.doc(messageUuid);
+    const userActionRef = messageRef.collection(config.userAction).doc(user.uid);
+    return db.runTransaction(transaction => {
+      return transaction.get(userActionRef).then(actionDoc => {
+        if(actionDoc.exists) {
+            transaction.update(userActionRef, {
+                happAndSad: happAndSad
+            });            
+        } else {
+            transaction.set(userActionRef, {
+                happAndSad: happAndSad
+            });            
+        }
+        transaction.update(messageRef, {
+            happyCount: happyCount,
+            sadCount: sadCount,
+        });
+      });
+    });
+}
+
 /// All about comment
 function addComment(messageUUID, currentUser, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status) {
     var now = Date.now();
@@ -484,4 +533,4 @@ function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
     });
 }
 
-export {upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser};
+export {getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser};

@@ -10,8 +10,6 @@ import CardMedia from '@material-ui/core/CardMedia';
 import ProgressiveCardImg from './ProgressiveCardImg';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied'; 
-import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied'; 
 import IconButton from '@material-ui/core/IconButton';
 import ForumIcon from '@material-ui/icons/Forum';
 import Grid from '@material-ui/core/Grid';
@@ -22,6 +20,7 @@ import red from '@material-ui/core/colors/red';
 import EventMap from './REventMap';
 import ChipArray from './ChipArray';
 import MessageDetailViewImage from './MessageDetailViewImage';
+import MessageAction from './MessageAction';
 import Tab  from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import AppBar from '@material-ui/core/AppBar';
@@ -29,7 +28,6 @@ import CommentList from './comment/CommentList';
 import geoString from './GeoLocationString';
 import PostCommentView from './comment/PostCommentView';
 import timeOffsetStringInChinese from './TimeString';
-import FavoriteButton from './FavoriteButton';
 import Avatar from '@material-ui/core/Avatar';
 import green from '@material-ui/core/colors/green';
 import {
@@ -89,25 +87,12 @@ const styles = theme => ({
 class MessageDetailView extends Component {
   constructor(props) {
     super(props);
-    let happyCount = 0;
-    let sadCount = 0;
-    let m = this.props.message;
-    if(m.happyCount) {
-      happyCount = m.happyCount;
-    }
-    if(m.sadCount) {
-      sadCount = m.sadCount;
-    }
     this.state = {expanded: false, 
         rotate: 'rotate(0deg)', 
         tab: 0, 
-        happyAndSad: this.props.happyAndSad,
-        happyCount: happyCount,
-        sadCount: sadCount
       };
     this.handleChangeTab = this.handleChangeTab.bind(this);
     this.handleAuthorClick = this.handleAuthorClick.bind(this);
-    this.handleHappySadClick = this.handleHappySadClick.bind(this);
   }
 
   handleExpandClick() {
@@ -115,41 +100,6 @@ class MessageDetailView extends Component {
 
   };
 
-  handleHappySadClick(happySadValue) {
-    let happyCount = this.state.happyCount;
-    let sadCount = this.state.sadCount;
-    let happyAndSadValue = happySadValue;
-    switch(this.state.happyAndSad) {
-      case 0:
-        if(happySadValue > 0) {
-          happyCount++;
-        } else {
-          sadCount++;
-        }
-        break;
-      case 1:
-        happyCount--;
-        if(happySadValue < 0) {
-          sadCount++;
-        } else {
-          happyAndSadValue = 0;
-        }      
-        break;
-      case -1:
-        sadCount--;
-        if(happySadValue > 0) {
-          happyCount++;
-        } else {
-          happyAndSadValue = 0;
-        }
-        break;
-    }
-    this.setState({
-      happyAndSad: happyAndSadValue,
-      happyCount: happyCount,
-      sadCount: sadCount
-    })
-  }
 
   handleChangeTab(evt, value) {
      this.setState({...this.state, tab: value});
@@ -184,55 +134,7 @@ class MessageDetailView extends Component {
       </Grid>    );
   }
 
-  renderAction() {
-    const { classes } = this.props;
-    let m = this.props.message;
-    let happyCount = this.state.happyCount;
-    let sadCount = this.state.sadCount;
-    let happyColor = "";
-    let sadColor = "";
-    switch(this.state.happyAndSad) {
-      case 1: 
-        happyColor = "primary";
-        break;
-      case -1:
-        sadColor = "secondary"
-        break;
-    }
-    let disable=true;
-    if(this.props.user != null && this.props.user.user != null) {
-      disable = false;
-    }
-    return(<Paper role="button" >
-        <Grid container className={classes.actionContainer} spacing={16}>
-        <Grid item className={classes.authorGrid}> 
-            <IconButton
-                        className={classes.button}
-                        disabled={disable}
-                        color={happyColor}   
-                        onClick={() => this.handleHappySadClick(1)}                     
-                        >
-              <SentimentSatisfiedIcon />
-              : {happyCount}
-            </IconButton>            
-          </Grid> 
-          <Grid item className={classes.authorGrid}> 
-            <IconButton
-                        className={classes.button}
-                        disabled={disable}
-                        color={sadColor}
-                        onClick={() => this.handleHappySadClick(-1)}                        
-                        >
-              <SentimentDissatisfiedIcon/>
-              : {sadCount}
-            </IconButton>
-          </Grid>  
-        <Grid item >
-          <FavoriteButton message={m}/>    
-        </Grid>
-      </Grid>
-  </Paper>);
-  }
+
 
   renderBase() {
     let locationString = null;
@@ -319,7 +221,6 @@ class MessageDetailView extends Component {
 
     let dateHtml = null;
     let intervalHtml = null;
-    let actionHtml = this.renderAction();
     if(dateTimeString != '') { 
       if(interval && interval != '') {
         intervalHtml =<Typography variant="subheading"> 週期: {interval} </Typography> 
@@ -346,7 +247,7 @@ class MessageDetailView extends Component {
              </CardContent> 
              </Paper>             
              {dateHtml}
-             {actionHtml}             
+             <MessageAction message={m} happyAndSad={this.props.happyAndSad}/>        
              <div>
                <AppBar position="static" className={classes.appBar}>
                  <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
