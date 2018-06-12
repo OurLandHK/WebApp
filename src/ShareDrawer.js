@@ -120,7 +120,7 @@ class ShareDrawer extends React.Component {
     for (var i = 0; i < tagsLength; i++) {
       tagString += "#"+tags[i] + " ";
     }
-    console.log("HashTag String:" + tagString);
+    //console.log("HashTag String:" + tagString);
     return tagString;
 
   }

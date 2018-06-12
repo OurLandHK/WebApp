@@ -142,7 +142,8 @@ class MessageDialog extends React.Component {
         } catch(error) {
           eventCreateTimeDiff = nowDateTime - m.createdAt;
         };
-        if(user.uid == m.uid && (nowDateTime < (10 * 60 * 1000))) {
+        console.log("User id: " + user.uid + " " + m.uid + " " + eventCreateTimeDiff  )
+        if(user.uid == m.uid && ( eventCreateTimeDiff < (10 * 60 * 1000))) {
           deleteButton = <IconButton color="contrast" onClick={this.handleRequestDelete} aria-label="Close">
                             <DeleteIcon />
                           </IconButton>

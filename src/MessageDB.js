@@ -158,11 +158,10 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ca
     }
  }
 
- function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, start, duration, interval, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status) {
+ function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status) {
     let now = Date.now();
-    if(start === "")
+    if(startDate === null)
     {
-      start = null;
       duration = null;
       interval = null;
     }
@@ -190,9 +189,13 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ca
         key: key,   
         uid: currentUser.uid,
         fbuid: currentUser.providerData[0].uid,
-        start: new Date(start),
+        start: new Date(startDate),
+        startTime: startTime,
         duration: duration,
         interval: interval,
+        everydayOpenning: everydayOpenning,
+        weekdaysOpennings: weekdaysOpennings,
+        endDate: endDate, 
         link: link,
         imageUrl, publicImageURL, 
         thumbnailImageURL, 
