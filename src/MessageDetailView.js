@@ -164,6 +164,72 @@ class MessageDetailView extends Component {
     );
   }
 
+  renderTimeHtml() {
+    const classes = this.props.classes;
+    let rv = null;
+    let m = this.props.message;   
+    let dateTimeString = '';
+    if(m.start != null)
+    {
+      let date = m.start.toDate();
+      if(date.getFullYear() > 1970) {
+        dateTimeString = date.toLocaleDateString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });
+        console.log(dateTimeString);
+        if(m.startTime != null) {
+          dateTimeString += ` ${m.startTime}`;
+        }
+      } else {
+        date = null;
+      }
+    }
+
+    let everydayOpenning = m.everydayOpenning;
+    let weekdaysOpennings = m.weekdaysOpennings;
+    let interval = m.interval;
+    let duration = m.duration;
+    let endDate = m.endDate;
+    if(dateTimeString != '') {
+      let intervalHtml = null;
+      let durationHtml = null;
+      let openningHtml = null;
+      let timeTypeHtml = <Typography variant="subheading"> {constant.timeOptions[1]} </Typography> ;
+      if(duration != null) {
+        durationHtml = <Typography variant="subheading"> 為期: {duration} </Typography>
+        timeTypeHtml = <Typography variant="subheading"> {constant.timeOptions[0]} </Typography> ;
+      } 
+      if(interval && interval != '' && interval != constant.intervalOptions[0]) {
+        intervalHtml =<Typography variant="subheading"> 週期: {interval} </Typography> 
+      }
+      console.log(everydayOpenning);
+      if(everydayOpenning) {
+        openningHtml = <Typography variant="subheading"> {`${constant.openningOptions[0]} ${everydayOpenning.open}至${everydayOpenning.close}`}  </Typography> 
+      } else {
+        if(weekdaysOpennings) {
+          let i = 0;
+          openningHtml = weekdaysOpennings.map((openning) => {
+            let openningHours = constant.closeWholeDay;
+            if(openning.enable) {
+              openningHours =  `${openning.open}至${openning.close}`;
+            }
+            let openningHoursString = `- ${constant.weekdayLabel[i]} ${openningHours}`;
+            i++;
+          return <Typography variant="subheading"> {openningHoursString}  </Typography>;
+          });
+        }
+      }
+      rv = <Paper className={classes.paper}>
+                  <CardContent>
+                    {timeTypeHtml}
+                    <Typography variant="subheading"> 開始: {dateTimeString}</Typography>  
+                    {durationHtml}
+                    {intervalHtml}
+                    {openningHtml}
+                    </CardContent>               
+                  </Paper>
+    }
+    return rv;
+  }
+
   validateExternalLink(link){
     if(link == null || link == ""){
       return false;
@@ -175,23 +241,9 @@ class MessageDetailView extends Component {
 
   render() {
     const classes = this.props.classes;
-    let m = this.props.message;
+    const m = this.props.message;
     let tag = m.tag;
     let chips = [];
-    let date = null;
-    let dateTimeString = '';
-    if(m.start != null)
-    {
-      date = m.start.toDate();
-      if(date.getFullYear() > 1970) {
-        dateTimeString = date.toLocaleString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });
-      } else {
-        console.log(m.start);
-        date = null;
-      }
-    }
-    var interval = m.interval;
-    var duration = m.duration;
     var link = m.link;
     if(Array.isArray(tag))
     {
@@ -218,22 +270,7 @@ class MessageDetailView extends Component {
     }
     const title = this.renderTitle();
     let baseHtml = <Grid container spacing={0}> {this.renderBase()}</Grid>;
-
-    let dateHtml = null;
-    let intervalHtml = null;
-    if(dateTimeString != '') { 
-      if(interval && interval != '') {
-        intervalHtml =<Typography variant="subheading"> 週期: {interval} </Typography> 
-      }
-      dateHtml = <Paper className={classes.paper}>
-                  <CardContent>
-                    <Typography variant="subheading"> 開始: {dateTimeString}</Typography>  
-                    <Typography variant="subheading"> 為期: {duration} </Typography>
-                    {intervalHtml}
-                    </CardContent>               
-                  </Paper>
-    }
-    
+    let dateHtml = this.renderTimeHtml();
 
     const tab = this.state.tab;
 

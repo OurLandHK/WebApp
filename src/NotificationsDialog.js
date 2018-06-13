@@ -115,7 +115,7 @@ class NotificationsDialog extends React.Component {
         if(user.userProfile.role == constant.admin) {
           distance = 100;
         }
-        console.log(address.geolocation);
+        //console.log(address.geolocation);
         fetchMessagesBaseOnGeo(address.geolocation, distance, constant.defaultEventNumber, lastLoginTime, this.setMessageRef);
       }
     });      

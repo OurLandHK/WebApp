@@ -97,14 +97,14 @@ class PostCommentView extends Component {
 
   componentDidMount() {
     if (this.props.user != null && this.props.user.user != null) {
-      console.log("DidMount Enable Post");
+      //console.log("DidMount Enable Post");
       this.setState({buttonShow: true});
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.user != this.props.user && this.props.user != null) {
-      console.log("DidUpdate Enable Post");
+      //console.log("DidUpdate Enable Post");
       const {user} = this.props.user;
       if (user) {
         this.setState({buttonShow: true});
@@ -120,7 +120,7 @@ class PostCommentView extends Component {
     if(this.props.message.tag) {
       tags = this.tagTextToTags(this.props.message.tag);
     }
-    console.log("Request for open " + this.state.popoverOpen);
+    //console.log("Request for open " + this.state.popoverOpen);
     this.setState({
      // Comment
         commentSelection: '發表回應',

@@ -34,6 +34,7 @@ let constant = {
   timeoutLocation: new firebase.firestore.GeoPoint(90, 180),
   user: "用戶", 
   admin: "我地管理員",
+  closeWholeDay:"全日關門",
   addressNotSet: "尚未設定",
   currentLocation: "附近",
   addressBookLabel: "地址簿",
@@ -50,6 +51,7 @@ let constant = {
   sortByLastUpdateLabel: "最近更新排序",
   sortByDistanceLabel: "距離排序",
   defaultEventNumber: 100,
+  timeOptions : ['活動時間', '設施開放時間'],
   commentOptions : ['發表回應', '要求更改地點', '要求更改現況', '要求更改外部連結', '要求更改分類'],    
   statusOptions : ['開放', '完結', '政府跟進中', '虛假訊息', '不恰當訊息'],
   approveOptions : ['接納', '駁回'],
@@ -63,6 +65,10 @@ let constant = {
   tagLabel: '分類',
   tagPlaceholder: '新增分類',
   notificationLabel: '通知',
+  weekdayLabel : ['日', '一', '二', '三', '四', '五', '六'],
+  openningOptions : ['每日', '自定'],
+  intervalOptions : ['不重複', '每星期', '每兩星期','每月'],
+  durationOptions : ['0:30', '1:00', '1:30','2:00','3:00','4:00','6:00','8:00','10:00','12:00','18:00','一天','兩天','三天','四天','五天','六天','一週'],  
   distance: 1,
 }
 

@@ -50,11 +50,11 @@ class SelectedMenu extends Component {
   render() {
     let listItemHtml = null;
     if(this.props.label == null || this.props.label == "") {
-//      listItemHtml = <ListItemText secondary={this.props.options[this.state.selectedIndex]}/>
+//      listItemHtml = <ListItemText primary={this.props.options[this.state.selectedIndex]}/>
         listItemHtml =<Button variant="outlined" color="primary"> {this.props.options[this.state.selectedIndex]} </Button>
     } else {
-//      listItemHtml = <ListItemText primary={this.props.label}  secondary={this.props.options[this.state.selectedIndex]}/>
-        listItemHtml =<Button variant="outlined" color="primary"> {this.props.options[this.state.selectedIndex]} </Button>
+      listItemHtml = <ListItemText primary={this.props.options[this.state.selectedIndex]}  secondary={this.props.label}/>
+//       listItemHtml =<Button variant="outlined" color="primary"> `{this.props.label}: {this.props.options[this.state.selectedIndex]}` </Button>
     } 
     return (
       <div>

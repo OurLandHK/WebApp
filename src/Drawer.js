@@ -103,7 +103,7 @@ class DrawerMenu extends Component {
     const { user } = this.props;
 
     if(this.state.open) {
-      if (user && user.user) {
+      if (user && user.user && user.userProfile) {
         var imgURL = (user.userProfile.photoURL || '/images/profile_placeholder.png');
         userSection = (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{user.userProfile.displayName}&nbsp;&nbsp;</div>);
         signOutSection = (<ListItem><SignOutButton/></ListItem>);
