@@ -65,6 +65,10 @@ let constant = {
   tagLabel: '分類',
   tagPlaceholder: '新增分類',
   notificationLabel: '通知',
+  weekdayLabel : ['日', '一', '二', '三', '四', '五', '六'],
+  openningOptions : ['每日', '自定'],
+  intervalOptions : ['不重複', '每星期', '每兩星期','每月'],
+  durationOptions : ['0:30', '1:00', '1:30','2:00','3:00','4:00','6:00','8:00','10:00','12:00','18:00','一天','兩天','三天','四天','五天','六天','一週'],  
   distance: 1,
 }
 
