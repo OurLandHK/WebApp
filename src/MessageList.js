@@ -51,7 +51,6 @@ class MessageList extends Component {
     };
     this.updateFilter = this.updateFilter.bind(this);
     this.setMessage = this.setMessage.bind(this);
-    this.setMessageRef = this.setMessageRef.bind(this);
     this.clear = this.clear.bind(this);
   }
 
@@ -95,25 +94,16 @@ class MessageList extends Component {
     this.fetchMessages(this.props.filter); 
   }
 
-  setMessageRef(messageRef) {
-    if(messageRef == null) {
+  setMessage(val) {
+    if(val == null) {
       this.setState({statusMessage: constant.messageListNoMessage});
       return;
     }
-    var val = messageRef.data();
-    if(val) {
-      this.setMessage(val)
-    }
-  }
-
-  setMessage(val) {
-    if(val != null && val.tag != null && val.tag.length > 0) {      
+    if(val.tag != null && val.tag.length > 0) {      
       this.props.updateFilterTagList(val.tag);
     }
-    if(val != null) {
-      this.state.data.push(val);
-      this.setState({data:this.state.data});
-    } 
+    this.state.data.push(val);
+    this.setState({data:this.state.data}); 
   };
 
   clear() {
@@ -147,7 +137,7 @@ class MessageList extends Component {
           break;
         default:
           //console.log("fetchMessagesBaseOnGeo");
-          fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, null, this.setMessageRef);
+          fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, null, this.props.tagFilter, this.setMessage);
           break;
       }
     }

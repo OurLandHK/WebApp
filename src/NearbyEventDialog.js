@@ -20,6 +20,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import MessageList from './MessageList';
 import {connect} from "react-redux";
 import { toggleNearbyEventDialog } from './actions';
+import Chip from '@material-ui/core/Chip';
 import FilterBar from './FilterBar';
 
 function Transition(props) {
@@ -27,7 +28,7 @@ function Transition(props) {
 }
 
 
-const styles = {
+const styles = theme => ({
   appBar: {
     position: 'relative',
   },
@@ -47,8 +48,11 @@ const styles = {
     bottom:'0',
     right:'0',
     fontSize:'0.5rem',
-  }
-};
+  },
+  chip: {
+    margin: theme.spacing.unit / 2,
+  },  
+});
 
 class NearbyEventDialog extends React.Component {
   constructor(props) {
@@ -56,12 +60,15 @@ class NearbyEventDialog extends React.Component {
     this.state = {
         eventNumber: this.props.eventNumber,
         distance: this.props.distance, 
-        geolocation: this.props.geolocation
+        geolocation: this.props.geolocation,
+        filter: null,
+        titleLabel: ""
       };
   }    
 
-  handleRequestOpen(evt) {
+  handleRequestOpen(evt, titleLabel, filter) {
     evt.preventDefault();
+    this.setState({filter: filter, titleLabel: titleLabel});
     this.props.toggleNearbyEventDialog(true);
   }
 
@@ -79,6 +86,7 @@ class NearbyEventDialog extends React.Component {
           eventNumber={eventNumber}
           distance={distance}
           geolocation={geolocation}
+          tagFilter={this.state.filter}
         />
       </div>
     );
@@ -86,7 +94,8 @@ class NearbyEventDialog extends React.Component {
 
   
   render() {
-    const { classes, open } = this.props;let messageHtml = null;
+    const { classes, open, buttons } = this.props;
+    let messageHtml = null;
 
     const cardImage = (
       <CardMedia
@@ -101,22 +110,45 @@ class NearbyEventDialog extends React.Component {
         </div>
       </CardMedia>
     );
+    let buttonList = buttons.map(buttonDetail => {
+//      return <Button  variant="outlined" color="primary" onClick={(evt) => this.handleRequestOpen(evt, buttonDetail.value)}>{buttonDetail.label}</Button>;
+        return <Chip
+          avatar={
+            buttonDetail.avatar
+          }
+          label={buttonDetail.label}
+          onClick={(evt) => this.handleRequestOpen(evt, buttonDetail.label, buttonDetail.value)}
+          className={classes.chip}
+        />
+    });
 
     if(open)  {
         messageHtml = this.renderMessages();
     }
     return (
         <span>
-            <Card onClick={(evt) => this.handleRequestOpen(evt)}>
-                {cardImage}
-                <CardContent>
-                <Typography variant="headline" component="h2">
-                    {constant.nearbyEventLabel}
-                </Typography>
-                <Typography component="p">
-                    查詢現在身處位置或地址簿中1公里範圍的社區人和事
-                </Typography>
-                </CardContent>
+            <Card >
+              <CardMedia
+                  className={classes.media}
+                  image="/images/ssp.jpg"
+                  title={constant.nearbyEventLabel}
+                >
+                  <br/>
+                  {buttonList}
+                  <div
+                    className={classes.mediaCredit}
+                  >
+                    Photo by Steven Wei on Unsplash
+                  </div>
+              </CardMedia>
+              <CardContent>
+              <Typography variant="headline" component="h2">
+                  {constant.nearbyEventLabel}
+              </Typography>
+              <Typography component="p">
+                  查詢現在身處位置或地址簿中1公里範圍的社區人和事
+              </Typography>
+              </CardContent>                
             </Card>
             <Dialog fullScreen  open={open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
                 <AppBar className={classes.appBar}>
@@ -124,7 +156,7 @@ class NearbyEventDialog extends React.Component {
                         <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                             <CloseIcon />
                         </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>{constant.nearbyEventLabel}</Typography>           
+                        <Typography variant="title" color="inherit" className={classes.flex}>{`${constant.nearbyEventLabel} ${this.state.titleLabel}`}</Typography>           
                     </Toolbar>      
                 </AppBar>
                 <FilterBar />     
@@ -141,6 +173,7 @@ NearbyEventDialog.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   return {
     open: state.nearbyEventDialog.open,
+    buttons: state.nearbyEventDialog.buttons,
   };
 }
 
