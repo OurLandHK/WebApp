@@ -200,7 +200,6 @@ class MessageDetailView extends Component {
       if(interval && interval != '' && interval != constant.intervalOptions[0]) {
         intervalHtml =<Typography variant="subheading"> 週期: {interval} </Typography> 
       }
-      console.log(everydayOpenning);
       if(everydayOpenning) {
         openningHtml = <Typography variant="subheading"> {`${constant.openningOptions[0]} ${everydayOpenning.open}至${everydayOpenning.close}`}  </Typography> 
       } else {

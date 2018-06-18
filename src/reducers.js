@@ -153,7 +153,23 @@ function addressDialogReducer(state={open: false}, action) {
   }
 }
 
-function nearbyEventDialogReducer(state={open: false}, action) {
+const buttonList = [
+  { label: '所有', value: null },
+  { label: '活動', value: '活動' },
+  { label: '公共設施', value: '公共設施' },
+  { label: '假日診所', value: '假日診所' },
+  { label: '寵物', value: '寵物' },
+  { label: '社區匯報', value: '社區匯報' },
+  { label: '社區幹事', value: '社區幹事' },
+  { label: '環保', value: '環保' },
+
+  
+].map(button => ({
+  value: button.value,
+  label: button.label,
+}));
+
+function nearbyEventDialogReducer(state={open: false, buttons: buttonList}, action) {
   switch (action.type) {
     case TOGGLE_NEARBYEVENT_DIALOG:
       return {...state, open: action.open};
@@ -170,6 +186,7 @@ function regionEventDialogReducer(state={open: false}, action) {
       return state;
   }
 }
+
 
 function leaderBoardReducer(state={open: false, topTwenty:[]}, action) {
   //console.log(action);
@@ -225,11 +242,12 @@ function ourlandReducer(state={focusMessages: []}, action) {
 
   const tagSuggestions = [
     { label: '公共地方維修' },
-    { label: '兒童遊樂場' },
-    { label: '郵箱' },
     { label: '活動' },
+    { label: '環保'},
     { label: '公共設施' },
     { label: '假日診所' },
+    { label: '兒童遊樂場' },
+    { label: '郵箱' },
     { label: '寵物' },
     { label: '社區規劃' },
     { label: '社區匯報' },
@@ -243,10 +261,6 @@ function ourlandReducer(state={focusMessages: []}, action) {
 
 function suggestionReducer(state={tag: tagSuggestions}, action) {
   switch (action.type) {
-/*
-    case FETCH_FOCUS_MESSAGE:
-      return {...state, focusMessages: action.messages};
-*/      
     default:
       return state;
   }
