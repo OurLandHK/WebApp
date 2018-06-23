@@ -63,15 +63,15 @@ class MessageDialog extends React.Component {
 
   componentDidMount() {
     if(this.props.open) {
-      console.log("openDialog uuid: " + uuid);
       var uuid = this.props.uuid;
+      console.log("openDialog uuid: " + uuid);
       return getMessage(uuid).then((message) => {
         console.log("Message: " + message);            
         this.message = message;   
 
         if(this.props.user != null && this.props.user.user) {
           // get sad and happy inital value
-          return getHappyAndSad(uuid, this.props.user.uid).then((data) => {
+          return getHappyAndSad(uuid, this.props.user.user).then((data) => {
             console.log("Data: " + data);
             if(data != null) {
               this.happyAndSad = data.happyAndSad;
