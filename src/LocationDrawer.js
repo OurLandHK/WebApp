@@ -84,7 +84,6 @@ class LocationDrawer extends React.Component {
         locationName: '現在位置',
         isUsingCurrentLocation: true,
         distance: this.props.filter.distance,
-        locationPrefix: ''
       };
       this.isUsePublicAddressBook = false;
       if(this.props.isUsePublicAddressBook == true) {
@@ -136,40 +135,12 @@ class LocationDrawer extends React.Component {
       updateFilterLocation(coords, distance);
   }
 
-  setLocationPrefix(prefix) {
-    this.setState({...this.state, locationPrefix: prefix});
-  }
-
-  buildGrouppedAddressList(addressList, prefix) {
-    return addressList.reduce((grouppedList, address) => {
-      if (address.text.startsWith(prefix)) {
-        const childPart = address.text.slice(prefix.length);
-        if (childPart.includes('/')) {
-          const group = childPart.split('/', 2)[0];
-          if (!grouppedList.find(a => a.text == group)) {
-            grouppedList.push({
-              text: group,
-              isGroup: true
-            });
-          }
-        } else {
-          grouppedList.push({
-            ...address,
-            text: address.text.slice(prefix.length)
-          });
-        }
-      }
-      return grouppedList;
-    }, []);
-  }
-
   renderAddressBook() {
     const { classes, addressBook, geolocation } = this.props;
     var addressList=addressBook.addresses;
     if(this.isUsePublicAddressBook) {
       addressList=addressBook.publicAddresses;
     }
-    addressList = this.buildGrouppedAddressList(addressList || [], this.state.locationPrefix);
     return addressList.map(address => {
       let type = address.type;
       if(this.isUsePublicAddressBook && (type == addressEnum.home || type == addressEnum.office)) {
@@ -200,18 +171,9 @@ class LocationDrawer extends React.Component {
           icons = <WorkIcon />;
           break;
       }
-      if (address.isGroup) {
-        return (
-          <ListItem button onClick={() => {this.setLocationPrefix(text + '/')}}>
-            <ListItemIcon>
-            {icons}
-            </ListItemIcon>
-            <ListItemText primary={text}/>
-          </ListItem>
-        );
-      } else if (locationString != constant.addressNotSet ) {
+     if (locationString != constant.addressNotSet) {
        return (
-         <ListItem button onClick={() => {this.setLocation(this.state.locationPrefix + text, distance, geolocation)}}>
+         <ListItem button onClick={() => {this.setLocation(text, distance, geolocation)}}>
            <ListItemIcon>
            {icons}
            </ListItemIcon>
