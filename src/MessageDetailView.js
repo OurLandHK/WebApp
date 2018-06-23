@@ -43,6 +43,9 @@ const styles = theme => ({
     width: '64px',
     height: '64px'
   },
+  paper: {
+
+  },
   authorContainer: {
     display: 'flex',
     alignItems: 'center',
@@ -60,7 +63,7 @@ const styles = theme => ({
   authorGrid: {
     alignItems: 'center',
     alignContent: 'center',
-
+    
     padding: '8px'
   },
   appBar: {
@@ -84,9 +87,9 @@ const styles = theme => ({
 class MessageDetailView extends Component {
   constructor(props) {
     super(props);
-    this.state = {expanded: false,
-        rotate: 'rotate(0deg)',
-        tab: 0,
+    this.state = {expanded: false, 
+        rotate: 'rotate(0deg)', 
+        tab: 0, 
       };
     this.handleChangeTab = this.handleChangeTab.bind(this);
     this.handleAuthorClick = this.handleAuthorClick.bind(this);
@@ -123,10 +126,10 @@ class MessageDetailView extends Component {
         <Grid item className={classes.authorGrid}>
           {fbProfileImage}
           <Typography color='primary' noWrap='true' >{message.name}</Typography>
-          <Typography color='primary' noWrap='true' >{subheader}</Typography>
+          <Typography color='primary' noWrap='true' >{subheader}</Typography>                
         </Grid>
         <Grid item xs className={classes.summaryGrid}>
-          <Typography variant="headline">{message.text}</Typography>
+          <Typography variant="headline">{message.text}</Typography>         
         </Grid>
       </Grid>    );
   }
@@ -155,16 +158,16 @@ class MessageDetailView extends Component {
           </Typography>
           <Typography variant="subheading">
           {`現況: ${message.status} ${viewCountString}`}
-          </Typography>
+          </Typography>                
         </Grid>
-      </Grid>
+      </Grid> 
     );
   }
 
   renderTimeHtml() {
     const classes = this.props.classes;
     let rv = null;
-    let m = this.props.message;
+    let m = this.props.message;   
     let dateTimeString = '';
     if(m.start != null)
     {
@@ -193,12 +196,12 @@ class MessageDetailView extends Component {
       if(duration != null) {
         durationHtml = <Typography variant="subheading"> 為期: {duration} </Typography>
         timeTypeHtml = <Typography variant="subheading"> {constant.timeOptions[0]} </Typography> ;
-      }
+      } 
       if(interval && interval != '' && interval != constant.intervalOptions[0]) {
-        intervalHtml =<Typography variant="subheading"> 週期: {interval} </Typography>
+        intervalHtml =<Typography variant="subheading"> 週期: {interval} </Typography> 
       }
       if(everydayOpenning) {
-        openningHtml = <Typography variant="subheading"> {`${constant.openningOptions[0]} ${everydayOpenning.open}至${everydayOpenning.close}`}  </Typography>
+        openningHtml = <Typography variant="subheading"> {`${constant.openningOptions[0]} ${everydayOpenning.open}至${everydayOpenning.close}`}  </Typography> 
       } else {
         if(weekdaysOpennings) {
           let i = 0;
@@ -216,11 +219,11 @@ class MessageDetailView extends Component {
       rv = <Paper className={classes.paper}>
                   <CardContent>
                     {timeTypeHtml}
-                    <Typography variant="subheading"> 開始: {dateTimeString}</Typography>
+                    <Typography variant="subheading"> 開始: {dateTimeString}</Typography>  
                     {durationHtml}
                     {intervalHtml}
                     {openningHtml}
-                    </CardContent>
+                    </CardContent>               
                   </Paper>
     }
     return rv;
@@ -243,7 +246,7 @@ class MessageDetailView extends Component {
     var link = m.link;
     if(Array.isArray(tag))
     {
-        for (var i = 0; i < tag.length; i++) {
+        for (var i = 0; i < tag.length; i++) { 
             var chip = {key:i, label:tag[i]};
             chips.push(chip);
         }
@@ -262,7 +265,7 @@ class MessageDetailView extends Component {
     } else {
       if(link != null && link != "")
       linkHtml = <Typography variant="subheading"> {link} </Typography>;
-
+      
     }
     const title = this.renderTitle();
     let baseHtml = <Grid container spacing={0}> {this.renderBase()}</Grid>;
@@ -273,14 +276,14 @@ class MessageDetailView extends Component {
     return(<div className={classes.container}>
             <Paper className={classes.paper}>
              {title}
-             <CardContent>
-             {baseHtml}
+             <CardContent> 
+             {baseHtml}             
               <ChipArray chipData={chips} />
              {linkHtml}
-             </CardContent>
-             </Paper>
+             </CardContent> 
+             </Paper>             
              {dateHtml}
-             <MessageAction message={m} happyAndSad={this.props.happyAndSad}/>
+             <MessageAction message={m} happyAndSad={this.props.happyAndSad}/>        
              <div>
                <AppBar position="static" className={classes.appBar}>
                  <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>

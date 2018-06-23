@@ -5,7 +5,7 @@ import config, {constant} from './config/default';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
-import PlayListPlayIcon from '@material-ui/icons/PlaylistPlay';
+import PlayListPlayIcon from '@material-ui/icons/PlayListPlay';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -59,13 +59,13 @@ class EventListDialog extends React.Component {
 //    console.log("createEventListDialog");
     super(props);
     var messageIds = [];
-    if(this.props.messageIds != null) {
+    if(this.props.messageIds != null) {  
       messageIds = this.props.messageIds;
     }
     var title = "EventList";
     if(this.props.title != undefined) {
       title = this.props.title;
-    }
+    }    
 
     var userName = "";
     if(this.props.displayName != undefined) {
@@ -78,7 +78,7 @@ class EventListDialog extends React.Component {
       userName: userName,
       open: false,
     };
-  }
+  }    
 
   handleRequestOpen(evt) {
     evt.preventDefault();
@@ -92,7 +92,7 @@ class EventListDialog extends React.Component {
   };
 
   renderMessages() {
-    const { classes } = this.props;
+    const { classes } = this.props; 
     return (
       <div className={classes.container}>
         <MessageList
@@ -107,7 +107,7 @@ class EventListDialog extends React.Component {
     );
   }
 
-
+  
   render() {
     const { classes} = this.props;let messageHtml = null;
     let titleText = this.state.title + ": " + this.state.messageIds.length;
@@ -121,17 +121,17 @@ class EventListDialog extends React.Component {
                     <PlayListPlayIcon/>
                 </ListItemIcon>
                 <ListItemText primary={titleText} />
-            </ListItem>
+            </ListItem>  
             <Dialog fullScreen  open={this.state.open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
                 <AppBar className={classes.appBar} >
                     <Toolbar>
                         <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                             <CloseIcon />
                         </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>{this.state.userName} {this.state.title}</Typography>
-                    </Toolbar>
+                        <Typography variant="title" color="inherit" className={classes.flex}>{this.state.userName} {this.state.title}</Typography> 
+                    </Toolbar>                            
                 </AppBar>
-                <FilterBar disableLocationDrawer={true}/>
+                <FilterBar disableLocationDrawer={true}/>   
                 {messageHtml}
             </Dialog>
         </span>);

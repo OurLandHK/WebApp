@@ -14,7 +14,7 @@ const styles = theme => ({
     overflowY: 'hidden',
     whiteSpace: 'nowrap',
   },
-
+  
   scrollingItem: {
       display: 'inline-block',
   },
@@ -30,10 +30,10 @@ class MessageList extends Component {
     let messageIds = [];
     let statusMessage = constant.messageListReadingLocation;
 //    console.log("Message List" + this.props.messageIds);
-    if(this.props.messageIds != null) {
+    if(this.props.messageIds != null) {  
       messageIds = this.props.messageIds;
       statusMessage = constant.messageListLoadingStatus;
-    }
+    } 
     this.hori = false;
     if(this.props.hori == true) {
       this.hori = true;
@@ -41,9 +41,9 @@ class MessageList extends Component {
     this.state = {
 //      eventId: this.props.eventId,
       eventNumber: this.props.eventNumber,
-      distance: this.props.distance,
+      distance: this.props.distance, 
       geolocation: geolocation,
-      data:[],
+      data:[], 
       messageIds: messageIds,
       selectedTag: null,
       selectedSorting: null,
@@ -60,7 +60,7 @@ class MessageList extends Component {
       this.updateFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
     }
   }
-
+ 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.filter.geolocation != prevProps.filter.geolocation ||
       this.props.filter.distance != prevProps.filter.distance ||
@@ -70,7 +70,7 @@ class MessageList extends Component {
         this.refreshMessageList();
       }
     } else {
-      if(this.props.filter.selectedTag != undefined &&
+      if(this.props.filter.selectedTag != undefined && 
             this.props.filter.selectedTag != prevProps.filter.selectedTag) {
         this.setState({selectedTag: this.props.filter.selectedTag});
       }
@@ -91,7 +91,7 @@ class MessageList extends Component {
   refreshMessageList() {
     this.setState({selectedTag: null});
     this.setState({selectedSorting: null});
-    this.fetchMessages(this.props.filter);
+    this.fetchMessages(this.props.filter); 
   }
 
   setMessage(val) {
@@ -99,17 +99,17 @@ class MessageList extends Component {
       this.setState({statusMessage: constant.messageListNoMessage});
       return;
     }
-    if(val.tag != null && val.tag.length > 0) {
+    if(val.tag != null && val.tag.length > 0) {      
       this.props.updateFilterTagList(val.tag);
     }
     this.state.data.push(val);
-    this.setState({data:this.state.data});
+    this.setState({data:this.state.data}); 
   };
 
   clear() {
     //console.log("clear  message list")
     this.setState({data: []});
-  }
+  }  
 
 
   fetchMessages(filter) {
@@ -147,9 +147,9 @@ class MessageList extends Component {
     const classes = this.props.classes;
 //    let queryMessage = null;
 //    let linebreak = <div><br/><br/><br/><br/></div>;
-    let lon = 0;
+    let lon = 0; 
     let lat = 0;
-
+    
     if(this.state.geolocation != null && this.state.geolocation != constant.invalidLocation) {
       lon = this.state.geolocation.longitude;
       lat = this.state.geolocation.latitude;
@@ -159,14 +159,14 @@ class MessageList extends Component {
     if(sorting == 'sortByLastUpdate'){
       this.state.data.sort((i, j) => (j.lastUpdate==null?j.createdAt.toDate():j.lastUpdate.toDate()) - (i.lastUpdate==null?i.createdAt.toDate():i.lastUpdate.toDate()));
     }else if(sorting == 'sortByDistance'){
-      this.state.data.sort((i, j) => (distance(i.geolocation.longitude,i.geolocation.latitude,lon,lat))
+      this.state.data.sort((i, j) => (distance(i.geolocation.longitude,i.geolocation.latitude,lon,lat)) 
         - (distance(j.geolocation.longitude,j.geolocation.latitude,lon,lat)));
     }
-
+    
 
     if(this.state.data.length == 0) {
       let statusMessage = this.state.statusMessage;
-      return(<div><h4>{statusMessage}</h4></div>);
+      return(<div><center><br/><h4>{statusMessage}</h4></center></div>);
     } else {
       let messageList = null;
       let elements = this.state.data.map((message) => {
@@ -186,7 +186,7 @@ class MessageList extends Component {
       } else {
         messageList = elements;
       }
-      return (<div className="message-list-wrapper">{messageList}</div>);
+      return (<div>{messageList}</div>);
     }
   }
 };

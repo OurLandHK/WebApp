@@ -7,6 +7,12 @@ import { withStyles } from '@material-ui/core/styles';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import { signOut, signIn } from "./actions";
 
+const styles = theme => ({
+  button: {
+    color: '#FFFFFF',
+  },
+});
+
 class SignInButton extends  Component {
   constructor(props) {
     super(props);
@@ -30,12 +36,14 @@ class SignInButton extends  Component {
           variant="raised"
           onClick={signIn}
           color="primary"
+          className={classes.button}
         >
           <SocialIcon
             color="white"
             network="facebook"
             style={{ height: 25, width: 25 }}
-          />&nbsp;登入
+          />&nbsp;
+          使用Facebook登入
         </Button>
       );
     }
@@ -60,4 +68,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignInButton);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(SignInButton));

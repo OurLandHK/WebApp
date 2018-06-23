@@ -9,8 +9,8 @@ import Main from './Main';
 import PublicProfile from './PublicProfile';
 import Header from './Header';
 import {getMessage} from './MessageDB';
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
+import { createStore, applyMiddleware } from 'redux';  
+import thunk from 'redux-thunk';  
 import {connect} from "react-redux";
 import rootReducer from './reducers';
 import {
@@ -24,7 +24,7 @@ import {
 import {constant} from './config/default';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
+const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);  
 const store = createStoreWithMiddleware(rootReducer);
 
 class App extends Component {
@@ -52,10 +52,10 @@ class App extends Component {
     this.state = {
         eventId: eventId,
         eventNumber: eventNumber,
-        distance: distance,
+        distance: distance, 
         userId: userId,
       };
-  }
+  }  
 
   componentWillMount() {
     this.props.checkAuthState();
@@ -66,7 +66,7 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.user != this.props.user && this.props.user.user) {
-      this.props.fetchAddressBookByUser(this.props.user.user);
+      this.props.fetchAddressBookByUser(this.props.user.user);    
     }
   }
 
@@ -74,9 +74,9 @@ class App extends Component {
     /* Needed for onTouchTap
        http://stackoverflow.com/a/34015469/988941
     */
-    //injectTapEventPlugin();
+    //injectTapEventPlugin();   
     return (
-        <div className="wrapper">
+        <div>
           <CssBaseline />
           <Header />
           <Main
@@ -109,9 +109,9 @@ const mapDispatchToProps = (dispatch) => {
       user =>
         dispatch(fetchAddressBookByUser(user)),
     fetchAddressBookFromOurLand:
-      () => dispatch(fetchAddressBookFromOurLand()),
+      () => dispatch(fetchAddressBookFromOurLand()),  
     fetchConcernMessagesFromOurLand:
-      () => dispatch(fetchConcernMessagesFromOurLand()),
+      () => dispatch(fetchConcernMessagesFromOurLand()),       
   }
 };
 

@@ -30,7 +30,7 @@ class Main extends Component {
     }
     if(this.props.userId != "") {
       updatePublicProfileDialog(this.props.userId, "", true);
-    }
+    }    
     if(this.props.eventId != "") {
       updateRecentMessage(this.props.eventId, true);
     }
@@ -38,10 +38,10 @@ class Main extends Component {
         userId: this.props.userId,
         eventId: this.props.eventId,
         eventNumber: this.props.eventNumber,
-        distance: this.props.distance,
+        distance: this.props.distance, 
         geolocation: this.props.geolocation
       };
-
+    
   }
 
   handleClick() {
@@ -69,20 +69,20 @@ class Main extends Component {
     const {open: openRecent} = this.props.recentMessage;
     const {focusMessages} = this.props.ourland;
     let linebreak = <div><br/><br/></div>;
-    const { classes } = this.props;
+    const { classes } = this.props; 
     let focusMessage = null
 
-    if(queryMessage != null) {
+    if(queryMessage != null) {      
       let message = queryMessage;
-      recentMessage = <div className="recent-event-wrapper">
-                        <h4>{constant.recentEventLabel}</h4>
+      recentMessage = <div>
+                        <b><h4>{constant.recentEventLabel}</h4></b>
                         <MessageView message={message} key={message.key} openDialogDefault={openRecent} />
                         <br/>
                       </div>;
-    }
+    }   
     if(focusMessages.length > 0) {
-      focusMessage = <div className="focus-message-wrapper">
-        <h4>{constant.focusMessagesLabel}</h4>
+      focusMessage = <div>
+        <b><h4>{constant.focusMessagesLabel}</h4></b>
         <MessageList
           ref={(messageList) => {this.messageList = messageList;}}
           eventNumber={100}
@@ -92,23 +92,23 @@ class Main extends Component {
         />
         <br/>
       </div>
-    }
+    } 
 
     return (
       <div className={classes.container}>
         {linebreak}
         {recentMessage}
         {focusMessage}
-        <NearbyEventDialog
+        <NearbyEventDialog 
           eventNumber={eventNumber}
           distance={distance}
           geolocation={geolocation}
         />
-        <RegionEventDialog
+        <RegionEventDialog 
           eventNumber={eventNumber}
           distance={distance}
           geolocation={geolocation}
-        />
+        />        
         <PostMessageView />
       </div>
     );
@@ -117,7 +117,7 @@ class Main extends Component {
   render() {
     let messageHtml = this.renderMessageFrontPage();
     return (
-      <div class="content-wrapper">
+      <div>
         <br/>
           {messageHtml}
           <PublicProfile />

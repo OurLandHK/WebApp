@@ -78,19 +78,19 @@ class DrawerMenu extends Component {
   currentClick() {
     this.props.fetchLocation();
     this.handleClose();
-  }
+  }  
 
   componentDidMount() {
     if(this.props.user && this.props.user.userProfile) {
       this.setState({concernMessages: this.props.user.userProfile.concernMessages});
     }
   }
-
+ 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.user != this.props.user &&  this.props.user && this.props.user.userProfile) {
       this.setState({concernMessages: this.props.user.userProfile.concernMessages});
-    }
-  }
+    } 
+  }  
 
 
   render() {
@@ -108,8 +108,8 @@ class DrawerMenu extends Component {
         userSection = (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{user.userProfile.displayName}&nbsp;&nbsp;</div>);
         signOutSection = (<ListItem><SignOutButton/></ListItem>);
         if(this.state.concernMessages) {
-          concernMessage = <EventListDialog title="關注" messageIds={this.state.concernMessages}/>
-        }
+          concernMessage = <EventListDialog title="關注" messageIds={this.state.concernMessages}/> 
+        }        
         userLoginDisplay = (<span>
                             <ListItem button>
                               <ListItemIcon>
@@ -129,26 +129,26 @@ class DrawerMenu extends Component {
               <ChatBubbleIcon />
             </ListItemIcon>
             <ListItemText primary="Upgrade" onClick={() => this.upgrade()}/>
-          </ListItem>
-        }
+          </ListItem> 
+        }                            
       }
     }
 
 
     return (
-      <div className="drawer-menu">
-        <IconButton
+      <div>
+        <IconButton 
           aria-label="More"
           aria-haspopup="true"
           onClick={() => this.handleToggle()}>
           <MoreVertIcon />
         </IconButton>
         {userProfileView}
-        <AddressDialog ref={(addressDialog) => {this.addressDialog = addressDialog;}} openDialog={openDialog => this.openAddressDialog = openDialog}/>
+        <AddressDialog ref={(addressDialog) => {this.addressDialog = addressDialog;}} openDialog={openDialog => this.openAddressDialog = openDialog}/>        
         <LeaderBoard />
-        <AboutDialog openDialog={f => this.openAboutDialog = f}/>
+        <AboutDialog openDialog={f => this.openAboutDialog = f}/>        
         <Drawer
-          anchor="right"
+          anchor="right" 
           open={this.state.open}
           onClose={() => this.handleClose()}
         >
@@ -160,7 +160,7 @@ class DrawerMenu extends Component {
               {signOutSection}
             </List>
             <Divider/>
-            <List disablePadding>
+            <List disablePadding>            
               <ListItem button>
                 <ListItemIcon>
                   <StarIcon />
@@ -168,16 +168,16 @@ class DrawerMenu extends Component {
                 <ListItemText primary={constant.leaderBoardLabel} onClick={() => this.leaderBoardClick()}/>
               </ListItem>
               {concernMessage}
-              {userLoginDisplay}
+              {userLoginDisplay}                                                      
               <ListItem button>
                 <ListItemIcon>
                   <ChatBubbleIcon />
                 </ListItemIcon>
                 <ListItemText primary="關於" onClick={() => this.showAbout()}/>
               </ListItem>
-              {adminButton}
+              {adminButton}                                                        
             </List>
-          </div>
+          </div>                  
         </Drawer>
       </div>
     );
