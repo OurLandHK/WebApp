@@ -102,12 +102,6 @@ class SortingDrawer extends React.Component {
     selectedSorting(sorting);
   }
 
-  renderSortByDefault(){
-    return (<ListItem button onClick={() => {this.setSorting(null)}}>
-               <ListItemText primary={constant.sortByDefaultLabel} />
-            </ListItem>);
-  }
-
   renderSortByLastUpdate() {
     return (<ListItem button onClick={() => {this.setSorting('sortByLastUpdate')}}>
                <ListItemText primary={constant.sortByLastUpdateLabel} />
@@ -135,7 +129,6 @@ class SortingDrawer extends React.Component {
   }
 
   render() {
-      let sortByDefault = this.renderSortByDefault();
   	  let sortByLastUpdate = this.renderSortByLastUpdate();
   	  let sortByDistance = this.renderSortByDistance();
       let sortBtnLabel = this.renderSortBtnLabel();
@@ -159,8 +152,6 @@ class SortingDrawer extends React.Component {
                   role='button'
                   className={classes.fullList}>
                   <List>
-                    {sortByDefault}
-                    <Divider />
                   	{sortByLastUpdate}
                   	<Divider />
                   	{sortByDistance}

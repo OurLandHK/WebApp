@@ -47,7 +47,6 @@ let constant = {
   noTagLabel: "所有事件",
   viewCountLabel: '觀看次數: ',
   publicProfileLabel: "簡介",
-  sortByDefaultLabel: "沒有排序",
   sortByLastUpdateLabel: "最近更新排序",
   sortByDistanceLabel: "距離排序",
   defaultEventNumber: 100,
