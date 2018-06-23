@@ -25,7 +25,7 @@ const styles = () => ({
     height: '64px'
   },
   on: {
-    color: 'secondary',
+    color: 'secondary'
   },
   off: {
     color: null,
