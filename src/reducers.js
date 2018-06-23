@@ -70,7 +70,7 @@ function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, e
     case UPDATE_FILTER_DEFAULT:
       return {
         selectedTag: null, 
-        selectedSorting: null,
+        selectedSorting: 'sortByLastUpdate',
         tagList: [],
         defaultEventNumber: action.eventNumber,
         eventNumber: action.eventNumber,
