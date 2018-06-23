@@ -18,6 +18,7 @@ import {
   TOGGLE_ADDRESS_DIALOG,
   TOGGLE_NEARBYEVENT_DIALOG,
   TOGGLE_REGIONEVENT_DIALOG,
+  TOGGLE_EVENTLIST_DIALOG,
   TOGGLE_LEADER_BOARD,
   FETCH_TOP_TWENTY,
   UPDATE_FILTER_SORTING
@@ -35,6 +36,10 @@ function dispatchToggleNearbyEventDialog(flag) {
 
 function dispatchToggleRegionEventDialog(flag) {
   return {type: TOGGLE_REGIONEVENT_DIALOG, open: flag};
+}
+
+function dispatchToggleEventListDialog(flag) {
+  return {type: TOGGLE_EVENTLIST_DIALOG, open: flag};
 }
 
 function dispatchToggleAddressBook(flag) {
@@ -389,6 +394,12 @@ export function toggleRegionEventDialog(flag) {
   return dispatch => {
     dispatch(dispatchToggleRegionEventDialog(flag));
   };
+}
+
+export function toggleEventListDialog(flag) {
+  return dispatch => {
+    dispatch(dispatchToggleEventListDialog(flag));
+  }
 }
 
 export function toggleLeaderBoard(flag) {
