@@ -73,8 +73,7 @@ class SortingDrawer extends React.Component {
       this.state = {
         open: false,
         selectedSorting: null,
-        isSortByDefault: true,
-        isSortByLastUpdate: false,
+        isSortByLastUpdate: true,
         isSortByDistance: false
       };
   }    
@@ -84,38 +83,23 @@ class SortingDrawer extends React.Component {
   };
 
   setSorting(sorting){
-  	 if(sorting == null) {
-      this.setState({
-        selectedSorting: null,
-        isSortByDefault: true,
-        isSortByLastUpdate: false,
-        isSortByDistance: false
-      });
-    } else if(sorting == 'sortByLastUpdate'){
+  	 if(sorting == 'sortByLastUpdate'){
       this.setState({
         selectedSorting: sorting,
         isSortByLastUpdate: true,
-        isSortByDefault: false,
         isSortByDistance: false
       });
     } else if(sorting == 'sortByDistance'){
       this.setState({
         selectedSorting: sorting,
         isSortByDistance: true,
-        isSortByLastUpdate: false,
-        isSortByDefault: false
+        isSortByLastUpdate: false
       });
     }
 
     this.toggleDrawer(false);
     const { selectedSorting } = this.props;
     selectedSorting(sorting);
-  }
-
-  renderSortByDefault(){
-    return (<ListItem button onClick={() => {this.setSorting(null)}}>
-               <ListItemText primary={constant.sortByDefaultLabel} />
-            </ListItem>);
   }
 
   renderSortByLastUpdate() {
@@ -145,7 +129,6 @@ class SortingDrawer extends React.Component {
   }
 
   render() {
-      let sortByDefault = this.renderSortByDefault();
   	  let sortByLastUpdate = this.renderSortByLastUpdate();
   	  let sortByDistance = this.renderSortByDistance();
       let sortBtnLabel = this.renderSortBtnLabel();
@@ -169,8 +152,6 @@ class SortingDrawer extends React.Component {
                   role='button'
                   className={classes.fullList}>
                   <List>
-                    {sortByDefault}
-                    <Divider />
                   	{sortByLastUpdate}
                   	<Divider />
                   	{sortByDistance}

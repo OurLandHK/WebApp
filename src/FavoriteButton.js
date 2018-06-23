@@ -67,7 +67,7 @@ class FavoriteButton extends Component {
     const { favor } = this.state
     const favorClass = favor ? 'secondary' : '';
     const baseClass = classes.base;
-    const iconHtml = favor ? <PlayListAddCheckIcon/> : <PlayListAddIcon/>;
+    const iconHtml = favor ? <PlaylistAddCheckIcon/> : <PlaylistAddIcon/>;
     let disable = true;
     if(this.props.user != null && this.props.user.user != null) {
       disable = false;
