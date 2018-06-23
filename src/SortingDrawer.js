@@ -73,8 +73,7 @@ class SortingDrawer extends React.Component {
       this.state = {
         open: false,
         selectedSorting: null,
-        isSortByDefault: true,
-        isSortByLastUpdate: false,
+        isSortByLastUpdate: true,
         isSortByDistance: false
       };
   }    
@@ -84,26 +83,17 @@ class SortingDrawer extends React.Component {
   };
 
   setSorting(sorting){
-  	 if(sorting == null) {
-      this.setState({
-        selectedSorting: null,
-        isSortByDefault: true,
-        isSortByLastUpdate: false,
-        isSortByDistance: false
-      });
-    } else if(sorting == 'sortByLastUpdate'){
+  	 if(sorting == 'sortByLastUpdate'){
       this.setState({
         selectedSorting: sorting,
         isSortByLastUpdate: true,
-        isSortByDefault: false,
         isSortByDistance: false
       });
     } else if(sorting == 'sortByDistance'){
       this.setState({
         selectedSorting: sorting,
         isSortByDistance: true,
-        isSortByLastUpdate: false,
-        isSortByDefault: false
+        isSortByLastUpdate: false
       });
     }
 
