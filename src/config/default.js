@@ -12,17 +12,11 @@ let config = {
     version: 'v2.10'
   },
   userAction: 'userAction',
-/*
+
   fbGroupId: '244493866025075', // Production https://www.facebook.com/groups/OurLandHK/?fref=nf
   messageDB: 'message', // Production
   userDB: 'userProfile', // Production
   photoDB: 'photo',
-  MasterUID: 'mUQgwxkmPBfVA47d9lHzB482Nmp1',
-/*/
-  fbGroupId: '264191847414716', // For Development https://www.facebook.com/groups/264191847414716/ 
-  messageDB: 'messageTest', // For development.
-  userDB: 'userProfileTest', // For developments.
-  photoDB: 'photoTest', // For developments.
   MasterUID: 'mUQgwxkmPBfVA47d9lHzB482Nmp1',
 
   addressBook: "AddressBook",

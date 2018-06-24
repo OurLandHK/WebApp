@@ -18,6 +18,7 @@ import {
   TOGGLE_ADDRESS_DIALOG,
   TOGGLE_NEARBYEVENT_DIALOG,
   TOGGLE_REGIONEVENT_DIALOG,
+  TOGGLE_EVENTLIST_DIALOG,
   UPDATE_PUBLIC_PROFILE_DIALOG,
   TOGGLE_PUBLIC_PROFILE_DIALOG,  
   TOGGLE_LEADER_BOARD,
@@ -266,6 +267,15 @@ function suggestionReducer(state={tag: tagSuggestions}, action) {
   }
 }
 
+function eventListDialogReducer(state={open: false}, action) {
+  switch (action.type) {
+    case TOGGLE_EVENTLIST_DIALOG:
+      return {...state, open: action.open};
+    default:
+      return state;
+  }
+}
+
 const rootReducer = combineReducers({  
   geoLocation: geoLocationReducer,
   user: userReducer,
@@ -275,6 +285,7 @@ const rootReducer = combineReducers({
   addressDialog: addressDialogReducer,
   nearbyEventDialog: nearbyEventDialogReducer,
   regionEventDialog: regionEventDialogReducer,
+  eventListDialog: eventListDialogReducer,
   leaderBoard: leaderBoardReducer,
   recentMessage: recentMessageReducer,
   publicProfileDialog: publicProfileDialogReducer,

@@ -1,8 +1,6 @@
-/*global FB*/
-import React, { Component } from 'react';
-import * as firebase from 'firebase';
+
+import React from 'react';
 import config, {constant} from './config/default';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
 import PlayListPlayIcon from '@material-ui/icons/PlaylistPlay';
@@ -13,17 +11,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import MessageList from './MessageList';
-import InboxIcon from '@material-ui/icons/Inbox';
-import Divider from '@material-ui/core/Divider';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText  from '@material-ui/core/ListItemText';
+import {connect} from "react-redux";
+import { toggleEventListDialog } from './actions';
 import FilterBar from './FilterBar';
 
 function Transition(props) {
@@ -59,7 +52,11 @@ class EventListDialog extends React.Component {
 //    console.log("createEventListDialog");
     super(props);
     var messageIds = [];
-    if(this.props.messageIds != null) {
+    let invisible = false;
+    if(this.props.invisible) {
+      invisible = this.props.invisible;
+    }
+    if(this.props.messageIds != null) {  
       messageIds = this.props.messageIds;
     }
     var title = "EventList";
@@ -72,6 +69,7 @@ class EventListDialog extends React.Component {
       userName = this.props.displayName;
     }
 
+    this.invisible = invisible;
     this.state = {
       messageIds: messageIds,
       title: title,
@@ -109,20 +107,24 @@ class EventListDialog extends React.Component {
 
 
   render() {
-    const { classes} = this.props;let messageHtml = null;
+    const { classes} = this.props;let messageHtml = null;let buttonHtml = null;
     let titleText = this.state.title + ": " + this.state.messageIds.length;
-    if(this.state.open)  {
+    let open = this.state.open || this.props.open; 
+    if(open)  {
         messageHtml = this.renderMessages();
+    }
+    if(!this.invisible) {
+      buttonHtml = <ListItem button onClick={(evt) => this.handleRequestOpen(evt)}>
+                      <ListItemIcon>
+                        <PlayListPlayIcon/>
+                          </ListItemIcon>
+                        <ListItemText primary={titleText} />
+                      </ListItem>;
     }
     return (
         <span>
-            <ListItem button onClick={(evt) => this.handleRequestOpen(evt)}>
-                <ListItemIcon>
-                    <PlayListPlayIcon/>
-                </ListItemIcon>
-                <ListItemText primary={titleText} />
-            </ListItem>
-            <Dialog fullScreen  open={this.state.open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
+            {buttonHtml}
+            <Dialog fullScreen  open={open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
                 <AppBar className={classes.appBar} >
                     <Toolbar>
                         <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
@@ -142,5 +144,18 @@ EventListDialog.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    open: state.regionEventDialog.open,
+  };
+}
 
-export default (withStyles(styles)(EventListDialog));
+const mapDispatchToProps = (dispatch) => {
+  return {
+    toggleEventListDialog: flag => 
+      dispatch(toggleEventListDialog(flag)),
+  }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(EventListDialog));

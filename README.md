@@ -26,8 +26,7 @@ https://google.github.io/styleguide/jsguide.html
 	* Install windows-build-tools on windows envirnoment `npm install --global --production windows-build-tools`
     * Install the following peer Dependencies
 		* `npm install jquery@^1.9.1`
-		* `npm install webpack@^2.2.0`
-    * Checkout the source code and run the following commands
+    * Checkout the source code and run the following commands to build and test run
 		```bash
 		firebase login
 		cd WebApp
@@ -37,7 +36,8 @@ https://google.github.io/styleguide/jsguide.html
 		cd ..
 		firebase use --add
 		npm run generate_firebase_config
-		npm run start
+		npm run build
+		serve -s build
 	    ```
 	* Deployment
 	   ```bash
