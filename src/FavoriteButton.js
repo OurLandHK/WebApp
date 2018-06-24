@@ -1,14 +1,14 @@
 import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import IconButton from '@material-ui/core/IconButton';
-import PlayListAddIcon from '@material-ui/icons/PlayListAdd';
-import PlayListAddCheckIcon from '@material-ui/icons/PlayListAddCheck';
+import PlayListAddIcon from '@material-ui/icons/PlaylistAdd';
+import PlayListAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 import { withStyles } from '@material-ui/core/styles';
 import {updateMessageConcernUser} from './MessageDB';
 import {
-  isConcernMessage, 
+  isConcernMessage,
   toggleConcernMessage
 } from './UserProfile';
 import {connect} from "react-redux";
@@ -25,7 +25,7 @@ const styles = () => ({
     height: '64px'
   },
   on: {
-    color: 'secondary'
+    color: 'secondary',
   },
   off: {
     color: null,
@@ -93,7 +93,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     checkAuthState:
-      () => dispatch(checkAuthState()),         
+      () => dispatch(checkAuthState()),
   }
 };
 

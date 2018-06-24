@@ -1,11 +1,9 @@
-/*global FB*/
-import React, { Component } from 'react';
-import * as firebase from 'firebase';
+
+import React from 'react';
 import config, {constant} from './config/default';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
-import PlayListPlayIcon from '@material-ui/icons/PlayListPlay';
+import PlayListPlayIcon from '@material-ui/icons/PlaylistPlay';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -13,14 +11,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import MessageList from './MessageList';
-import InboxIcon from '@material-ui/icons/Inbox';
-import Divider from '@material-ui/core/Divider';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText  from '@material-ui/core/ListItemText';
@@ -71,7 +62,7 @@ class EventListDialog extends React.Component {
     var title = "EventList";
     if(this.props.title != undefined) {
       title = this.props.title;
-    }    
+    }
 
     var userName = "";
     if(this.props.displayName != undefined) {
@@ -85,7 +76,7 @@ class EventListDialog extends React.Component {
       userName: userName,
       open: false,
     };
-  }    
+  }
 
   handleRequestOpen(evt) {
     evt.preventDefault();
@@ -114,7 +105,7 @@ class EventListDialog extends React.Component {
     );
   }
 
-  
+
   render() {
     const { classes} = this.props;let messageHtml = null;let buttonHtml = null;
     let titleText = this.state.title + ": " + this.state.messageIds.length;
@@ -139,10 +130,10 @@ class EventListDialog extends React.Component {
                         <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                             <CloseIcon />
                         </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>{this.state.userName} {this.state.title}</Typography> 
-                    </Toolbar>                            
+                        <Typography variant="title" color="inherit" className={classes.flex}>{this.state.userName} {this.state.title}</Typography>
+                    </Toolbar>
                 </AppBar>
-                <FilterBar disableLocationDrawer={true}/>   
+                <FilterBar disableLocationDrawer={true}/>
                 {messageHtml}
             </Dialog>
         </span>);
