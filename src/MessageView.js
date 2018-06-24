@@ -38,7 +38,7 @@ const styles = theme => ({
     display: 'flex',
     justify: 'flex-start',
     alignItems: 'center'
-  },  
+  },
   avatar: {
     backgroundColor: red[500],
   },
@@ -61,12 +61,12 @@ const styles = theme => ({
   content: {
     flex: '1 0 auto',
     wrap: 'nowrap',
-    zeroMinWidth: 'true' 
-},  
+    zeroMinWidth: 'true'
+},
   cover: {
     width: 64,
     height: 64,
-  },  
+  },
   newIcon: {
     backgroundColor: green,
     color: red
@@ -100,7 +100,7 @@ class MessageView extends Component {
       }
       updateRecentMessage(this.props.message.key, false);
       this.openDialog();
-      
+
       if(incViewCount) {
         incMessageViewCount(this.props.message.key);
       }
@@ -117,7 +117,7 @@ class MessageView extends Component {
               </CardContent>
             </Card>);
   };
-/*  
+/*
   sliceRender(text, auther, imageUrl, subtitle, isUpdate) {
     const classes = this.props.classes;
     let newIcon = null;
@@ -137,14 +137,14 @@ class MessageView extends Component {
               {summary}
             </Card>);
   }
-*/  
+*/
 
   sliceRender(text, auther, imageUrl, subtitle, isUpdate) {
     const classes = this.props.classes;
     let newIcon = null;
     if(isUpdate) {
       newIcon = <FiberNewIcon className={classes.newIcon}/>
-    }    
+    }
     let summary = <Grid className={classes.summaryGrid} item xs onClick={() => this.handleClick()}>
                       <Typography noWrap='true'className={classes.title}>{newIcon}{auther}</Typography>
                       <Typography noWrap='true' variant="title"> {text}</Typography>
@@ -157,7 +157,7 @@ class MessageView extends Component {
               {summary}
               </Grid>
             </Paper>);
-            
+
   }
 
 
@@ -204,15 +204,15 @@ class MessageView extends Component {
       let lastLoginTime = user.lastLogin;
       //console.log('update Time: ' + updateTime + ' ' + lastLoginTime + ' ' + (updateTime > lastLoginTime));
       isUpdate = (updateTime > lastLoginTime);
-    } 
+    }
     let post = '張貼';
     timeOffset = Date.now() - m.lastUpdate.toDate();
     if(m.createdAt != m.lastUpdate) {
       post = '更新'
     }
-    
+
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
-    
+
     var auther = `${m.name} 於: ${timeOffsetString}前${post}`;
     var tag = '';
     if(m.tag != null && m.tag.length > 0) {
@@ -228,7 +228,7 @@ class MessageView extends Component {
     } else {
       card = this.sliceRender(m.text, auther, imageUrl, subtitle, isUpdate);
     }
-    return (<div>
+    return (<div className="message-item">
               {card}
               <MessageDialog uuid={uuid} open={o} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
             </div>);
@@ -258,4 +258,3 @@ const mapDispatchToProps = (dispatch) => {
 
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(MessageView));
-

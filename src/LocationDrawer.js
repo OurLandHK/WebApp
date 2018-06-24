@@ -72,7 +72,7 @@ const styles = theme => ({
   },
   container: {
     width: '98vw'
-  } 
+  }
 });
 
 
@@ -93,7 +93,7 @@ class LocationDrawer extends React.Component {
       this.geolocation = null;
       this.currentLocationOnClick = this.currentLocationOnClick.bind(this);
       this.addLocationOnClick = this.addLocationOnClick.bind(this);
-  }    
+  }
 
 
   componentWillMount() {
@@ -107,7 +107,7 @@ class LocationDrawer extends React.Component {
       if (user) {
         this.fetchAddress(user.user);
         if (geolocation === null || geolocation.pos === null) {
-          fetchLocation();     
+          fetchLocation();
         }
       }
     }
@@ -116,7 +116,7 @@ class LocationDrawer extends React.Component {
   toggleDrawer(open){
     this.setState({open: open});
   };
-      
+
   fetchAddress(user) {
     this.setState({user:user});
     if(!this.isUsePublicAddressBook) {
@@ -125,7 +125,7 @@ class LocationDrawer extends React.Component {
       this.props.fetchAddressBookFromOurLand();
     }
   }
-  
+
   setLocation(text, distance, coords, isUsingCurrentLocation=false) {
       this.geolocation = coords;
       this.setState({...this.state, isUsingCurrentLocation: isUsingCurrentLocation})
@@ -189,8 +189,8 @@ class LocationDrawer extends React.Component {
         if (address.streetAddress != null) {
           locationString =  address.streetAddress + ' (' + geoString(geolocation.latitude, geolocation.longitude) + ')';
         } else {
-          locationString = '近' + geoString(geolocation.latitude, geolocation.longitude);      
-        } 
+          locationString = '近' + geoString(geolocation.latitude, geolocation.longitude);
+        }
       }
       switch(type) {
         case addressEnum.home:
@@ -246,7 +246,7 @@ class LocationDrawer extends React.Component {
       return (<ListItem>
               <Button onClick={this.currentLocationOnClick}>
                <NearMeIcon />
-               
+
               </Button>
               {addAddress}
             </ListItem>);
@@ -254,7 +254,7 @@ class LocationDrawer extends React.Component {
       return (<ListItem button onClick={this.currentLocationOnClick}>
       <ListItemIcon>
       <NearMeIcon />
-      </ListItemIcon> 
+      </ListItemIcon>
       <ListItemText primary={constant.currentLocation} />
     </ListItem>);
    }
@@ -262,11 +262,11 @@ class LocationDrawer extends React.Component {
 
   render() {
       let firstItem = this.renderFirstListItem();
-      const { classes } = this.props;      
+      const { classes } = this.props;
       return (
       <div className={classes.container}>
           <Button
-            variant="outlined" color="primary" 
+            variant="outlined" color="primary"
             onClick={() => {this.toggleDrawer(true)}}
             className={classes.button}
           >

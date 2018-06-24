@@ -1,0 +1,16 @@
+.recent-event-wrapper {
+  text-align: center;
+}
+.focus-message-wrapper {
+  text-align: center;
+}
+.message-list-wrapper {
+  > div {
+    overflow-x: auto;
+  }
+}
+.message-item {
+  > div {
+    box-shadow: none;
+  }
+}
