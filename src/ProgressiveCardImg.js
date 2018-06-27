@@ -29,7 +29,7 @@ class ProgressiveCardImg extends Component {
 
   render() {
     const classes = this.props.classes;
-    var width = window.innerWidth;
+    let width = window.innerWidth;
     return (<img width={width} src={this.src}/>);       
   }
 }

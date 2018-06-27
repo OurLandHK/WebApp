@@ -108,20 +108,15 @@ class LeaderBoard extends React.Component {
     const { classes, open } = this.props;
     const { value } = this.state;
     return (
-      <Dialog fullScreen  open={open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
-        <AppBar className={classes.appBar}>
-          <Toolbar>
-            <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
-              <CloseIcon />
-            </IconButton>
-            <Typography
-              variant="title"
-              color="inherit"
-              className={classes.flex}
-            >
-              {constant.leaderBoardLabel}
-            </Typography>          
-          </Toolbar>
+      <div>
+        <div>
+          <Typography
+            variant="title"
+            color="inherit"
+            className={classes.flex}
+          >
+            {constant.leaderBoardLabel}
+          </Typography>          
           <Tabs
             value={value}
             onChange={this.handleChange}
@@ -130,9 +125,9 @@ class LeaderBoard extends React.Component {
             <Tab label="頭二十名" />
             <Tab label="你的排名" />
           </Tabs>
-        </AppBar>
+        </div>
         {value == 0 && this.renderTopTwenty()}
-      </Dialog>);
+      </div>);
   }
 }
 

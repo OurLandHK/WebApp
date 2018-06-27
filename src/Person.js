@@ -20,76 +20,44 @@ import LeaderBoard from './LeaderBoard';
 import {connect} from "react-redux";
 import Divider from '@material-ui/core/Divider';
 import {
-  fetchLocation,
   toggleAddressDialog,
-  toggleLeaderBoard,
 } from "./actions";
 import {upgradeAllMessage} from './MessageDB';
 import { constant } from './config/default';
 import AboutDialog from './AboutDialog';
 import SignOutButton from './SignOutButton';
 
-const currentLocationLabel = "現在位置";
-const officeLocationLabel = "辦公室位置";
-const homeLocationLabel = "屋企位置";
 
 
-class DrawerMenu extends Component {
+class Person extends Component {
 
   constructor(props) {
     super(props);
     this.state = {open: false};
   }
 
-  handleToggle(){
-    this.setState({open: !this.state.open});
-  }
-
-  handleClose(){
-    this.setState({open: false});
-  }
-
   userProfileClick(){
-    this.handleClose();
     this.openUserProfileDialog();
   }
 
   addressDialogClick(){
-    this.handleClose();
     this.props.toggleAddressDialog(true);
-  }
-
-  leaderBoardClick(){
-    this.handleClose();
-    this.props.toggleLeaderBoard(true);
   }
 
 
   showAbout() {
-    this.handleClose();
     this.openAboutDialog();
   }
 
   upgrade() {
-    this.handleClose();
     upgradeAllMessage()
   }
 
-  currentClick() {
-    this.props.fetchLocation();
-    this.handleClose();
-  }
 
   componentDidMount() {
-    if(this.props.user && this.props.user.userProfile) {
-      this.setState({concernMessages: this.props.user.userProfile.concernMessages});
-    }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.user != this.props.user &&  this.props.user && this.props.user.userProfile) {
-      this.setState({concernMessages: this.props.user.userProfile.concernMessages});
-    }
   }
 
 
@@ -97,88 +65,60 @@ class DrawerMenu extends Component {
     let userSection = (<div></div>);
     let signOutSection = null;
     let userLoginDisplay =  null;
-    let concernMessage = null;
     let adminButton = null;
     let userProfileView = userProfileView = <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>;
     const { user } = this.props;
 
-    if(this.state.open) {
-      if (user && user.user && user.userProfile) {
+    if (user && user.user && user.userProfile) {
         var imgURL = (user.userProfile.photoURL || '/images/profile_placeholder.png');
         userSection = (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{user.userProfile.displayName}&nbsp;&nbsp;</div>);
         signOutSection = (<ListItem><SignOutButton/></ListItem>);
-        if(this.state.concernMessages) {
-          concernMessage = <EventListDialog title={constant.concernLabel} messageIds={this.state.concernMessages}/>
-        }
         userLoginDisplay = (<span>
                             <ListItem button>
-                              <ListItemIcon>
+                                <ListItemIcon>
                                 <PersonIcon />
-                              </ListItemIcon>
-                              <ListItemText primary="使用者設定" onClick={() => this.userProfileClick()}/>
+                                </ListItemIcon>
+                                <ListItemText primary="使用者設定" onClick={() => this.userProfileClick()}/>
                             </ListItem>
                             <ListItem button>
-                              <ListItemIcon>
+                                <ListItemIcon>
                                 <LocationOn />
-                              </ListItemIcon>
-                              <ListItemText primary={constant.addressBookLabel} onClick={() => this.addressDialogClick()}/>
+                                </ListItemIcon>
+                                <ListItemText primary={constant.addressBookLabel} onClick={() => this.addressDialogClick()}/>
                             </ListItem></span>);
         if(user.userProfile != null & user.userProfile.role == constant.admin) {
-          adminButton = <ListItem button>
+            adminButton = <ListItem button>
             <ListItemIcon>
-              <ChatBubbleIcon />
+                <ChatBubbleIcon />
             </ListItemIcon>
             <ListItemText primary="Upgrade" onClick={() => this.upgrade()}/>
-          </ListItem>
+            </ListItem>
         }
-      }
     }
 
 
     return (
-      <div className="drawer-menu">
-        <IconButton
-          aria-label="More"
-          aria-haspopup="true"
-          onClick={() => this.handleToggle()}>
-          <MoreVertIcon />
-        </IconButton>
+      <div>
         {userProfileView}
         <AddressDialog ref={(addressDialog) => {this.addressDialog = addressDialog;}} openDialog={openDialog => this.openAddressDialog = openDialog}/>
-        <LeaderBoard />
         <AboutDialog openDialog={f => this.openAboutDialog = f}/>
-        <Drawer
-          anchor="right"
-          open={this.state.open}
-          onClose={() => this.handleClose()}
-        >
-          <div>
-            <List>
-              <ListItem>
-              {userSection}
-              </ListItem>
-              {signOutSection}
-            </List>
-            <Divider/>
-            <List disablePadding>
-              <ListItem button>
-                <ListItemIcon>
-                  <StarIcon />
-                </ListItemIcon>
-                <ListItemText primary={constant.leaderBoardLabel} onClick={() => this.leaderBoardClick()}/>
-              </ListItem>
-              {concernMessage}
-              {userLoginDisplay}
-              <ListItem button>
-                <ListItemIcon>
-                  <ChatBubbleIcon />
-                </ListItemIcon>
-                <ListItemText primary="關於" onClick={() => this.showAbout()}/>
-              </ListItem>
-              {adminButton}
-            </List>
-          </div>
-        </Drawer>
+        <List>
+            <ListItem>
+            {userSection}
+            </ListItem>
+            {signOutSection}
+        </List>
+        <Divider/>
+        <List disablePadding>
+            {userLoginDisplay}
+            <ListItem button>
+            <ListItemIcon>
+                <ChatBubbleIcon />
+            </ListItemIcon>
+            <ListItemText primary="關於" onClick={() => this.showAbout()}/>
+            </ListItem>
+            {adminButton}
+        </List>
       </div>
     );
   }
@@ -186,18 +126,15 @@ class DrawerMenu extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    geoLocation : state.geoLocation,
     user: state.user
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchLocation: () => dispatch(fetchLocation()),
     toggleAddressDialog: flag => dispatch(toggleAddressDialog(flag)),
-    toggleLeaderBoard: flag => dispatch(toggleLeaderBoard(flag)),
   }
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(DrawerMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(Person);

@@ -1,9 +1,7 @@
 import { withStyles } from '@material-ui/core/styles';
 import NearbyEventDialog from './NearbyEventDialog';
 import RegionEventDialog from './RegionEventDialog';
-import PostMessageView from './PostMessageView';
 import MessageDialog from './MessageDialog';
-import PublicProfile from './PublicProfile';
 import MessageView from './MessageView';
 import {getMessage} from './MessageDB';
 import React, { Component } from 'react';
@@ -68,7 +66,6 @@ class Main extends Component {
     const { eventNumber, distance, geolocation, eventId, queryMessage} = this.state;
     const {open: openRecent} = this.props.recentMessage;
     const {focusMessages} = this.props.ourland;
-    let linebreak = <div><br/><br/></div>;
     const { classes } = this.props;
     let focusMessage = null
 
@@ -96,7 +93,6 @@ class Main extends Component {
 
     return (
       <div className={classes.container}>
-        {linebreak}
         {recentMessage}
         {focusMessage}
         <NearbyEventDialog
@@ -109,7 +105,6 @@ class Main extends Component {
           distance={distance}
           geolocation={geolocation}
         />
-        <PostMessageView />
       </div>
     );
   }
@@ -118,9 +113,7 @@ class Main extends Component {
     let messageHtml = this.renderMessageFrontPage();
     return (
       <div class="content-wrapper">
-        <br/>
-          {messageHtml}
-          <PublicProfile />
+          {messageHtml}       
       </div>
     );
   }
