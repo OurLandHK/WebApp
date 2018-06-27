@@ -1,10 +1,8 @@
 /*global FB*/
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
 import { Form, Label, Input} from 'reactstrap';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
 import Checkbox from '@material-ui/core/Checkbox';
 import LocationButton from './LocationButton';
 import postMessage from './PostMessage';
@@ -13,23 +11,18 @@ import config, {constant} from './config/default';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
-import Chip from '@material-ui/core/Chip';
 import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
-import InputLabel from '@material-ui/core/InputLabel';
+import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
-import FileUploadIcon from '@material-ui/icons/FileUpload';
 import Slide from '@material-ui/core/Slide';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import UploadImageButton from './UploadImageButton';
 import IntegrationReactSelect from './IntegrationReactSelect';
 import uuid from 'js-uuid';
@@ -41,15 +34,22 @@ import {connect} from "react-redux";
 
 
 const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    top: 'auto',
+    bottom: 40,
+    position: 'fixed',
+  },
   hidden: {
     display: 'none',
   },
   fab: {
-    margin: 0,
+    margin: 'auto',
     top: 'auto',
-    right: 20,
-    bottom: 20,
-    left: 'auto',
+    right: 'auto',
+    left: '40%',
+    width: '10%',
+    bottom: 45,
     position: 'fixed',
   },
   flex: {
@@ -515,9 +515,9 @@ class PostMessageView extends Component {
         }
       }
       return (
-        <span>
-          <Button variant="fab" color="primary" className={classes.fab} raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
-            <AddIcon />
+        <div>  
+          <Button className={classes.fab}  variant="contained" color="primary"  raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
+            <AddIcon />報料
           </Button>
           <Dialog
             fullScreen
@@ -598,7 +598,7 @@ class PostMessageView extends Component {
               </Form>
               </div>
         </Dialog>     
-        </span>
+        </div>
       )
     } else {
       return (<div/>);

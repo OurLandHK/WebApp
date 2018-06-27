@@ -40,7 +40,6 @@ class Header extends  Component {
                 </div>
                 <SignInButton/>
                 <NotificationsDialog/>
-                <DrawerMenu header={this} ref={(drawerMenu) => {this.drawerMenu = drawerMenu;}} />
               </Toolbar>
             </AppBar>);
   }
