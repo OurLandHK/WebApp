@@ -12,7 +12,7 @@ function getCurrentLocation(successCallBack, errorCallBack, notSupportedCallBack
 } 
 
 function getGeoLocationFromStreetAddress(streetAddress, successCallBack, errorCallBack) {
-  var googleMapsClient = require('@google/maps').createClient({
+  let googleMapsClient = require('@google/maps').createClient({
     key: 'AIzaSyDdPxqSdKSWLot9NS0yMD2CQtI1j4GF_Qo'
   });
   googleMapsClient.geocode({
@@ -21,9 +21,20 @@ function getGeoLocationFromStreetAddress(streetAddress, successCallBack, errorCa
   }, successCallBack);
 }
 
+function getStreetAddressFromGeoLocation(geocode, successCallBack, errorCallBack) {
+  let googleMapsClient = require('@google/maps').createClient({
+    key: 'AIzaSyDdPxqSdKSWLot9NS0yMD2CQtI1j4GF_Qo'
+  });
+  let latlng = {lat: parseFloat(geocode.latitude), lng: parseFloat(geocode.longitude)};
+  console.log(`Lat Lng ${latlng.lat} ${latlng.lng}`);
+  googleMapsClient.reverseGeocode({
+    latlng: [latlng.lat, latlng.lng],
+    language: 'zh-TW'
+  }, successCallBack);  
+}
 
 
 
 
 
-export {getCurrentLocation, getGeoLocationFromStreetAddress};
+export {getCurrentLocation, getGeoLocationFromStreetAddress, getStreetAddressFromGeoLocation};

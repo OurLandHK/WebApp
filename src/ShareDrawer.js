@@ -61,9 +61,6 @@ const styles = theme => ({
   avatar: {
     backgroundColor: red[500],
   },
-  flexGrow: {
-    flex: '1 1 auto',
-  },
   someNetwork: someNetwork,
   someNetworkShareCount: {
     color: 'white',
@@ -123,7 +120,7 @@ class ShareDrawer extends React.Component {
     for (var i = 0; i < tagsLength; i++) {
       tagString += "#"+tags[i] + " ";
     }
-    console.log("HashTag String:" + tagString);
+    //console.log("HashTag String:" + tagString);
     return tagString;
 
   }

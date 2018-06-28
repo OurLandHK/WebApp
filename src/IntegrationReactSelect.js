@@ -218,11 +218,13 @@ class IntegrationReactSelect extends React.Component {
     if(this.props.label != null) {
         this.label = this.props.label;
     }
-    this.state = {
-        single: null,
-        multi: null,
-        multiLabel: null,
-      };
+    let state = {
+      single: null,
+      multi: null,
+      multiLabel: null,
+    }; 
+    state[this.selectType] = this.props.value;
+    this.state = state; 
     }    
 
   handleChange = name => value => {

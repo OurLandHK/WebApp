@@ -1,14 +1,8 @@
 /*global FB*/
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
-import { Form, Label, Input} from 'reactstrap';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Checkbox from '@material-ui/core/Checkbox';
 import LocationButton from '../LocationButton';
 import SelectedMenu from '../SelectedMenu';
-import config, {constant} from '../config/default';
+import {constant} from '../config/default';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
@@ -18,23 +12,19 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
-import classnames from 'classnames';
-import InputLabel from '@material-ui/core/InputLabel';
-import IconButton from '@material-ui/core/IconButton';
-import Collapse from '@material-ui/core/Collapse';
-import Typography from '@material-ui/core/Typography';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {addComment} from '../MessageDB';
+import IntegrationReactSelect from '../IntegrationReactSelect';
 import CustomTags from '../CustomTags';
-import { geocode } from '@google/maps/lib/apis/geocode';
 import {
   checkAuthState,
 } from '../actions';
 import {connect} from 'react-redux';
+
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 
 
 const styles = theme => ({
@@ -90,6 +80,7 @@ class PostCommentView extends Component {
       createdAt: null,
       link: null,
       tags: tags};
+    this.handleTagChange = this.handleTagChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleAddition = this.handleAddition.bind(this);
     this.handleDrag = this.handleDrag.bind(this);      
@@ -97,14 +88,14 @@ class PostCommentView extends Component {
 
   componentDidMount() {
     if (this.props.user != null && this.props.user.user != null) {
-      console.log("DidMount Enable Post");
+      //console.log("DidMount Enable Post");
       this.setState({buttonShow: true});
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.user != this.props.user && this.props.user != null) {
-      console.log("DidUpdate Enable Post");
+      //console.log("DidUpdate Enable Post");
       const {user} = this.props.user;
       if (user) {
         this.setState({buttonShow: true});
@@ -120,7 +111,7 @@ class PostCommentView extends Component {
     if(this.props.message.tag) {
       tags = this.tagTextToTags(this.props.message.tag);
     }
-    console.log("Request for open " + this.state.popoverOpen);
+    //console.log("Request for open " + this.state.popoverOpen);
     this.setState({
      // Comment
         commentSelection: '發表回應',
@@ -191,31 +182,46 @@ class PostCommentView extends Component {
       this.setState({commentSelection: selectedValue});
   }
 
+  handleTagChange(value) {
+    let tags = [];
+    if(value != null && value != '') {
+      var partsOfStr = value.split(',');
+      let i = 0;
+      partsOfStr.forEach(function(element) {
+        tags.push({
+          id: tags.length + 1,
+          text: element
+        });
+      });
+    } 
+    this.setState({tags: tags});
+  }
+
   handleDelete(i) {
     let tags = this.state.tags;
     tags.splice(i, 1);
     this.setState({tags: tags});
-}
+  }
 
-handleAddition(tag) {
-let tags = this.state.tags;
-tags.push({
-id: tags.length + 1,
-text: tag
-});
-this.setState({tags: tags});
-}
+  handleAddition(tag) {
+    let tags = this.state.tags;
+    tags.push({
+    id: tags.length + 1,
+    text: tag
+    });
+    this.setState({tags: tags});
+  }
 
-handleDrag(tag, currPos, newPos) {
-let tags = this.state.tags;
+  handleDrag(tag, currPos, newPos) {
+    let tags = this.state.tags;
 
-// mutate array
-tags.splice(currPos, 1);
-tags.splice(newPos, 0, tag);
+    // mutate array
+    tags.splice(currPos, 1);
+    tags.splice(newPos, 0, tag);
 
-// re-render
-this.setState({ tags: tags });
-}
+    // re-render
+    this.setState({ tags: tags });
+  }
 
 
 
@@ -236,7 +242,14 @@ this.setState({ tags: tags });
                 inputHtml = <TextField autoFocus id="link" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>;
                 break;
               case constant.commentOptions[4]: //"要求更改分類"
-                inputHtml = <CustomTags tags={tags}
+               /* inputHtml = 
+                  <IntegrationReactSelect value={tags}
+                  label={constant.tagLabel}
+                  placeholder={constant.tagPlaceholder}
+                  suggestions={this.props.suggestions.tag}
+                  onChange={(value) => this.handleTagChange(value)}
+                />*/
+              inputHtml = <CustomTags tags={tags}
                   inline={false}
                   placeholder="新增分類"
                   handleDelete={this.handleDelete}
@@ -251,8 +264,10 @@ this.setState({ tags: tags });
                 <AddIcon />
             </Button>
             <Dialog
+                fullScreen
                 open={this.state.popoverOpen}
                 onClose={() => this.handleClose()}
+                transition={Transition}
                 aria-labelledby="form-dialog-title"
                 unmountOnExit>
                 <DialogTitle id="form-dialog-title">更新參與進度</DialogTitle>
@@ -262,8 +277,8 @@ this.setState({ tags: tags });
                     {inputHtml}
                 </DialogContent>  
                 <DialogActions>
-                    <Button color="primary" onClick={() => this.handleClose()} >取消</Button>
-                    <Button color="primary" onClick={() => this.onSubmit()}>提交</Button> 
+                    <Button variant="raised" color="secondary" onClick={() => this.handleClose()} >取消</Button>
+                    <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>提交</Button> 
                 </DialogActions>          
             </Dialog>     
         </span>
@@ -277,6 +292,7 @@ this.setState({ tags: tags });
 const mapStateToProps = (state, ownProps) => {
   return {
     user          :   state.user,
+    suggestions:  state.suggestions,
   };
 }
 

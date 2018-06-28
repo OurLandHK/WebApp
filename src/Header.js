@@ -13,18 +13,6 @@ import {connect} from "react-redux";
 import {fetchLocation} from "./actions";
 import NotificationsDialog from "./NotificationsDialog";
 
-
-const styles = {
-  root: {
-    marginTop: 1,
-    width: '100%',
-  },
-  flex: {
-    flex: 1,
-  },
-};
-
-
 class Header extends  Component {
   constructor(props) {
     super(props);
@@ -41,22 +29,19 @@ class Header extends  Component {
 
   errorCallBack(error) {
     console.warn('ERROR(${err.code}): ${err.message}');
-  }  
+  }
 
   render() {
     const classes = this.props.classes;
-    return (<div className={classes.root}>
-              <AppBar position="fixed">
-                <Toolbar>
-                  <SignInButton/>
-                  <Typography variant="title" color="inherit" className={classes.flex}>
-                    我地
-                  </Typography>
-                  <NotificationsDialog/>
-                  <DrawerMenu header={this} ref={(drawerMenu) => {this.drawerMenu = drawerMenu;}} />
-                </Toolbar>  
-              </AppBar>      
-            </div>);
+    return (<AppBar className="header">
+              <Toolbar>
+                <div className="header-title">
+                  我地
+                </div>
+                <SignInButton/>
+                <NotificationsDialog/>
+              </Toolbar>
+            </AppBar>);
   }
 }
 
@@ -77,4 +62,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Header));
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

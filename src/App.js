@@ -8,11 +8,22 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import Main from './Main';
 import PublicProfile from './PublicProfile';
 import Header from './Header';
+import PostMessageView from './PostMessageView';
 import {getMessage} from './MessageDB';
-import { createStore, applyMiddleware } from 'redux';  
-import thunk from 'redux-thunk';  
+import { createStore, applyMiddleware } from 'redux';
+import { withStyles } from '@material-ui/core/styles';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import HomeIcon from '@material-ui/icons/Home';
+import PersonIcon from '@material-ui/icons/Person';
+import RateReviewIcon from '@material-ui/icons/RateReview';
+import BottomNavigation from '@material-ui/core/BottomNavigation';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import EventListDialog from './EventListDialog';
+import thunk from 'redux-thunk';
 import {connect} from "react-redux";
 import rootReducer from './reducers';
+import Person from './Person';
+import LeaderBoard from './LeaderBoard';
 import {
   fetchAddressBookByUser,
   fetchAddressBookFromOurLand,
@@ -24,8 +35,18 @@ import {
 import {constant} from './config/default';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);  
+const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 const store = createStoreWithMiddleware(rootReducer);
+
+const styles = theme => ({
+  root: {
+    margin: 0,
+    top: 'auto',
+    bottom: 0,
+    width: '100%',
+    position: 'fixed',
+  },
+});
 
 class App extends Component {
   constructor(props) {
@@ -52,10 +73,11 @@ class App extends Component {
     this.state = {
         eventId: eventId,
         eventNumber: eventNumber,
-        distance: distance, 
+        distance: distance,
         userId: userId,
+        tab: 0,
       };
-  }  
+  }
 
   componentWillMount() {
     this.props.checkAuthState();
@@ -66,25 +88,65 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.user != this.props.user && this.props.user.user) {
-      this.props.fetchAddressBookByUser(this.props.user.user);    
+      this.props.fetchAddressBookByUser(this.props.user.user);
     }
   }
+
+  handleChange = (event, value) => {
+    this.setState({ tab: value });
+  };
 
   render() {
     /* Needed for onTouchTap
        http://stackoverflow.com/a/34015469/988941
     */
-    //injectTapEventPlugin();   
+    //injectTapEventPlugin();
+    let mainScreen = null;
+    let linebreak = <div><br/><br/></div>;
+    const { tab } = this.state;
+    const { classes, user } = this.props;
+    switch(tab) {
+      case 0:
+        mainScreen = <Main
+              eventId={this.state.eventId}
+              userId={this.state.userId}
+              eventNumber={this.state.eventNumber}
+              distance={this.state.distance}
+            />
+        break;
+      case 1:
+        mainScreen = <EventListDialog title={constant.concernLabel} messageIds={user.userProfile.concernMessages}/>
+        break;
+      case 2:
+        mainScreen = <LeaderBoard/>;
+        break;
+      case 3:
+        mainScreen = <Person/>
+        break;
+    }
+    let userLoginDisable = true; 
+    if(user && user.userProfile) {
+      userLoginDisable = false;
+    }
     return (
-        <div>
+        <div className="wrapper">
           <CssBaseline />
           <Header />
-          <Main
-            eventId={this.state.eventId}
-            userId={this.state.userId}
-            eventNumber={this.state.eventNumber}
-            distance={this.state.distance}
-          />
+          <PublicProfile />
+          {linebreak}
+          {mainScreen}
+          <BottomNavigation
+            value={tab}
+            onChange={this.handleChange}
+            showLabels
+            className={classes.root}
+          >
+            <BottomNavigationAction label={constant.homeLabel} icon={<HomeIcon />} />
+            <BottomNavigationAction disabled={userLoginDisable} label={constant.concernLabel} icon={<FavoriteIcon />} />
+            <BottomNavigationAction label={constant.leaderBoardLabel} icon={<RateReviewIcon />} />
+            <BottomNavigationAction label={constant.userLabel} icon={<PersonIcon />} />
+          </BottomNavigation>
+          <PostMessageView />
         </div>
     );
   }
@@ -109,11 +171,11 @@ const mapDispatchToProps = (dispatch) => {
       user =>
         dispatch(fetchAddressBookByUser(user)),
     fetchAddressBookFromOurLand:
-      () => dispatch(fetchAddressBookFromOurLand()),  
+      () => dispatch(fetchAddressBookFromOurLand()),
     fetchConcernMessagesFromOurLand:
-      () => dispatch(fetchConcernMessagesFromOurLand()),       
+      () => dispatch(fetchConcernMessagesFromOurLand()),
   }
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(App));

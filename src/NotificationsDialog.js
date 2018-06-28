@@ -59,7 +59,7 @@ class NotificationsDialog extends React.Component {
       messageIds: [],
       open: false,
     };
-    this.setMessageRef = this.setMessageRef.bind(this);
+    this.setMessage = this.setMessage.bind(this);
     this.clear = this.clear.bind(this);    
   }    
 
@@ -79,21 +79,18 @@ class NotificationsDialog extends React.Component {
     this.fetchMessages(); 
   }
 
-  setMessageRef(messageRef) {
-    if(messageRef == null) {
+  setMessage(val) {
+    if(val == null) {
       return;
     }
-    var val = messageRef.data();
-    if(val) {
-      let messageIds = this.state.messageIds;
-      const messageUUID = val.key;
-      var index = messageIds.indexOf(messageUUID);
-      if(index == -1)
-      {
-        messageIds.push(messageUUID);
-      }
-      this.setState({messageIds: messageIds});
+    let messageIds = this.state.messageIds;
+    const messageUUID = val.key;
+    var index = messageIds.indexOf(messageUUID);
+    if(index == -1)
+    {
+      messageIds.push(messageUUID);
     }
+    this.setState({messageIds: messageIds});
   }
 
   clear() {
@@ -112,8 +109,11 @@ class NotificationsDialog extends React.Component {
         if(address.distance != null) {
           distance = address.distance;
         }
-        console.log(address.geolocation);
-        fetchMessagesBaseOnGeo(address.geolocation, distance, constant.defaultEventNumber, lastLoginTime, this.setMessageRef);
+        if(user.userProfile.role == constant.admin) {
+          distance = 100;
+        }
+        //console.log(address.geolocation);
+        fetchMessagesBaseOnGeo(address.geolocation, distance, constant.defaultEventNumber, lastLoginTime, null, this.setMessage);
       }
     });      
 
@@ -167,8 +167,8 @@ class NotificationsDialog extends React.Component {
                         </IconButton>
                         <Typography variant="title" color="inherit" className={classes.flex}>{constant.notificationLabel}</Typography> 
                     </Toolbar>
-                    <FilterBar disableLocationDrawer={true}/>           
                 </AppBar>
+                <FilterBar disableLocationDrawer={true}/>                           
                 {messageHtml}
             </Dialog>
         </span>;

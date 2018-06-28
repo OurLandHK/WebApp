@@ -11,17 +11,12 @@ let config = {
     xfbml: true,
     version: 'v2.10'
   },
-/*
+  userAction: 'userAction',
+
   fbGroupId: '244493866025075', // Production https://www.facebook.com/groups/OurLandHK/?fref=nf
   messageDB: 'message', // Production
   userDB: 'userProfile', // Production
   photoDB: 'photo',
-  MasterUID: 'mUQgwxkmPBfVA47d9lHzB482Nmp1',
-/*/
-  fbGroupId: '264191847414716', // For Development https://www.facebook.com/groups/264191847414716/ 
-  messageDB: 'messageTest', // For development.
-  userDB: 'userProfileTest', // For developments.
-  photoDB: 'photoTest', // For developments.
   MasterUID: 'mUQgwxkmPBfVA47d9lHzB482Nmp1',
 
   addressBook: "AddressBook",
@@ -33,8 +28,9 @@ let constant = {
   timeoutLocation: new firebase.firestore.GeoPoint(90, 180),
   user: "用戶", 
   admin: "我地管理員",
+  closeWholeDay:"全日關門",
   addressNotSet: "尚未設定",
-  currentLocation: "現在位置",
+  currentLocation: "附近",
   addressBookLabel: "地址簿",
   addAddressLabel: "新增地址",
   updateAddressLabel: "更新地址",
@@ -45,13 +41,17 @@ let constant = {
   noTagLabel: "所有事件",
   viewCountLabel: '觀看次數: ',
   publicProfileLabel: "簡介",
-  sortByDefaultLabel: "沒有排序",
   sortByLastUpdateLabel: "最近更新排序",
   sortByDistanceLabel: "距離排序",
   defaultEventNumber: 100,
+  concernLabel: "關注",
+  homeLabel: "主頁",
+  userLabel: "我的",
+  timeOptions : ['活動時間', '設施開放時間'],
   commentOptions : ['發表回應', '要求更改地點', '要求更改現況', '要求更改外部連結', '要求更改分類'],    
   statusOptions : ['開放', '完結', '政府跟進中', '虛假訊息', '不恰當訊息'],
   approveOptions : ['接納', '駁回'],
+  messageDialogLabel: '社區事件',
   messageListReadingLocation: '讀取現在位置中...',
   messageListLoadingStatus: '讀取社區事件中...',
   messageListNoMessage: '選擇的位置沒有任何社區事件, 請選擇其他位置',
@@ -61,9 +61,18 @@ let constant = {
   tagLabel: '分類',
   tagPlaceholder: '新增分類',
   notificationLabel: '通知',
+  weekdayLabel : ['日', '一', '二', '三', '四', '五', '六'],
+  openningOptions : ['每日', '自定'],
+  intervalOptions : ['不重複', '每星期', '每兩星期','每月'],
+  durationOptions : ['0:30', '1:00', '1:30','2:00','3:00','4:00','6:00','8:00','10:00','12:00','18:00','一天','兩天','三天','四天','五天','六天','一週'],  
   distance: 1,
 }
 
+let happyAndSadEnum = {
+  happy: 1,
+  sad: -1,
+  nothing: 0
+}
 
 let addressEnum = {
   home: "住宅",
@@ -73,4 +82,4 @@ let addressEnum = {
 
 
 export  default config;
-export {constant, addressEnum};
+export {constant, addressEnum, happyAndSadEnum};

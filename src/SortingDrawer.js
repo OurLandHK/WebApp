@@ -40,20 +40,20 @@ const styles = theme => ({
     color: '#FFFFFF',
   },
   button: {
-    border: '2px solid' ,
-    borderColor: green[200],
-//    width: '100%',
-    fontWeight: 'bold',
-    fontSize: '0.8rem',
-    margin: theme.spacing.unit,
-    color: '#FFFFFF',
-    textAlign: 'left',
-    backgroundColor: green[500],
-    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-    display:'flex',
-  },
+    //    border: '2px solid' ,
+    //    borderColor: green[200],
+    //    width: '100%',
+        fontWeight: 'bold',
+        fontSize: '0.8rem',
+        margin: theme.spacing.unit,
+    //    color: '#FFFFFF',
+        textAlign: 'left',
+    //    backgroundColor: green[500],
+    //    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+    //    display:'flex',
+      },
   buttonContainer: {
-    flex: '1 0 auto',
+  //  flex: '1 0 auto',
   },
   buttonRightContainer: {
     flex: '1 0 auto',
@@ -73,8 +73,7 @@ class SortingDrawer extends React.Component {
       this.state = {
         open: false,
         selectedSorting: null,
-        isSortByDefault: true,
-        isSortByLastUpdate: false,
+        isSortByLastUpdate: true,
         isSortByDistance: false
       };
   }    
@@ -84,38 +83,23 @@ class SortingDrawer extends React.Component {
   };
 
   setSorting(sorting){
-  	 if(sorting == null) {
-      this.setState({
-        selectedSorting: null,
-        isSortByDefault: true,
-        isSortByLastUpdate: false,
-        isSortByDistance: false
-      });
-    } else if(sorting == 'sortByLastUpdate'){
+  	 if(sorting == 'sortByLastUpdate'){
       this.setState({
         selectedSorting: sorting,
         isSortByLastUpdate: true,
-        isSortByDefault: false,
         isSortByDistance: false
       });
     } else if(sorting == 'sortByDistance'){
       this.setState({
         selectedSorting: sorting,
         isSortByDistance: true,
-        isSortByLastUpdate: false,
-        isSortByDefault: false
+        isSortByLastUpdate: false
       });
     }
 
     this.toggleDrawer(false);
     const { selectedSorting } = this.props;
     selectedSorting(sorting);
-  }
-
-  renderSortByDefault(){
-    return (<ListItem button onClick={() => {this.setSorting(null)}}>
-               <ListItemText primary={constant.sortByDefaultLabel} />
-            </ListItem>);
   }
 
   renderSortByLastUpdate() {
@@ -145,7 +129,6 @@ class SortingDrawer extends React.Component {
   }
 
   render() {
-      let sortByDefault = this.renderSortByDefault();
   	  let sortByLastUpdate = this.renderSortByLastUpdate();
   	  let sortByDistance = this.renderSortByDistance();
       let sortBtnLabel = this.renderSortBtnLabel();
@@ -153,14 +136,12 @@ class SortingDrawer extends React.Component {
       return (
       <div className={classes.container}>
           <Button
+            variant="outlined" color="primary" 
             onClick={() => {this.toggleDrawer(true)}}
             className={classes.button}
           >
             <div className={classes.buttonContainer}>
                 {sortBtnLabel}
-            </div>
-            <div className={classes.buttonRightContainer}>
-              <ArrowIcon className={classes.white}/>
             </div>
           </Button>
           <Drawer anchor='bottom'
@@ -171,8 +152,6 @@ class SortingDrawer extends React.Component {
                   role='button'
                   className={classes.fullList}>
                   <List>
-                    {sortByDefault}
-                    <Divider />
                   	{sortByLastUpdate}
                   	<Divider />
                   	{sortByDistance}

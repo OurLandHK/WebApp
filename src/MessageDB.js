@@ -3,6 +3,27 @@ import uuid from 'js-uuid';
 import config, {constant} from './config/default';
 import distance from './Distance';
 import { light } from '@material-ui/core/styles/createPalette';
+import { getStreetAddressFromGeoLocation} from './Location';
+
+function tagsToTagfilter(tags) {
+        let rv = {};
+        if(tags != null && tags.length > 0) {
+            tags.map((tag) => {
+                rv[tag] = 1;
+            });
+        }
+        return rv;
+}
+
+function tagfilterToTags(tagfilter) {
+    let rv = [];
+    if(tagfilter != null) {
+        for(let key in tagfilter) {
+            rv.push(key);
+        }
+    }
+    return rv;
+}
 
 function degreesToRadians(degrees) {return (degrees * Math.PI)/180;}
 
@@ -53,15 +74,44 @@ function upgradeAllMessage() {
                     } catch(error) {
                         changeCreatedAt = true;
                     };
+                    if(val.tag != null) {
+                        change = true;
+                        if(!val.tag.includes("公共設施")) {
+                            if(val.tag.includes("兒童遊樂場") || val.tag.includes("郵箱") || val.tag.includes("郵筒")) {
+                                val.tag.push("公共設施");
+                            }
+                        }
+                    }
+                    if(val.tagfilter != null) {
+                        let tags = tagfilterToTags(val.tagfilter);
+                        if(!tags.includes("公共設施")) {
+                            if(tags.includes("兒童遊樂場") || tags.includes("郵箱") || tags.includes("郵筒")) {
+                                tags.push("公共設施");
+                            }
+                        }
+                        val.tagfilter = tagsToTagfilter(tags);
+                        change = true;    
+                    }
                     if(changeCreatedAt) {
                         change = true;
                         val.createdAt = new Date(val.createdAt);
-                        console.log(`Update: ${val.key} ${before} ${val.createdAt}`)
+                        //console.log(`Update: ${val.key} ${before} ${val.createdAt}`)
                     }
                     if(val.lastUpdate == null) {
                         change = true;
                         val.lastUpdate = val.createdAt;
                     }
+                    if(val.streetAddress == null) {
+                        change = false;
+                        return getStreetAddressFromGeoLocation(val.geolocation, function(err, response){
+                            if (!err) {
+                                console.log(response.json.results);
+                                val.streetAddress = response.json.results[0].formatted_address;
+                                return updateMessage(val.key, val, false);
+                              }
+                        }, null);
+                    }
+                    
                     if(change) {
                         return updateMessage(val.key, val, false);
                     } else {
@@ -73,7 +123,7 @@ function upgradeAllMessage() {
     })         
 }
 
-function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, callback) {
+function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, tag, callback) {
 
     const db = firebase.firestore();
     
@@ -98,12 +148,17 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ca
 
         // Use firestore
 
-        let query = collectionRef.where("hide", "==", false);
-        if(lastUpdate != null) {
+        let query = null;
+        if(tag != null) {
+            query = collectionRef.where(`tagfilter.${tag}`, ">" , 0);
+        } else {
+            query = collectionRef.where("hide", "==", false);
+            if(lastUpdate != null) {
             console.log("Last Update: " + lastUpdate.toDate());
             query = query.where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc");
-        } else {
-            query = query.where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc");
+            } else {
+                    query = query.where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc");
+            }      
         }
         query.limit(numberOfMessage).get().then(function(querySnapshot) {
             if(querySnapshot.empty) {
@@ -115,9 +170,13 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ca
                         var lon = geocode.longitude;
                         var lat = geocode.latitude;
                         var dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
-                        if(dis < radius) {
+                        if(dis < radius && val.hide == false) {
+                            let tags = tagfilterToTags(val.tagfilter);
+                            //console.log(`${tags} ${val.tagfilter}`)
+                            val.tag = tags;
+                            val.tagfilter = null;
                             //console.log('message key: ' + val.key );
-                            callback(messageRef); 
+                            callback(val); 
                         } else {
                             callback(null);
                         }
@@ -135,7 +194,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ca
     } else {
         // Use firestore
         collectionRef.where("hide", "==", false).orderBy("createdAt", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
-            querySnapshot.forEach(callback);
+            querySnapshot.forEach(function(messageRef) {let val = messageRef.data(); callback(val)});
         })
         .catch(function(error) {
             console.log("Error getting documents: ", error);
@@ -146,11 +205,10 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ca
     }
  }
 
- function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, start, duration, interval, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status) {
+ function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status) {
     let now = Date.now();
-    if(start === "")
+    if(startDate === null)
     {
-      start = null;
       duration = null;
       interval = null;
     }
@@ -165,6 +223,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ca
             displayName = userProfile.displayName;
         }
     }
+    let tagfilter = tagsToTagfilter(tags);
     var messageRecord = {
         hide: false,
         name: displayName,
@@ -172,15 +231,19 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ca
         photoUrl: photoUrl || '/images/profile_placeholder.png',
         geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
         streetAddress: streetAddress,
-        tag: tags,
+        tagfilter: tagfilter,
         createdAt: new Date(now),
         lastUpdate: new Date(now),
         key: key,   
         uid: currentUser.uid,
         fbuid: currentUser.providerData[0].uid,
-        start: new Date(start),
+        start: new Date(startDate),
+        startTime: startTime,
         duration: duration,
         interval: interval,
+        everydayOpenning: everydayOpenning,
+        weekdaysOpennings: weekdaysOpennings,
+        endDate: endDate, 
         link: link,
         imageUrl, publicImageURL, 
         thumbnailImageURL, 
@@ -284,7 +347,14 @@ function getMessageRef(uuid) {
 function getMessage(uuid) {
     return getMessageRef(uuid).then(function (messageRef) {
         if(messageRef != null) {
-            return messageRef.data();
+            let rv = messageRef.data();
+            if(rv.tagfilter != null) {
+                let tags = tagfilterToTags(rv.tagfilter);
+                //console.log(`${tags} ${rv.tagfilter}`)
+                rv.tag = tags;
+                rv.tagfilter = null;
+            }
+            return rv
         } else {
             return null;
         }
@@ -310,6 +380,11 @@ function updateMessage(messageKey, messageRecord, updateTime) {
         // we can use this to update the scheme if needed.
         if(updateTime) {
             messageRecord.lastUpdate = new Date(now);
+        }
+        if(messageRecord.tagfilter == null && messageRecord.tag != null) {
+            let tagfilter = tagsToTagfilter(messageRecord.tag);
+            messageRecord.tagfilter = tagfilter;
+            messageRecord.tag = null;
         }
         return collectionRef.doc(messageKey).set(messageRecord).then(function(messageRecordRef) {
             console.log("Document written with ID: ", messageKey);
@@ -386,6 +461,55 @@ function updateMessageConcernUser(messageUuid, user, isConcern) {
             return null;
         }
     });        
+}
+
+function getHappyAndSad(messageUuid, user) {
+    const db = firebase.firestore();
+    let collectionRef = db.collection(config.messageDB).doc(messageUuid).collection(config.userAction);
+    if(user != null && collectionRef) {
+        return collectionRef.doc(user.uid).get().then(function(doc) {
+            if(doc.exists) {
+                let userAction = doc.data();
+                let rv = 0;
+                if(userAction.happAndSad != null) {
+                    rv = userAction.happAndSad;
+                }
+                return rv;
+            } else {
+                return 0;
+            }
+        });
+    } else {
+        return 0
+        ;
+    } 
+}
+
+function setHappyAndSad(messageUuid, happyCount, sadCount, happAndSad, user) {
+    if(user == null) {
+        return null;
+    }
+    const db = firebase.firestore();
+    const messageCollectionRef = db.collection(config.messageDB);
+    const messageRef = messageCollectionRef.doc(messageUuid);
+    const userActionRef = messageRef.collection(config.userAction).doc(user.uid);
+    return db.runTransaction(transaction => {
+      return transaction.get(userActionRef).then(actionDoc => {
+        if(actionDoc.exists) {
+            transaction.update(userActionRef, {
+                happAndSad: happAndSad
+            });            
+        } else {
+            transaction.set(userActionRef, {
+                happAndSad: happAndSad
+            });            
+        }
+        transaction.update(messageRef, {
+            happyCount: happyCount,
+            sadCount: sadCount,
+        });
+      });
+    });
 }
 
 /// All about comment
@@ -472,4 +596,5 @@ function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
     });
 }
 
-export {upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser};
+
+export {getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser};

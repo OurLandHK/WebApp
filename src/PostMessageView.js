@@ -1,10 +1,8 @@
 /*global FB*/
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
 import { Form, Label, Input} from 'reactstrap';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
 import Checkbox from '@material-ui/core/Checkbox';
 import LocationButton from './LocationButton';
 import postMessage from './PostMessage';
@@ -13,21 +11,18 @@ import config, {constant} from './config/default';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
-import Chip from '@material-ui/core/Chip';
 import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
-import InputLabel from '@material-ui/core/InputLabel';
+import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
-import FileUploadIcon from '@material-ui/icons/FileUpload';
 import Slide from '@material-ui/core/Slide';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import UploadImageButton from './UploadImageButton';
 import IntegrationReactSelect from './IntegrationReactSelect';
 import uuid from 'js-uuid';
@@ -39,15 +34,22 @@ import {connect} from "react-redux";
 
 
 const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    top: 'auto',
+    bottom: 40,
+    position: 'fixed',
+  },
   hidden: {
     display: 'none',
   },
   fab: {
-    margin: 0,
+    margin: 'auto',
     top: 'auto',
-    right: 20,
-    bottom: 20,
-    left: 'auto',
+    right: 'auto',
+    left: '40%',
+    width: '10%',
+    bottom: 45,
     position: 'fixed',
   },
   flex: {
@@ -81,21 +83,44 @@ class PostMessageView extends Component {
       key: key,
       summary: "",
       link: "",
-      start: "",
-      end: "",
+      start: this.today(),
+      startTime: this.startTime(),
+      end: this.today(),
       status: "開放",
       expanded: false,
+      opennings: this.props.opennings,
+      timeSelection: constant.timeOptions[0],
+      intervalSelection: this.props.intervalOptions[0],
+      durationSelection: this.props.durationOptions[0],
+      openningSelection: this.props.openningOptions[0],
       tags: []};
     this.handleRequestDelete = this.handleRequestDelete.bind(this);
     this.handleTouchTap = this.handleTouchTap.bind(this);
     this.handleTagChange = this.handleTagChange.bind(this);
-    this.summaryTextField = null;
+    this.renderWeekdayHtml = this.renderWeekdayHtml.bind(this);
+    this.renderOpenningHtml = this.renderOpenningHtml.bind(this);
+    this.renderActivitiesHtml = this.renderActivitiesHtml.bind(this);
+    this.setOpenning = this.setOpenning.bind(this);
+    this.summaryTextField = null;  
   }
 
   static defaultProps = {
-    intervalOptions : ['一次', '每週', '每兩週','每月'],
-    durationOptions : ['0:30', '1:00', '1:30','2:00','3:00','4:00','6:00','8:00','10:00','12:00','18:00','一天','兩天','三天','四天','五天','六天','一週'],    
-  }
+    weekdayLabel : constant.weekdayLabel,
+    openningOptions : constant.openningOptions,
+    intervalOptions : constant.intervalOptions,
+    durationOptions : constant.durationOptions,  
+    openning :  {enable: true, open: '09:00', close: '17:00'},
+    opennings : [
+      {enable: true, open: '09:00', close: '17:00'}, // all days
+      {enable: true, open: '09:00', close: '17:00'}, // sun
+      {enable: true, open: '09:00', close: '17:00'}, // mon
+      {enable: true, open: '09:00', close: '17:00'}, // tue
+      {enable: true, open: '09:00', close: '17:00'}, // wed
+      {enable: true, open: '09:00', close: '17:00'}, // thur
+      {enable: true, open: '09:00', close: '17:00'}, // fri
+      {enable: true, open: '09:00', close: '17:00'}, // sat      
+      ]
+    }
 
   componentDidMount() {
     if (this.props.user != null && this.props.user.user != null) {
@@ -125,16 +150,23 @@ class PostMessageView extends Component {
       key: key,
       summary: "",
       link: "",
-      start: "",
-      end: "",
+      start: this.today(),
+      startTime: this.startTime(),
+      end: this.today(),
       expanded: false, rotate: 'rotate(0deg)',
       tags: [],
       popoverOpen: true,
+      timeSelection: constant.timeOptions[0],
       anchorEl: evt.currentTarget,
       imageURL: null, 
       publicImageURL: null, 
       thumbnailImageURL: null, 
-      thumbnailPublicImageURL: null
+      thumbnailPublicImageURL: null,
+      timeSelection: constant.timeOptions[0],
+      opennings: this.props.opennings,
+      intervalSelection: this.props.intervalOptions[0],
+      durationSelection: this.props.durationOptions[0],
+      openningSelection: this.props.openningOptions[0],
     });
   }
 
@@ -146,24 +178,36 @@ class PostMessageView extends Component {
   };
 
   onSubmit() {
-    var interval = "";
-    if(this.intervalSelection != null)
-    {
-      interval = this.intervalSelection.selectedValue;
-    }
-    var duration = "";
-    if(this.durationSelection != null)
-    {
-      duration = this.durationSelection.selectedValue;
-    }
-    var startTimeInMs = "";
-    if(this.state.start !== "") {
-      startTimeInMs = Date.parse(this.state.start);
-      console.log('Now Time ' + startTimeInMs+ ' ' + this.state.start);
-//      startTimeInMs = Date.parse('2018年4月15日 下午2:50');
-//      console.log('Chinese Time ' + startTimeInMs);
-//      startTimeInMs = new Date('2018年4月15日 下午2:50');
-//      console.log('New Date Time ' + startTimeInMs);
+    console.log(" expand:  " + this.state.expanded + " " + this.state.intervalSelection + " " + this.state.durationSelection + " " + this.state.start)
+    let interval = null;
+    let duration = null;
+    let startDate = null;
+    let startTime = null;
+    let everydayOpenning = null;
+    let weekdaysOpennings = null;
+    let endDate = null;
+    if(this.state.expanded) { // detail for time
+      startDate = this.state.start;
+      // console.log('Now Time ' + startTimeInMs+ ' ' + this.state.start);
+      switch(this.state.timeSelection) {
+        case constant.timeOptions[0]:
+          interval = this.state.intervalSelection;
+          duration = this.state.durationSelection;
+          startTime = this.state.startTime;
+          if(this.state.intervalSelection != this.props.intervalOptions[0]) {
+            endDate = this.state.end;
+          }
+          break;
+        default:
+          switch(this.state.openningSelection) {
+            case this.props.openningOptions[0]: 
+              everydayOpenning = this.state.opennings[0];
+            break;
+            case this.props.openningOptions[1]: 
+              weekdaysOpennings = [this.state.opennings[1], this.state.opennings[2], this.state.opennings[3], this.state.opennings[4], this.state.opennings[5], this.state.opennings[6], this.state.opennings[7]]
+            break;
+          }
+      }
     }
     if (this.state.summary == null || this.state.summary.length == 0) {
       this.summaryTextField.select();
@@ -186,11 +230,10 @@ class PostMessageView extends Component {
       if(this.state.thumbnailPublicImageURL != null) {
         thumbnailPublicImageURL = this.state.thumbnailPublicImageURL;
       }      
-      //console.log("Submit: " + imageURL + " " + publicImageURL+ " " + thumbnailImageURL+ " " + thumbnailPublicImageURL)
       
       var tags = this.state.tags.map((tag) => tag.text);
       postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.locationButton.geolocation, this.locationButton.streetAddress, 
-        startTimeInMs, duration, interval, this.state.link, 
+        startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link, 
         imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
         this.state.status).then((messageKey) => {
           const { updateRecentMessage, checkAuthState} = this.props;
@@ -199,7 +242,9 @@ class PostMessageView extends Component {
             checkAuthState();
           }
         });
-      this.setState({popoverOpen: false});
+      this.setState({
+        popoverOpen: false
+      });
     }
   }
 
@@ -217,6 +262,27 @@ class PostMessageView extends Component {
 
   handleTouchTap(evt) {
     alert(evt);
+  }
+
+  setOpenning(index, type,  value) {
+    let opennings = this.state.opennings;
+    opennings[index][type] = value;
+    this.setState({opennings: opennings});
+  }
+
+  timeOptionSelection(selectedValue) {
+    this.setState({timeSelection: selectedValue});
+  }
+
+  intervalOptionSelection(selectedValue) {
+    this.setState({intervalSelection: selectedValue});
+  }
+
+  durationOptionSelection(selectedValue) {
+    this.setState({durationSelection: selectedValue});
+  }
+  openningOptionSelection(selectedValue) {
+    this.setState({openningSelection: selectedValue});
   }
 
   handleTagChange(value) {
@@ -245,17 +311,213 @@ class PostMessageView extends Component {
 //    console.log("uploadFinish: " + this.state.imageURL + " " + this.state.publicImageURL+ " " + this.state.thumbnailImageURL+ " " + this.state.thumbnailPublicImageURL)
   }
 
+  today() {
+    let now = new Date();
+    return `${now.getFullYear()}-${("0" + now.getMonth()).slice(-2)}-${("0" + now.getDate()).slice(-2)}`;
+  }
+
+  startTime() {
+    let now = new Date();
+    return `${("0" + now.getHours()).slice(-2)}:${("0" + now.getMinutes()).slice(-2)}`;
+  }
+
+  renderWeekdayHtml(label, index) {
+    const classes = this.props.classes;
+    let openningHours = constant.closeWholeDay;
+    if(this.state.opennings[index].enable) {
+      openningHours = <div>
+                  <TextField
+                    id={`open${index}`}
+                    type="time"
+                    defaultValue={this.state.opennings[index].open}
+                    className={classes.textField}
+                    onChange={event => this.setOpenning(index, 'open', event.target.value)}   
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      step: 300, // 5 min
+                    }}
+                  /> 至 <TextField
+                  id={`close${index}`}
+                  type="time"
+                  defaultValue={this.state.opennings[index].close}
+                  className={classes.textField}
+                  onChange={event => this.setOpenning(index, 'close', event.target.value)}   
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{
+                    step: 300, // 5 min
+                  }}
+                />
+        </div>;
+    }
+    return(
+      <Toolbar>                  
+        <FormControlLabel
+          label={label}
+          control={
+            <Checkbox
+              id={label}
+              checked={this.state.opennings[index].enable}
+              onChange={() => this.setOpenning(index, 'enable', !this.state.opennings[index].enable)}
+            />
+            }
+          /> 
+        {openningHours}
+      </Toolbar>
+    );
+  }
+  
+  renderOpenningHtml() {
+    
+    let today = this.today();
+    let startTime = this.startTime();
+    let endDateHtml = null;
+    let openningHtml = null;
+    const classes = this.props.classes;
+    switch(this.state.openningSelection) {
+      case this.props.openningOptions[0]:
+        openningHtml = <Toolbar>
+                  <TextField
+                    id="open"
+                    type="time"
+                    defaultValue={this.state.opennings[0].open}
+                    className={classes.textField}
+                    onChange={event => this.setOpenning(0, 'open', event.target.value)}   
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    inputProps={{
+                      step: 300, // 5 min
+                    }}
+                  /> 至 <TextField
+                  id="close"
+                  type="time"
+                  defaultValue={this.state.opennings[0].close}
+                  className={classes.textField}
+                  onChange={event => this.setOpenning(0, 'close', event.target.value)}   
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{
+                    step: 300, // 5 min
+                  }}
+                />
+        </Toolbar>
+        break;
+      default:
+        let i = 0;
+        openningHtml = this.props.weekdayLabel.map((label) => {
+          i++;
+          return this.renderWeekdayHtml(label, i);
+        });
+        break;
+    }
+    return (<div>
+      <Toolbar>
+        <TextField
+          id="start"
+          label="開始日期"
+          type="date"
+          defaultValue={today}
+          className={classes.textField}
+          margin="normal"
+          onChange={event => this.setState({ start: event.target.value })}                      
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        <SelectedMenu label="" options={this.props.openningOptions} changeSelection={(selectedValue) => this.openningOptionSelection(selectedValue)} />
+      </Toolbar>
+      {openningHtml}
+    </div>);
+  }  
+
+  renderActivitiesHtml() {
+    
+    let today = this.today();
+    let startTime = this.startTime();
+    let endDateHtml = null;
+    const classes = this.props.classes;
+    if(this.state.intervalSelection != this.props.intervalOptions[0]) {
+    endDateHtml = <TextField
+            id="end"
+            label="完結日期"
+            type="date"
+            defaultValue={today}
+            className={classes.textField}
+            margin="normal"
+            onChange={event => this.setState({ end: event.target.value })}                      
+            InputLabelProps={{
+              shrink: true,
+            }}
+          /> 
+    }
+   
+    return (<div>
+      <Toolbar>
+        <TextField
+          id="start"
+          label="開始日期"
+          type="date"
+          defaultValue={today}
+          className={classes.textField}
+          margin="normal"
+          onChange={event => this.setState({ start: event.target.value })}                      
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        <TextField
+          id="startTime"
+          label="開始時間"
+          type="time"
+          defaultValue={startTime}
+          className={classes.textField}
+          onChange={event => this.setState({ startTime: event.target.value })}   
+          InputLabelProps={{
+            shrink: true,
+          }}
+          inputProps={{
+            step: 300, // 5 min
+          }}
+        />
+      </Toolbar>
+      <Toolbar>
+        <SelectedMenu label="為期" options={this.props.durationOptions} changeSelection={(selectedValue) => this.durationOptionSelection(selectedValue)} ref={(durationSelection) => {this.durationSelection = durationSelection;}}/>
+      </Toolbar>
+      <Toolbar>    
+        <SelectedMenu label="" options={this.props.intervalOptions} changeSelection={(selectedValue) => this.intervalOptionSelection(selectedValue)}ref={(intervalSelection) => {this.intervalSelection = intervalSelection;}}/>      
+        {endDateHtml}
+      </Toolbar>
+    </div>);
+  }
+
   render() {
-    var startTime = new Date().toLocaleTimeString();
+    let startTime = new Date().toLocaleTimeString();
+    let timeHtml = null;
     const classes = this.props.classes;
     const { tags } = this.state; 
-    if(this.locationButton != null && this.locationButton.geolocation != null)
+    if(this.locationButton != null && this.locationButton.geolocation != null) {
       console.log("Geolocation:" + this.locationButton.geolocation);
+    }
     if(this.state.buttonShow) {
+      if(this.state.expanded) {
+        switch(this.state.timeSelection) {
+          case constant.timeOptions[0]:
+            timeHtml = this.renderActivitiesHtml();
+            break;
+          default:
+            timeHtml = this.renderOpenningHtml();
+            break;
+        }
+      }
       return (
-        <span>
-          <Button variant="fab" color="primary" className={classes.fab} raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
-            <AddIcon />
+        <div>  
+          <Button className={classes.fab}  variant="contained" color="primary"  raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
+            <AddIcon />報料
           </Button>
           <Dialog
             fullScreen
@@ -306,9 +568,12 @@ class PostMessageView extends Component {
                 <br/>
                 <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.key} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
                 </FormGroup>
+                <FormGroup>                
+                    <TextField id="link" label="外部連結" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>
+                </FormGroup>  
                 <FormGroup>    
                   <FormControlLabel
-                  label="活動"
+                  label="詳細時間"
                   control={
                     <Checkbox
                       checked={this.state.expanded}
@@ -319,31 +584,21 @@ class PostMessageView extends Component {
                   />                                                    
                 </FormGroup>                                          
                 <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>                
-                  <FormGroup>                
-                    <TextField
-                      id="start"
-                      label="開始"
-                      type="datetime-local"
-                      className={classes.textField}
-                      margin="normal"
-                      onChange={event => this.setState({ start: event.target.value })}                      
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                    <SelectedMenu label="為期" options={this.props.durationOptions} ref={(durationSelection) => {this.durationSelection = durationSelection;}}/>                  
-                    </FormGroup> 
-                  <SelectedMenu label="週期" options={this.props.intervalOptions} ref={(intervalSelection) => {this.intervalSelection = intervalSelection;}}/>                  
-                  <FormGroup>                
-                    <TextField id="link" label="外部連結" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>
-                  </FormGroup>                  
+                  <FormGroup>                                   
+                    <SelectedMenu label="" options={constant.timeOptions} changeSelection={(selectedValue) => this.timeOptionSelection(selectedValue)} ref={(timeSelection) => {this.timeSelection = timeSelection}}/>
+                    {timeHtml}
+                  </FormGroup>               
                   <br/>
-                </Collapse>                    
-                <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>提交</Button> 
+                </Collapse>
+                <DialogActions>
+                  <Typography variant="title" color="inherit" flex='1'>
+                  </Typography>                 
+                  <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>提交</Button> 
+                </DialogActions>   
               </Form>
               </div>
         </Dialog>     
-        </span>
+        </div>
       )
     } else {
       return (<div/>);

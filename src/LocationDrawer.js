@@ -49,20 +49,20 @@ const styles = theme => ({
     color: '#FFFFFF',
   },
   button: {
-    border: '2px solid' ,
-    borderColor: green[200],
+//    border: '2px solid' ,
+//    borderColor: green[200],
 //    width: '100%',
     fontWeight: 'bold',
     fontSize: '0.8rem',
     margin: theme.spacing.unit,
-    color: '#FFFFFF',
+//    color: '#FFFFFF',
     textAlign: 'left',
-    backgroundColor: green[500],
-    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-    display:'flex',
+//    backgroundColor: green[500],
+//    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+//    display:'flex',
   },
   buttonContainer: {
-    flex: '1 0 auto',
+//    flex: '1 0 auto',
   },
   buttonRightContainer: {
     flex: '1 0 auto',
@@ -72,7 +72,7 @@ const styles = theme => ({
   },
   container: {
     width: '98vw'
-  } 
+  }
 });
 
 
@@ -84,6 +84,7 @@ class LocationDrawer extends React.Component {
         locationName: '現在位置',
         isUsingCurrentLocation: true,
         distance: this.props.filter.distance,
+        locationPrefix: ''
       };
       this.isUsePublicAddressBook = false;
       if(this.props.isUsePublicAddressBook == true) {
@@ -92,7 +93,7 @@ class LocationDrawer extends React.Component {
       this.geolocation = null;
       this.currentLocationOnClick = this.currentLocationOnClick.bind(this);
       this.addLocationOnClick = this.addLocationOnClick.bind(this);
-  }    
+  }
 
 
   componentWillMount() {
@@ -106,7 +107,7 @@ class LocationDrawer extends React.Component {
       if (user) {
         this.fetchAddress(user.user);
         if (geolocation === null || geolocation.pos === null) {
-          fetchLocation();     
+          fetchLocation();
         }
       }
     }
@@ -115,7 +116,7 @@ class LocationDrawer extends React.Component {
   toggleDrawer(open){
     this.setState({open: open});
   };
-      
+
   fetchAddress(user) {
     this.setState({user:user});
     if(!this.isUsePublicAddressBook) {
@@ -124,7 +125,7 @@ class LocationDrawer extends React.Component {
       this.props.fetchAddressBookFromOurLand();
     }
   }
-  
+
   setLocation(text, distance, coords, isUsingCurrentLocation=false) {
       this.geolocation = coords;
       this.setState({...this.state, isUsingCurrentLocation: isUsingCurrentLocation})
@@ -135,15 +136,46 @@ class LocationDrawer extends React.Component {
       updateFilterLocation(coords, distance);
   }
 
+  setLocationPrefix(prefix) {
+    this.setState({...this.state, locationPrefix: prefix});
+  }
+
+  buildGrouppedAddressList(addressList, prefix) {
+    return addressList.reduce((grouppedList, address) => {
+      if (address.text.startsWith(prefix)) {
+        const childPart = address.text.slice(prefix.length);
+        if (childPart.includes('/')) {
+          const group = childPart.split('/', 2)[0];
+          if (!grouppedList.find(a => a.text == group)) {
+            grouppedList.push({
+              text: group,
+              isGroup: true
+            });
+          }
+        } else {
+          grouppedList.push({
+            ...address,
+            text: address.text.slice(prefix.length)
+          });
+        }
+      }
+      return grouppedList;
+    }, []);
+  }
+
   renderAddressBook() {
     const { classes, addressBook, geolocation } = this.props;
     var addressList=addressBook.addresses;
     if(this.isUsePublicAddressBook) {
       addressList=addressBook.publicAddresses;
     }
+    addressList = this.buildGrouppedAddressList(addressList || [], this.state.locationPrefix);
     return addressList.map(address => {
-      let icons = <PlaceIcon />;
       let type = address.type;
+      if(this.isUsePublicAddressBook && (type == addressEnum.home || type == addressEnum.office)) {
+        return null;
+      }
+      let icons = <PlaceIcon />;
       let text = address.text;
       let locationString = constant.addressNotSet;
       let distance = this.props.filter.defaultDistance;
@@ -157,8 +189,8 @@ class LocationDrawer extends React.Component {
         if (address.streetAddress != null) {
           locationString =  address.streetAddress + ' (' + geoString(geolocation.latitude, geolocation.longitude) + ')';
         } else {
-          locationString = '近' + geoString(geolocation.latitude, geolocation.longitude);      
-        } 
+          locationString = '近' + geoString(geolocation.latitude, geolocation.longitude);
+        }
       }
       switch(type) {
         case addressEnum.home:
@@ -168,9 +200,18 @@ class LocationDrawer extends React.Component {
           icons = <WorkIcon />;
           break;
       }
-     if (locationString != constant.addressNotSet) {
+      if (address.isGroup) {
+        return (
+          <ListItem button onClick={() => {this.setLocationPrefix(text + '/')}}>
+            <ListItemIcon>
+            {icons}
+            </ListItemIcon>
+            <ListItemText primary={text}/>
+          </ListItem>
+        );
+      } else if (locationString != constant.addressNotSet ) {
        return (
-         <ListItem button onClick={() => {this.setLocation(text, distance, geolocation)}}>
+         <ListItem button onClick={() => {this.setLocation(this.state.locationPrefix + text, distance, geolocation)}}>
            <ListItemIcon>
            {icons}
            </ListItemIcon>
@@ -205,7 +246,7 @@ class LocationDrawer extends React.Component {
       return (<ListItem>
               <Button onClick={this.currentLocationOnClick}>
                <NearMeIcon />
-               
+
               </Button>
               {addAddress}
             </ListItem>);
@@ -213,7 +254,7 @@ class LocationDrawer extends React.Component {
       return (<ListItem button onClick={this.currentLocationOnClick}>
       <ListItemIcon>
       <NearMeIcon />
-      </ListItemIcon> 
+      </ListItemIcon>
       <ListItemText primary={constant.currentLocation} />
     </ListItem>);
    }
@@ -221,19 +262,17 @@ class LocationDrawer extends React.Component {
 
   render() {
       let firstItem = this.renderFirstListItem();
-      const { classes } = this.props;      
+      const { classes } = this.props;
       return (
       <div className={classes.container}>
           <Button
+            variant="outlined" color="primary"
             onClick={() => {this.toggleDrawer(true)}}
             className={classes.button}
           >
             <div className={classes.buttonContainer}>
                 {`${this.state.isUsingCurrentLocation ? constant.currentLocation
-                          : this.state.locationName}${this.state.distance}公里內`}
-            </div>
-            <div className={classes.buttonRightContainer}>
-              <ArrowIcon className={classes.white}/>
+                          : this.state.locationName}${this.state.distance}公里`}
             </div>
           </Button>
           <Drawer anchor='bottom'

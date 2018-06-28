@@ -6,6 +6,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Button  from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
@@ -13,7 +14,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import FileUploadIcon from '@material-ui/icons/FileUpload';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import imageResizer from './ImageResizer';
 
 const styles = theme => ({
@@ -196,7 +197,7 @@ pushOriginal(blob) {
     return (
       <div>
         <Button variant="raised" color="primary" className={classes.uploadButton} raised={true} onClick={() => this.handleClickOpen()}>
-            <FileUploadIcon />
+            <PhotoCamera />
                 上載相片
         </Button>
         {thumbnail}
@@ -209,6 +210,7 @@ pushOriginal(blob) {
                 <DialogContent>
                     <Label for="file">相片</Label>
                         <input
+                            accept="image/*" 
                             type="file"
                             name="file"
                             id="file"
@@ -216,15 +218,14 @@ pushOriginal(blob) {
                             ref={(file) => {this.file = file;}}
                             onChange={() => this.inputOnchange()}
                         />                                       
-                    <Button
+                    <IconButton color="primary" 
                         className={classes.uploadButton}
                         variant="raised"
                         component="label"
                         htmlFor="file"
                     >
-                        <FileUploadIcon />
-                        選擇來源
-                    </Button>
+                        <PhotoCamera />
+                    </IconButton>
                 </DialogContent>
             <DialogActions>
                 <Button disabled={this.state.disableDelete} color="secondary" onClick={() => this.onDelete()} >刪除</Button>

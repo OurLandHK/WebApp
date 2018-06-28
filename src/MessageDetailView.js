@@ -2,12 +2,15 @@ import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import Paper from '@material-ui/core/Paper';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import ProgressiveCardImg from './ProgressiveCardImg';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import IconButton from '@material-ui/core/IconButton';
 import ForumIcon from '@material-ui/icons/Forum';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
@@ -17,12 +20,14 @@ import red from '@material-ui/core/colors/red';
 import EventMap from './REventMap';
 import ChipArray from './ChipArray';
 import MessageDetailViewImage from './MessageDetailViewImage';
+import MessageAction from './MessageAction';
 import Tab  from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import AppBar from '@material-ui/core/AppBar';
 import CommentList from './comment/CommentList';
 import geoString from './GeoLocationString';
 import PostCommentView from './comment/PostCommentView';
+import timeOffsetStringInChinese from './TimeString';
 import Avatar from '@material-ui/core/Avatar';
 import green from '@material-ui/core/colors/green';
 import {
@@ -33,6 +38,11 @@ import {connect} from 'react-redux';
 import { constant } from './config/default';
 
 const styles = theme => ({
+  button: {
+    borderRadius: 0,
+    width: '64px',
+    height: '64px'
+  },
   authorContainer: {
     display: 'flex',
     alignItems: 'center',
@@ -43,27 +53,41 @@ const styles = theme => ({
   authorColumn2: {
     flex: '1 0 auto',
   },
+  summaryGrid: {
+    display: 'inline-grid',
+    padding: '8px',
+  },
+  authorGrid: {
+    alignItems: 'center',
+    alignContent: 'center',
 
+    padding: '8px'
+  },
   appBar: {
     backgroundColor: theme.palette.secondary['200'],
   },
   avatar: {
     backgroundColor: red[500],
   },
-  cover: {
-    width: 64,
-    height: 64,
-  },
   container: {
     overflowY: 'auto'
-  }
+  },
+  actionContainer: {
+    display: 'flex',
+    height: '5rem',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 
 class MessageDetailView extends Component {
   constructor(props) {
     super(props);
-    this.state = {expanded: false, rotate: 'rotate(0deg)', tab: 0};
+    this.state = {expanded: false,
+        rotate: 'rotate(0deg)',
+        tab: 0,
+      };
     this.handleChangeTab = this.handleChangeTab.bind(this);
     this.handleAuthorClick = this.handleAuthorClick.bind(this);
   }
@@ -72,6 +96,7 @@ class MessageDetailView extends Component {
     this.setState({ expanded: !this.state.expanded });
 
   };
+
 
   handleChangeTab(evt, value) {
      this.setState({...this.state, tab: value});
@@ -85,24 +110,28 @@ class MessageDetailView extends Component {
   };
 
 
-  renderAuthor() {
+  renderTitle() {
     const { message, classes} = this.props;
+    let post = '張貼';
+    let timeOffset = Date.now() - message.createdAt.toDate();
+    let timeOffsetString = timeOffsetStringInChinese(timeOffset);
+    let subheader = `於:${timeOffsetString}前${post}`;
     const photoUrl = message.photoUrl || '/images/profile_placeholder.png';
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     return (
-      <div className={classes.authorContainer}>
-        <div className={classes.authorColumn}>
+      <Grid container spacing={16}>
+        <Grid item className={classes.authorGrid}>
           {fbProfileImage}
-        </div>
-        <div className={classes.authorColumn2}>
-          &nbsp; {message.name}
-        </div>
-        <div className={classes.authorColumn2}>
-           現況: {message.status}
-        </div>
-      </div>
-    );
+          <Typography color='primary' noWrap='true' >{message.name}</Typography>
+          <Typography color='primary' noWrap='true' >{subheader}</Typography>
+        </Grid>
+        <Grid item xs className={classes.summaryGrid}>
+          <Typography variant="headline">{message.text}</Typography>
+        </Grid>
+      </Grid>    );
   }
+
+
 
   renderBase() {
     let locationString = null;
@@ -119,15 +148,82 @@ class MessageDetailView extends Component {
       viewCountString += 0;
     }
     return (
-      <CardContent>
-        <Typography component='p'>
-        {locationString}
-        </Typography>
-        <Typography component='p'>
-        {viewCountString}
-        </Typography>
-      </CardContent>
+      <Grid container direction='row' spacing={16}>
+        <Grid item xs direction='column' className={classes.summaryGrid} >
+          <Typography variant="subheading">
+          {locationString}
+          </Typography>
+          <Typography variant="subheading">
+          {`現況: ${message.status} ${viewCountString}`}
+          </Typography>
+        </Grid>
+      </Grid>
     );
+  }
+
+  renderTimeHtml() {
+    const classes = this.props.classes;
+    let rv = null;
+    let m = this.props.message;
+    let dateTimeString = '';
+    if(m.start != null)
+    {
+      let date = m.start.toDate();
+      if(date.getFullYear() > 1970) {
+        dateTimeString = date.toLocaleDateString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });
+        console.log(dateTimeString);
+        if(m.startTime != null) {
+          dateTimeString += ` ${m.startTime}`;
+        }
+      } else {
+        date = null;
+      }
+    }
+
+    let everydayOpenning = m.everydayOpenning;
+    let weekdaysOpennings = m.weekdaysOpennings;
+    let interval = m.interval;
+    let duration = m.duration;
+    let endDate = m.endDate;
+    if(dateTimeString != '') {
+      let intervalHtml = null;
+      let durationHtml = null;
+      let openningHtml = null;
+      let timeTypeHtml = <Typography variant="subheading"> {constant.timeOptions[1]} </Typography> ;
+      if(duration != null) {
+        durationHtml = <Typography variant="subheading"> 為期: {duration} </Typography>
+        timeTypeHtml = <Typography variant="subheading"> {constant.timeOptions[0]} </Typography> ;
+      }
+      if(interval && interval != '' && interval != constant.intervalOptions[0]) {
+        intervalHtml =<Typography variant="subheading"> 週期: {interval} </Typography>
+      }
+      if(everydayOpenning) {
+        openningHtml = <Typography variant="subheading"> {`${constant.openningOptions[0]} ${everydayOpenning.open}至${everydayOpenning.close}`}  </Typography>
+      } else {
+        if(weekdaysOpennings) {
+          let i = 0;
+          openningHtml = weekdaysOpennings.map((openning) => {
+            let openningHours = constant.closeWholeDay;
+            if(openning.enable) {
+              openningHours =  `${openning.open}至${openning.close}`;
+            }
+            let openningHoursString = `- ${constant.weekdayLabel[i]} ${openningHours}`;
+            i++;
+          return <Typography variant="subheading"> {openningHoursString}  </Typography>;
+          });
+        }
+      }
+      rv = <Paper className={classes.paper}>
+                  <CardContent>
+                    {timeTypeHtml}
+                    <Typography variant="subheading"> 開始: {dateTimeString}</Typography>
+                    {durationHtml}
+                    {intervalHtml}
+                    {openningHtml}
+                    </CardContent>
+                  </Paper>
+    }
+    return rv;
   }
 
   validateExternalLink(link){
@@ -141,28 +237,13 @@ class MessageDetailView extends Component {
 
   render() {
     const classes = this.props.classes;
-    var m = this.props.message;
-    var tag = m.tag;
-    var chips = [];
-    var date = null;
-    var dateTimeString = '';
-    if(m.start != null)
-    {
-      date = m.start.toDate();
-      if(date.getFullYear() > 1970) {
-        dateTimeString = date.toLocaleString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });
-      } else {
-        console.log(m.start);
-        date = null;
-      }
-    }
-    var interval = m.interval;
-    var duration = m.duration;
+    const m = this.props.message;
+    let tag = m.tag;
+    let chips = [];
     var link = m.link;
-    console.log(link);
     if(Array.isArray(tag))
     {
-        for (var i = 0; i < tag.length; i++) { 
+        for (var i = 0; i < tag.length; i++) {
             var chip = {key:i, label:tag[i]};
             chips.push(chip);
         }
@@ -177,45 +258,35 @@ class MessageDetailView extends Component {
     }
     let linkHtml = null;
     if (this.validateExternalLink(link)) {
-      linkHtml = <Grid container spacing={0}>
-        <Grid item>
-        <CardContent> <Typography component='p'> 外部連結： <a href={link} target="_blank">前往</a> </Typography> </CardContent></Grid></Grid>;
+      linkHtml = <Typography variant="subheading"> 外部連結： <a href={link} target="_blank">前往</a> </Typography>
     } else {
       if(link != null && link != "")
-      linkHtml = <Grid container spacing={0}>
-        <Grid item>
-        <CardContent> <Typography component='p'> {link} </Typography> </CardContent></Grid></Grid>;
-      
-    }
-    const author = this.renderAuthor();
-    let baseHtml = <Grid container spacing={0}> {this.renderBase()}</Grid>;
+      linkHtml = <Typography variant="subheading"> {link} </Typography>;
 
-    let dateHtml = null;
-    if(dateTimeString != '') { 
-        dateHtml = <Grid container spacing={0}>
-                        <Grid item><CardContent><Typography component='p'> 開始: {dateTimeString}</Typography> </CardContent> </Grid>  
-                        <Grid item><CardContent><Typography component='p'> 為期: {duration} </Typography> </CardContent> </Grid>
-                        <Grid item><CardContent><Typography component='p'> 週期: {interval} </Typography> </CardContent> </Grid>                
-                        </Grid>;
     }
+    const title = this.renderTitle();
+    let baseHtml = <Grid container spacing={0}> {this.renderBase()}</Grid>;
+    let dateHtml = this.renderTimeHtml();
 
     const tab = this.state.tab;
 
     return(<div className={classes.container}>
-             {author}
-             <ChipArray chipData={chips} />
+            <Paper className={classes.paper}>
+             {title}
+             <CardContent>
              {baseHtml}
+              <ChipArray chipData={chips} />
              {linkHtml}
+             </CardContent>
+             </Paper>
              {dateHtml}
-             <br/>
-             <br/>
-             <br/>
+             <MessageAction message={m} happyAndSad={this.props.happyAndSad}/>
              <div>
                <AppBar position="static" className={classes.appBar}>
                  <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
                    <Tab label="參與紀錄" />
-                   <Tab label="圖片" />
-                   <Tab label="地圖"/>
+                   <Tab label="相關照片" />
+                   <Tab label="準確地點"/>
                  </Tabs>
                </AppBar>
              </div>
@@ -230,6 +301,7 @@ class MessageDetailView extends Component {
 const mapStateToProps = (state, ownProps) => {
   return {
     recentMessage : state.recentMessage,
+    user: state.user,
   };
 }
 
