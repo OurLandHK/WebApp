@@ -5,7 +5,6 @@ import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import ForumIcon from '@material-ui/icons/Forum';
-import EmailIcon from '@material-ui/icons/Email';
 import classnames from 'classnames';
 import red from '@material-ui/core/colors/red';
 import Typography from '@material-ui/core/Typography';
@@ -99,6 +98,7 @@ const {
 const FacebookIcon = generateShareIcon('facebook');
 const TelegramIcon = generateShareIcon('telegram');
 const WhatsappIcon = generateShareIcon('whatsapp');
+const EmailIcon = generateShareIcon('email');
 
 class ShareDrawer extends React.Component {
   state = {
@@ -146,10 +146,7 @@ class ShareDrawer extends React.Component {
           subject={m}
           body={shareUrl}
           className={classes.someNetworkShareButton}>
-          <EmailIcon
-            style={{width: '4.5rem', height: '4.5rem'}}
-            color="secondary"
-            round />
+          <EmailIcon round size={'3.3em'} />
         </EmailShareButton>
       </div>
     );
