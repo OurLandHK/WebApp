@@ -16,6 +16,7 @@ import {
   UPDATE_PUBLIC_PROFILE_DIALOG,
   TOGGLE_PUBLIC_PROFILE_DIALOG,  
   TOGGLE_ADDRESS_DIALOG,
+  FETCH_GLOBAL_FOCUS_MESSAGE,
   TOGGLE_NEARBYEVENT_DIALOG,
   TOGGLE_REGIONEVENT_DIALOG,
   TOGGLE_EVENTLIST_DIALOG,
@@ -27,6 +28,7 @@ import * as firebase from 'firebase';
 import * as firestore from 'firebase/firestore';
 import config, {constant} from './config/default';
 import {getUserProfile, updateUserProfile} from './UserProfile';
+import {fetchFocusMessagesBaseOnGeo} from './GlobalDB';
 
 const currentLocationLabel = "現在位置";
 
@@ -68,6 +70,10 @@ function fetchPublicAddressBook(address) {
 
 function fetchFocusMessage(message) {
   return {type: FETCH_FOCUS_MESSAGE, messages: message};
+}
+
+function fetchGlobalFocusMessage(message) {
+  return {type: FETCH_GLOBAL_FOCUS_MESSAGE, messages: message};
 }
 
 function fetchUser(user, loading=false) {
@@ -325,7 +331,11 @@ export function fetchConcernMessagesFromOurLand() {
     let user={uid:config.MasterUID}
     return getUserProfile(user).then((userProfile)=>{
       const messages = userProfile.concernMessages;
-      return dispatch(fetchFocusMessage(messages));
+      dispatch(fetchFocusMessage(messages));
+      return fetchFocusMessagesBaseOnGeo(null, 1).then((globalFocusMessage)=>{
+        console.log(globalFocusMessage);
+        return dispatch(fetchGlobalFocusMessage(globalFocusMessage));
+      });
     });    
   };  
 }
