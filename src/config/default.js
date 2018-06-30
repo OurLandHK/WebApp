@@ -19,7 +19,6 @@ let config = {
   focusMessageDB: 'focusMessage',
   photoDB: 'photo',
   MasterUID: 'mUQgwxkmPBfVA47d9lHzB482Nmp1',
-
   addressBook: "AddressBook",
   commentDB: "comment"
 };
