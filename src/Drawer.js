@@ -25,7 +25,7 @@ import {
   toggleLeaderBoard,
 } from "./actions";
 import {upgradeAllMessage} from './MessageDB';
-import { constant } from './config/default';
+import { constant, RoleEnum } from './config/default';
 import AboutDialog from './AboutDialog';
 import SignOutButton from './SignOutButton';
 
@@ -123,7 +123,7 @@ class DrawerMenu extends Component {
                               </ListItemIcon>
                               <ListItemText primary={constant.addressBookLabel} onClick={() => this.addressDialogClick()}/>
                             </ListItem></span>);
-        if(user.userProfile != null & user.userProfile.role == constant.admin) {
+        if(user.userProfile != null & user.userProfile.role == RoleEnum.admin) {
           adminButton = <ListItem button>
             <ListItemIcon>
               <ChatBubbleIcon />

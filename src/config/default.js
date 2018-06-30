@@ -26,8 +26,6 @@ let config = {
 let constant = {
   invalidLocation: new firebase.firestore.GeoPoint(90, 0),
   timeoutLocation: new firebase.firestore.GeoPoint(90, 180),
-  user: "用戶",
-  admin: "我地管理員",
   closeWholeDay:"全日關門",
   addressNotSet: "尚未設定",
   currentLocation: "附近",
@@ -46,7 +44,7 @@ let constant = {
   defaultEventNumber: 100,
   concernLabel: "關注",
   homeLabel: "主頁",
-  userLabel: "設定",
+  userLabel: "我的",
   timeOptions : ['活動時間', '設施開放時間'],
   commentOptions : ['發表回應', '要求更改地點', '要求更改現況', '要求更改外部連結', '要求更改分類'],
   statusOptions : ['開放', '完結', '政府跟進中', '虛假訊息', '不恰當訊息'],
@@ -80,6 +78,12 @@ let addressEnum = {
   other: "其他"
 }
 
+let RoleEnum = {
+  user: "用戶",
+  betaUser: "測試用戶",
+  monitor: "監察員",
+  admin: "我地管理員", 
+}
 
 export  default config;
-export {constant, addressEnum, happyAndSadEnum};
+export {constant, addressEnum, happyAndSadEnum, RoleEnum};
