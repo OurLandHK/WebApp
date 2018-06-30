@@ -214,7 +214,7 @@ class IntegrationReactSelect extends React.Component {
     if(this.props.name != null) {
         this.name = this.props.name;
     }
-    this.label = 'label';
+    this.label = '';
     if(this.props.label != null) {
         this.label = this.props.label;
     }
@@ -222,10 +222,10 @@ class IntegrationReactSelect extends React.Component {
       single: null,
       multi: null,
       multiLabel: null,
-    }; 
+    };
     state[this.selectType] = this.props.value;
-    this.state = state; 
-    }    
+    this.state = state;
+    }
 
   handleChange = name => value => {
     this.setState({

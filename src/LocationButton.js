@@ -7,6 +7,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import LocationIcon from '@material-ui/icons/LocationOn';
+import MyLocationIcon from '@material-ui/icons/MyLocation';
 import geoString from './GeoLocationString';
 import Slide from '@material-ui/core/Slide';
 import EventMap from './REventMap';
@@ -47,9 +48,9 @@ class LocationButton extends Component {
 
   geoSuccessCallBack(pos) {
     console.log("geoSccessCallBack " +pos.coords.latitude  + pos.coords.longitude);
-    this.tempGeolocation = pos; 
+    this.tempGeolocation = pos;
     getStreetAddressFromGeoLocation(pos.coords, this.geoLocationSuccessCallBack, this.errorCallBack);
-   
+
   }
 
   geoLocationSuccessCallBack(err, response) {
@@ -63,7 +64,7 @@ class LocationButton extends Component {
   successCallBack(pos) {
     this.geolocation = pos.coords;
     console.log("geoSccessCallBack " + this.geolocation.latitude + this.geolocation.longitude);
-    
+
     this.setState({geolocation: pos.coords, disableSumbit: false});
   }
 
@@ -72,7 +73,7 @@ class LocationButton extends Component {
   streetAddressSuccessCallBack(err, response) {
     if (!err) {
       console.log(response.json.results);
-      var pos = { coords: 
+      var pos = { coords:
                   {
                     latitude: response.json.results[0].geometry.location.lat,
                     longitude: response.json.results[0].geometry.location.lng
@@ -105,7 +106,7 @@ class LocationButton extends Component {
       getGeoLocationFromStreetAddress(this.state.streetAddress, this.streetAddressSuccessCallBack, this.errorCallBack);
     }
   }
-  
+
 
   rest() {
 
@@ -125,7 +126,7 @@ class LocationButton extends Component {
     console.log("handleSubmit:" + this.streetAddress);
     this.setState({ open: false });
   };
-  
+
 
   render() {
     //const {fetchLocation, geoLocation} = this.props;
@@ -138,8 +139,8 @@ class LocationButton extends Component {
       if(this.state.streetAddress != "") {
         locationString = "位置: " + this.state.streetAddress + "\n(" + geoString(pos.latitude, pos.longitude) + ")";
       } else {
-        locationString = "位置: 近" + geoString(pos.latitude, pos.longitude);   
-      }  
+        locationString = "位置: 近" + geoString(pos.latitude, pos.longitude);
+      }
     }
     return (
       <div>
@@ -148,7 +149,7 @@ class LocationButton extends Component {
           color="secondary"
           onClick={this.handleClickOpen}>
           <LocationIcon />
-          輸入位置
+          輸入地點
         </Button>
         &nbsp;
         {locationString}
@@ -159,42 +160,32 @@ class LocationButton extends Component {
           transition={Transition}
           aria-labelledby="form-dialog-title"
         >
-          <DialogTitle id="form-dialog-title">輸入位置</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              請輸入街道地址或使用您當前的位置
-            </DialogContentText>
-            <Button variant="outlined" color="primary"  onClick={() => this.handleGetLocation()}>使用您當前的位置</Button> 
-            <DialogContentText>
-              或
-            </DialogContentText> 
-            <DialogContentText>
-              請輸入街道地址或使用您當前的位置
-            </DialogContentText>            
+          <DialogTitle id="form-dialog-title" className="dialog-title">使用所在位置 / 輸入地址</DialogTitle>
+          <DialogContent className="address-row">
+            <MyLocationIcon onClick={() => this.handleGetLocation()} />
             <TextField
               autoFocus
               fullWidth
               id="stressAddress"
-              label="街道地址"
+              placeholder="街道地址"
               helperText="中/英文均可"
               type="text"
-              fullWidth
               value={this.state.streetAddress} onChange={event => this.setState({ streetAddress: event.target.value, disableSumbit: true,  geolocation: null})}
             />
-            <Button variant="outlined" color="primary"  onClick={() => this.handleGetLocationFromStreetAddress()}>驗證街道地址</Button>
           </DialogContent>
-          {locationString}
+          <Button className={this.state.streetAddress === null || this.state.streetAddress === "" ? "hide" : ""} variant="outlined" color="primary" onClick={() => this.handleGetLocationFromStreetAddress()}>查看地圖</Button>
+          <p>{locationString}</p>
           <DialogActions>
-            <Button variant="raised" color="secondary" onClick={this.handleClose} >
-              取消
+            <Button color="secondary" variant="contained" onClick={this.handleClose} >
+              返回
             </Button>
-            <Button variant="raised" color="primary" disabled={this.state.disableSumbit} onClick={this.handleSubmit} >
-              提交
+            <Button color="primary" variant="contained" disabled={this.state.disableSumbit} onClick={this.handleSubmit} >
+              確定
             </Button>
           </DialogActions>
           {this.state.geolocation != null  && <EventMap center={geolocation} zoom={zoom}/>}
-        </Dialog>        
-         
+        </Dialog>
+
       </div>);
   }
 }

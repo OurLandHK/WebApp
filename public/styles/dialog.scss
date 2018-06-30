@@ -1,0 +1,27 @@
+$blue: #3f51b5;
+.dialog-title {
+  text-align: center;
+}
+.address-row {
+  display: flex;
+  flex-direction: row;
+
+  svg {
+    color: $blue;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+}
+[class*="helper-text"],
+[id*="helper-text"] {
+  padding: 0;
+}
+
+.photo-upload-wrapper {
+  margin-top: 10px;
+}
+.uploaded-thumbnail {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 10px;
+}
