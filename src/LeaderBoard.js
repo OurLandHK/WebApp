@@ -35,7 +35,6 @@ function Transition(props) {
   return <Slide direction="left" {...props} />;
 }
 
-
 const styles = {
   appBar: {
     position: 'relative',
@@ -53,10 +52,10 @@ class LeaderBoard extends React.Component {
     super(props);
     this.state = { value: 0};
     this.openPublicProfileDialog = this.openPublicProfileDialog.bind(this);
-  }    
+  }
 
   componentWillMount() {
-    this.props.fetchTopTwenty(); 
+    this.props.fetchTopTwenty();
   }
 
   handleRequestClose = () => {
@@ -100,23 +99,16 @@ class LeaderBoard extends React.Component {
     return (
       <div className={classes.container}>
         {this.props.topTwenty.map((t, i) => this.renderUser(t, i + 1))}
-      </div>  
+      </div>
     );
   }
-  
+
   render() {
     const { classes, open } = this.props;
     const { value } = this.state;
     return (
-      <div>
-        <div>
-          <Typography
-            variant="title"
-            color="inherit"
-            className={classes.flex}
-          >
-            {constant.leaderBoardLabel}
-          </Typography>          
+      <div class="leaderboard-wrapper">
+        <div class="tabs-row">
           <Tabs
             value={value}
             onChange={this.handleChange}
@@ -144,7 +136,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleLeaderBoard: flag => 
+    toggleLeaderBoard: flag =>
       dispatch(toggleLeaderBoard(flag)),
     fetchTopTwenty: () =>
       dispatch(fetchTopTwenty()),

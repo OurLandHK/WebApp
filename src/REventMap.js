@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
+import { compose, withProps, withState, withHandlers } from "recompose";
+import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -12,34 +13,69 @@ const style = {
   width: '100%'
 }
 
-const style2 = {
-  height: '40vh',
-  width:'100vw',
-  position: 'relative'
-}
-
 export class EventMap extends Component {
-  static defaultProps = {
-    center: {lat: 22, lng: 114},
-    zoom: 15,
-}
-
-render() {
-    return (
-      <CardMedia>
-        <div style={style2}>
-          <Map google={this.props.google}
-            style={style}
-            initialCenter={this.props.center}
-            zoom={this.props.zoom}>
-            <Marker position={this.props.center} />
-          </Map>
-        </div>
-      </CardMedia>
-    );
+  constructor(props) {
+    super(props);
+    this.state = {
+      center: this.props.center,
+      zoom: this.props.zoom
+    };
+    // this.setState({
+    //   center: this.props.center,
+    //   zoom: this.props.zoom
+    // });
+    this.onMapClicked = this.onMapClicked.bind(this);
   }
+
+  onMapClicked(mapProps, map, clickEvent) {
+    console.log('mapProps',mapProps)
+    let newPosSet = {lat: clickEvent.latLng.lat(), lng: clickEvent.latLng.lng()};
+    this.state.center = newPosSet;
+    mapProps.google.maps.Marker;
+  }
+
+  render() {
+    const MyMapComponent = compose(
+      withProps({
+          googleMapURL: "https://maps.googleapis.com/maps/api/js?key=AIzaSyDdPxqSdKSWLot9NS0yMD2CQtI1j4GF_Qo&v=3.exp&libraries=geometry,drawing,places",
+          loadingElement: <div style={{ height: `100%` }} />,
+          containerElement: <div style={{ height: `40vh` }} />,
+          mapElement: <div style={{ height: `100%` }} />,
+        }),
+        withState('zoom', 'onZoomChange', 8),
+        withHandlers(() => {
+          const refs = {
+            map: undefined,
+          }
+
+          return {
+            onMapMounted: () => ref => {
+              refs.map = ref
+            },
+            onClick: (wt) => {
+              console.log(refs.map.getCenter())
+            },
+            onZoomChanged: ({ onZoomChange }) => () => {
+              onZoomChange(refs.map.getZoom())
+            }
+          }
+        }),
+        withScriptjs,
+        withGoogleMap
+      )((props) =>
+      <GoogleMap
+      defaultZoom={this.props.zoom}
+      defaultCenter={this.props.center}
+      >
+      <Marker position={this.props.center} onClick={props.onMarkerClick} />
+      </GoogleMap>
+    );
+      return (
+        <CardMedia className="map-wrapper">
+          <MyMapComponent/>
+        </CardMedia>
+      );
+    }
 }
 
-export default GoogleApiWrapper({
-  apiKey: 'AIzaSyDdPxqSdKSWLot9NS0yMD2CQtI1j4GF_Qo'
-})(EventMap)
+export default EventMap

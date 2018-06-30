@@ -218,7 +218,7 @@ class MessageView extends Component {
     if(m.tag != null && m.tag.length > 0) {
       tag = ' #' + m.tag[0];
     }
-    var subtitle = distanceSpan + ' 現況: ' + m.status + tag;
+    var subtitle = distanceSpan + ' 現況：' + m.status + tag;
     let card = null;
     if(this.tile) {
       if(m.publicImageURL != null) {
