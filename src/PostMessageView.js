@@ -517,12 +517,13 @@ class PostMessageView extends Component {
             transition={Transition}
             unmountOnExit>
             <AppBar className={classes.dialogTitle}>
-              <Toolbar>
+              <DialogActions>
                 <IconButton color="contrast" onClick={() => this.handleRequestClose()} aria-label="Close">
                   <CloseIcon />
                 </IconButton>
-                <Typography variant="title" color="inherit" className={classes.flex}>提交</Typography>
-              </Toolbar>
+                <Typography variant="title" color="inherit" className={classes.flex}> </Typography>
+                <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>報料</Button>
+              </DialogActions>
             </AppBar>
               <div className={classes.dialogContainer}>
               <br/>
@@ -577,11 +578,6 @@ class PostMessageView extends Component {
                   </FormGroup>
                   <br/>
                 </Collapse>
-                <DialogActions>
-                  <Typography variant="title" color="inherit" flex='1'>
-                  </Typography>
-                  <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>提交</Button>
-                </DialogActions>
               </Form>
               </div>
         </Dialog>

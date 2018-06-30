@@ -1,7 +1,7 @@
 /*global FB*/
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
-import config, {constant, addressEnum} from './config/default';
+import config, {constant, addressEnum, RoleEnum} from './config/default';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import Badge from '@material-ui/core/Badge';
@@ -109,7 +109,7 @@ class NotificationsDialog extends React.Component {
         if(address.distance != null) {
           distance = address.distance;
         }
-        if(user.userProfile.role == constant.admin) {
+        if(user.userProfile.role == RoleEnum.admin) {
           distance = 100;
         }
         //console.log(address.geolocation);

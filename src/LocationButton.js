@@ -1,16 +1,24 @@
 import React, { Component } from 'react';
 import Button  from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import { Form, Label, Input} from 'reactstrap';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import Typography from '@material-ui/core/Typography';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
 import LocationIcon from '@material-ui/icons/LocationOn';
 import MyLocationIcon from '@material-ui/icons/MyLocation';
 import geoString from './GeoLocationString';
 import Slide from '@material-ui/core/Slide';
 import EventMap from './REventMap';
+import { withStyles } from '@material-ui/core/styles';
+
 /*
 import {connect} from "react-redux";
 import {fetchLocation} from "./actions";
@@ -21,6 +29,15 @@ import {getCurrentLocation, getGeoLocationFromStreetAddress, getStreetAddressFro
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
+
+const styles = theme => ({
+  flex: {
+    flex: 1,
+  },  
+  dialogTitle: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'  
+  }
+});
 class LocationButton extends Component {
   constructor(props) {
     super(props);
@@ -132,6 +149,7 @@ class LocationButton extends Component {
     //const {fetchLocation, geoLocation} = this.props;
     const zoom=15;
     const pos = this.state.geolocation;
+    const classes = this.props.classes;
     let geolocation = null;
     let locationString = null;
     if (pos != null) {
@@ -161,6 +179,17 @@ class LocationButton extends Component {
           aria-labelledby="form-dialog-title"
         >
           <DialogTitle id="form-dialog-title" className="dialog-title">使用所在位置 / 輸入地址</DialogTitle>
+          <AppBar className={classes.dialogTitle}>
+            <Toolbar>
+              <IconButton color="contrast" onClick={this.handleClose} aria-label="Close">
+                <CloseIcon />
+              </IconButton>
+              <Typography variant="title" color="inherit" className={classes.flex}>  </Typography>
+              <Button variant="raised" color="primary"disabled={this.state.disableSumbit} onClick={this.handleSubmit} >
+              使用所在位置 / 輸入地址
+              </Button>
+            </Toolbar>
+          </AppBar>
           <DialogContent className="address-row">
             <MyLocationIcon onClick={() => this.handleGetLocation()} />
             <TextField
@@ -171,18 +200,10 @@ class LocationButton extends Component {
               helperText="中/英文均可"
               type="text"
               value={this.state.streetAddress} onChange={event => this.setState({ streetAddress: event.target.value, disableSumbit: true,  geolocation: null})}
-            />
+            />            
           </DialogContent>
           <Button className={this.state.streetAddress === null || this.state.streetAddress === "" ? "hide" : ""} variant="outlined" color="primary" onClick={() => this.handleGetLocationFromStreetAddress()}>查看地圖</Button>
           <p>{locationString}</p>
-          <DialogActions>
-            <Button color="secondary" variant="contained" onClick={this.handleClose} >
-              返回
-            </Button>
-            <Button color="primary" variant="contained" disabled={this.state.disableSumbit} onClick={this.handleSubmit} >
-              確定
-            </Button>
-          </DialogActions>
           {this.state.geolocation != null  && <EventMap center={geolocation} zoom={zoom}/>}
         </Dialog>
 
@@ -190,4 +211,4 @@ class LocationButton extends Component {
   }
 }
 
-export default LocationButton;
+export default withStyles(styles)(LocationButton);

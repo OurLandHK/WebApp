@@ -25,7 +25,6 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import geoString from './GeoLocationString';
-import EventListDialog from './EventListDialog';
 import {getUserProfile, updateUserLocation, getUserRecords, updateUserProfile} from './UserProfile';
 import UploadImageButton from './UploadImageButton';
 import uuid from 'js-uuid';
@@ -159,12 +158,6 @@ class UserProfileView extends React.Component {
         if(this.state.userProfile.desc) {
           desc = this.state.userProfile.desc;
         }
-        if(this.state.userProfile != null)
-        {
-          publishMessage = <EventListDialog title="發表事件: " messageIds={this.state.userProfile.publishMessages}/>
-          completeMessage = <EventListDialog title="完成事件: " messageIds={this.state.userProfile.completeMessages}/> 
-          concernMessage = <EventListDialog title="關注事件: " messageIds={this.state.userProfile.concernMessages}/>          
-        }
     }
     return (
       <Dialog fullScreen  open={this.state.open} onRequestClose={this.handleRequestClose} transition={Transition}>
@@ -213,10 +206,7 @@ class UserProfileView extends React.Component {
           <List>
             <ListItem >
               <ListItemText primary={this.state.displayRole} />
-            </ListItem>          
-            {publishMessage}
-            {concernMessage}
-            {completeMessage}                                  
+            </ListItem>                                         
           </List>
         </div>
         </Dialog>
