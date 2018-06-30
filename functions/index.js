@@ -22,114 +22,83 @@ admin.initializeApp(functions.config().firebase);
 const gcs = require('@google-cloud/storage')();
 //const vision = require('@google-cloud/vision')();
 const exec = require('child-process-promise').exec;
+const nodemailer = require('nodemailer');
 
-// Adds a message that welcomes new users into the chat.
-exports.addWelcomeMessages = functions.auth.user().onCreate(event => {
-  const user = event.data;
-  console.log('A new user signed in for the first time.');
-  const fullName = user.displayName || 'Anonymous';
+// Email Service
 
-  // Saves the new welcome message into the database
-  // which then displays it in the OurLand clients.
-  return admin.database().ref('messages').push({
-    name: 'Firebase Bot',
-    photoUrl: '/images/firebase-logo.png', // Firebase logo
-    text: `${fullName} signed in for the first time! Welcome!`
-  });
+const gmailEmail = 'EMAIL_ADDRESS';
+const gmailPassword = 'EMAIL_PASSWORD';
+const mailTransport = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: gmailEmail,
+    pass: gmailPassword,
+  },
 });
 
-// Checks if uploaded images are flagged as Adult or Violence and if so blurs them.
-exports.blurOffensiveImages = functions.storage.object().onChange(event => {
-  const object = event.data;
-  // Exit if this is a deletion or a deploy event.
-  if (object.resourceState === 'not_exists') {
-    return console.log('This is a deletion event.');
-  } else if (!object.name) {
-    return console.log('This is a deploy event.');
-  }
+const APP_NAME = '我地';
 
-  const bucket = gcs.bucket(object.bucket);
-  const file = bucket.file(object.name);
+exports.sendEmail = functions.firestore.document('/message/{messageId}')
+  .onWrite((change, context) => {
+    const beforeData = change.before.data();
+    const afterData = change.after.data();
 
-  // Check the image content using the Cloud Vision API. 
-  return vision.detectSafeSearch(file).then(safeSearchResult => {
-    if (safeSearchResult[0].adult || safeSearchResult[0].violence) {
-      console.log('The image', object.name, 'has been detected as inappropriate.');
-      return blurImage(object.name, bucket);
-    } else {
-      console.log('The image', object.name,'has been detected as OK.');
+    var data = change.after.exists? change.after.data(): change.before.data();
+
+    if(data){
+      let messageLongitude = data.geolocation.longitude;
+      let messageLatitude = data.geolocation.latitude;
+      
+       const db = admin.firestore();
+        var userRef = db.collection('userProfile');
+        var userDoc = userRef.get().then(snapshot => {
+          snapshot.forEach(user => {
+            let addressBookDoc = userRef.doc(user.id).collection('AddressBook').get().then(snapshot => {
+              snapshot.forEach(addressBook => {
+                var userAddressGeoLocation = addressBook.data().geolocation;
+                var dis = distance(messageLongitude, messageLatitude, userAddressGeoLocation.longitude, userAddressGeoLocation.latitude);
+                if(dis < 1) {
+                   return sendEmail(user.data().emailAddress, user.data().displayName, data.key);
+                }
+              })
+            })
+          });
+        }).catch(err => {
+          console.log('Error getting document', err);
+        });
     }
-  });
-});
+   
 
-// Blurs the given image located in the given bucket using ImageMagick.
-function blurImage(filePath, bucket) {
-  const fileName = filePath.split('/').pop();
-  const tempLocalFile = `/tmp/${fileName}`;
-  const messageId = filePath.split('/')[1];
+    return null;
+  })
 
-  // Download file from bucket.
-  return bucket.file(filePath).download({destination: tempLocalFile})
-      .then(() => {
-        console.log('Image has been downloaded to', tempLocalFile);
-        // Blur the image using ImageMagick.
-        return exec(`convert ${tempLocalFile} -channel RGBA -blur 0x24 ${tempLocalFile}`);
-      }).then(() => {
-        console.log('Image has been blurred');
-        // Uploading the Blurred image back into the bucket.
-        return bucket.upload(tempLocalFile, {destination: filePath});
-      }).then(() => {
-        console.log('Blurred image has been uploaded to', filePath);
-        // Indicate that the message has been moderated.
-//        return admin.database().ref(`/messages/${messageId}`).update({moderated: true});
-      }).then(() => {
-        console.log('Marked the image as moderated in the database.');
-      });
-}
 
-// Sends a notifications to all users when a new message is posted.
-exports.sendNotifications = functions.database.ref('/messages/{messageId}').onWrite(event => {
-  const snapshot = event.data;
-  // Only send a notification when a message has been created.
-  if (snapshot.previous.val()) {
-    return;
-  }
-
-  // Notification details.
-  const text = snapshot.val().text;
-  const payload = {
-    notification: {
-      title: `${snapshot.val().name} posted ${text ? 'a message' : 'an image'}`,
-      body: text ? (text.length <= 100 ? text : text.substring(0, 97) + '...') : '',
-      icon: snapshot.val().photoUrl || '/images/profile_placeholder.png',
-      click_action: `https://${functions.config().firebase.authDomain}`
-    }
+function sendEmail(email, displayName, eventId) {
+  const mailOptions = {
+    to: email,
+    subject: `${APP_NAME} 通知`,
+    text: `您好 ${displayName || ''}! 以下為1公里範圍社區事件: https://ourland.hk/?eventid=${eventId}`
   };
 
-  
-  // Get the list of device tokens.
-  return admin.database().ref('fcmTokens').once('value').then(allTokens => {
-    if (allTokens.val()) {
-      // Listing all tokens.
-      const tokens = Object.keys(allTokens.val());
-
-      // Send notifications to all tokens.
-      return admin.messaging().sendToDevice(tokens, payload).then(response => {
-        // For each message check if there was an error.
-        const tokensToRemove = [];
-        response.results.forEach((result, index) => {
-          const error = result.error;
-          if (error) {
-            console.error('Failure sending notification to', tokens[index], error);
-            // Cleanup the tokens who are not registered anymore.
-            if (error.code === 'messaging/invalid-registration-token' ||
-                error.code === 'messaging/registration-token-not-registered') {
-              tokensToRemove.push(allTokens.ref.child(tokens[index]).remove());
-            }
-          }
-        });
-        return Promise.all(tokensToRemove);
-      });
-    }
+  return mailTransport.sendMail(mailOptions).then(() => {
+    return console.log('Email sent to:', email);
   });
-});
+}
+
+function distance(lon1, lat1, lon2, lat2) {
+    var R = 6371; // Radius of the earth in km
+    var dLat = (lat2-lat1).toRad();  // Javascript functions in radians
+    var dLon = (lon2-lon1).toRad(); 
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+            Math.sin(dLon/2) * Math.sin(dLon/2); 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var d = R * c; // Distance in km
+    return d;
+}
+
+if (typeof(Number.prototype.toRad) === "undefined") {
+  Number.prototype.toRad = function() {
+    return this * Math.PI / 180;
+  }
+}

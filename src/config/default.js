@@ -16,6 +16,7 @@ let config = {
   fbGroupId: '244493866025075', // Production https://www.facebook.com/groups/OurLandHK/?fref=nf
   messageDB: 'message', // Production
   userDB: 'userProfile', // Production
+  focusMessageDB: 'focusMessage', 
   photoDB: 'photo',
   MasterUID: 'mUQgwxkmPBfVA47d9lHzB482Nmp1',
 
