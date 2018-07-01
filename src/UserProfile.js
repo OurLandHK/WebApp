@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import * as firestore from 'firebase/firestore';
-import config, {constant, addressEnum} from './config/default';
+import config, {constant, addressEnum, RoleEnum} from './config/default';
 
 function getUserProfile(user) {
     // Use firestore
@@ -22,7 +22,7 @@ function getUserProfile(user) {
                 photoURL: user.photoURL,
                 fbuid: user.providerData[0].uid,
                 desc: "",
-                role: constant.user,
+                role: RoleEnum.user,
                 publishMessages: [],
                 concernMessages: [],
                 completeMessages: [],

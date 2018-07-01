@@ -43,18 +43,9 @@ const styles = theme => ({
   hidden: {
     display: 'none',
   },
-  fab: {
-    margin: 'auto',
-    top: 'auto',
-    right: 'auto',
-    left: '40%',
-    width: '10%',
-    bottom: 45,
-    position: 'fixed',
-  },
   flex: {
     flex: 1,
-  },  
+  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
@@ -66,7 +57,7 @@ const styles = theme => ({
     padding: '0.5rem'
   },
   dialogTitle: {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'  
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
   }
 });
 
@@ -78,7 +69,7 @@ class PostMessageView extends Component {
   constructor(props) {
     super(props);
     var key = uuid.v4();
-    this.state = {popoverOpen: false, buttonShow: false, 
+    this.state = {popoverOpen: false, buttonShow: false,
       // message
       key: key,
       summary: "",
@@ -101,14 +92,14 @@ class PostMessageView extends Component {
     this.renderOpenningHtml = this.renderOpenningHtml.bind(this);
     this.renderActivitiesHtml = this.renderActivitiesHtml.bind(this);
     this.setOpenning = this.setOpenning.bind(this);
-    this.summaryTextField = null;  
+    this.summaryTextField = null;
   }
 
   static defaultProps = {
     weekdayLabel : constant.weekdayLabel,
     openningOptions : constant.openningOptions,
     intervalOptions : constant.intervalOptions,
-    durationOptions : constant.durationOptions,  
+    durationOptions : constant.durationOptions,
     openning :  {enable: true, open: '09:00', close: '17:00'},
     opennings : [
       {enable: true, open: '09:00', close: '17:00'}, // all days
@@ -118,7 +109,7 @@ class PostMessageView extends Component {
       {enable: true, open: '09:00', close: '17:00'}, // wed
       {enable: true, open: '09:00', close: '17:00'}, // thur
       {enable: true, open: '09:00', close: '17:00'}, // fri
-      {enable: true, open: '09:00', close: '17:00'}, // sat      
+      {enable: true, open: '09:00', close: '17:00'}, // sat
       ]
     }
 
@@ -140,7 +131,7 @@ class PostMessageView extends Component {
       }
     }
   }
-  
+
 
   handleRequestOpen(evt) {
     evt.preventDefault();
@@ -158,9 +149,9 @@ class PostMessageView extends Component {
       popoverOpen: true,
       timeSelection: constant.timeOptions[0],
       anchorEl: evt.currentTarget,
-      imageURL: null, 
-      publicImageURL: null, 
-      thumbnailImageURL: null, 
+      imageURL: null,
+      publicImageURL: null,
+      thumbnailImageURL: null,
       thumbnailPublicImageURL: null,
       timeSelection: constant.timeOptions[0],
       opennings: this.props.opennings,
@@ -200,10 +191,10 @@ class PostMessageView extends Component {
           break;
         default:
           switch(this.state.openningSelection) {
-            case this.props.openningOptions[0]: 
+            case this.props.openningOptions[0]:
               everydayOpenning = this.state.opennings[0];
             break;
-            case this.props.openningOptions[1]: 
+            case this.props.openningOptions[1]:
               weekdaysOpennings = [this.state.opennings[1], this.state.opennings[2], this.state.opennings[3], this.state.opennings[4], this.state.opennings[5], this.state.opennings[6], this.state.opennings[7]]
             break;
           }
@@ -211,7 +202,7 @@ class PostMessageView extends Component {
     }
     if (this.state.summary == null || this.state.summary.length == 0) {
       this.summaryTextField.select();
-    } else if (this.locationButton.geolocation == null) {
+    } else if (this.state.geolocation == null) {
       this.locationButton.handleClickOpen();
     } else {
       var imageURL = null;
@@ -229,11 +220,11 @@ class PostMessageView extends Component {
       }
       if(this.state.thumbnailPublicImageURL != null) {
         thumbnailPublicImageURL = this.state.thumbnailPublicImageURL;
-      }      
-      
+      }
+
       var tags = this.state.tags.map((tag) => tag.text);
-      postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.locationButton.geolocation, this.locationButton.streetAddress, 
-        startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link, 
+      postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress,
+        startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link,
         imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
         this.state.status).then((messageKey) => {
           const { updateRecentMessage, checkAuthState} = this.props;
@@ -296,16 +287,24 @@ class PostMessageView extends Component {
           text: element
         });
       });
-    } 
+    }
     this.setState({tags: tags});
   }
 
-
-  uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {  
+  locationButtonSubmit = (geolocation, streetAddress) => {
+    console.log("locationButtonSubmit ");
     this.setState({
-      imageURL: imageURL, 
-      publicImageURL: publicImageURL, 
-      thumbnailImageURL: thumbnailImageURL, 
+        geolocation: geolocation,
+        streetAddress: streetAddress,
+    });
+  }; 
+
+
+  uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {
+    this.setState({
+      imageURL: imageURL,
+      publicImageURL: publicImageURL,
+      thumbnailImageURL: thumbnailImageURL,
       thumbnailPublicImageURL: thumbnailPublicImageURL
     });
 //    console.log("uploadFinish: " + this.state.imageURL + " " + this.state.publicImageURL+ " " + this.state.thumbnailImageURL+ " " + this.state.thumbnailPublicImageURL)
@@ -331,7 +330,7 @@ class PostMessageView extends Component {
                     type="time"
                     defaultValue={this.state.opennings[index].open}
                     className={classes.textField}
-                    onChange={event => this.setOpenning(index, 'open', event.target.value)}   
+                    onChange={event => this.setOpenning(index, 'open', event.target.value)}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -343,7 +342,7 @@ class PostMessageView extends Component {
                   type="time"
                   defaultValue={this.state.opennings[index].close}
                   className={classes.textField}
-                  onChange={event => this.setOpenning(index, 'close', event.target.value)}   
+                  onChange={event => this.setOpenning(index, 'close', event.target.value)}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -354,7 +353,7 @@ class PostMessageView extends Component {
         </div>;
     }
     return(
-      <Toolbar>                  
+      <Toolbar>
         <FormControlLabel
           label={label}
           control={
@@ -364,14 +363,14 @@ class PostMessageView extends Component {
               onChange={() => this.setOpenning(index, 'enable', !this.state.opennings[index].enable)}
             />
             }
-          /> 
+          />
         {openningHours}
       </Toolbar>
     );
   }
-  
+
   renderOpenningHtml() {
-    
+
     let today = this.today();
     let startTime = this.startTime();
     let endDateHtml = null;
@@ -385,7 +384,7 @@ class PostMessageView extends Component {
                     type="time"
                     defaultValue={this.state.opennings[0].open}
                     className={classes.textField}
-                    onChange={event => this.setOpenning(0, 'open', event.target.value)}   
+                    onChange={event => this.setOpenning(0, 'open', event.target.value)}
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -397,7 +396,7 @@ class PostMessageView extends Component {
                   type="time"
                   defaultValue={this.state.opennings[0].close}
                   className={classes.textField}
-                  onChange={event => this.setOpenning(0, 'close', event.target.value)}   
+                  onChange={event => this.setOpenning(0, 'close', event.target.value)}
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -424,7 +423,7 @@ class PostMessageView extends Component {
           defaultValue={today}
           className={classes.textField}
           margin="normal"
-          onChange={event => this.setState({ start: event.target.value })}                      
+          onChange={event => this.setState({ start: event.target.value })}
           InputLabelProps={{
             shrink: true,
           }}
@@ -433,10 +432,10 @@ class PostMessageView extends Component {
       </Toolbar>
       {openningHtml}
     </div>);
-  }  
+  }
 
   renderActivitiesHtml() {
-    
+
     let today = this.today();
     let startTime = this.startTime();
     let endDateHtml = null;
@@ -449,13 +448,13 @@ class PostMessageView extends Component {
             defaultValue={today}
             className={classes.textField}
             margin="normal"
-            onChange={event => this.setState({ end: event.target.value })}                      
+            onChange={event => this.setState({ end: event.target.value })}
             InputLabelProps={{
               shrink: true,
             }}
-          /> 
+          />
     }
-   
+
     return (<div>
       <Toolbar>
         <TextField
@@ -465,7 +464,7 @@ class PostMessageView extends Component {
           defaultValue={today}
           className={classes.textField}
           margin="normal"
-          onChange={event => this.setState({ start: event.target.value })}                      
+          onChange={event => this.setState({ start: event.target.value })}
           InputLabelProps={{
             shrink: true,
           }}
@@ -476,7 +475,7 @@ class PostMessageView extends Component {
           type="time"
           defaultValue={startTime}
           className={classes.textField}
-          onChange={event => this.setState({ startTime: event.target.value })}   
+          onChange={event => this.setState({ startTime: event.target.value })}
           InputLabelProps={{
             shrink: true,
           }}
@@ -488,8 +487,8 @@ class PostMessageView extends Component {
       <Toolbar>
         <SelectedMenu label="為期" options={this.props.durationOptions} changeSelection={(selectedValue) => this.durationOptionSelection(selectedValue)} ref={(durationSelection) => {this.durationSelection = durationSelection;}}/>
       </Toolbar>
-      <Toolbar>    
-        <SelectedMenu label="" options={this.props.intervalOptions} changeSelection={(selectedValue) => this.intervalOptionSelection(selectedValue)}ref={(intervalSelection) => {this.intervalSelection = intervalSelection;}}/>      
+      <Toolbar>
+        <SelectedMenu label="" options={this.props.intervalOptions} changeSelection={(selectedValue) => this.intervalOptionSelection(selectedValue)}ref={(intervalSelection) => {this.intervalSelection = intervalSelection;}}/>
         {endDateHtml}
       </Toolbar>
     </div>);
@@ -499,7 +498,7 @@ class PostMessageView extends Component {
     let startTime = new Date().toLocaleTimeString();
     let timeHtml = null;
     const classes = this.props.classes;
-    const { tags } = this.state; 
+    const { tags } = this.state;
     if(this.locationButton != null && this.locationButton.geolocation != null) {
       console.log("Geolocation:" + this.locationButton.geolocation);
     }
@@ -515,8 +514,8 @@ class PostMessageView extends Component {
         }
       }
       return (
-        <div>  
-          <Button className={classes.fab}  variant="contained" color="primary"  raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
+        <div className="cta-report-wrapper">
+          <Button className="cta-report"  variant="contained" color="primary"  raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
             <AddIcon />報料
           </Button>
           <Dialog
@@ -526,78 +525,70 @@ class PostMessageView extends Component {
             transition={Transition}
             unmountOnExit>
             <AppBar className={classes.dialogTitle}>
-              <Toolbar>
+              <DialogActions>
                 <IconButton color="contrast" onClick={() => this.handleRequestClose()} aria-label="Close">
                   <CloseIcon />
                 </IconButton>
-                <Typography variant="title" color="inherit" className={classes.flex}>提交</Typography>     
-              </Toolbar>
+                <Typography variant="title" color="inherit" className={classes.flex}> </Typography>
+                <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>報料</Button>
+              </DialogActions>
             </AppBar>
               <div className={classes.dialogContainer}>
               <br/>
               <br/>
               <br/>
               <Form>
-                <FormGroup>           
+                <FormGroup>
                   <TextField
                     autoFocus
                     required
                     id="message"
-                    label="簡介"
+                    placeholder="事件內容及期望街坊如何參與"
                     fullWidth
                     margin="normal"
-                    helperText="介紹事件內容及期望街坊如何參與"
                     value={this.state.summary}
                     onChange={event => this.setState({ summary: event.target.value })}
                     inputRef={(tf) => {this.summaryTextField = tf;}}
                   />
-                  <IntegrationReactSelect 
-                    label={constant.tagLabel}
+                  <IntegrationReactSelect
+                    showLabel={false}
                     placeholder={constant.tagPlaceholder}
                     suggestions={this.props.suggestions.tag}
                     onChange={(value) => this.handleTagChange(value)}
                   />
                   <div className={classes.hidden}>
-                    <TextField id="status" label="現況" className={classes.textField} disabled value={this.state.status} />                  
+                    <TextField id="status" label="現況" className={classes.textField} disabled value={this.state.status} />
                   </div>
                   <br/>
-                  <Label for="locations">地點</Label>
-                  <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}}/>
+                  <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>
                 </FormGroup>
-                <FormGroup>  
-                <br/>
+                <FormGroup>
                 <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.key} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
                 </FormGroup>
-                <FormGroup>                
+                <FormGroup>
                     <TextField id="link" label="外部連結" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>
-                </FormGroup>  
-                <FormGroup>    
+                </FormGroup>
+                <FormGroup>
                   <FormControlLabel
                   label="詳細時間"
                   control={
                     <Checkbox
                       checked={this.state.expanded}
                       onChange={() => this.handleExpandClick()}
-                      value="checkedA"
-                    />
+                      value="checkedA" />
                     }
-                  />                                                    
-                </FormGroup>                                          
-                <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>                
-                  <FormGroup>                                   
+                  />
+                </FormGroup>
+                <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>
+                  <FormGroup>
                     <SelectedMenu label="" options={constant.timeOptions} changeSelection={(selectedValue) => this.timeOptionSelection(selectedValue)} ref={(timeSelection) => {this.timeSelection = timeSelection}}/>
                     {timeHtml}
-                  </FormGroup>               
+                  </FormGroup>
                   <br/>
                 </Collapse>
-                <DialogActions>
-                  <Typography variant="title" color="inherit" flex='1'>
-                  </Typography>                 
-                  <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>提交</Button> 
-                </DialogActions>   
               </Form>
               </div>
-        </Dialog>     
+        </Dialog>
         </div>
       )
     } else {
@@ -621,7 +612,7 @@ const mapDispatchToProps = (dispatch) => {
       (recentMessageID, open) =>
         dispatch(updateRecentMessage(recentMessageID, open)),
     checkAuthState:
-      () => dispatch(checkAuthState()),    
+      () => dispatch(checkAuthState()),
   }
 };
 

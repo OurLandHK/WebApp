@@ -22,7 +22,7 @@ const styles = theme => ({
       display: 'none',
     },
     dialogTitle: {
-      background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'  
+      background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
     },
     previewThumbnail: {
       width: '128px',
@@ -32,8 +32,8 @@ const styles = theme => ({
 
 function validateFile(file) {
   if (! file) {
-    console.log("file not exist: " + file); 
-    return false;    
+    console.log("file not exist: " + file);
+    return false;
   }
 
   if(!file.type.match('image.*')) {
@@ -52,7 +52,7 @@ function validateFile(file) {
 function uploadImage(messageKey, filename, blob) {
   var filePath = config.photoDB + '/' + messageKey + '/' + filename;
   var storage = firebase.storage();
-  return storage.ref(filePath).put(blob);  
+  return storage.ref(filePath).put(blob);
 };
 
 
@@ -86,7 +86,7 @@ class UploadImageButton extends Component {
     if(this.props.isThumbnailOnly == true) {
       this.isThumbnailOnly = true;
     }
-    
+
   }
 
   postImage() {
@@ -94,7 +94,7 @@ class UploadImageButton extends Component {
       this.thumbnailFile = this.file.files[0];
         // Upload Event Full Image
         if(this.isThumbnailOnly){
-          imageResizer(this.thumbnailFile, 128, 128, "image/jpeg", 0.5, this.pushThumbnail); 
+          imageResizer(this.thumbnailFile, 128, 128, "image/jpeg", 0.5, this.pushThumbnail);
         } else {
           imageResizer(this.file.files[0], 1280, 1280, "image/jpeg", 0.5, this.pushOriginal);
         }
@@ -165,8 +165,8 @@ pushOriginal(blob) {
     if(this.props.uploadFinish != null) {
       this.props.uploadFinish(null, null, null, null);
     }
-    this.setState({ disableSumbit: true, disableDelete: true, publicThumbnailImagURL: null, open: false });     
-  };  
+    this.setState({ disableSumbit: true, disableDelete: true, publicThumbnailImagURL: null, open: false });
+  };
 
   handleRequestClose(){
     this.setState({ open: false });
@@ -183,10 +183,10 @@ pushOriginal(blob) {
       if(this.file != null && this.file.files[0] != null && this.file.files[0] != "") {
         this.setState({ disableSumbit: false , disableDelete: false});
       } else {
-        this.setState({ disableSumbit: true, disableDelete: true});   
+        this.setState({ disableSumbit: true, disableDelete: true});
       }
   }
-  
+
 
   render() {
     const { classes, theme } = this.props;
@@ -195,12 +195,11 @@ pushOriginal(blob) {
       thumbnail = <img src={this.state.publicThumbnailImagURL} className={classes.previewThumbnail}/>
     }
     return (
-      <div>
+      <div className="photo-upload-wrapper">
         <Button variant="raised" color="primary" className={classes.uploadButton} raised={true} onClick={() => this.handleClickOpen()}>
-            <PhotoCamera />
-                上載相片
+            <PhotoCamera />上載相片
         </Button>
-        {thumbnail}
+        <span class="uploaded-thumbnail">{thumbnail}</span>
         <Dialog
           open={this.state.open}
           onRequestClose={() => this.handleRequestClose()}
@@ -210,15 +209,15 @@ pushOriginal(blob) {
                 <DialogContent>
                     <Label for="file">相片</Label>
                         <input
-                            accept="image/*" 
+                            accept="image/*"
                             type="file"
                             name="file"
                             id="file"
                             className={classes.hidden}
                             ref={(file) => {this.file = file;}}
                             onChange={() => this.inputOnchange()}
-                        />                                       
-                    <IconButton color="primary" 
+                        />
+                    <IconButton color="primary"
                         className={classes.uploadButton}
                         variant="raised"
                         component="label"
@@ -230,9 +229,9 @@ pushOriginal(blob) {
             <DialogActions>
                 <Button disabled={this.state.disableDelete} color="secondary" onClick={() => this.onDelete()} >刪除</Button>
                 <Button color="primary" onClick={() => this.handleRequestClose()} >取消</Button>
-                <Button disabled={this.state.disableSumbit} color="primary" onClick={() => this.onSubmit()}>提交</Button> 
+                <Button disabled={this.state.disableSumbit} color="primary" onClick={() => this.onSubmit()}>提交</Button>
             </DialogActions>
-        </Dialog>                
+        </Dialog>
       </div>);
   }
 }

@@ -56,9 +56,14 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
             let addressBookDoc = userRef.doc(user.id).collection('AddressBook').get().then(snapshot => {
               snapshot.forEach(addressBook => {
                 var userAddressGeoLocation = addressBook.data().geolocation;
-                var dis = distance(messageLongitude, messageLatitude, userAddressGeoLocation.longitude, userAddressGeoLocation.latitude);
-                if(dis < 1) {
-                   return sendEmail(user.data().emailAddress, user.data().displayName, data.key);
+                if(userAddressGeoLocation != 'undefined' && userAddressGeoLocation != null) {
+                  var emailAddress = user.data().emailAddress;
+                  if( emailAddress != 'undefined'&& emailAddress != null && userAddressGeoLocation.longitude != null && userAddressGeoLocation.latitude != null){
+                    var dis = distance(messageLongitude, messageLatitude, userAddressGeoLocation.longitude, userAddressGeoLocation.latitude);
+                    if(dis < 1) {
+                       return sendEmail(emailAddress, user.data().displayName, data.key);
+                    }
+                  }
                 }
               })
             })

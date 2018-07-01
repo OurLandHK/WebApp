@@ -16,3 +16,23 @@
   margin-top: -24px;
   right: 0;
 }
+
+.nav-placeholder {
+  position: relative;
+  width: 100%;
+  height: 56px;
+}
+
+.nav-wrapper {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+}
+
+.cta-report-wrapper {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
