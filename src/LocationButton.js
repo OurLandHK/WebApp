@@ -140,6 +140,10 @@ class LocationButton extends Component {
 
   handleSubmit = () => {
     this.streetAddress = this.state.streetAddress;
+    if(this.props.onSubmit != null) {
+      console.log("this.props.onSubmit call");
+      this.props.onSubmit(this.geolocation, this.streetAddress);
+    }
     console.log("handleSubmit:" + this.streetAddress);
     this.setState({ open: false });
   };
