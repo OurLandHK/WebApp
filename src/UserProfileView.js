@@ -33,7 +33,7 @@ import {connect} from "react-redux";
 import {
   checkAuthState
 } from './actions';
-import  {constant} from './config/default';
+import  {constant , RoleEnum} from './config/default';
 
 function Transition(props) {
   return <Slide direction="left" {...props} />;
@@ -174,7 +174,7 @@ class UserProfileView extends React.Component {
     }
 
   render() {
-    const { classes } = this.props;
+    const { classes, user } = this.props;
     var imgURL = '/images/profile_placeholder.png';
     var publish = 0;
     var concern = 0;
@@ -182,6 +182,7 @@ class UserProfileView extends React.Component {
     let concernMessage = null;
     let publishMessage = null;
     let completeMessage = null; 
+    let emailHtml = null;
     let dialogHtml = null;
     if (this.state.user != null && this.state.userProfile != null) {
         imgURL = this.state.userProfile.photoURL;
@@ -190,6 +191,18 @@ class UserProfileView extends React.Component {
         if(this.state.userProfile.desc) {
           desc = this.state.userProfile.desc;
         }
+    }
+    if(user.userProfile.role == RoleEnum.admin ||  user.userProfile.role == RoleEnum.betaUser || user.userProfile.role == RoleEnum.monitor) {
+      emailHtml = <TextField
+                  id="emailAddress"
+                  label="電郵地址"
+                  fullWidth
+                  margin="normal"
+                  helperText="相關社區資訊將會傳到該電郵地址"
+                  value={this.state.emailAddress}
+                  onChange={event => this.setState({ emailAddress: event.target.value })}
+                  inputRef={(tf) => {this.emailAddressTextField = tf;}}
+                />;
     }
     return (
       <Dialog fullScreen  open={this.state.open} onRequestClose={this.handleRequestClose} transition={Transition}>
@@ -230,16 +243,7 @@ class UserProfileView extends React.Component {
                     onChange={event => this.setState({ desc: event.target.value })}
                     inputRef={(tf) => {this.descTextField = tf;}}
                   />
-            <TextField
-                    id="emailAddress"
-                    label="電郵地址"
-                    fullWidth
-                    margin="normal"
-                    helperText="相關社區資訊將會傳到該電郵地址"
-                    value={this.state.emailAddress}
-                    onChange={event => this.setState({ emailAddress: event.target.value })}
-                    inputRef={(tf) => {this.emailAddressTextField = tf;}}
-                  />
+            {emailHtml}
             <br/>
             <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} thumbnailFilename={this.thumbnailFilename} isThumbnailOnly={true} path={this.path} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
           </FormGroup>

@@ -36,6 +36,20 @@ const mailTransport = nodemailer.createTransport({
   },
 });
 
+const RoleEnum = {
+  user: "用戶",
+  betaUser: "測試用戶",
+  monitor: "監察員",
+  admin: "我地管理員", 
+}
+
+const addressEnum = {
+  home: "住宅",
+  office: "辦工室",
+  other: "其他"
+}
+
+
 const APP_NAME = '我地';
 
 exports.sendEmail = functions.firestore.document('/message/{messageId}')
@@ -50,26 +64,40 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
       let messageLatitude = data.geolocation.latitude;
       
        const db = admin.firestore();
-        var userRef = db.collection('userProfile');
-        var userDoc = userRef.get().then(snapshot => {
-          snapshot.forEach(user => {
-            let addressBookDoc = userRef.doc(user.id).collection('AddressBook').get().then(snapshot => {
-              snapshot.forEach(addressBook => {
-                var userAddressGeoLocation = addressBook.data().geolocation;
-                if(userAddressGeoLocation != 'undefined' && userAddressGeoLocation != null) {
-                  var emailAddress = user.data().emailAddress;
-                  if( emailAddress != 'undefined'&& emailAddress != null && userAddressGeoLocation.longitude != null && userAddressGeoLocation.latitude != null){
-                    var dis = distance(messageLongitude, messageLatitude, userAddressGeoLocation.longitude, userAddressGeoLocation.latitude);
-                    if(dis < 1) {
-                       return sendEmail(emailAddress, user.data().displayName, data.key);
+        let userRef = db.collection('userProfile');
+        let userDoc = userRef.get().then(snapshot => {
+          snapshot.forEach(userProfile => {
+            let emailAddress = userProfile.data().emailAddress;
+            if(emailAddress != undefined && emailAddress != null) {
+              if(userProfile.role == RoleEnum.admin ||  userProfile.role == RoleEnum.betaUser || userProfile.role == RoleEnum.monitor) {
+                console.log('UserProfile ID for send email '+ userProfile.id);
+                let addressBookDoc = userRef.doc(userProfile.id).collection('AddressBook').get().then(snapshot => {
+                  snapshot.forEach(addressBook => {
+                    let address = addressBook.data();
+                    if(address.geolocation != null && (address.type == addressEnum.home || address.type == addressEnum.office)) {
+                      let addressDistance = constant.distance;
+                      if(address.distance != null) {
+                        addressDistance = address.distance;
+                      }
+                      if(user.userProfile.role == RoleEnum.admin) {
+                        addressDistance = 100;
+                      }
+                      let userAddressGeoLocation = addressBook.data().geolocation;
+                      console.log(`email ${emailAddress}, ${userProfile.displayName}, ${data.key}`);
+                      if(userAddressGeoLocation.longitude != null && userAddressGeoLocation.latitude != null){
+                        var dis = distance(messageLongitude, messageLatitude, userAddressGeoLocation.longitude, userAddressGeoLocation.latitude);
+                        if(dis < addressDistance) {
+                          return sendEmail(emailAddress, userProfile.displayName, data.key);
+                        }
+                      }
                     }
-                  }
-                }
-              })
-            })
+                  })
+                })
+              }
+            }
           });
         }).catch(err => {
-          console.log('Error getting document', err);
+          console.log(`Error getting document ${err}`);
         });
     }
    
