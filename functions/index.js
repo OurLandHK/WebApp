@@ -77,7 +77,7 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
                   snapshot.forEach(addressBook => {
                     let address = addressBook.data();
                     if(address.geolocation != null && (address.type == addressEnum.home || address.type == addressEnum.office)) {
-                      let addressDistance = constant.distance;
+                      let addressDistance = 1;
                       if(address.distance != null) {
                         addressDistance = address.distance;
                       }
