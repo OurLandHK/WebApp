@@ -67,12 +67,14 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
        const db = admin.firestore();
         let userRef = db.collection('userProfile');
         let userDoc = userRef.get().then(snapshot => {
-          snapshot.forEach(userProfile => {
-            let emailAddress = userProfile.data().emailAddress;
+          snapshot.forEach(userProfileRef => {
+            let userProfile = userProfileRef.data();
+            console.log
+            let emailAddress = userProfile.emailAddress;
             if(emailAddress != undefined && emailAddress != null) {
               if(userProfile.role == RoleEnum.admin ||  userProfile.role == RoleEnum.betaUser || userProfile.role == RoleEnum.monitor) {
-                console.log('UserProfile ID for send email '+ userProfile.id);
-                let addressBookDoc = userRef.doc(userProfile.id).collection('AddressBook').get().then(snapshot => {
+                console.log('UserProfile ID for send email '+ userProfileRef.id);
+                let addressBookDoc = userRef.doc(userProfileRef.id).collection('AddressBook').get().then(snapshot => {
                   snapshot.forEach(addressBook => {
                     let address = addressBook.data();
                     if(address.geolocation != null && (address.type == addressEnum.home || address.type == addressEnum.office)) {
@@ -80,7 +82,7 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
                       if(address.distance != null) {
                         addressDistance = address.distance;
                       }
-                      if(user.userProfile.role == RoleEnum.admin) {
+                      if(userProfile.role == RoleEnum.admin) {
                         addressDistance = 100;
                       }
                       let userAddressGeoLocation = addressBook.data().geolocation;
@@ -138,51 +140,50 @@ if (typeof(Number.prototype.toRad) === "undefined") {
 }
 
 // Checks if uploaded images are flagged as Adult or Violence and if so blurs them.
-exports.blurOffensiveImages = functions.storage.object().onChange(event => {
-  const object = event.data;
-  // Exit if this is a deletion or a deploy event.
-  if (object.resourceState === 'not_exists') {
-    return console.log('This is a deletion event.');
-  } else if (!object.name) {
-    return console.log('This is a deploy event.');
-  }
+exports.blurOffensiveImages = functions.storage.object().onFinalize((object) => {
+  const image = {
+    source: {imageUri: `gs://${object.bucket}/${object.name}`},
+  };
 
-  const bucket = gcs.bucket(object.bucket);
-  const file = bucket.file(object.name);
-
-  // Check the image content using the Cloud Vision API. 
-  return vision.detectSafeSearch(file).then(safeSearchResult => {
-    if (safeSearchResult[0].adult || safeSearchResult[0].violence) {
+  // Check the image content using the Cloud Vision API.
+  return vision.safeSearchDetection(image).then((batchAnnotateImagesResponse) => {
+    const safeSearchResult = batchAnnotateImagesResponse[0].safeSearchAnnotation;
+    const Likelihood = Vision.types.Likelihood;
+    if (Likelihood[safeSearchResult.adult] >= Likelihood.LIKELY ||
+        Likelihood[safeSearchResult.violence] >= Likelihood.LIKELY) {
       console.log('The image', object.name, 'has been detected as inappropriate.');
-      return blurImage(object.name, bucket);
-    } else {
-      console.log('The image', object.name,'has been detected as OK.');
+      return blurImage(object.name);
     }
+    console.log('The image', object.name, 'has been detected as OK.');
+    return null;
   });
 });
 
 // Blurs the given image located in the given bucket using ImageMagick.
-function blurImage(filePath, bucket) {
-  const fileName = filePath.split('/').pop();
-  const tempLocalFile = `/tmp/${fileName}`;
-  const messageId = filePath.split('/')[1];
+function blurImage(filePath) {
+  const tempLocalFile = path.join(os.tmpdir(), path.basename(filePath));
+  const messageId = filePath.split(path.sep)[1];
+  const bucket = admin.storage().bucket();
 
   // Download file from bucket.
-  return bucket.file(filePath).download({destination: tempLocalFile})
-      .then(() => {
-        console.log('Image has been downloaded to', tempLocalFile);
-        // Blur the image using ImageMagick.
-        return exec(`convert ${tempLocalFile} -channel RGBA -blur 0x24 ${tempLocalFile}`);
-      }).then(() => {
-        console.log('Image has been blurred');
-        // Uploading the Blurred image back into the bucket.
-        return bucket.upload(tempLocalFile, {destination: filePath});
-      }).then(() => {
-        console.log('Blurred image has been uploaded to', filePath);
-        // Indicate that the message has been moderated.
-//        return admin.database().ref(`/messages/${messageId}`).update({moderated: true});
-      }).then(() => {
-        console.log('Marked the image as moderated in the database.');
-      });
+  return bucket.file(filePath).download({destination: tempLocalFile}).then(() => {
+    console.log('Image has been downloaded to', tempLocalFile);
+    // Blur the image using ImageMagick.
+    return spawn('convert', [tempLocalFile, '-channel', 'RGBA', '-blur', '0x24', tempLocalFile]);
+  }).then(() => {
+    console.log('Image has been blurred');
+    // Uploading the Blurred image back into the bucket.
+    return bucket.upload(tempLocalFile, {destination: filePath});
+  }).then(() => {
+    console.log('Blurred image has been uploaded to', filePath);
+    // Deleting the local file to free up disk space.
+    fs.unlinkSync(tempLocalFile);
+    console.log('Deleted local file.');
+    // Indicate that the message has been moderated.
+    return null
+//    return admin.database().ref(`/messages/${messageId}`).update({moderated: true});
+  }).then(() => {
+    console.log('Marked the image as moderated in the database.');
+    return null;
+  });
 }
-
