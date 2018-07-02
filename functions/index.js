@@ -69,7 +69,6 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
         let userDoc = userRef.get().then(snapshot => {
           snapshot.forEach(userProfileRef => {
             let userProfile = userProfileRef.data();
-            console.log
             let emailAddress = userProfile.emailAddress;
             if(emailAddress != undefined && emailAddress != null) {
               if(userProfile.role == RoleEnum.admin ||  userProfile.role == RoleEnum.betaUser || userProfile.role == RoleEnum.monitor) {
