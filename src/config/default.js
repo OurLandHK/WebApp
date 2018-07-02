@@ -66,19 +66,19 @@ let constant = {
   distance: 1,
 }
 
-let happyAndSadEnum = {
+const happyAndSadEnum = {
   happy: 1,
   sad: -1,
   nothing: 0
 }
 
-let addressEnum = {
+const addressEnum = {
   home: "住宅",
   office: "辦工室",
   other: "其他"
 }
 
-let RoleEnum = {
+const RoleEnum = {
   user: "用戶",
   betaUser: "測試用戶",
   monitor: "監察員",
