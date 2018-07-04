@@ -58,9 +58,22 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
     const beforeData = change.before.data();
     const afterData = change.after.data();
 
-    var data = change.after.exists? change.after.data(): change.before.data();
+    let data = change.after.exists? change.after.data(): change.before.data();
+    let updateContent = false;
+    let newEvent = false;
+    // check for any real update for the content
+    if(beforeData == null) {
+      newEvent = true;
+      updateContent = true;
+    } else if(afterData == null) {
+      updateContent = true;
+    } else if (afterData.lastUpdate.getTime() != beforeData.lastUpdate.getTime()) {
+      console.log(`Last update ${afterData.lastUpdate} and ${beforeData.lastUpdate}`);
+      updateContent = true;
+    }
 
-    if(data){
+
+    if(data && updateContent){
       let messageLongitude = data.geolocation.longitude;
       let messageLatitude = data.geolocation.latitude;
       
@@ -69,33 +82,28 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
         let userDoc = userRef.get().then(snapshot => {
           snapshot.forEach(userProfileRef => {
             let userProfile = userProfileRef.data();
-            let emailAddress = userProfile.emailAddress;
-            if(emailAddress != undefined && emailAddress != null) {
-              if(userProfile.role == RoleEnum.admin ||  userProfile.role == RoleEnum.betaUser || userProfile.role == RoleEnum.monitor) {
-                console.log('UserProfile ID for send email '+ userProfileRef.id);
-                let addressBookDoc = userRef.doc(userProfileRef.id).collection('AddressBook').get().then(snapshot => {
-                  snapshot.forEach(addressBook => {
-                    let address = addressBook.data();
-                    if(address.geolocation != null && (address.type == addressEnum.home || address.type == addressEnum.office)) {
-                      let addressDistance = 1;
-                      if(address.distance != null) {
-                        addressDistance = address.distance;
-                      }
-                      if(userProfile.role == RoleEnum.admin) {
-                        addressDistance = 100;
-                      }
-                      let userAddressGeoLocation = addressBook.data().geolocation;
-                      console.log(`email ${emailAddress}, ${userProfile.displayName}, ${data.key}`);
-                      if(userAddressGeoLocation.longitude != null && userAddressGeoLocation.latitude != null){
-                        var dis = distance(messageLongitude, messageLatitude, userAddressGeoLocation.longitude, userAddressGeoLocation.latitude);
-                        if(dis < addressDistance) {
-                          return sendEmail(emailAddress, userProfile.displayName, data.key);
-                        }
+            if(receviedNotifcation(userProfile)) {
+              let emailAddress = userProfile.emailAddress;
+              console.log('UserProfile ID for send email '+ userProfileRef.id);
+              // get the home address for send notification
+              let sent = false;              
+              let addressBookDoc = userRef.doc(userProfileRef.id).collection('AddressBook').get().then(snapshot => {
+                snapshot.forEach(addressBook => {
+                  let address = addressBook.data();
+                  let addressDistance = getAddressDistance(address, userProfile);
+                  if(sent == false && addressDistance > 0) {
+                    let userAddressGeoLocation = addressBook.data().geolocation;
+                    console.log(`email ${emailAddress}, ${userProfile.displayName}, ${data.key}`);
+                    if(userAddressGeoLocation.longitude != null && userAddressGeoLocation.latitude != null){
+                      var dis = distance(messageLongitude, messageLatitude, userAddressGeoLocation.longitude, userAddressGeoLocation.latitude);
+                      if(dis < addressDistance) {
+                        sent = true;
+                        return sendEmail(emailAddress, userProfile.displayName, newEvent, address, data);
                       }
                     }
-                  })
+                  }
                 })
-              }
+              })
             }
           });
         }).catch(err => {
@@ -107,12 +115,41 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
     return null;
   })
 
+function getAddressDistance(address, userProfile) {
+  let addressDistance = 0;
+  if(address.geolocation != null && (address.type == addressEnum.home || address.type == addressEnum.office)) {
+    addressDistance = 1;
+    if(address.distance != null) {
+      addressDistance = address.distance;
+    }
+    if(userProfile.role == RoleEnum.admin) {
+      addressDistance = 100;
+    }
+  }
+  return addressDistance;
+}
 
-function sendEmail(email, displayName, eventId) {
+function receviedNotifcation(userProfile) {
+  let rv = false;
+  let emailAddress = userProfile.emailAddress;
+  if(emailAddress != undefined && emailAddress != null) {
+    if(userProfile.role == RoleEnum.admin ||  userProfile.role == RoleEnum.betaUser || userProfile.role == RoleEnum.monitor) {
+      rv = true;
+    }
+  }
+return rv;
+}  
+
+function sendEmail(email, displayName, newEvent, address, message) {
+  const eventId = message.key
+  let text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區事件 ${message.text} 有新發展. 詳細請瀏覽以下連結: https://ourland.hk/?eventid=${eventId}`;
+  if(newEvent) {
+    `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區有新事件 ${message.text} 詳細請瀏覽以下連結: https://ourland.hk/?eventid=${eventId}`;
+  }
   const mailOptions = {
     to: email,
     subject: `${APP_NAME} 通知`,
-    text: `您好 ${displayName || ''}! 以下為1公里範圍社區事件: https://ourland.hk/?eventid=${eventId}`
+    text: text
   };
 
   return mailTransport.sendMail(mailOptions).then(() => {
