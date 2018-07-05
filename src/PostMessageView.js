@@ -17,6 +17,7 @@ import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
@@ -158,6 +159,7 @@ class PostMessageView extends Component {
       intervalSelection: this.props.intervalOptions[0],
       durationSelection: this.props.durationOptions[0],
       openningSelection: this.props.openningOptions[0],
+      locationTipOpen: false,
     });
   }
 
@@ -203,7 +205,8 @@ class PostMessageView extends Component {
     if (this.state.summary == null || this.state.summary.length == 0) {
       this.summaryTextField.select();
     } else if (this.state.geolocation == null) {
-      this.locationButton.handleClickOpen();
+      //this.locationButton.handleClickOpen();
+      this.setState({locationTipOpen: true});
     } else {
       var imageURL = null;
       var publicImageURL = null;
@@ -296,6 +299,7 @@ class PostMessageView extends Component {
     this.setState({
         geolocation: geolocation,
         streetAddress: streetAddress,
+        locationTipOpen: false,
     });
   }; 
 
@@ -560,7 +564,14 @@ class PostMessageView extends Component {
                     <TextField id="status" label="現況" className={classes.textField} disabled value={this.state.status} />
                   </div>
                   <br/>
-                  <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>
+                  <Tooltip
+                      id="tooltip-controlled"
+                      open={this.state.locationTipOpen}
+                      placement="top-start"
+                      title="請輸入事件位置"
+                    >
+                    <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>
+                  </Tooltip>
                 </FormGroup>
                 <FormGroup>
                 <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.key} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>

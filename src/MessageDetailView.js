@@ -109,7 +109,6 @@ class MessageDetailView extends Component {
     }
   };
 
-
   renderTitle() {
     const { message, classes} = this.props;
     let post = '張貼';
@@ -272,7 +271,7 @@ class MessageDetailView extends Component {
 
     return(<div className={classes.container}>
             <Paper className={classes.paper}>
-             {title}
+            {title}
              <CardContent>
              {baseHtml}
               <ChipArray chipData={chips} />
