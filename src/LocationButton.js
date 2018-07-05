@@ -51,6 +51,7 @@ class LocationButton extends Component {
     }
     this.state = {open: false, streetAddress: this.streetAddress, geolocation: this.geolocation, disableSumbit: true};
     this.disabled = false;
+    this.handleClickOpen = this.handleClickOpen.bind(this);
     this.successCallBack = this.successCallBack.bind(this);
     this.geoSuccessCallBack = this.geoSuccessCallBack.bind(this);
     this.streetAddressSuccessCallBack = this.streetAddressSuccessCallBack.bind(this);
@@ -124,18 +125,13 @@ class LocationButton extends Component {
     }
   }
 
-
-  rest() {
-
-  }
-
   handleClickOpen = () => {
     this.geolocation = null;
     this.setState({ open: true, disableSumbit: true, geolocation: null});
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({ open: false, disableSumbit: true, geolocation: null});
   };
 
   handleSubmit = () => {
