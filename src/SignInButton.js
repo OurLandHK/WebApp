@@ -10,7 +10,18 @@ import { signOut, signIn } from "./actions";
 class SignInButton extends  Component {
   constructor(props) {
     super(props);
-    this.state = {loading: true};
+    this.state = {
+      loginLabel: '登入',
+      loading: true
+    };
+  }
+
+  componentDidMount() {
+    if(this.props.label != null) {
+      this.setState({
+        loginLabel: this.props.label
+      })
+    }
   }
 
   render() {
@@ -35,7 +46,7 @@ class SignInButton extends  Component {
             color="white"
             network="facebook"
             style={{ height: 25, width: 25 }}
-          />&nbsp;登入
+          />&nbsp; {this.state.loginLabel}
         </Button>
       );
     }

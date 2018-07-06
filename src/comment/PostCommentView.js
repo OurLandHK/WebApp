@@ -1,8 +1,6 @@
 /*global FB*/
 import React, { Component } from 'react';
-import LocationButton from '../LocationButton';
-import SelectedMenu from '../SelectedMenu';
-import {constant} from '../config/default';
+import {connect} from 'react-redux';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
@@ -18,13 +16,17 @@ import CloseIcon from '@material-ui/icons/Close';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Slide from '@material-ui/core/Slide';
+import LocationButton from '../LocationButton';
+import SelectedMenu from '../SelectedMenu';
+import {constant} from '../config/default';
 import {addComment} from '../MessageDB';
 import IntegrationReactSelect from '../IntegrationReactSelect';
 import CustomTags from '../CustomTags';
 import {
   checkAuthState,
 } from '../actions';
-import {connect} from 'react-redux';
+import SignInButton from '../SignInButton'
+
 
 
 function Transition(props) {
@@ -294,7 +296,11 @@ class PostCommentView extends Component {
         </div>
       )
     } else {
-      return (<div/>);
+      return (
+        <div className="cta-report-wrapper">
+          <SignInButton label="請先登入方可參與該活動"/>
+        </div>
+      );
     }
   }
 };
