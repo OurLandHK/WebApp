@@ -1,20 +1,18 @@
 /*global FB*/
 import React, { Component } from 'react';
+import {connect} from "react-redux";
 import { Form, Label, Input} from 'reactstrap';
+import uuid from 'js-uuid';
+import classnames from 'classnames';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import LocationButton from './LocationButton';
-import postMessage from './PostMessage';
-import SelectedMenu from './SelectedMenu';
-import config, {constant} from './config/default';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
-import classnames from 'classnames';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -24,14 +22,18 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
+import LocationButton from './LocationButton';
+import postMessage from './PostMessage';
+import SelectedMenu from './SelectedMenu';
+import config, {constant} from './config/default';
 import UploadImageButton from './UploadImageButton';
 import IntegrationReactSelect from './IntegrationReactSelect';
-import uuid from 'js-uuid';
+import SignInButton from './SignInButton';
 import {
   checkAuthState,
   updateRecentMessage,
 } from './actions';
-import {connect} from "react-redux";
+
 
 
 const styles = theme => ({
@@ -603,7 +605,11 @@ class PostMessageView extends Component {
         </div>
       )
     } else {
-      return (<div/>);
+      return (
+        <div className="cta-report-wrapper">
+          <SignInButton label="請先登入方可報料"/>
+        </div>
+      );
     }
   }
 };
