@@ -11,11 +11,11 @@ import Icon from '@material-ui/core/Icon';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import StarIcon from '@material-ui/icons/Star';
 import LocationOn from '@material-ui/icons/LocationOn';
+import EventListDialog from './EventListDialog';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline';
 import PersonIcon from '@material-ui/icons/Person';
 import UserProfileView from './UserProfileView';
 import AddressDialog from './address/AddressDialog';
-import EventListDialog from './EventListDialog';
 import LeaderBoard from './LeaderBoard';
 import {connect} from "react-redux";
 import Divider from '@material-ui/core/Divider';
@@ -23,7 +23,7 @@ import {
   toggleAddressDialog,
 } from "./actions";
 import {upgradeAllMessage} from './MessageDB';
-import { constant } from './config/default';
+import { constant, RoleEnum } from './config/default';
 import AboutDialog from './AboutDialog';
 import SignOutButton from './SignOutButton';
 
@@ -66,6 +66,8 @@ class Person extends Component {
     let signOutSection = null;
     let userLoginDisplay =  null;
     let adminButton = null;
+    let publishMessage = null;
+    let completeMessage = null;
     let userProfileView = userProfileView = <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>;
     const { user } = this.props;
 
@@ -86,7 +88,10 @@ class Person extends Component {
                                 </ListItemIcon>
                                 <ListItemText primary={constant.addressBookLabel} onClick={() => this.addressDialogClick()}/>
                             </ListItem></span>);
-        if(user.userProfile != null & user.userProfile.role == constant.admin) {
+        publishMessage = <EventListDialog title="發表事件: " messageIds={user.userProfile.publishMessages}/>
+        completeMessage = <EventListDialog title="完成事件: " messageIds={user.userProfile.completeMessages}/>          
+                            
+        if(user.userProfile != null & user.userProfile.role == RoleEnum.admin) {
             adminButton = <ListItem button>
             <ListItemIcon>
                 <ChatBubbleIcon />
@@ -111,6 +116,8 @@ class Person extends Component {
         <Divider/>
         <List disablePadding>
             {userLoginDisplay}
+            {publishMessage}
+            {completeMessage}  
             <ListItem button>
             <ListItemIcon>
                 <ChatBubbleIcon />

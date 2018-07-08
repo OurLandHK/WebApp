@@ -10,7 +10,7 @@ import { withStyles } from '@material-ui/core/styles';
 import red from '@material-ui/core/colors/red';
 import Avatar from '@material-ui/core/Avatar';
 import geoString from '../GeoLocationString';
-import config, {constant} from '../config/default';
+import config, {constant, RoleEnum} from '../config/default';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import {
@@ -181,7 +181,7 @@ class CommentView extends Component {
     let approvedButton = null;
     let approvedLog = "";    
     if(approvedStatus == null) {
-      if(user != null && user.userProfile != null && user.userProfile.role === constant.admin) {
+      if(user != null && user.userProfile != null && user.userProfile.role === RoleEnum.admin) {
         approvedButton = <div>
                             <Button variant="raised" color="primary" className={classes.uploadButton} raised={true} onClick={() => this.approve()}>
                                 <ThumbUpIcon />

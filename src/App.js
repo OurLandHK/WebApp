@@ -11,7 +11,6 @@ import Header from './Header';
 import PostMessageView from './PostMessageView';
 import {getMessage} from './MessageDB';
 import { createStore, applyMiddleware } from 'redux';
-import { withStyles } from '@material-ui/core/styles';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from '@material-ui/icons/Person';
@@ -37,16 +36,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 const store = createStoreWithMiddleware(rootReducer);
-
-const styles = theme => ({
-  root: {
-    margin: 0,
-    top: 'auto',
-    bottom: 0,
-    width: '100%',
-    position: 'fixed',
-  },
-});
 
 class App extends Component {
   constructor(props) {
@@ -124,10 +113,11 @@ class App extends Component {
         mainScreen = <Person/>
         break;
     }
-    let userLoginDisable = true; 
+    let userLoginDisable = true;
     if(user && user.userProfile) {
       userLoginDisable = false;
     }
+
     return (
         <div className="wrapper">
           <CssBaseline />
@@ -135,18 +125,18 @@ class App extends Component {
           <PublicProfile />
           {linebreak}
           {mainScreen}
-          <BottomNavigation
-            value={tab}
-            onChange={this.handleChange}
-            showLabels
-            className={classes.root}
-          >
-            <BottomNavigationAction label={constant.homeLabel} icon={<HomeIcon />} />
-            <BottomNavigationAction disabled={userLoginDisable} label={constant.concernLabel} icon={<FavoriteIcon />} />
-            <BottomNavigationAction label={constant.leaderBoardLabel} icon={<RateReviewIcon />} />
-            <BottomNavigationAction label={constant.userLabel} icon={<PersonIcon />} />
-          </BottomNavigation>
-          <PostMessageView />
+          <div className="nav-placeholder" />
+          <div className="nav-wrapper">
+            <BottomNavigation
+              value={tab}
+              onChange={this.handleChange}>
+              <BottomNavigationAction label={constant.homeLabel} icon={<HomeIcon />} />
+              <BottomNavigationAction hidden={userLoginDisable} label={constant.concernLabel} icon={<FavoriteIcon />} />
+              <BottomNavigationAction label={constant.leaderBoardLabel} icon={<RateReviewIcon />} />
+              <BottomNavigationAction label={constant.userLabel} icon={<PersonIcon />} />
+            </BottomNavigation>
+            <PostMessageView />
+          </div>
         </div>
     );
   }
@@ -178,4 +168,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(App));
+export default connect(mapStateToProps, mapDispatchToProps)(App);

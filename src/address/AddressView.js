@@ -103,7 +103,14 @@ class AddressView extends Component {
           popoverOpen: false,
         });
     }; 
-    
+
+    locationButtonSubmit = (geolocation, streetAddress) => {
+        this.setState({
+            geolocation: geolocation,
+            streetAddress: streetAddress,
+        });
+    };    
+
     onSubmit() {
         const { user } = this.props;
         if (user.user) {
@@ -111,13 +118,14 @@ class AddressView extends Component {
           if (this.props.address != null) {
               key = this.props.address.id;
           }
-          console.log("addressbook submit" + this.locationButton.streetAddress);
-          this.props.upsertAddress(user.user, key, this.state.type, this.state.text, this.locationButton.geolocation, this.locationButton.streetAddress);
+          console.log("addressbook submit" + this.state.streetAddress);
+          this.props.upsertAddress(user.user, key, this.state.type, this.state.text, this.state.geolocation, this.state.streetAddress);
           this.setState({popoverOpen: false});
    
         }
     }
 
+    
     onDelete() {
       const { user } = this.props;
       if (user.user) {
@@ -187,7 +195,7 @@ class AddressView extends Component {
                         <DialogContent>
                             {icons}
                             <TextField disabled={disableValue} autoFocus required id="message" fullWidth margin="normal" helperText="名稱" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>
-                            <LocationButton autoFocus geolocation={geolocation} streetAddress={streetAddress} ref={(locationButton) => {this.locationButton = locationButton;}}/>                   
+                            <LocationButton autoFocus geolocation={geolocation} streetAddress={streetAddress} ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>                   
                         </DialogContent>  
                         <DialogActions>
                             <Button disabled={disableValue} color="secondary" onClick={() => this.onDelete()} >刪除</Button>

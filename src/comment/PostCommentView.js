@@ -1,8 +1,6 @@
 /*global FB*/
 import React, { Component } from 'react';
-import LocationButton from '../LocationButton';
-import SelectedMenu from '../SelectedMenu';
-import {constant} from '../config/default';
+import {connect} from 'react-redux';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
@@ -10,16 +8,25 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import CloseIcon from '@material-ui/icons/Close';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import Slide from '@material-ui/core/Slide';
+import LocationButton from '../LocationButton';
+import SelectedMenu from '../SelectedMenu';
+import {constant} from '../config/default';
 import {addComment} from '../MessageDB';
 import IntegrationReactSelect from '../IntegrationReactSelect';
 import CustomTags from '../CustomTags';
 import {
   checkAuthState,
 } from '../actions';
-import {connect} from 'react-redux';
+import SignInButton from '../SignInButton'
+
 
 
 function Transition(props) {
@@ -259,9 +266,9 @@ class PostCommentView extends Component {
               }
         }
       return (
-        <span>
-            <Button variant="fab" color="primary" className={classes.fab} raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
-                <AddIcon />
+        <div className="cta-report-wrapper">
+            <Button className="cta-report"  variant="contained" color="primary"  raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
+              <AddIcon />參與
             </Button>
             <Dialog
                 fullScreen
@@ -271,20 +278,29 @@ class PostCommentView extends Component {
                 aria-labelledby="form-dialog-title"
                 unmountOnExit>
                 <DialogTitle id="form-dialog-title">更新參與進度</DialogTitle>
+                <AppBar className={classes.dialogTitle}>
+                  <Toolbar>
+                    <IconButton color="contrast" onClick={() => this.handleClose()} aria-label="Close">
+                      <CloseIcon />
+                    </IconButton>
+                    <Typography variant="title" color="inherit" className={classes.flex}>  </Typography>
+                    <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>更新參與進度</Button>
+                  </Toolbar>
+                </AppBar>
                 <DialogContent>
                     <DialogContentText>選擇更新範圍</DialogContentText>
                     <SelectedMenu label="" options={constant.commentOptions} changeSelection={(selectedValue) => this.commentOptionSelection(selectedValue)} ref={(commentSelection) => {this.commentSelection = commentSelection}}/>
                     {inputHtml}
                 </DialogContent>  
-                <DialogActions>
-                    <Button variant="raised" color="secondary" onClick={() => this.handleClose()} >取消</Button>
-                    <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>提交</Button> 
-                </DialogActions>          
             </Dialog>     
-        </span>
+        </div>
       )
     } else {
-      return (<div/>);
+      return (
+        <div className="cta-report-wrapper">
+          <SignInButton label="請先登入方可參與該活動"/>
+        </div>
+      );
     }
   }
 };

@@ -109,7 +109,6 @@ class MessageDetailView extends Component {
     }
   };
 
-
   renderTitle() {
     const { message, classes} = this.props;
     let post = '張貼';
@@ -272,7 +271,7 @@ class MessageDetailView extends Component {
 
     return(<div className={classes.container}>
             <Paper className={classes.paper}>
-             {title}
+            {title}
              <CardContent>
              {baseHtml}
               <ChipArray chipData={chips} />
@@ -290,7 +289,7 @@ class MessageDetailView extends Component {
                  </Tabs>
                </AppBar>
              </div>
-             {tab == 0 && <div><PostCommentView messageUUID={m.key} message={m}/><CommentList messageUUID={m.key}/></div>}
+             {tab == 0 && <div className="wrapper"><CommentList messageUUID={m.key}/><div className="nav-wrapper"><PostCommentView messageUUID={m.key} message={m}/></div></div>}
              {tab == 1 && <MessageDetailViewImage url={m.publicImageURL} messageUUID={m.key}/>}
              {tab == 2 && <EventMap center={geolocation} zoom={zoom}/>}
          </div>);
