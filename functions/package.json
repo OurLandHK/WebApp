@@ -12,6 +12,7 @@
     "@google-cloud/storage": "^0.6.1",
     "@google-cloud/vision": "^0.7.1",
     "child-process-promise": "^2.2.0",
+    "express": "^4.16.3",
     "firebase-admin": "^5.12.1",
     "firebase-functions": "^1.1.0",
     "nodemailer": "^4.6.7"
