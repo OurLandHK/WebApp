@@ -71,7 +71,7 @@ function Transition(props) {
 class PostMessageView extends Component {
   constructor(props) {
     super(props);
-    var key = uuid.v4();
+    let key = uuid.v4();
     this.state = {popoverOpen: false, buttonShow: false,
       // message
       key: key,
