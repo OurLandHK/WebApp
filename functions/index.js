@@ -23,7 +23,7 @@ const gcs = require('@google-cloud/storage')();
 //const vision = require('@google-cloud/vision')();
 const exec = require('child-process-promise').exec;
 const nodemailer = require('nodemailer');
-
+const detailView = require('./detailView');
 // Email Service
 
 
@@ -223,3 +223,5 @@ function blurImage(filePath) {
     return null;
   });
 }
+
+exports.detailView = detailView.detailView;
