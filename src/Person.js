@@ -16,7 +16,7 @@ import ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline';
 import PersonIcon from '@material-ui/icons/Person';
 import UserProfileView from './UserProfileView';
 import AddressDialog from './address/AddressDialog';
-import LeaderBoard from './LeaderBoard';
+import FocusDialog from './admin/FocusDialog';
 import {connect} from "react-redux";
 import Divider from '@material-ui/core/Divider';
 import {
@@ -26,6 +26,7 @@ import {upgradeAllMessage} from './MessageDB';
 import { constant, RoleEnum } from './config/default';
 import AboutDialog from './AboutDialog';
 import SignOutButton from './SignOutButton';
+
 
 
 
@@ -68,11 +69,12 @@ class Person extends Component {
     let adminButton = null;
     let publishMessage = null;
     let completeMessage = null;
+    let focusButton = null;
     let userProfileView = userProfileView = <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>;
     const { user } = this.props;
 
     if (user && user.user && user.userProfile) {
-        var imgURL = (user.userProfile.photoURL || '/images/profile_placeholder.png');
+        let imgURL = (user.userProfile.photoURL || '/images/profile_placeholder.png');
         userSection = (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{user.userProfile.displayName}&nbsp;&nbsp;</div>);
         signOutSection = (<ListItem><SignOutButton/></ListItem>);
         userLoginDisplay = (<span>
@@ -90,7 +92,9 @@ class Person extends Component {
                             </ListItem></span>);
         publishMessage = <EventListDialog title="發表事件: " messageIds={user.userProfile.publishMessages}/>
         completeMessage = <EventListDialog title="完成事件: " messageIds={user.userProfile.completeMessages}/>          
-                            
+        if (user.userProfile != null & (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
+          focusButton = <FocusDialog/>;
+        }   
         if(user.userProfile != null & user.userProfile.role == RoleEnum.admin) {
             adminButton = <ListItem button>
             <ListItemIcon>
@@ -124,6 +128,7 @@ class Person extends Component {
             </ListItemIcon>
             <ListItemText primary="關於" onClick={() => this.showAbout()}/>
             </ListItem>
+            {focusButton}
             {adminButton}
         </List>
       </div>
