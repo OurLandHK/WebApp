@@ -1,10 +1,8 @@
 /*global FB*/
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
 import config, {constant} from './config/default';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -14,7 +12,6 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import MessageList from './MessageList';
@@ -27,7 +24,7 @@ function Transition(props) {
 }
 
 
-const styles = {
+const styles = theme =>  ({
     appBar: {
       position: 'relative',
     },
@@ -47,8 +44,11 @@ const styles = {
       bottom:'0',
       right:'0',
       fontSize:'0.5rem',
-    }
-  };
+    },
+    chip: {
+      margin: theme.spacing.unit / 2,
+    },    
+  });
 
 class RegionEventDialog extends React.Component {
   constructor(props) {
@@ -56,12 +56,15 @@ class RegionEventDialog extends React.Component {
     this.state = {
         eventNumber: this.props.eventNumber,
         distance: this.props.distance, 
-        geolocation: this.props.geolocation
+        geolocation: this.props.geolocation,
+        filter: null,
+        titleLabel: ""
       };
   }    
 
-  handleRequestOpen(evt) {
+  handleRequestOpen(evt, titleLabel, filter) {
     evt.preventDefault();
+    this.setState({filter: filter, titleLabel: titleLabel});
     this.props.toggleRegionEventDialog(true);
   }
 
@@ -80,6 +83,7 @@ class RegionEventDialog extends React.Component {
           eventNumber={eventNumber}
           distance={distance}
           geolocation={geolocation}
+          tagFilter={this.state.filter}
         />
       </div>
     );
@@ -87,14 +91,27 @@ class RegionEventDialog extends React.Component {
 
   
   render() {
-    const { classes, open } = this.props;let messageHtml = null;
-
+    const { classes, open, buttons } = this.props;
+    let messageHtml = null;
+    const buttonList = buttons.map(buttonDetail => {
+      //      return <Button  variant="outlined" color="primary" onClick={(evt) => this.handleRequestOpen(evt, buttonDetail.value)}>{buttonDetail.label}</Button>;
+              return <Chip
+                avatar={
+                  buttonDetail.avatar
+                }
+                label={buttonDetail.label}
+                onClick={(evt) => this.handleRequestOpen(evt, buttonDetail.label, buttonDetail.value)}
+                className={classes.chip}
+              />
+          });
     const cardImage = (
       <CardMedia
         className={classes.media}
         image="/images/fromPeak.jpg"
         title={constant.regionEventLabel}
       >
+        <br/>
+        {buttonList}
         <div
           className={classes.mediaCredit}
         >
@@ -109,15 +126,13 @@ class RegionEventDialog extends React.Component {
     return (
         <span>
             <br/>
-            <Card onClick={(evt) => this.handleRequestOpen(evt)}>
-                {cardImage}
-                <CardContent>
+            <Card>
                 <Typography variant="headline" component="h2">
                     {constant.regionEventLabel}
                 </Typography>
-                <Typography component="p">
-                    查詢現在身處位置或十八社區的人和事
-                </Typography>
+                {cardImage}
+                <CardContent>
+                查詢現在身處位置或十八社區的人和事
                 </CardContent>
             </Card>
             <Dialog fullScreen  open={open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
@@ -143,6 +158,7 @@ RegionEventDialog.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   return {
     open: state.regionEventDialog.open,
+    buttons: state.regionEventDialog.buttons,
   };
 }
 
