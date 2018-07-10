@@ -59,6 +59,8 @@ let constant = {
   radiusLabel: '半徑',
   descLabel: '內文',
   focusMessagesLabel: '焦點社區事件',
+  updateFocusMessagesLabel: '更新焦點社區事件',
+  addFocusMessagesLabel: '新增焦點社區事件',
   tagLabel: '分類',
   tagPlaceholder: '新增分類',
   notificationLabel: '通知',

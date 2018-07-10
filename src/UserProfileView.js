@@ -192,7 +192,7 @@ class UserProfileView extends React.Component {
           desc = this.state.userProfile.desc;
         }
     }
-    if(user.userProfile.role == RoleEnum.admin ||  user.userProfile.role == RoleEnum.betaUser || user.userProfile.role == RoleEnum.monitor) {
+    if(user != null && user.userProfile != null && (user.userProfile.role == RoleEnum.admin ||  user.userProfile.role == RoleEnum.betaUser || user.userProfile.role == RoleEnum.monitor)) {
       emailHtml = <TextField
                   id="emailAddress"
                   label="電郵地址"

@@ -128,6 +128,7 @@ class Person extends Component {
             </ListItemIcon>
             <ListItemText primary="關於" onClick={() => this.showAbout()}/>
             </ListItem>
+            <Divider/>
             {focusButton}
             {adminButton}
         </List>
