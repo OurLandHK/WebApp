@@ -16,7 +16,7 @@ class FocusList extends Component {
   render() {
     let elements = null;
     const { ourland } = this.props;
-    elements = serv.map((focus) => {
+    elements = ourland.globalFocusMessages.map((focus) => {
         return (<FocusView focus={focus} OnChange={() => {this.componentWillMount()}}/>);
       });      
     return (<div width="100%" >{elements}</div>);
