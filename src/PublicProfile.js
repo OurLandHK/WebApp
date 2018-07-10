@@ -101,7 +101,7 @@ class PublicProfile extends React.Component {
     var displayName = "...";
     var facebookLink = "...";
     let imageHtml = "等一下";
-    let concernMessage = null;
+//    let concernMessage = null;
     let publishMessage = null;
     let completeMessage = null;
     let desc = null;
@@ -116,7 +116,7 @@ class PublicProfile extends React.Component {
         </ListItem> 
       }
       publishMessage = <EventListDialog title="發表事件: " displayName={displayName} messageIds={this.publishMessages}/>
-      concernMessage = <EventListDialog title="關注事件: " displayName={displayName} messageIds={this.concernMessages}/>  
+//      concernMessage = <EventListDialog title="關注事件: " displayName={displayName} messageIds={this.concernMessages}/>  
       completeMessage = <EventListDialog title="完成事件: " displayName={displayName} messageIds={this.completeMessages}/> 
       if(this.state.userProfile.fbuid) {
         this.fbId=this.state.userProfile.fbuid;
@@ -157,7 +157,6 @@ class PublicProfile extends React.Component {
             </ListItem>        
             <Divider/>            
             {publishMessage}
-            {concernMessage}
             {completeMessage}                                                         
             </List> 
           </div>

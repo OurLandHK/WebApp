@@ -162,7 +162,7 @@ class FocusView extends Component {
     render() {
         const { classes, theme } = this.props;
         let addressButtonHtml = null;
-        let titleText = constant.updateAddressLabel;
+        let titleText = constant.updateFocusMessagesLabel;
         let messageHtml = null;
         let geolocation = null;
         let streetAddress = null;
@@ -200,7 +200,7 @@ class FocusView extends Component {
                 />
             }
         } else {
-            titleText = constant.addAddressLabel;
+            titleText = constant.addFocusMessagesLabel;
             addressButtonHtml = <Button variant="fab" color="primary" className={classes.fab} raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
                                     <AddIcon />
                                 </Button>
