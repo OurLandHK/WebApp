@@ -74,7 +74,6 @@ class Main extends Component {
       recentMessage = <div className="recent-event-wrapper">
                         <h4>{constant.recentEventLabel}</h4>
                         <MessageView message={message} key={message.key} openDialogDefault={openRecent} />
-                        <br/>
                       </div>;
     }
     if(focusMessages.length > 0) {
@@ -87,7 +86,6 @@ class Main extends Component {
           messageIds={focusMessages}
           hori={true}
         />
-        <br/>
       </div>
     }
 
