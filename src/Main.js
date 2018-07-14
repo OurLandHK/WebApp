@@ -16,6 +16,10 @@ import {connect} from 'react-redux';
 const styles = () => ({
   container: {
   },
+
+  contentWrapper: {
+    marginBottom: '40px'
+  }
 });
 
 class Main extends Component {
@@ -109,8 +113,9 @@ class Main extends Component {
 
   render() {
     let messageHtml = this.renderMessageFrontPage();
+    const { classes } = this.props;
     return (
-      <div class="content-wrapper">
+      <div className={classes.contentWrapper}>
           {messageHtml}       
       </div>
     );
