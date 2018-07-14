@@ -16,6 +16,10 @@ import {connect} from 'react-redux';
 const styles = () => ({
   container: {
   },
+
+  contentWrapper: {
+    marginBottom: '40px'
+  }
 });
 
 class Main extends Component {
@@ -74,7 +78,6 @@ class Main extends Component {
       recentMessage = <div className="recent-event-wrapper">
                         <h4>{constant.recentEventLabel}</h4>
                         <MessageView message={message} key={message.key} openDialogDefault={openRecent} />
-                        <br/>
                       </div>;
     }
     if(focusMessages.length > 0) {
@@ -87,7 +90,6 @@ class Main extends Component {
           messageIds={focusMessages}
           hori={true}
         />
-        <br/>
       </div>
     }
 
@@ -111,8 +113,9 @@ class Main extends Component {
 
   render() {
     let messageHtml = this.renderMessageFrontPage();
+    const { classes } = this.props;
     return (
-      <div class="content-wrapper">
+      <div className={classes.contentWrapper}>
           {messageHtml}       
       </div>
     );

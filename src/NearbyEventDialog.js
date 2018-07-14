@@ -97,58 +97,27 @@ class NearbyEventDialog extends React.Component {
     const { classes, open, buttons } = this.props;
     let messageHtml = null;
 
-    const cardImage = (
-      <CardMedia
-        className={classes.media}
-        image="/images/ssp.jpg"
-        title={constant.nearbyEventLabel}
-      >
-        <div
-          className={classes.mediaCredit}
-        >
-          Photo by Steven Wei on Unsplash
-        </div>
-      </CardMedia>
-    );
-    let buttonList = buttons.map(buttonDetail => {
-//      return <Button  variant="outlined" color="primary" onClick={(evt) => this.handleRequestOpen(evt, buttonDetail.value)}>{buttonDetail.label}</Button>;
-        return <Chip
-          avatar={
-            buttonDetail.avatar
-          }
-          label={buttonDetail.label}
-          onClick={(evt) => this.handleRequestOpen(evt, buttonDetail.label, buttonDetail.value)}
-          className={classes.chip}
-        />
-    });
-
     if(open)  {
         messageHtml = this.renderMessages();
     }
     return (
         <span>
-            <Card >
+            <Card onClick={(evt) => this.handleRequestOpen(evt, buttons[0].label, buttons[0].value)}>
+              <Typography variant="headline" component="h2">{constant.nearbyEventLabel}</Typography>
               <CardMedia
                   className={classes.media}
                   image="/images/ssp.jpg"
                   title={constant.nearbyEventLabel}
                 >
-                  <br/>
-                  {buttonList}
                   <div
                     className={classes.mediaCredit}
                   >
                     Photo by Steven Wei on Unsplash
                   </div>
               </CardMedia>
-              <CardContent>
-              <Typography variant="headline" component="h2">
-                  {constant.nearbyEventLabel}
-              </Typography>
               <Typography component="p">
-                  查詢現在身處位置或地址簿中1公里範圍的社區人和事
-              </Typography>
-              </CardContent>                
+                  查詢附近1公里的社區人和事
+              </Typography>              
             </Card>
             <Dialog fullScreen  open={open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
                 <AppBar className={classes.appBar}>

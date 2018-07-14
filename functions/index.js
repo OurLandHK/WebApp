@@ -23,7 +23,7 @@ const gcs = require('@google-cloud/storage')();
 //const vision = require('@google-cloud/vision')();
 const exec = require('child-process-promise').exec;
 const nodemailer = require('nodemailer');
-
+const detailView = require('./detailView');
 // Email Service
 
 
@@ -82,7 +82,7 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
         let userDoc = userRef.get().then(snapshot => {
           snapshot.forEach(userProfileRef => {
             let userProfile = userProfileRef.data();
-            if(receviedNotifcation(userProfile)) {
+            if(receviedNotification(userProfile)) {
               let emailAddress = userProfile.emailAddress;
               console.log('UserProfile ID for send email '+ userProfileRef.id);
               // get the home address for send notification
@@ -129,7 +129,7 @@ function getAddressDistance(address, userProfile) {
   return addressDistance;
 }
 
-function receviedNotifcation(userProfile) {
+function receviedNotification(userProfile) {
   let rv = false;
   let emailAddress = userProfile.emailAddress;
   if(emailAddress != undefined && emailAddress != null) {
@@ -144,7 +144,7 @@ function sendEmail(email, displayName, newEvent, address, message) {
   const eventId = message.key
   let text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區事件 ${message.text} 有新發展. 詳細請瀏覽以下連結: https://ourland.hk/?eventid=${eventId}`;
   if(newEvent) {
-    `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區有新事件 ${message.text} 詳細請瀏覽以下連結: https://ourland.hk/?eventid=${eventId}`;
+    text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區有新事件 ${message.text} 詳細請瀏覽以下連結: https://ourland.hk/?eventid=${eventId}`;
   }
   const mailOptions = {
     to: email,
@@ -223,3 +223,5 @@ function blurImage(filePath) {
     return null;
   });
 }
+
+exports.detailView = detailView.detailView;

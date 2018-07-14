@@ -207,7 +207,7 @@ class CommentView extends Component {
                 {fbProfileImage}               
                 <div className={classes.details}>
                     <CardContent className={classes.content} zeroMinWidth>
-                        <Typography variant="subheading" noWrap='true'>{text}</Typography>
+                        <Typography variant="subheading">{text}</Typography>
                         <Typography variant="caption" color="textSecondary">
                         {subtitle}
                         </Typography>

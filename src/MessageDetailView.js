@@ -70,7 +70,8 @@ const styles = theme => ({
     backgroundColor: red[500],
   },
   container: {
-    overflowY: 'auto'
+    overflowY: 'auto',
+    marginBottom: '40px'
   },
   actionContainer: {
     display: 'flex',

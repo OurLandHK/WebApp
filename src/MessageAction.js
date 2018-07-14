@@ -2,7 +2,6 @@ import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import CardActions from '@material-ui/core/CardActions';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied'; 
@@ -13,12 +12,12 @@ import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
 import FavoriteButton from './FavoriteButton';
 import {setHappyAndSad} from './MessageDB';
+import FocusToggleButton from './admin/FocusToggleButton';
 import {
-  updateRecentMessage,
   updatePublicProfileDialog,
 } from './actions';
 import {connect} from 'react-redux';
-import { constant, happyAndSadEnum } from './config/default';
+import { constant, happyAndSadEnum, RoleEnum } from './config/default';
 
 const styles = theme => ({
   button: {
@@ -109,12 +108,13 @@ class MessageAction extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, user } = this.props;
     let m = this.props.message;
     let happyCount = this.state.happyCount;
     let sadCount = this.state.sadCount;
     let happyColor = "";
     let sadColor = "";
+    let focusButton = null;
     switch(this.state.happyAndSad) {
       case happyAndSadEnum.happy: 
         happyColor = "secondary";
@@ -127,6 +127,9 @@ class MessageAction extends Component {
     if(this.props.user != null && this.props.user.user != null) {
       disable = false;
     }
+    if (user.userProfile != null & (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
+      focusButton =  <Grid item ><FocusToggleButton message={m}/></Grid>;
+    } 
     return(<Paper role="button" >
         <Grid container className={classes.actionContainer} spacing={16}>
         <Grid item className={classes.authorGrid}> 
@@ -154,6 +157,7 @@ class MessageAction extends Component {
         <Grid item >
           <FavoriteButton message={m}/>    
         </Grid>
+        {focusButton}
       </Grid>
   </Paper>);
   }

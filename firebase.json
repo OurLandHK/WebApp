@@ -19,7 +19,13 @@
         "key" : "Cache-Control",
         "value" : "max-age=0"
       } ]
-    }]
+    }],
+    "rewrites":[
+      {
+        "source": "/details/*",
+        "function": "detailView"
+      }
+    ]
   },
   "firestore": {
     "rules": "firestore.rules",

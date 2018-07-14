@@ -180,7 +180,7 @@ function nearbyEventDialogReducer(state={open: false, buttons: buttonList}, acti
   }
 }
 
-function regionEventDialogReducer(state={open: false}, action) {
+function regionEventDialogReducer(state={open: false, buttons: buttonList}, action) {
   switch (action.type) {
     case TOGGLE_REGIONEVENT_DIALOG:
       return {...state, open: action.open};
