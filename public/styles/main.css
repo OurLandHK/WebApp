@@ -94,8 +94,13 @@ p {
 .cta-report-wrapper {
   position: absolute;
   top: -40px;
-  left: 50%;
-  transform: translateX(-50%); }
+  width: 100%;
+}
+
+.cta-report-wrapper button {
+  width: 100%;
+  border-radius: 0px;
+}
 
 .recent-event-wrapper {
   text-align: center; }
