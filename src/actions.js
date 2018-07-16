@@ -27,7 +27,7 @@ import {
 import * as firebase from 'firebase';
 import * as firestore from 'firebase/firestore';
 import config, {constant} from './config/default';
-import {getUserProfile, updateUserProfile} from './UserProfile';
+import {getUserProfile, updateUserProfile, fetchBookmarkList} from './UserProfile';
 import {fetchFocusMessagesBaseOnGeo} from './GlobalDB';
 
 const currentLocationLabel = "現在位置";
@@ -80,8 +80,8 @@ function fetchUser(user, loading=false) {
   return {type: FETCH_USER, user: user, loading: loading};
 }
 
-function fetchUserProfile(userProfile, lastLogin) {
-  return {type: FETCH_USER_PROFILE, userProfile: userProfile, lastLogin: lastLogin};
+function fetchUserProfile(userProfile, lastLogin, bookmarkList) {
+  return {type: FETCH_USER_PROFILE, userProfile: userProfile, lastLogin: lastLogin, bookmarkList: bookmarkList};
 }
 
 function dispatchRecentMessage(id, open) {
@@ -178,7 +178,9 @@ export function checkAuthState() {
           console.log("Last Login: " + lastLogin);
           return updateUserProfile(user, userProfile).then(()=>{
             console.log("Last Login: " + lastLogin);
-            return dispatch(fetchUserProfile(userProfile, lastLogin))
+            return fetchBookmarkList(user).then((bookmarkList)=>{
+              return dispatch(fetchUserProfile(userProfile, lastLogin, bookmarkList));
+            });        
           });
         });
       }

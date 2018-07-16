@@ -17,7 +17,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import RateReviewIcon from '@material-ui/icons/RateReview';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import EventListDialog from './EventListDialog';
+import BookmarkBoard from './bookmark/BookmarkBoard';
 import thunk from 'redux-thunk';
 import {connect} from "react-redux";
 import rootReducer from './reducers';
@@ -104,7 +104,7 @@ class App extends Component {
             />
         break;
       case 1:
-        mainScreen = <EventListDialog title={constant.concernLabel} messageIds={user.userProfile.concernMessages}/>
+        mainScreen = <BookmarkBoard/>
         break;
       case 2:
         mainScreen = <LeaderBoard/>;
