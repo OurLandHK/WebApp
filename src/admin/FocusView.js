@@ -47,7 +47,6 @@ class FocusView extends Component {
         let radius = 1;
         if(this.props.focus != null) {
             let c = this.props.focus;
-            title = c.title;
             if(c.geolocation != null) {
                 geolocation = {latitude :c.geolocation.latitude,
                 longitude: c.geolocation.longitude};
@@ -82,7 +81,6 @@ class FocusView extends Component {
         let radius = 1;
         if(this.props.focus != null) {
             let c = this.props.focus;
-            title = c.title;
             if(c.geolocation != null) {
                 geolocation = {latitude :c.geolocation.latitude,
                 longitude: c.geolocation.longitude};
@@ -217,7 +215,7 @@ class FocusView extends Component {
                             <TextField autoFocus required id="desc" fullWidth  
                                 multiline
                                 rowsMax="20" 
-                                margin="normal" helperText={constant.desc} value={this.state.desc} onChange={event => this.setState({ desc: event.target.value })}/>
+                                margin="normal" helperText={constant.descLabel} value={this.state.desc} onChange={event => this.setState({ desc: event.target.value })}/>
                             {messageHtml}
                         </DialogContent>  
                         <DialogActions>

@@ -74,23 +74,24 @@ function upgradeAllMessage() {
                     } catch(error) {
                         changeCreatedAt = true;
                     };
-                    if(val.tag != null) {
-                        change = true;
-                        if(!val.tag.includes("公共設施")) {
-                            if(val.tag.includes("兒童遊樂場") || val.tag.includes("郵箱") || val.tag.includes("郵筒")) {
-                                val.tag.push("公共設施");
+                    if(val.text.includes("遊戲室")) {
+                        if(val.tag != null) {
+                            change = true;
+                            if(!val.tag.includes("兒童遊戲室")) {
+                                val.tag.push("兒童遊戲室");
+                                var index = val.tag.indexOf("兒童遊樂場");
+                                if (index !== -1) val.tag.splice(index, 1);
                             }
                         }
-                    }
-                    if(val.tagfilter != null) {
-                        let tags = tagfilterToTags(val.tagfilter);
-                        if(!tags.includes("公共設施")) {
-                            if(tags.includes("兒童遊樂場") || tags.includes("郵箱") || tags.includes("郵筒")) {
-                                tags.push("公共設施");
-                            }
+                        if(val.tagfilter != null) {
+                            let tags = tagfilterToTags(val.tagfilter);
+                            if(!tags.includes("兒童遊戲室")) {
+                                tags.push("兒童遊戲室");
+                                var index = tags.indexOf("兒童遊樂場");
+                                if (index !== -1) tags.splice(index, 1);                            }
+                            val.tagfilter = tagsToTagfilter(tags);
+                            change = true;    
                         }
-                        val.tagfilter = tagsToTagfilter(tags);
-                        change = true;    
                     }
                     if(changeCreatedAt) {
                         change = true;

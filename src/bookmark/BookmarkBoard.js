@@ -1,0 +1,105 @@
+
+import React from 'react';
+import IconButton from '@material-ui/core/IconButton';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import Tab  from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
+import Slide from '@material-ui/core/Slide';
+import {connect} from "react-redux";
+import config, {constant} from '../config/default';
+import BookmarkList from './BookmarkList';
+import BookmarkView from './BookmarkView';
+
+function Transition(props) {
+  return <Slide direction="left" {...props} />;
+}
+
+
+const styles = {
+    appBar: {
+      position: 'relative',
+    },
+    flex: {
+      flex: 1,
+    },
+    container: {
+       overflowY: 'auto'
+    },
+    media: {
+      color: '#fff',
+      position: 'relative',
+      height: '10rem',
+    },
+    mediaCredit: {
+      position:'absolute',
+      bottom:'0',
+      right:'0',
+      fontSize:'0.5rem',
+    }
+  };
+
+class BookmarkBoard extends React.Component {
+  constructor(props) {
+//    console.log("createEventListDialog");
+    super(props);
+    this.state = {
+      tabValue: 0,
+    };
+  }
+
+  handleChange = (event, value) => {
+    this.setState({ tabValue: value });
+  };
+
+  renderMessages() {
+    const { classes } = this.props;
+    return (
+      <div className={classes.container}>
+        <BookmarkList/>
+      </div>
+    );
+  }
+
+
+  render() {
+    const { classes} = this.props;
+    const { tabValue } = this.state;
+    return (
+      <div class="bookmakrboard-wrapper">
+        <div class="tabs-row">
+          <Tabs
+            value={tabValue}
+            onChange={this.handleChange}
+            fullWidth
+          >
+            <Tab label={constant.myBookmarkLabel} />
+            <Tab label={constant.publicBookmarkLabel} />
+            <BookmarkView/>
+          </Tabs>
+        </div>
+        {tabValue == 0 && this.renderMessages()}  
+      </div>);
+  }
+}
+
+BookmarkBoard.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user          :   state.user,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+  }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(BookmarkBoard));

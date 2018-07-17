@@ -264,5 +264,126 @@ function updateUserProfile(user, userProfile){
     });
 }
 
-export {addCompleteMessage, upsertAddress, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile};
+function fetchBookmarkList(user) {
+
+    const db = firebase.firestore();
+    let userID = user.uid;
+    let collectionRef = db.collection(config.userDB).doc(userID).collection(config.bookDB);
+    collectionRef.onSnapshot(function() {})         
+    let query = collectionRef.orderBy("lastUpdate", "desc");
+    return query.get().then(function(querySnapshot) {
+        if(querySnapshot.empty) {
+            return [];
+        } else { 
+            const bookmarks = querySnapshot.docs.map(bookmarkRef => {
+                let val = bookmarkRef.data();
+                if(val) {
+                    return(val); 
+                }                    
+            });
+            return(bookmarks);
+        }
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+        return [];
+    });
+ }
+
+ function addBookmark(key, user, 
+    title, desc, messages) {
+    let uid = user.uid;
+    let now = Date.now();
+    var bookmarkRecord = {
+        public: true,
+        title: title,
+        desc: desc,
+        messages: messages,
+        createdAt: new Date(now),
+        lastUpdate: new Date(now),
+        key: key,   
+        uid: uid,
+        viewCount: 0,
+    };      
+    // Use firestore
+    const db = firebase.firestore();
+    return db.collection(config.userDB).doc(uid).collection(config.bookDB).doc(key).set(bookmarkRecord).then(function(recordRef) {
+        return(key);
+    })
+};
+
+function dropBookmark(user, key) {
+    let uid = user.uid;
+    return getBookmarkRef(user, key).then(function(bookmark) {
+        if(bookmark != null) {
+            const db = firebase.firestore();
+            db.collection(config.userDB).doc(uid).collection(config.bookDB).doc(key).delete().then(function() {
+                console.log("Document successfully deleted!");
+                return true;
+            }).catch(function(error) {
+                console.error("Error removing document: ", error);
+                return false;
+            });
+        } else {
+            return false;
+        }
+    });
+}
+  
+function getBookmarkRef(user, key) {
+    // firestore
+    // Use firestore
+    let uid = user.uid;
+    var db = firebase.firestore();
+    var collectionRef = db.collection(config.userDB).doc(uid).collection(config.bookDB);
+    var docRef = collectionRef.doc(key);
+    return docRef.get().then(function(doc) {
+        if (doc.exists) {
+            return(doc);
+        } else {
+            return null;
+        }
+    });     
+}
+
+function getBookmark(user, key) {
+    return getBookmarkRef(user, key).then(function (bookmarkRef) {
+        if(bookmarkRef != null) {
+            let rv = bookmarkRef.data();
+            return rv
+        } else {
+            return null;
+        }
+    });
+}
+
+function updateBookmark(user, key, bookmarkRecord, isUpdateTime) {
+    let uid = user.uid;
+    var db = firebase.firestore();
+    var now = Date.now();
+    var collectionRef = db.collection(config.userDB).doc(uid).collection(config.bookDB);
+    if(bookmarkRecord == null) {
+        if(isUpdateTime) {
+            return collectionRef.doc(key).update({
+                lastUpdate: new Date(now)
+            }).then(function(bookmarkRecordRef) {
+                console.log("Document written with ID: ", key);
+                return(bookmarkRecordRef);
+            }) 
+        }
+    } else {
+        // we can use this to update the scheme if needed.
+        if(isUpdateTime) {
+            bookmarkRecord.lastUpdate = new Date(now);
+        }
+        return collectionRef.doc(key).set(bookmarkRecord).then(function(bookmarkRecordRef) {
+            console.log("Document written with ID: ", key);
+            return(bookmarkRecordRef);
+        })      
+    }
+}
+
+
+export {addCompleteMessage, upsertAddress, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
+    dropBookmark, fetchBookmarkList, addBookmark, getBookmark, updateBookmark};
 
