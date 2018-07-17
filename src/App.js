@@ -44,6 +44,7 @@ class App extends Component {
     let params = (new URL(document.location)).searchParams;
     let eventId = params.get("eventid");
     let userId = params.get("userid");
+    let bookmark = params.get("bookmark");
     let eventNumber = params.get("eventnumber");
     let distance = params.get("distance");
     if(userId == null) {
@@ -51,6 +52,9 @@ class App extends Component {
     }
     if(eventId == null) {
       eventId = "";
+    }
+    if(bookmark == null) {
+      bookmark = "";
     }
     if(eventNumber == null) {
       eventNumber = constant.defaultEventNumber;
@@ -65,6 +69,7 @@ class App extends Component {
         distance: distance,
         userId: userId,
         tab: 0,
+        bookmark: bookmark,
       };
   }
 
@@ -101,6 +106,7 @@ class App extends Component {
               userId={this.state.userId}
               eventNumber={this.state.eventNumber}
               distance={this.state.distance}
+              bookmark={this.state.bookmark}
             />
         break;
       case 1:

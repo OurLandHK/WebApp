@@ -3,6 +3,7 @@ import uuid from 'js-uuid';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
 import PlayListPlayIcon from '@material-ui/icons/PlaylistPlay';
 import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -16,6 +17,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
+import ShareDrawer from '../ShareDrawer';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import TextField from '@material-ui/core/TextField';
 import {connect} from "react-redux";
@@ -53,6 +55,8 @@ class BookmarkView extends Component {
         let desc = "";
         let key = "";   
         let uid = "";
+        let readonly = false;
+        let open = false;
         if(this.props.bookmark != null) {
             let c = this.props.bookmark;
             title = c.title;
@@ -60,14 +64,19 @@ class BookmarkView extends Component {
             key = c.key;
             desc = c.desc;
             uid = c.uid;
+            readonly = true;
         }        
+        if(this.props.open != undefined) {
+            open = this.props.open;
+        }
         this.state = {
-            popoverOpen: false,
+            popoverOpen: open,
             title: title,
             messages: messages,
             desc: desc,
             key: key,
-            uid: uid
+            uid: uid,
+            readonly: readonly,
         };
     }
 
@@ -78,6 +87,7 @@ class BookmarkView extends Component {
         let desc = "";
         let key = "";  
         let uid = "";
+        let readonly = false;
         if(this.props.bookmark != null) {
             let c = this.props.bookmark;
             messages = c.messages;
@@ -85,6 +95,7 @@ class BookmarkView extends Component {
             title = c.title;
             desc = c.desc;
             uid = c.uid;
+            readonly = true;
         }  
         this.setState({
             popoverOpen: true,
@@ -92,7 +103,8 @@ class BookmarkView extends Component {
             messages: messages,
             desc: desc,
             key: key,
-            uid: uid
+            uid: uid,
+            readonly: readonly
         });
       }
     
@@ -139,6 +151,7 @@ class BookmarkView extends Component {
         const { classes, user } = this.props;
         let addressButtonHtml = null;
         let deleteButtonHtml = null;
+        let actionButtonHtml = null;
         let titleText = constant.updateBookmarkLabel;
         let messageHtml = null;
         let icons = <PlayListPlayIcon />;
@@ -174,6 +187,18 @@ class BookmarkView extends Component {
                     <ListItemText primary={constant.addBookmarkLabel} />
                 </ListItem>
         }
+        let titleTextHtml = "";
+        if(this.state.readonly) {
+            titleTextHtml = titleText;
+            if(user.user && user.user.uid == this.props.bookmark.uid) {
+                deleteButtonHtml = <IconButton color="contrast" onClick={() => this.setState({readonly: false})} aria-label="Close">
+                                    <EditIcon />
+                                </IconButton>
+            }
+            actionButtonHtml = <ShareDrawer bookmark={this.props.bookmark}/>
+        } else {
+            actionButtonHtml = <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>{titleText}</Button>;
+        }
         return(<span>
                     {addressButtonHtml}
                     <Dialog  fullScreen open={this.state.popoverOpen} onClose={() => this.handleRequestClose()} aria-labelledby="form-dialog-title" unmountOnExit>
@@ -182,9 +207,9 @@ class BookmarkView extends Component {
                                 <IconButton color="contrast" onClick={() => this.handleRequestClose()} aria-label="Close">
                                 <CloseIcon />
                                 </IconButton>
-                                <Typography variant="title" color="inherit" className={classes.flex}> </Typography>
+                                <Typography variant="title" color="inherit" className={classes.flex}>{titleTextHtml} </Typography>
                                 {deleteButtonHtml}
-                                <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>{titleText}</Button>
+                                {actionButtonHtml}
                             </DialogActions>
                         </AppBar>
                         <br/>
@@ -192,8 +217,8 @@ class BookmarkView extends Component {
                         <br/>
                         <br/>
                         <DialogContent>
-                            <TextField autoFocus required inputRef={(tf) => {this.titleTextField = tf;}} id="title" fullWidth margin="normal" helperText={constant.bookmarkTitleLabel} value={this.state.title} onChange={event => this.setState({ title: event.target.value })}/>
-                            <TextField required id="desc" fullWidth  
+                            <TextField disabled={this.state.readonly} autoFocus required inputRef={(tf) => {this.titleTextField = tf;}} id="title" fullWidth margin="normal" helperText={constant.bookmarkTitleLabel} value={this.state.title} onChange={event => this.setState({ title: event.target.value })}/>
+                            <TextField disabled={this.state.readonly} required id="desc" fullWidth  
                                 multiline
                                 rowsMax="20" 
                                 margin="normal" helperText={constant.descLabel} value={this.state.desc} onChange={event => this.setState({ desc: event.target.value })}/>

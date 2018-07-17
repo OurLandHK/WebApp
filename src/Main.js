@@ -1,15 +1,17 @@
 import { withStyles } from '@material-ui/core/styles';
 import NearbyEventDialog from './NearbyEventDialog';
 import RegionEventDialog from './RegionEventDialog';
-import MessageDialog from './MessageDialog';
 import MessageView from './MessageView';
+import BookmarkView from './bookmark/BookmarkView';
 import {getMessage} from './MessageDB';
+import {getBookmark} from './UserProfile';
 import React, { Component } from 'react';
 import MessageList from './MessageList';
 import config, {constant} from './config/default';
 import {
   updateRecentMessage,
   updatePublicProfileDialog,
+  updateRecentBookmark,
 } from './actions';
 import {connect} from 'react-redux';
 
@@ -26,16 +28,21 @@ class Main extends Component {
   constructor(props) {
     super(props);
     let geolocation = this.props.geolocation;
-    const { updateRecentMessage, updatePublicProfileDialog } = this.props;
+    const { updateRecentMessage, updatePublicProfileDialog, updateRecentBookmark } = this.props;
     if(geolocation == null) {
       geolocation = constant.invalidLocation;
     }
-    if(this.props.userId != "") {
+    if(this.props.userId != "" && this.props.bookmark == "") {
       updatePublicProfileDialog(this.props.userId, "", true);
     }
     if(this.props.eventId != "") {
       updateRecentMessage(this.props.eventId, true);
     }
+    if(this.props.bookmark != "" && this.props.userId != "") {
+      console.log(`updateRecentBookmark ${this.props.userId}, ${this.props.bookmark}`);
+      updateRecentBookmark(this.props.userId, this.props.bookmark, true);
+    }
+
     this.state = {
         userId: this.props.userId,
         eventId: this.props.eventId,
@@ -57,17 +64,24 @@ class Main extends Component {
   }
 
   refreshQueryMessage() {
-    if(this.props.recentMessage.id != "") {
-      console.log("eventID: " + this.props.recentMessage.id);
-      getMessage(this.props.recentMessage.id).then((message) => {this.setState({queryMessage: message})});
+    const {id, bookmark} = this.props.recentMessage;
+    console.log("eventID: " + id + "  bookmark" + bookmark);
+    if(id != "") {
+      console.log("eventID: " + id);
+      getMessage(id).then((message) => {this.setState({queryMessage: message, bookmark: null})});
     } else {
+      if(bookmark.bookmark != "") {
+        console.log("bookmark: " + bookmark.bookmark);
+        let user = {uid: bookmark.uid};
+        getBookmark(user, bookmark.bookmark).then((bookmarkMessage) => {this.setState({queryMessage: null, bookmark: bookmarkMessage})});
+      }
       this.queryMessage = null;
     }
   }
 
   renderMessageFrontPage() {
     let recentMessage = null;
-    const { eventNumber, distance, geolocation, eventId, queryMessage} = this.state;
+    const { eventNumber, distance, geolocation, eventId, queryMessage, bookmark} = this.state;
     const {open: openRecent} = this.props.recentMessage;
     const {focusMessages} = this.props.ourland;
     const { classes } = this.props;
@@ -79,7 +93,12 @@ class Main extends Component {
                         <h4>{constant.recentEventLabel}</h4>
                         <MessageView message={message} key={message.key} openDialogDefault={openRecent} />
                       </div>;
-    }
+    } else if(bookmark != null) {
+      recentMessage = <div className="recent-event-wrapper">
+                        <h4>{constant.recentEventLabel}</h4>
+                        <BookmarkView bookmark={bookmark} open={openRecent} />
+                      </div>;
+    }    
     if(focusMessages.length > 0) {
       focusMessage = <div className="focus-message-wrapper">
         <h4>{constant.focusMessagesLabel}</h4>
@@ -134,6 +153,9 @@ const mapDispatchToProps = (dispatch) => {
     updateRecentMessage:
       (recentMessageID, open) =>
         dispatch(updateRecentMessage(recentMessageID, open)),
+    updateRecentBookmark:
+      (userId, bookmark, open) =>
+        dispatch(updateRecentBookmark(userId, bookmark, open)),
     updatePublicProfileDialog:
       (userId, fbuid, open) =>
         dispatch(updatePublicProfileDialog(userId, fbuid, open)),
