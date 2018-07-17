@@ -39,15 +39,15 @@ function geoLocationReducer(state={pos: null, enabled: true}, action) {
   }
 }
 
-function userReducer(state={user: null, userProfile: null, lastLogin: null, loading: true}, action) {
+function userReducer(state={user: null, userProfile: null, lastLogin: null, bookmarkList: [], loading: true}, action) {
   switch (action.type) {
     case FETCH_USER:
       return {...state, user: action.user, loading: action.loading};
     case FETCH_USER_PROFILE:
       if(action.lastLogin != null) {
-        return {...state, userProfile: action.userProfile, lastLogin: action.lastLogin};
+        return {...state, userProfile: action.userProfile, lastLogin: action.lastLogin, bookmarkList: action.bookmarkList};
       } else {
-        return {...state, userProfile: action.userProfile};
+        return {...state, userProfile: action.userProfile, bookmarkList: action.bookmarkList};
       }
     default:
       return state;
