@@ -7,6 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import CheckIcon from '@material-ui/icons/Check';
+import BookmarkView from './BookmarkView';
 import PlayListPlayIcon from '@material-ui/icons/PlaylistPlay';
 import { withStyles } from '@material-ui/core/styles';
 import { dropBookmark, addBookmark, updateBookmark} from '../UserProfile';
@@ -42,7 +43,7 @@ class BookmarkToggleButton extends Component {
 
   }
 
-  renderFocusList() {
+  renderBookmarkList() {
     const { message, user } = this.props;
     return user.bookmarkList.map(bookmark => {
       let icons = null;
@@ -93,7 +94,10 @@ class BookmarkToggleButton extends Component {
         className={classes.fullList}>
         <List>
             <Divider />
-            {this.renderFocusList()}
+            {this.renderBookmarkList()}
+            <ListItem>
+                <BookmarkView/>
+            </ListItem>
         </List>
     </div>
 </Drawer>

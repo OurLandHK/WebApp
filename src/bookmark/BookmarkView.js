@@ -168,9 +168,11 @@ class BookmarkView extends Component {
             }
         } else {
             titleText = constant.addBookmarkLabel;
-            addressButtonHtml = <Button variant="contained" color="primary"  raised={true} color="primary" raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
-                                    <AddIcon />
-                                </Button>
+            addressButtonHtml = 
+                <ListItem button onClick={(evt) => this.handleRequestOpen(evt)}>
+                    <AddIcon/>
+                    <ListItemText primary={constant.addBookmarkLabel} />
+                </ListItem>
         }
         return(<span>
                     {addressButtonHtml}
