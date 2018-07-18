@@ -6,6 +6,7 @@ import {
   RESET_FILTER_TAGS,
   UPDATE_FILTER_TAG,
   UPDATE_RECENT_MESSAGE,
+  UPDATE_RECENT_BOOKMARK,
   FETCH_USER,
   FETCH_USER_PROFILE,
   DISABLE_LOCATION,
@@ -86,6 +87,10 @@ function fetchUserProfile(userProfile, lastLogin, bookmarkList) {
 
 function dispatchRecentMessage(id, open) {
   return {type: UPDATE_RECENT_MESSAGE, id: id, open: open};
+}
+
+function dispatchRecentBookmark(uid, bookmark, open) {
+  return {type: UPDATE_RECENT_BOOKMARK, uid: uid, bookmark: bookmark, open: open};
 }
 
 function dispatchPublicProfile(id, fbId, open) {
@@ -226,6 +231,12 @@ export function signOut() {
 export function updateRecentMessage(id, open) {
   return dispatch => {
     dispatch(dispatchRecentMessage(id, open));
+  };
+}
+
+export function updateRecentBookmark(uid, bookmark, open) {
+  return dispatch => {
+    dispatch(dispatchRecentBookmark(uid, bookmark, open));
   };
 }
 
