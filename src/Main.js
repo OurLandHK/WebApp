@@ -28,21 +28,11 @@ class Main extends Component {
   constructor(props) {
     super(props);
     let geolocation = this.props.geolocation;
+    this.init = true;
     const { updateRecentMessage, updatePublicProfileDialog, updateRecentBookmark } = this.props;
     if(geolocation == null) {
       geolocation = constant.invalidLocation;
     }
-    if(this.props.userId != "" && this.props.bookmark == "") {
-      updatePublicProfileDialog(this.props.userId, "", true);
-    }
-    if(this.props.eventId != "") {
-      updateRecentMessage(this.props.eventId, true);
-    }
-    if(this.props.bookmark != "" && this.props.userId != "") {
-      console.log(`updateRecentBookmark ${this.props.userId}, ${this.props.bookmark}`);
-      updateRecentBookmark(this.props.userId, this.props.bookmark, true);
-    }
-
     this.state = {
         userId: this.props.userId,
         eventId: this.props.eventId,
@@ -58,7 +48,8 @@ class Main extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.recentMessage != prevProps.recentMessage) {
+    if (this.init || this.props.recentMessage != prevProps.recentMessage) {
+      this.init = false;
       this.refreshQueryMessage();
     }
   }
@@ -83,10 +74,10 @@ class Main extends Component {
     let recentMessage = null;
     const { eventNumber, distance, geolocation, eventId, queryMessage, bookmark} = this.state;
     const {open: openRecent} = this.props.recentMessage;
-    const {focusMessages} = this.props.ourland;
+//    const {focusMessages} = this.props.ourland;
+    const {globalFocusMessages: focusMessages} = this.props.ourland;
     const { classes } = this.props;
     let focusMessage = null
-
     if(queryMessage != null) {
       let message = queryMessage;
       recentMessage = <div className="recent-event-wrapper">
@@ -99,14 +90,14 @@ class Main extends Component {
                         <BookmarkView bookmark={bookmark} open={openRecent} />
                       </div>;
     }    
-    if(focusMessages.length > 0) {
+    if(focusMessages != null && focusMessages.length > 0 && focusMessages[0].messages.length) {
       focusMessage = <div className="focus-message-wrapper">
         <h4>{constant.focusMessagesLabel}</h4>
         <MessageList
           ref={(messageList) => {this.messageList = messageList;}}
           eventNumber={100}
           distance={10}
-          messageIds={focusMessages}
+          messageIds={focusMessages[0].messages}
           hori={true}
         />
       </div>
