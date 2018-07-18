@@ -29,6 +29,9 @@ import {
   fetchConcernMessagesFromOurLand,
   updateFilterDefault,
   checkAuthState,
+  updateRecentMessage,
+  updatePublicProfileDialog,
+  updateRecentBookmark,
   init3rdPartyLibraries
 } from './actions';
 import {constant} from './config/default';
@@ -71,6 +74,16 @@ class App extends Component {
         tab: 0,
         bookmark: bookmark,
       };
+      const { updateRecentMessage, updatePublicProfileDialog, updateRecentBookmark } = this.props;
+      if(this.state.userId != "" && this.state.bookmark == "") {
+        updatePublicProfileDialog(this.state.userId, "", true);
+      }
+      if(this.state.eventId != "") {
+        updateRecentMessage(this.state.eventId, true);
+      }
+      if(this.state.bookmark != "" && this.state.userId != "") {
+        updateRecentBookmark(this.state.userId, this.state.bookmark, true);
+      }      
   }
 
   componentWillMount() {
@@ -170,6 +183,15 @@ const mapDispatchToProps = (dispatch) => {
       () => dispatch(fetchAddressBookFromOurLand()),
     fetchConcernMessagesFromOurLand:
       () => dispatch(fetchConcernMessagesFromOurLand()),
+    updateRecentMessage:
+      (recentMessageID, open) =>
+        dispatch(updateRecentMessage(recentMessageID, open)),
+    updateRecentBookmark:
+      (userId, bookmark, open) =>
+        dispatch(updateRecentBookmark(userId, bookmark, open)),
+    updatePublicProfileDialog:
+      (userId, fbuid, open) =>
+        dispatch(updatePublicProfileDialog(userId, fbuid, open)),      
   }
 };
 

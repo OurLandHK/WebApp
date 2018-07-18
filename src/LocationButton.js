@@ -213,9 +213,7 @@ class LocationButton extends Component {
     const classes = this.props.classes;
     const user = this.props.user;
 
-    if(user.userProfile != null && user.userProfile.role != RoleEnum.advancedUser) {
-      return (null);
-    } else {
+    if(user.userProfile != null && (user.userProfile.role == RoleEnum.advancedUser || user.userProfile.role != RoleEnum.admin)) {
       if (this.state.streetAddress === null || this.state.streetAddress === "" || (this.state.geoLocationSearch.latitude != "" || this.state.geoLocationSearch.longitude != "") ) {
            let geoLocationSearchClass = "";
           if(this.state.geoLocationSearch != null) {
@@ -249,11 +247,12 @@ class LocationButton extends Component {
                   /> 
                </DialogContent>
                <Button className={geoLocationSearchClass + " " +  classes.showMapBtn} variant="outlined" color="primary" onClick={() => this.handleGetLocationFromGeoAddress()}>查看Geo地圖</Button>
-            </div>
-        )
+            </div>)
+        } else {
+          return (null);
+        }
       } else {
         return (null);
-      }
       }
   }
 
@@ -281,7 +280,6 @@ class LocationButton extends Component {
     const zoom=15;
     const pos = this.state.geolocation;
     const classes = this.props.classes;
-    console.log("this.state.streetAddress=" + this.state.streetAddress);
     let geolocation = null;
     let locationString = null;
     if (pos != null) {

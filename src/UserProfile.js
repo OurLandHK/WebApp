@@ -357,6 +357,24 @@ function getBookmark(user, key) {
     });
 }
 
+function incBookmarkViewCount(user, key) {
+    return getBookmarkRef(user, key).then(function (bookmarkRef) {
+        if(bookmarkRef != null) {
+            let viewCount = 1;
+            if(bookmarkRef.data().viewCount != null) {
+                viewCount = bookmarkRef.data().viewCount + 1;
+            }
+            const db = firebase.firestore();
+            var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.bookDB);
+            var docRef = collectionRef.doc(key);
+            return docRef.update({viewCount: viewCount});
+        } else {
+            return null;
+        }
+    });
+}
+
+
 function updateBookmark(user, key, bookmarkRecord, isUpdateTime) {
     let uid = user.uid;
     var db = firebase.firestore();
@@ -385,5 +403,5 @@ function updateBookmark(user, key, bookmarkRecord, isUpdateTime) {
 
 
 export {addCompleteMessage, upsertAddress, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
-    dropBookmark, fetchBookmarkList, addBookmark, getBookmark, updateBookmark};
+    dropBookmark, fetchBookmarkList, addBookmark, getBookmark, updateBookmark, incBookmarkViewCount};
 
