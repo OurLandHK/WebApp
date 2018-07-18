@@ -92,6 +92,7 @@ const addressEnum = {
 const RoleEnum = {
   user: "用戶",
   betaUser: "測試用戶",
+  advancedUser: "進階用戶",
   monitor: "監察員",
   admin: "我地管理員", 
 }
