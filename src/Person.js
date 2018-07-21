@@ -15,6 +15,7 @@ import EventListDialog from './EventListDialog';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline';
 import PersonIcon from '@material-ui/icons/Person';
 import UserProfileView from './UserProfileView';
+import {upgradeAllUser} from './UserProfile';
 import AddressDialog from './address/AddressDialog';
 import FocusDialog from './admin/FocusDialog';
 import {connect} from "react-redux";
@@ -51,7 +52,10 @@ class Person extends Component {
   }
 
   upgrade() {
-    upgradeAllMessage()
+    upgradeAllMessage();
+    upgradeAllUser(
+
+    );
   }
 
 

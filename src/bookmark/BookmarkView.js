@@ -93,6 +93,11 @@ class BookmarkView extends Component {
         };
     }
 
+    componentDidMount() {
+        //console.log("componentDidMolunt");
+        this.getUserProfile();
+      }
+
     componentDidUpdate(prevProps, prevState) {
         if (this.props.bookmark != prevProps.bookmark) {
           this.getUserProfile();
