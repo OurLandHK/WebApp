@@ -71,7 +71,7 @@ class App extends Component {
         eventNumber: eventNumber,
         distance: distance,
         userId: userId,
-        tab: 0,
+        tab: 'main',
         bookmark: bookmark,
       };
       const { updateRecentMessage, updatePublicProfileDialog, updateRecentBookmark } = this.props;
@@ -113,7 +113,7 @@ class App extends Component {
     const { tab } = this.state;
     const { classes, user } = this.props;
     switch(tab) {
-      case 0:
+      case 'main':
         mainScreen = <Main
               eventId={this.state.eventId}
               userId={this.state.userId}
@@ -122,13 +122,13 @@ class App extends Component {
               bookmark={this.state.bookmark}
             />
         break;
-      case 1:
+      case 'concern':
         mainScreen = <BookmarkBoard/>
         break;
-      case 2:
+      case 'leader':
         mainScreen = <LeaderBoard/>;
         break;
-      case 3:
+      case 'person':
         mainScreen = <Person/>
         break;
     }
@@ -149,12 +149,12 @@ class App extends Component {
             <BottomNavigation
               value={tab}
               onChange={this.handleChange}>
-              <BottomNavigationAction label={constant.homeLabel} icon={<HomeIcon />} />
-              <BottomNavigationAction hidden={userLoginDisable} label={constant.concernLabel} icon={<FavoriteIcon />} />
-              <BottomNavigationAction label={constant.leaderBoardLabel} icon={<RateReviewIcon />} />
-              <BottomNavigationAction label={constant.userLabel} icon={<PersonIcon />} />
+              <BottomNavigationAction value='main' label={constant.homeLabel} icon={<HomeIcon />} />
+              <BottomNavigationAction value='concern' label={constant.concernLabel} icon={<FavoriteIcon />} />
+              <PostMessageView />
+              <BottomNavigationAction value='leader' label={constant.leaderBoardLabel} icon={<RateReviewIcon />} />
+              <BottomNavigationAction value='person' label={constant.userLabel} icon={<PersonIcon />} />
             </BottomNavigation>
-            <PostMessageView />
           </div>
         </div>
     );

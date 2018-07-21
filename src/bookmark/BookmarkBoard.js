@@ -13,6 +13,9 @@ import {connect} from "react-redux";
 import config, {constant} from '../config/default';
 import BookmarkList from './BookmarkList';
 import BookmarkView from './BookmarkView';
+import {
+  checkAuthState,
+} from '../actions';
 
 function Transition(props) {
   return <Slide direction="left" {...props} />;
@@ -51,22 +54,26 @@ class BookmarkBoard extends React.Component {
     };
   }
 
+  componentWillMount() {
+    this.props.checkAuthState();
+  }
+
   handleChange = (event, value) => {
     this.setState({ tabValue: value });
   };
 
   renderMessages() {
-    const { classes } = this.props;
+    const { classes, user } = this.props;
     return (
       <div className={classes.container}>
-        <BookmarkList/>
+        <BookmarkList bookmarkList={user.bookmarkList}/>
       </div>
     );
   }
 
 
   render() {
-    const { classes} = this.props;
+    const { classes, user} = this.props;
     const { tabValue } = this.state;
     return (
       <div class="bookmakrboard-wrapper">
@@ -98,6 +105,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    checkAuthState:
+      () => dispatch(checkAuthState()),    
   }
 };
 

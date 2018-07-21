@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import * as firestore from 'firebase/firestore';
+import uuid from 'js-uuid';
 import config, {constant, addressEnum, RoleEnum} from './config/default';
 
 function getUserProfile(user) {
@@ -32,7 +32,8 @@ function getUserProfile(user) {
                 console.log("Document written with ID: ", user.uid);
                 upsertAddress(user, "0", addressEnum.home, addressEnum.home, null, null).then(function() {
                     upsertAddress(user, "1", addressEnum.office, addressEnum.office, null, null).then(function() {
-                        return(userRecord);
+                        addBookmark(uuid.v4(), user, 
+                            constant.concernLabel, "", []).then(() => {return(userRecord);})
                     });
                 });         
             })
@@ -401,7 +402,41 @@ function updateBookmark(user, key, bookmarkRecord, isUpdateTime) {
     }
 }
 
+function upgradeAllUser() {
+    const db = firebase.firestore();
+    let collectionRef = db.collection(config.userDB);
+    collectionRef.onSnapshot(function() {})  
+    collectionRef.get().then(function(querySnapshot) {
+        if(querySnapshot.empty) {
+            return;
+        } else { 
+            querySnapshot.forEach(function(userRef) {
+                var val = userRef.data();
+                if(val) {
+                    let changeCreatedAt = false;
+                    let change = false;
+                    let user = {uid: userRef.id};
+                    return fetchBookmarkList(user).then((bookmarkList) => {
+                        if(bookmarkList.length == 0) {
+                            const concernMessages = val.concernMessages;
+                            
+                            return addBookmark(uuid.v4(), user, 
+                            constant.concernLabel, "", concernMessages).then(()=>{
+                                if(val.concernMessages.length > 0) {
+                                    val.concernMessages = [];
+                                    updateUserProfile(user, val);
+                                }
+                            })
+                        } else {
+                            return;
+                        }
+                    });
+                }                
+            });
+        }
+    })         
+}
 
-export {addCompleteMessage, upsertAddress, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
+export {addCompleteMessage, upsertAddress, upgradeAllUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
     dropBookmark, fetchBookmarkList, addBookmark, getBookmark, updateBookmark, incBookmarkViewCount};
 
