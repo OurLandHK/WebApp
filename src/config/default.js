@@ -20,7 +20,8 @@ let config = {
   photoDB: 'photo',
   MasterUID: 'mUQgwxkmPBfVA47d9lHzB482Nmp1',
   addressBook: "AddressBook",
-  commentDB: "comment"
+  commentDB: "comment",
+  bookDB: "Bookmark"
 };
 
 let constant = {
@@ -32,6 +33,9 @@ let constant = {
   addressBookLabel: "地址簿",
   addAddressLabel: "新增地址",
   updateAddressLabel: "更新地址",
+  addBookmarkLabel: "新增關注分類",
+  bookmarkTitleLabel: "關注分類",
+  updateBookmarkLabel: "更新關注分類",
   nearbyEventLabel: "我的社區",
   regionEventLabel: "十八社區",
   recentEventLabel: "最近查看",
@@ -43,6 +47,8 @@ let constant = {
   sortByDistanceLabel: "距離排序",
   defaultEventNumber: 100,
   concernLabel: "關注",
+  myBookmarkLabel: "我的關注",
+  publicBookmarkLabel: "我地關注",
   homeLabel: "主頁",
   userLabel: "我的",
   timeOptions : ['活動時間', '設施開放時間'],
@@ -86,6 +92,7 @@ const addressEnum = {
 const RoleEnum = {
   user: "用戶",
   betaUser: "測試用戶",
+  advancedUser: "進階用戶",
   monitor: "監察員",
   admin: "我地管理員", 
 }

@@ -17,7 +17,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import RateReviewIcon from '@material-ui/icons/RateReview';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import EventListDialog from './EventListDialog';
+import BookmarkBoard from './bookmark/BookmarkBoard';
 import thunk from 'redux-thunk';
 import {connect} from "react-redux";
 import rootReducer from './reducers';
@@ -29,6 +29,9 @@ import {
   fetchConcernMessagesFromOurLand,
   updateFilterDefault,
   checkAuthState,
+  updateRecentMessage,
+  updatePublicProfileDialog,
+  updateRecentBookmark,
   init3rdPartyLibraries
 } from './actions';
 import {constant} from './config/default';
@@ -44,6 +47,7 @@ class App extends Component {
     let params = (new URL(document.location)).searchParams;
     let eventId = params.get("eventid");
     let userId = params.get("userid");
+    let bookmark = params.get("bookmark");
     let eventNumber = params.get("eventnumber");
     let distance = params.get("distance");
     if(userId == null) {
@@ -51,6 +55,9 @@ class App extends Component {
     }
     if(eventId == null) {
       eventId = "";
+    }
+    if(bookmark == null) {
+      bookmark = "";
     }
     if(eventNumber == null) {
       eventNumber = constant.defaultEventNumber;
@@ -64,8 +71,19 @@ class App extends Component {
         eventNumber: eventNumber,
         distance: distance,
         userId: userId,
-        tab: 0,
+        tab: 'main',
+        bookmark: bookmark,
       };
+      const { updateRecentMessage, updatePublicProfileDialog, updateRecentBookmark } = this.props;
+      if(this.state.userId != "" && this.state.bookmark == "") {
+        updatePublicProfileDialog(this.state.userId, "", true);
+      }
+      if(this.state.eventId != "") {
+        updateRecentMessage(this.state.eventId, true);
+      }
+      if(this.state.bookmark != "" && this.state.userId != "") {
+        updateRecentBookmark(this.state.userId, this.state.bookmark, true);
+      }      
   }
 
   componentWillMount() {
@@ -95,21 +113,22 @@ class App extends Component {
     const { tab } = this.state;
     const { classes, user } = this.props;
     switch(tab) {
-      case 0:
+      case 'main':
         mainScreen = <Main
               eventId={this.state.eventId}
               userId={this.state.userId}
               eventNumber={this.state.eventNumber}
               distance={this.state.distance}
+              bookmark={this.state.bookmark}
             />
         break;
-      case 1:
-        mainScreen = <EventListDialog title={constant.concernLabel} messageIds={user.userProfile.concernMessages}/>
+      case 'concern':
+        mainScreen = <BookmarkBoard/>
         break;
-      case 2:
+      case 'leader':
         mainScreen = <LeaderBoard/>;
         break;
-      case 3:
+      case 'person':
         mainScreen = <Person/>
         break;
     }
@@ -130,12 +149,12 @@ class App extends Component {
             <BottomNavigation
               value={tab}
               onChange={this.handleChange}>
-              <BottomNavigationAction label={constant.homeLabel} icon={<HomeIcon />} />
-              <BottomNavigationAction hidden={userLoginDisable} label={constant.concernLabel} icon={<FavoriteIcon />} />
-              <BottomNavigationAction label={constant.leaderBoardLabel} icon={<RateReviewIcon />} />
-              <BottomNavigationAction label={constant.userLabel} icon={<PersonIcon />} />
+              <BottomNavigationAction value='main' label={constant.homeLabel} icon={<HomeIcon />} />
+              <BottomNavigationAction value='concern' label={constant.concernLabel} icon={<FavoriteIcon />} />
+              <PostMessageView />
+              <BottomNavigationAction value='leader' label={constant.leaderBoardLabel} icon={<RateReviewIcon />} />
+              <BottomNavigationAction value='person' label={constant.userLabel} icon={<PersonIcon />} />
             </BottomNavigation>
-            <PostMessageView />
           </div>
         </div>
     );
@@ -164,6 +183,15 @@ const mapDispatchToProps = (dispatch) => {
       () => dispatch(fetchAddressBookFromOurLand()),
     fetchConcernMessagesFromOurLand:
       () => dispatch(fetchConcernMessagesFromOurLand()),
+    updateRecentMessage:
+      (recentMessageID, open) =>
+        dispatch(updateRecentMessage(recentMessageID, open)),
+    updateRecentBookmark:
+      (userId, bookmark, open) =>
+        dispatch(updateRecentBookmark(userId, bookmark, open)),
+    updatePublicProfileDialog:
+      (userId, fbuid, open) =>
+        dispatch(updatePublicProfileDialog(userId, fbuid, open)),      
   }
 };
 

@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
 import FavoriteButton from './FavoriteButton';
+import BookmarkToggleButton from './bookmark/BookmarkToggleButton';
 import {setHappyAndSad} from './MessageDB';
 import FocusToggleButton from './admin/FocusToggleButton';
 import {
@@ -155,7 +156,7 @@ class MessageAction extends Component {
             </IconButton>
           </Grid>  
         <Grid item >
-          <FavoriteButton message={m}/>    
+          <BookmarkToggleButton message={m}/>    
         </Grid>
         {focusButton}
       </Grid>

@@ -2,7 +2,6 @@
 
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
-import config, {constant} from './config/default';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -23,8 +22,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText  from '@material-ui/core/ListItemText';
 import {connect} from "react-redux";
 import { togglePublicProfileDialog } from './actions';
-import {getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile} from './UserProfile';
+import {fetchBookmarkList, getUserPublishMessages, getUserCompleteMessages, getUserProfile} from './UserProfile';
 import ShareDrawer from './ShareDrawer';
+import BookmarkList from './bookmark/BookmarkList';
+import config, {constant, addressEnum, RoleEnum} from './config/default';
 
 function Transition(props) {
   return <Slide direction="left" {...props} />;
@@ -49,8 +50,7 @@ class PublicProfile extends React.Component {
     if(this.props.fbId) {
       this.fbId = this.props.fbId;
     }
-    this.state = {userProfile: null};
-    this.concernMessages = null;
+    this.state = {userProfile: null, bookmarkList: []};
     this.publishMessages = null;
     this.completeMessages = null;
   } 
@@ -65,19 +65,13 @@ class PublicProfile extends React.Component {
 
   fetchUserProfile(user) {
     this.setState({userProfile: null});
-    this.concernMessages = null;
     this.publishMessages = null;
     this.completeMessages = null;
     getUserProfile(user).then((userProfile)=>{
-      getUserConcernMessages(user).then((concernMessages)=>{
-        getUserPublishMessages(user).then((publishMessages)=>{
-          getUserCompleteMessages(user).then((completeMessages)=>{
-            this.completeMessages = completeMessages;
-            this.concernMessages = concernMessages;
-            this.publishMessages = publishMessages;
-            this.setState({user: user, userProfile: userProfile});
-          });
-        });            
+      fetchBookmarkList(user).then((bookmarkList)=>{
+      this.completeMessages = userProfile.completeMessages;
+      this.publishMessages = userProfile.publishMessages;
+      this.setState({user: user, userProfile: userProfile, bookmarkList: bookmarkList});
       });
     });
   }
@@ -99,24 +93,22 @@ class PublicProfile extends React.Component {
   
   render() {
     var displayName = "...";
-    var facebookLink = "...";
     let imageHtml = "等一下";
 //    let concernMessage = null;
     let publishMessage = null;
     let completeMessage = null;
     let desc = null;
-    let facebookhtml = "暫無";
+    let facebookhtml = null;
     if(this.state.userProfile != null) {
       displayName = this.state.userProfile.displayName;
       var displayNameLabel = "名字:" + displayName;
-      imageHtml =         <img src={this.state.userProfile.photoURL}/>;
+      imageHtml =  <img src={this.state.userProfile.photoURL}/>;
       if(this.state.userProfile.desc != null && this.state.userProfile.desc != "") {
         desc = <ListItem >
           <ListItemText primary={"簡介: " + this.state.userProfile.desc}/> 
         </ListItem> 
       }
       publishMessage = <EventListDialog title="發表事件: " displayName={displayName} messageIds={this.publishMessages}/>
-//      concernMessage = <EventListDialog title="關注事件: " displayName={displayName} messageIds={this.concernMessages}/>  
       completeMessage = <EventListDialog title="完成事件: " displayName={displayName} messageIds={this.completeMessages}/> 
       if(this.state.userProfile.fbuid) {
         this.fbId=this.state.userProfile.fbuid;
@@ -125,8 +117,11 @@ class PublicProfile extends React.Component {
 
 
 
-    if(this.fbId){
-     facebookhtml = <a href={"https://www.facebook.com/" + this.fbId} target="_blank">前往</a>;
+    if(this.fbId && false){
+     facebookhtml = 
+     <ListItem button >
+      <ListItemText primary="臉書連結:"/> <a href={"https://www.facebook.com/" + this.fbId} target="_blank">前往</a>
+    </ListItem>;
     }
 
     
@@ -145,20 +140,20 @@ class PublicProfile extends React.Component {
             </Toolbar>
           </AppBar>
           <div className={classes.container}>
-          <br/>
-          <br/>
-          <List>
-            <ListItem >
-              <ListItemText primary={displayNameLabel}/> <br/> {imageHtml} 
-            </ListItem> 
-            {desc}  
-            <ListItem button >
-              <ListItemText primary="臉書連結:"/> {facebookhtml}
-            </ListItem>        
-            <Divider/>            
-            {publishMessage}
-            {completeMessage}                                                         
+            <br/>
+            <br/>
+            <List>
+              <ListItem >
+                <ListItemText primary={displayNameLabel}/> <br/> {imageHtml} 
+              </ListItem> 
+              {desc}  
+              {facebookhtml}
+              <Divider/>            
+              {publishMessage}
+              {completeMessage}                                                          
             </List> 
+            {constant.bookmarkTitleLabel}
+            <BookmarkList bookmarkList={this.state.bookmarkList} /> 
           </div>
         </Dialog>
       </div>);
