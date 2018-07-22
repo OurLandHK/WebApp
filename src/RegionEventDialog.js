@@ -47,7 +47,12 @@ const styles = theme =>  ({
     },
     chip: {
       margin: theme.spacing.unit / 2,
-    },    
+    },
+    title: {
+      fontWeight: 'bold',
+      textAlign: 'center',
+      margin: '40px auto 10px'
+    }
   });
 
 class RegionEventDialog extends React.Component {
@@ -55,26 +60,27 @@ class RegionEventDialog extends React.Component {
     super(props);
     this.state = {
         eventNumber: this.props.eventNumber,
-        distance: this.props.distance, 
+        distance: this.props.distance,
         geolocation: this.props.geolocation,
         filter: null,
         titleLabel: ""
       };
-  }    
+  }
 
   handleRequestOpen(evt, titleLabel, filter) {
     evt.preventDefault();
+    console.log(filter, titleLabel)
     this.setState({filter: filter, titleLabel: titleLabel});
     this.props.toggleRegionEventDialog(true);
   }
 
-  handleRequestClose = () => {
+  handleRequestClose = () => { // this function is not called
     this.props.toggleRegionEventDialog(false);
   };
 
   renderMessages() {
     const { eventNumber, distance, geolocation, eventId } = this.state;
-    const { classes } = this.props; 
+    const { classes } = this.props;
     return (
       <div className={classes.container}>
         <MessageList
@@ -89,7 +95,7 @@ class RegionEventDialog extends React.Component {
     );
   }
 
-  
+
   render() {
     const { classes, open, buttons } = this.props;
     let messageHtml = null;
@@ -99,6 +105,7 @@ class RegionEventDialog extends React.Component {
                 avatar={
                   buttonDetail.avatar
                 }
+                key={buttonDetail.label}
                 label={buttonDetail.label}
                 onClick={(evt) => this.handleRequestOpen(evt, buttonDetail.label, buttonDetail.value)}
                 className={classes.chip}
@@ -125,9 +132,8 @@ class RegionEventDialog extends React.Component {
     }
     return (
         <span>
-            <br/>
             <Card>
-                <Typography variant="headline" component="h2">
+                <Typography variant="headline" component="h2" className={classes.title}>
                     {constant.regionEventLabel}
                 </Typography>
                 {cardImage}
@@ -135,16 +141,16 @@ class RegionEventDialog extends React.Component {
                 查詢現在身處位置或十八社區的人和事
                 </CardContent>
             </Card>
-            <Dialog fullScreen  open={open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
+            <Dialog fullScreen  open={open} >
                 <AppBar className={classes.appBar} >
                     <Toolbar>
-                        <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
+                        <IconButton onClick={this.handleRequestClose} aria-label="Close">
                             <CloseIcon />
                         </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>{constant.regionEventLabel}</Typography>           
-                    </Toolbar>      
+                        <Typography variant="title" color="inherit" className={classes.flex}>{constant.regionEventLabel}</Typography>
+                    </Toolbar>
                 </AppBar>
-                <FilterBar isUsePublicAddressBook={true}/>     
+                <FilterBar isUsePublicAddressBook={true}/>
                 {messageHtml}
             </Dialog>
         </span>);
@@ -164,7 +170,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleRegionEventDialog: flag => 
+    toggleRegionEventDialog: flag =>
       dispatch(toggleRegionEventDialog(flag)),
   }
 };

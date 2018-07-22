@@ -42,9 +42,9 @@ class AddressView extends Component {
         super(props);
         var text = "";
         var geolocation = null;
-        var streetAddress = null;  
-        var type = addressEnum.other;   
-        var distance = 1;   
+        var streetAddress = null;
+        var type = addressEnum.other;
+        var distance = 1;
         if(this.props.address != null) {
             var c = this.props.address;
             text = c.text;
@@ -57,7 +57,7 @@ class AddressView extends Component {
             if(c.distance != null) {
                 distance = c.distance;
             }
-        }        
+        }
         this.state = {
             popoverOpen: false,
             text: text,
@@ -72,9 +72,9 @@ class AddressView extends Component {
         evt.preventDefault();
         var text = "";
         var geolocation = null;
-        var streetAddress = null; 
-        var type = addressEnum.other;   
-        var distance = constant.distance;      
+        var streetAddress = null;
+        var type = addressEnum.other;
+        var distance = constant.distance;
         if(this.props.address != null) {
             var c = this.props.address;
             text = c.text;
@@ -87,7 +87,7 @@ class AddressView extends Component {
             if(c.distance != null) {
                 distance = c.distance;
             }
-        }        
+        }
         this.setState({
             popoverOpen: true,
             text: text,
@@ -97,19 +97,19 @@ class AddressView extends Component {
             type: type
         });
       }
-    
+
     handleRequestClose() {
         this.setState({
           popoverOpen: false,
         });
-    }; 
+    };
 
     locationButtonSubmit = (geolocation, streetAddress) => {
         this.setState({
             geolocation: geolocation,
             streetAddress: streetAddress,
         });
-    };    
+    };
 
     onSubmit() {
         const { user } = this.props;
@@ -121,11 +121,11 @@ class AddressView extends Component {
           console.log("addressbook submit" + this.state.streetAddress);
           this.props.upsertAddress(user.user, key, this.state.type, this.state.text, this.state.geolocation, this.state.streetAddress);
           this.setState({popoverOpen: false});
-   
+
         }
     }
 
-    
+
     onDelete() {
       const { user } = this.props;
       if (user.user) {
@@ -136,10 +136,10 @@ class AddressView extends Component {
         if (key == null)
           return;
         this.props.deleteAddress(user.user, key);
-      }  
+      }
       this.setState({popoverOpen: false});
     }
-    
+
 
 
     render() {
@@ -148,7 +148,7 @@ class AddressView extends Component {
         let titleText = constant.updateAddressLabel;
         let geolocation = null;
         let streetAddress = null;
-        let type = addressEnum.other;  
+        let type = addressEnum.other;
         let icons = <PlaceIcon />;
         let disableValue = false;
         if(this.props.address != null) {
@@ -173,8 +173,8 @@ class AddressView extends Component {
                 if(c.streetAddress != null) {
                     locationString =  c.streetAddress + " (" + geoString(c.geolocation.latitude, c.geolocation.longitude) + ")";
                 } else {
-                    locationString = "近" + geoString(c.geolocation.latitude, c.geolocation.longitude);      
-                } 
+                    locationString = "近" + geoString(c.geolocation.latitude, c.geolocation.longitude);
+                }
             }
             addressButtonHtml = <ListItem button onClick={(evt) => this.handleRequestOpen(evt)}>
                                     <ListItemIcon>
@@ -184,7 +184,7 @@ class AddressView extends Component {
                                 </ListItem>
         } else {
             titleText = constant.addAddressLabel;
-            addressButtonHtml = <Button variant="fab" color="primary" className={classes.fab} raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
+            addressButtonHtml = <Button variant="fab" color="primary" className={classes.fab} onClick={(evt) => this.handleRequestOpen(evt)}>
                                     <AddIcon />
                                 </Button>
         }
@@ -195,13 +195,13 @@ class AddressView extends Component {
                         <DialogContent>
                             {icons}
                             <TextField disabled={disableValue} autoFocus required id="message" fullWidth margin="normal" helperText="名稱" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>
-                            <LocationButton autoFocus geolocation={geolocation} streetAddress={streetAddress} ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>                   
-                        </DialogContent>  
+                            <LocationButton autoFocus geolocation={geolocation} streetAddress={streetAddress} ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>
+                        </DialogContent>
                         <DialogActions>
                             <Button disabled={disableValue} color="secondary" onClick={() => this.onDelete()} >刪除</Button>
                             <Button color="primary" onClick={() => this.handleRequestClose()} >取消</Button>
-                            <Button color="primary" onClick={() => this.onSubmit()}>提交</Button> 
-                        </DialogActions>          
+                            <Button color="primary" onClick={() => this.onSubmit()}>提交</Button>
+                        </DialogActions>
                     </Dialog>
                 </span>);
     }

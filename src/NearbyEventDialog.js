@@ -19,7 +19,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import MessageList from './MessageList';
 import {connect} from "react-redux";
-import { toggleNearbyEventDialog } from './actions';
+import { fetchLocation, toggleNearbyEventDialog } from './actions';
 import Chip from '@material-ui/core/Chip';
 import FilterBar from './FilterBar';
 
@@ -29,9 +29,6 @@ function Transition(props) {
 
 
 const styles = theme => ({
-  appBar: {
-    position: 'relative',
-  },
   flex: {
     flex: 1,
   },
@@ -51,7 +48,12 @@ const styles = theme => ({
   },
   chip: {
     margin: theme.spacing.unit / 2,
-  },  
+  },
+  title: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    margin: '40px auto 10px'
+  }
 });
 
 class NearbyEventDialog extends React.Component {
@@ -59,30 +61,29 @@ class NearbyEventDialog extends React.Component {
     super(props);
     this.state = {
         eventNumber: this.props.eventNumber,
-        distance: this.props.distance, 
+        distance: this.props.distance,
         geolocation: this.props.geolocation,
-        filter: null,
+        filter: this.props.buttons[0].value,
         titleLabel: ""
       };
-  }    
+  }
 
-  handleRequestOpen(evt, titleLabel, filter) {
-    evt.preventDefault();
-    this.setState({filter: filter, titleLabel: titleLabel});
+  componentDidMount() {
+    const { geolocation, fetchLocation } = this.props;
+    if (geolocation === null) {
+      fetchLocation();
+    }
+    console.log('geo!:', this.props.geolocation)
     this.props.toggleNearbyEventDialog(true);
   }
 
-  handleRequestClose = () => {
-    this.props.toggleNearbyEventDialog(false);
-  };
-
   renderMessages() {
     const { eventNumber, distance, geolocation, eventId } = this.state;
-    const { classes } = this.props; 
+    const { classes } = this.props;
     return (
       <div className={classes.container}>
         <MessageList
-          ref={(messageList) => {this.messageList = messageList;}}
+          ref={(messageList) => {this.messageList = messageList}}
           eventNumber={eventNumber}
           distance={distance}
           geolocation={geolocation}
@@ -92,7 +93,7 @@ class NearbyEventDialog extends React.Component {
     );
   }
 
-  
+
   render() {
     const { classes, open, buttons } = this.props;
     let messageHtml = null;
@@ -102,35 +103,19 @@ class NearbyEventDialog extends React.Component {
     }
     return (
         <span>
-            <Card onClick={(evt) => this.handleRequestOpen(evt, buttons[0].label, buttons[0].value)}>
-              <Typography variant="headline" component="h2">{constant.nearbyEventLabel}</Typography>
+            <Card>
+              <Typography variant="headline" component="h2" className={classes.title}>{constant.nearbyEventLabel}</Typography>
               <CardMedia
                   className={classes.media}
                   image="/images/ssp.jpg"
-                  title={constant.nearbyEventLabel}
-                >
-                  <div
-                    className={classes.mediaCredit}
-                  >
+                  title={constant.nearbyEventLabel} >
+                  <div className={classes.mediaCredit} >
                     Photo by Steven Wei on Unsplash
                   </div>
               </CardMedia>
-              <Typography component="p">
-                  查詢附近1公里的社區人和事
-              </Typography>              
             </Card>
-            <Dialog fullScreen  open={open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
-                <AppBar className={classes.appBar}>
-                    <Toolbar>
-                        <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
-                            <CloseIcon />
-                        </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>{`${constant.nearbyEventLabel} ${this.state.titleLabel}`}</Typography>           
-                    </Toolbar>      
-                </AppBar>
-                <FilterBar />     
-                {messageHtml}
-            </Dialog>
+            <FilterBar />
+            {messageHtml}
         </span>);
   }
 }
@@ -148,8 +133,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleNearbyEventDialog: flag => 
+    toggleNearbyEventDialog: flag =>
       dispatch(toggleNearbyEventDialog(flag)),
+    fetchLocation: () => dispatch(fetchLocation())
   }
 };
 

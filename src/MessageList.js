@@ -24,7 +24,7 @@ class MessageList extends Component {
   constructor(props) {
     super(props);
     let geolocation = this.props.geolocation;
-    if(geolocation == null) {
+    if (geolocation == null) {
       geolocation = constant.invalidLocation;
     }
     let messageIds = [];
@@ -55,7 +55,6 @@ class MessageList extends Component {
   }
 
   componentDidMount() {
-    //console.log("componentDidMolunt");
     if(this.state.messageIds.length != 0) {
       this.updateFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
     }
@@ -175,7 +174,7 @@ class MessageList extends Component {
           return null;
         } else {
           if(this.hori) {
-            return (<div className={classes.scrollingItem}><MessageView message={message} key={message.key} tile={this.hori} lon={lon} lat={lat}/></div>);
+            return (<div className={classes.scrollingItem} key={message.key}><MessageView message={message} key={message.key} tile={this.hori} lon={lon} lat={lat}/></div>);
           } else {
             return (<MessageView message={message} key={message.key} tile={this.hori} lon={lon} lat={lat}/>);
           }
