@@ -12,6 +12,7 @@ import {
   RESET_FILTER_TAGS,
   UPDATE_FILTER_TAG,  
   UPDATE_RECENT_MESSAGE,
+  UPDATE_RECENT_BOOKMARK,
   FETCH_ADDRESS_BOOK,
   FETCH_PUBLIC_ADDRESS_BOOK,
   FETCH_FOCUS_MESSAGE,
@@ -39,15 +40,15 @@ function geoLocationReducer(state={pos: null, enabled: true}, action) {
   }
 }
 
-function userReducer(state={user: null, userProfile: null, lastLogin: null, loading: true}, action) {
+function userReducer(state={user: null, userProfile: null, lastLogin: null, bookmarkList: [], loading: true}, action) {
   switch (action.type) {
     case FETCH_USER:
       return {...state, user: action.user, loading: action.loading};
     case FETCH_USER_PROFILE:
       if(action.lastLogin != null) {
-        return {...state, userProfile: action.userProfile, lastLogin: action.lastLogin};
+        return {...state, userProfile: action.userProfile, lastLogin: action.lastLogin, bookmarkList: action.bookmarkList};
       } else {
-        return {...state, userProfile: action.userProfile};
+        return {...state, userProfile: action.userProfile, bookmarkList: action.bookmarkList};
       }
     default:
       return state;
@@ -180,7 +181,7 @@ function nearbyEventDialogReducer(state={open: false, buttons: buttonList}, acti
   }
 }
 
-function regionEventDialogReducer(state={open: false}, action) {
+function regionEventDialogReducer(state={open: false, buttons: buttonList}, action) {
   switch (action.type) {
     case TOGGLE_REGIONEVENT_DIALOG:
       return {...state, open: action.open};
@@ -202,16 +203,28 @@ function leaderBoardReducer(state={open: false, topTwenty:[]}, action) {
   }
 }
 
-function recentMessageReducer(state={open: false, id: "", recentids: []}, action) {
+function recentMessageReducer(state={open: false, id: "", recentids: [], bookmark: {bookmark: ""}, recentbookmarks: []}, action) {
+  let index = -1;
   switch (action.type) {
     case UPDATE_RECENT_MESSAGE:
       let recentids = state.recentids;
-      var index = recentids.indexOf(action.id);
+      index = recentids.indexOf(action.id);
       if(index == -1)
       {
           recentids.push(action.id);
       }
-      return {open: action.open, id: action.id, recentids: recentids};
+      return {...state, open: action.open, id: action.id, bookmark: {bookmark: ""}, recentids: recentids};
+    case UPDATE_RECENT_BOOKMARK:
+      let bookmark = {uid: action.uid,
+                      bookmark: action.bookmark};
+      console.log("UPDATE_RECENT_BOOKMARK Bookmark: " + bookmark);
+      let recentbookmarks = state.recentbookmarks;
+      index = recentbookmarks.indexOf(action.bookmark);
+      if(index == -1)
+      {
+        recentbookmarks.push(action.bookmark);
+      }
+      return {...state, open: action.open, id: "", bookmark: bookmark, recentbookmarks: recentbookmarks};
     default:
       return state;
   }

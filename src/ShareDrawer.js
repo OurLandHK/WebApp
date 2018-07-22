@@ -101,9 +101,35 @@ const WhatsappIcon = generateShareIcon('whatsapp');
 const EmailIcon = generateShareIcon('email');
 
 class ShareDrawer extends React.Component {
-  state = {
-    bottom: false,
-  };
+  constructor(props) {
+    super(props);
+    let m = "";
+    let hashtag = "";
+    let shareUrl = window.location.protocol + "//" + window.location.hostname;
+    if(this.props.message != undefined) {
+      m = this.facebookQuote(this.props.message);
+      hashtag = this.facebookHashTag(this.props.message.tag);
+      shareUrl = shareUrl + "/?eventid=" + this.props.message.key;
+    }
+
+    if(this.props.uid != undefined && this.props.displayName != undefined && this.props.displayName != "..." ){
+      m = this.props.displayName;
+      hashtag = "#我地";
+      shareUrl = shareUrl + "/?userid=" + this.props.uid;
+    }
+    if(this.props.bookmark != undefined) {
+      m = this.props.bookmark.title;
+      hashtag = "#我地";
+      shareUrl = shareUrl + "/?userid=" + this.props.bookmark.uid + "&bookmark=" + this.props.bookmark.key;
+    }
+    this.state = {
+      bottom: false,
+      m: m,
+      hashtag: hashtag,
+      shareUrl: shareUrl
+    };
+  }
+
 
   toggleDrawer = (side, open) => () => {
     this.setState({
@@ -204,20 +230,7 @@ class ShareDrawer extends React.Component {
 
   render() {
     const { classes } = this.props;
-    var m = "";
-    var hashtag = "";
-    var shareUrl = window.location.protocol + "//" + window.location.hostname;
-    if(this.props.message != undefined) {
-      m = this.facebookQuote(this.props.message);
-      hashtag = this.facebookHashTag(this.props.message.tag);
-      shareUrl = shareUrl + "/?eventid=" + this.props.message.key;
-    }
 
-    if(this.props.uid != undefined && this.props.displayName != undefined && this.props.displayName != "..." ){
-      m = this.props.displayName;
-      hashtag = "#我地";
-      shareUrl = shareUrl + "/?userid=" + this.props.uid;
-    }
 
     return (
       <span>
@@ -249,10 +262,10 @@ class ShareDrawer extends React.Component {
             onClick={this.toggleDrawer('bottom', false)}
             onKeyDown={this.toggleDrawer('bottom', false)}
           >
-            { this.renderFacebook(shareUrl, m, hashtag) }
-            { this.renderWhatsapp(shareUrl, m) }
-            { this.renderEmail(shareUrl, m) }
-            { this.renderTelegram(shareUrl, m) }
+            { this.renderFacebook(this.state.shareUrl, this.state.m, this.state.hashtag) }
+            { this.renderWhatsapp(this.state.shareUrl, this.state.m) }
+            { this.renderEmail(this.state.shareUrl, this.state.m) }
+            { this.renderTelegram(this.state.shareUrl, this.state.m) }
           </div>
         </Drawer>
       </span>

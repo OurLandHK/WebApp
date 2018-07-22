@@ -102,13 +102,15 @@ function fetchFocusMessagesBaseOnGeo(geocode, radius) {
     }
  }
 
- function addFocusMessage(key, title, geolocation, desc, messages) {
+ function addFocusMessage(key, title, geolocation, streetAddress, radius , desc, messages) {
     let now = Date.now();
     var focusMessageRecord = {
         title: title,
-        desc: title,
+        desc: desc,
         messages: messages,
         geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
+        streetAddress: streetAddress,
+        radius: radius,
         createdAt: new Date(now),
         lastUpdate: new Date(now),
         key: key,   
@@ -124,7 +126,7 @@ function dropFocusMessage(key) {
     return getFocusMessage(key).then(function(message) {
         if(message != null) {
             const db = firebase.firestore();
-            db.collection(config.focusMessageDB).doc(key).delete.then(function() {
+            db.collection(config.focusMessageDB).doc(key).delete().then(function() {
                 console.log("Document successfully deleted!");
                 return true;
             }).catch(function(error) {

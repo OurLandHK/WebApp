@@ -20,7 +20,8 @@ let config = {
   photoDB: 'photo',
   MasterUID: 'mUQgwxkmPBfVA47d9lHzB482Nmp1',
   addressBook: "AddressBook",
-  commentDB: "comment"
+  commentDB: "comment",
+  bookDB: "Bookmark"
 };
 
 let constant = {
@@ -32,6 +33,9 @@ let constant = {
   addressBookLabel: "地址簿",
   addAddressLabel: "新增地址",
   updateAddressLabel: "更新地址",
+  addBookmarkLabel: "新增關注分類",
+  bookmarkTitleLabel: "關注分類",
+  updateBookmarkLabel: "更新關注分類",
   nearbyEventLabel: "我的社區",
   regionEventLabel: "十八社區",
   recentEventLabel: "最近查看",
@@ -43,6 +47,8 @@ let constant = {
   sortByDistanceLabel: "距離排序",
   defaultEventNumber: 100,
   concernLabel: "關注",
+  myBookmarkLabel: "我的關注",
+  publicBookmarkLabel: "我地關注",
   homeLabel: "主頁",
   userLabel: "我的",
   timeOptions : ['活動時間', '設施開放時間'],
@@ -55,7 +61,12 @@ let constant = {
   messageListNoMessage: '已選位置沒有任何社區事件，請選擇其他位置',
   messageListBlockLocation: '請允許Ourland.hk讀取所在位置，或選擇其他位置',
   messageListTimeOut: '未能讀取現在位置，請選擇其他位置或重試',
+  focusTitleLabel: '焦點名稱',
+  radiusLabel: '半徑',
+  descLabel: '內文',
   focusMessagesLabel: '焦點社區事件',
+  updateFocusMessagesLabel: '更新焦點社區事件',
+  addFocusMessagesLabel: '新增焦點社區事件',
   tagLabel: '分類',
   tagPlaceholder: '新增分類',
   notificationLabel: '通知',
@@ -81,6 +92,7 @@ const addressEnum = {
 const RoleEnum = {
   user: "用戶",
   betaUser: "測試用戶",
+  advancedUser: "進階用戶",
   monitor: "監察員",
   admin: "我地管理員", 
 }

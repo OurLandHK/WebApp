@@ -6,6 +6,7 @@ import {
   RESET_FILTER_TAGS,
   UPDATE_FILTER_TAG,
   UPDATE_RECENT_MESSAGE,
+  UPDATE_RECENT_BOOKMARK,
   FETCH_USER,
   FETCH_USER_PROFILE,
   DISABLE_LOCATION,
@@ -27,7 +28,7 @@ import {
 import * as firebase from 'firebase';
 import * as firestore from 'firebase/firestore';
 import config, {constant} from './config/default';
-import {getUserProfile, updateUserProfile} from './UserProfile';
+import {getUserProfile, updateUserProfile, fetchBookmarkList} from './UserProfile';
 import {fetchFocusMessagesBaseOnGeo} from './GlobalDB';
 
 const currentLocationLabel = "現在位置";
@@ -80,12 +81,16 @@ function fetchUser(user, loading=false) {
   return {type: FETCH_USER, user: user, loading: loading};
 }
 
-function fetchUserProfile(userProfile, lastLogin) {
-  return {type: FETCH_USER_PROFILE, userProfile: userProfile, lastLogin: lastLogin};
+function fetchUserProfile(userProfile, lastLogin, bookmarkList) {
+  return {type: FETCH_USER_PROFILE, userProfile: userProfile, lastLogin: lastLogin, bookmarkList: bookmarkList};
 }
 
 function dispatchRecentMessage(id, open) {
   return {type: UPDATE_RECENT_MESSAGE, id: id, open: open};
+}
+
+function dispatchRecentBookmark(uid, bookmark, open) {
+  return {type: UPDATE_RECENT_BOOKMARK, uid: uid, bookmark: bookmark, open: open};
 }
 
 function dispatchPublicProfile(id, fbId, open) {
@@ -178,7 +183,9 @@ export function checkAuthState() {
           console.log("Last Login: " + lastLogin);
           return updateUserProfile(user, userProfile).then(()=>{
             console.log("Last Login: " + lastLogin);
-            return dispatch(fetchUserProfile(userProfile, lastLogin))
+            return fetchBookmarkList(user).then((bookmarkList)=>{
+              return dispatch(fetchUserProfile(userProfile, lastLogin, bookmarkList));
+            });        
           });
         });
       }
@@ -224,6 +231,12 @@ export function signOut() {
 export function updateRecentMessage(id, open) {
   return dispatch => {
     dispatch(dispatchRecentMessage(id, open));
+  };
+}
+
+export function updateRecentBookmark(uid, bookmark, open) {
+  return dispatch => {
+    dispatch(dispatchRecentBookmark(uid, bookmark, open));
   };
 }
 

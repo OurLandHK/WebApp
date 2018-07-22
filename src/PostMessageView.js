@@ -25,6 +25,7 @@ import Slide from '@material-ui/core/Slide';
 import LocationButton from './LocationButton';
 import postMessage from './PostMessage';
 import SelectedMenu from './SelectedMenu';
+import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import config, {constant} from './config/default';
 import UploadImageButton from './UploadImageButton';
 import IntegrationReactSelect from './IntegrationReactSelect';
@@ -71,7 +72,7 @@ function Transition(props) {
 class PostMessageView extends Component {
   constructor(props) {
     super(props);
-    var key = uuid.v4();
+    let key = uuid.v4();
     this.state = {popoverOpen: false, buttonShow: false,
       // message
       key: key,
@@ -503,6 +504,12 @@ class PostMessageView extends Component {
   render() {
     let startTime = new Date().toLocaleTimeString();
     let timeHtml = null;
+    let postButtonHtml =  <Button size="small" variant="contained" color="primary"  raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
+                            +<br/>報料
+                          </Button>;
+    if(false) {
+      postButtonHtml =<BottomNavigationAction label="報料" showLabel={true} icon={<AddIcon />} onClick={(evt) => this.handleRequestOpen(evt)}/>
+    }                      
     const classes = this.props.classes;
     const { tags } = this.state;
     if(this.locationButton != null && this.locationButton.geolocation != null) {
@@ -520,10 +527,8 @@ class PostMessageView extends Component {
         }
       }
       return (
-        <div className="cta-report-wrapper">
-          <Button className="cta-report"  variant="contained" color="primary"  raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
-            <AddIcon />報料
-          </Button>
+        <div>
+          {postButtonHtml}
           <Dialog
             fullScreen
             open={this.state.popoverOpen}
