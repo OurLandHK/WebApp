@@ -277,8 +277,7 @@ class LocationDrawer extends React.Component {
           </Button>
           <Drawer anchor='bottom'
               open={this.state.open}
-              onClose={() => {this.toggleDrawer(false)}}
-              unmountOnExit>
+              onClose={() => {this.toggleDrawer(false)}} >
               <div tabIndex={0}
                   role='button'
                   className={classes.fullList}>

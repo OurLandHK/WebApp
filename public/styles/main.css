@@ -38,9 +38,6 @@ img {
 .hide {
   display: none !important; }
 
-p {
-  padding: 10px; }
-
 .dialog-title {
   text-align: center; }
 
@@ -94,13 +91,8 @@ p {
 .cta-report-wrapper {
   position: absolute;
   top: -40px;
-  width: 100%;
-}
-
-.cta-report-wrapper button {
-  width: 100%;
-  border-radius: 0px;
-}
+  left: 50%;
+  transform: translateX(-50%); }
 
 .recent-event-wrapper {
   text-align: center; }

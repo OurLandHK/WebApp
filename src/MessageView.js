@@ -112,8 +112,8 @@ class MessageView extends Component {
     return (<Card className={classes.tileCard} onClick={() => this.handleClick()}>
               <CardMedia className={classes.tileMedia} image={imageUrl} title={auther}/>
               <CardContent>
-                <Typography noWrap='true' variant="title">{text}</Typography>
-                <Typography noWrap='true' component="p">{subtitle}</Typography>
+                <Typography variant="title">{text}</Typography>
+                <Typography component="p">{subtitle}</Typography>
               </CardContent>
             </Card>);
   };
@@ -146,9 +146,9 @@ class MessageView extends Component {
       newIcon = <FiberNewIcon className={classes.newIcon}/>
     }
     let summary = <Grid className={classes.summaryGrid} item xs onClick={() => this.handleClick()}>
-                      <Typography noWrap='true'className={classes.title}>{newIcon}{auther}</Typography>
-                      <Typography noWrap='true' variant="title"> {text}</Typography>
-                      <Typography noWrap='true' className={classes.pos}>{subtitle}</Typography>
+                      <Typography className={classes.title}>{newIcon}{auther}</Typography>
+                      <Typography variant="title"> {text}</Typography>
+                      <Typography className={classes.pos}>{subtitle}</Typography>
                   </Grid>
     let thumbnail = <Grid item className={classes.thumbnailGrid}><CardMedia className={classes.cover}  image={imageUrl}/> </Grid>
     return ( <Paper className={classes.paper}>

@@ -49,7 +49,7 @@ const styles = theme => ({
   },
   flex: {
     flex: 1,
-  },  
+  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
@@ -61,7 +61,7 @@ const styles = theme => ({
     padding: '0.5rem'
   },
   dialogTitle: {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'  
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
   }
 });
 
@@ -77,7 +77,7 @@ class PostCommentView extends Component {
       tags = this.tagTextToTags(this.props.message.tag);
     }
 
-    this.state = {popoverOpen: false, buttonShow: false, 
+    this.state = {popoverOpen: false, buttonShow: false,
       // comment
       commentSelection: '發表回應',
       text: "",
@@ -90,7 +90,7 @@ class PostCommentView extends Component {
     this.handleTagChange = this.handleTagChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleAddition = this.handleAddition.bind(this);
-    this.handleDrag = this.handleDrag.bind(this);      
+    this.handleDrag = this.handleDrag.bind(this);
   }
 
   componentDidMount() {
@@ -110,7 +110,7 @@ class PostCommentView extends Component {
         this.setState({buttonShow: false});
       }
     }
-  }  
+  }
 
   handleRequestOpen(evt) {
     evt.preventDefault();
@@ -163,10 +163,10 @@ class PostCommentView extends Component {
             case  constant.commentOptions[0]: //"發表回應":
                 commentText = this.state.text;
                 break;
-            case constant.commentOptions[2]: //"要求更改現況": 
+            case constant.commentOptions[2]: //"要求更改現況":
                 status = this.state.changeStatus;
                 break;
-            case constant.commentOptions[1]: //"要求更改地點": 
+            case constant.commentOptions[1]: //"要求更改地點":
                 geolocation = this.locationButton.geolocation;
                 streetAddress = this.locationButton.streetAddress;
                 break;
@@ -200,7 +200,7 @@ class PostCommentView extends Component {
           text: element
         });
       });
-    } 
+    }
     this.setState({tags: tags});
   }
 
@@ -234,14 +234,14 @@ class PostCommentView extends Component {
 
   render() {
     const classes = this.props.classes;
-    const { tags } = this.state; 
+    const { tags } = this.state;
     if(this.state.buttonShow) {
         let inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="更新事件進度及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
         if(this.state.commentSelection != constant.commentOptions[0]) { //"發表回應"
             switch(this.state.commentSelection) {
               case constant.commentOptions[1]: //"要求更改地點"
                 inputHtml = <LocationButton autoFocus ref={(locationButton) => {this.locationButton = locationButton;}}/>;
-                break;              
+                break;
               case constant.commentOptions[2]: // "要求更改現況"
                 inputHtml = <SelectedMenu autoFocus label="" options={constant.statusOptions} changeSelection={(selectedValue) => this.setState({changeStatus: selectedValue})} ref={(statusSelection) => {this.statusSelection = statusSelection}}/>;
                 break;
@@ -249,7 +249,7 @@ class PostCommentView extends Component {
                 inputHtml = <TextField autoFocus id="link" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>;
                 break;
               case constant.commentOptions[4]: //"要求更改分類"
-               /* inputHtml = 
+               /* inputHtml =
                   <IntegrationReactSelect value={tags}
                   label={constant.tagLabel}
                   placeholder={constant.tagPlaceholder}
@@ -267,7 +267,7 @@ class PostCommentView extends Component {
         }
       return (
         <div className="cta-report-wrapper">
-            <Button className="cta-report"  variant="contained" color="primary"  raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
+            <Button className="cta-report"  variant="contained" color="primary" onClick={(evt) => this.handleRequestOpen(evt)}>
               <AddIcon />參與
             </Button>
             <Dialog
@@ -291,8 +291,8 @@ class PostCommentView extends Component {
                     <DialogContentText>選擇更新範圍</DialogContentText>
                     <SelectedMenu label="" options={constant.commentOptions} changeSelection={(selectedValue) => this.commentOptionSelection(selectedValue)} ref={(commentSelection) => {this.commentSelection = commentSelection}}/>
                     {inputHtml}
-                </DialogContent>  
-            </Dialog>     
+                </DialogContent>
+            </Dialog>
         </div>
       )
     } else {
@@ -315,8 +315,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
       checkAuthState:
-          () => 
-              dispatch(checkAuthState()),   
+          () =>
+              dispatch(checkAuthState()),
   }
 };
 

@@ -53,10 +53,6 @@ class SignInButton extends  Component {
   }
 }
 
-SignInButton.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
 const mapStateToProps = (state, ownProps) => {
   return {
     geoLocation : state.geoLocation,

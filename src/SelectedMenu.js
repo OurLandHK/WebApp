@@ -19,7 +19,7 @@ class SelectedMenu extends Component {
       anchorEl: undefined,
       open: false,
       selectedIndex: 0,
-    };    
+    };
   }
 
   static defaultProps = {
@@ -36,7 +36,7 @@ class SelectedMenu extends Component {
   };
 
   handleMenuItemClick = (event, index) => {
-    this.setState({ selectedIndex: index, open: false });    
+    this.setState({ selectedIndex: index, open: false });
     this.selectedValue = this.props.options[index];
     if(this.props.changeSelection != null) {
       this.props.changeSelection(this.selectedValue);
@@ -55,7 +55,7 @@ class SelectedMenu extends Component {
     } else {
       listItemHtml = <ListItemText primary={this.props.options[this.state.selectedIndex]}  secondary={this.props.label}/>
 //       listItemHtml =<Button variant="outlined" color="primary"> `{this.props.label}: {this.props.options[this.state.selectedIndex]}` </Button>
-    } 
+    }
     return (
       <div>
         <List borderColor='green[200]' backgroundColor='green[500]'>
@@ -94,9 +94,5 @@ class SelectedMenu extends Component {
     );
   }
 }
-
-SelectedMenu.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default SelectedMenu;

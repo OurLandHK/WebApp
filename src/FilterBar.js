@@ -21,9 +21,7 @@ const styles = {
     borderColor: 'primary',
     fontWeight: 'bold',
     fontSize: '0.8rem',
-    textAlign: 'left',
-    //    width: '100%',
-    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+    textAlign: 'center'
   }
 };
 
@@ -47,7 +45,7 @@ class FilterBar extends  Component {
 
   errorCallBack(error) {
     console.warn('ERROR(${err.code}): ${err.message}');
-  }  
+  }
 
   render() {
     const classes = this.props.classes;

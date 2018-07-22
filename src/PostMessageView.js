@@ -304,7 +304,7 @@ class PostMessageView extends Component {
         streetAddress: streetAddress,
         locationTipOpen: false,
     });
-  }; 
+  };
 
 
   uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {
@@ -504,12 +504,12 @@ class PostMessageView extends Component {
   render() {
     let startTime = new Date().toLocaleTimeString();
     let timeHtml = null;
-    let postButtonHtml =  <Button size="small" variant="contained" color="primary"  raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
+    let postButtonHtml =  <Button size="small" variant="contained" color="primary" onClick={(evt) => this.handleRequestOpen(evt)}>
                             +<br/>報料
                           </Button>;
     if(false) {
       postButtonHtml =<BottomNavigationAction label="報料" showLabel={true} icon={<AddIcon />} onClick={(evt) => this.handleRequestOpen(evt)}/>
-    }                      
+    }
     const classes = this.props.classes;
     const { tags } = this.state;
     if(this.locationButton != null && this.locationButton.geolocation != null) {

@@ -62,7 +62,7 @@ const styles = theme => ({
   },
   container: {
     width: '98vw'
-  } 
+  }
 });
 
 
@@ -74,7 +74,7 @@ class TagDrawer extends React.Component {
         selectedTag: null,
         isSelectedAll: true,
       };
-  }    
+  }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.filter.tagList != this.props.filter.tagList) {
@@ -85,7 +85,7 @@ class TagDrawer extends React.Component {
   toggleDrawer(open){
     this.setState({open: open});
   };
-        
+
   setTag(tag) {
     if(tag == null) {
       this.setState({
@@ -109,7 +109,7 @@ class TagDrawer extends React.Component {
     return tagList.map(tag => {
       let icons = <LabelIcon />;
       return (
-        <ListItem button onClick={() => {this.setTag(tag)}}>
+        <ListItem button key={tag} onClick={() => {this.setTag(tag)}}>
           <ListItemIcon>
           {icons}
           </ListItemIcon>
@@ -123,18 +123,18 @@ class TagDrawer extends React.Component {
     return (<ListItem button onClick={() => {this.setTag(null)}}>
               <ListItemIcon>
                <AllIcon />
-               </ListItemIcon> 
+               </ListItemIcon>
                <ListItemText primary={constant.noTagLabel} />
             </ListItem>);
   }
 
   render() {
       let firstItem = this.renderFirstListItem();
-      const { classes } = this.props;      
+      const { classes } = this.props;
       return (
       <div className={classes.container}>
           <Button
-          variant="outlined" color="primary" 
+          variant="outlined" color="primary"
             onClick={() => {this.toggleDrawer(true)}}
             className={classes.button}
           >

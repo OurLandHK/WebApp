@@ -89,7 +89,7 @@ class Main extends Component {
                         <h4>{constant.recentEventLabel}</h4>
                         <BookmarkView bookmark={bookmark} open={openRecent} />
                       </div>;
-    }    
+    }
     if(focusMessages != null && focusMessages.length > 0 && focusMessages[0].messages.length) {
       focusMessage = <div className="focus-message-wrapper">
         <h4>{constant.focusMessagesLabel}</h4>
@@ -107,11 +107,6 @@ class Main extends Component {
       <div className={classes.container}>
         {recentMessage}
         {focusMessage}
-        <NearbyEventDialog
-          eventNumber={eventNumber}
-          distance={distance}
-          geolocation={geolocation}
-        />
         <RegionEventDialog
           eventNumber={eventNumber}
           distance={distance}
@@ -126,7 +121,7 @@ class Main extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.contentWrapper}>
-          {messageHtml}       
+          {messageHtml}
       </div>
     );
   }
