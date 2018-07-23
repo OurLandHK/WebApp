@@ -9,7 +9,6 @@ import {connect} from "react-redux";
 class BookmarkList extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props.bookmarkList);
     if(this.props.bookmarkList==undefined || this.props.bookmarkList==null) {
         this.props.bookmarkList=[];
     }
@@ -21,7 +20,6 @@ class BookmarkList extends Component {
   render() {
     let elements = null;
     const { bookmarkList } = this.props;
-    console.log(bookmarkList);
     if(bookmarkList != undefined) {
         elements = bookmarkList.map((bookmark) => {
             return (<BookmarkView bookmark={bookmark} OnChange={() => {this.componentWillMount()}}/>);

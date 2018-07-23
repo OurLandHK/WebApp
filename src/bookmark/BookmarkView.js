@@ -95,19 +95,25 @@ class BookmarkView extends Component {
 
     componentDidMount() {
         //console.log("componentDidMolunt");
-        this.getUserProfile();
+        return this.getUserProfile();
       }
 
     componentDidUpdate(prevProps, prevState) {
         if (this.props.bookmark != prevProps.bookmark) {
-          this.getUserProfile();
+          return this.getUserProfile();
+        } else {
+            return;
         }
       }
 
     getUserProfile() {
         if(this.state.uid != "") {
             let user = {uid: this.state.uid};
-            getUserProfile(user).then((userProfile) => this.setState({userProfile: userProfile}));
+            return getUserProfile(user).then((userProfile) => {
+                this.setState({userProfile: userProfile});
+                return;});
+        } else {
+            return
         }
     }
 
