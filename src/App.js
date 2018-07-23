@@ -43,7 +43,6 @@ const store = createStoreWithMiddleware(rootReducer);
 class App extends Component {
   constructor(props) {
     super(props);
-    init3rdPartyLibraries();
     let params = (new URL(document.location)).searchParams;
     let eventId = params.get("eventid");
     let userId = params.get("userid");

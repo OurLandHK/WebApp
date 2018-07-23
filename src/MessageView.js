@@ -11,7 +11,6 @@ import { withStyles } from '@material-ui/core/styles';
 import FiberNewIcon from '@material-ui/icons/FiberNew';
 import Paper from '@material-ui/core/Paper';
 import red from '@material-ui/core/colors/red';
-import MessageDialog from './MessageDialog';
 import Typography from '@material-ui/core/Typography';
 import {incMessageViewCount} from './MessageDB';
 import {
@@ -228,10 +227,16 @@ class MessageView extends Component {
     } else {
       card = this.sliceRender(m.text, auther, imageUrl, subtitle, isUpdate);
     }
-    return (<div className="message-item">
-              {card}
-              <MessageDialog uuid={uuid} open={o} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
-            </div>);
+    return (
+      <div className='message-item'>
+        <a
+          target='detail'
+          href={'/detail/' + uuid}
+        >
+          {card}
+        </a>
+      </div>
+    );
   }
 }
 

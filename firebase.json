@@ -22,7 +22,7 @@
     }],
     "rewrites":[
       {
-        "source": "/details/*",
+        "source": "/detail/*",
         "function": "detailView"
       }
     ]
