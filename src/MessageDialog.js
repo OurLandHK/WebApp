@@ -121,7 +121,7 @@ class MessageDialog extends React.Component {
     let titleHtml = null;
     let detailView = null;
     let deleteButton = null;
-    let shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + uuid;
+    let shareUrl = window.location.protocol + "//" + window.location.hostname + "/detail/" + uuid;
     let title = "";
     let imageUrl = "";
     let m = this.message;
