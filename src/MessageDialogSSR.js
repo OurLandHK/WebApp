@@ -3,6 +3,7 @@ import {getMessage} from './MessageDB';
 import {connect} from "react-redux";
 import {
   checkAuthState,
+  fetchConcernMessagesFromOurLand,  
 } from './actions';
 
 import MessageDialog from './MessageDialog';
@@ -11,8 +12,9 @@ import MessageDetailView from  './MessageDetailView';
 
 class MessageDialogSSR extends Component {
   componentWillMount() {
-    const { checkAuthState, uuid } = this.props;
+    const { checkAuthState, fetchConcernMessagesFromOurLand } = this.props;
     checkAuthState();
+    fetchConcernMessagesFromOurLand();
   }
 
   render() {
@@ -43,6 +45,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     checkAuthState:
       () => dispatch(checkAuthState()),
+    fetchConcernMessagesFromOurLand:
+      () => dispatch(fetchConcernMessagesFromOurLand()),
   }
 };
 

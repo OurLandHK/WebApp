@@ -44,14 +44,19 @@ const styles = theme => ({
   flexGrow: {
     flex: '1 1 auto',
   },
-  title: {
+  auther: {
 //    marginBottom: 16,
     fontSize: 14,
     color: theme.palette.text.secondary,
+//    textOverflow: 'ellipsis',
+  },
+  title: {
+//    textOverflow: 'ellipsis', 
   },
   pos: {
 //    marginBottom: 12,
     color: theme.palette.text.secondary,
+//    textOverflow: 'ellipsis'
   },
   details: {
     display: 'flex',
@@ -72,7 +77,8 @@ const styles = theme => ({
   },
   summaryGrid: {
     display: 'inline-grid',
-    padding: '8px'
+    padding: '8px',
+    textOverflow: 'ellipsis',
   },
   thumbnailGrid: {
     padding: '8px'
@@ -98,7 +104,7 @@ class MessageView extends Component {
         incViewCount = true;
       }
       updateRecentMessage(this.props.message.key, false);
-      this.openDialog();
+      //this.openDialog();
 
       if(incViewCount) {
         incMessageViewCount(this.props.message.key);
@@ -111,32 +117,11 @@ class MessageView extends Component {
     return (<Card className={classes.tileCard} onClick={() => this.handleClick()}>
               <CardMedia className={classes.tileMedia} image={imageUrl} title={auther}/>
               <CardContent>
-                <Typography variant="title">{text}</Typography>
-                <Typography component="p">{subtitle}</Typography>
+                <Typography className={classes.title} variant="title">{text}</Typography>
+                <Typography className={classes.pos} component="p">{subtitle}</Typography>
               </CardContent>
             </Card>);
   };
-/*
-  sliceRender(text, auther, imageUrl, subtitle, isUpdate) {
-    const classes = this.props.classes;
-    let newIcon = null;
-    if(isUpdate) {
-      newIcon = <FiberNewIcon className={classes.newIcon}/>
-    }
-    let summary = <div className={classes.details}>
-                    <CardContent className={classes.content}>
-                      <Typography className={classes.title}>{newIcon}{auther}</Typography>
-                      <Typography noWrap='true' variant="headline"> {text}</Typography>
-                      <Typography className={classes.pos}>{subtitle}</Typography>
-                    </CardContent>
-                  </div>
-    let thumbnail = <CardMedia className={classes.cover}  image={imageUrl}/>;
-    return (<Card container className={classes.card}  onClick={() => this.handleClick()}>
-              {thumbnail}
-              {summary}
-            </Card>);
-  }
-*/
 
   sliceRender(text, auther, imageUrl, subtitle, isUpdate) {
     const classes = this.props.classes;
@@ -145,13 +130,13 @@ class MessageView extends Component {
       newIcon = <FiberNewIcon className={classes.newIcon}/>
     }
     let summary = <Grid className={classes.summaryGrid} item xs onClick={() => this.handleClick()}>
-                      <Typography className={classes.title}>{newIcon}{auther}</Typography>
-                      <Typography variant="title"> {text}</Typography>
+                      <Typography className={classes.auther}>{newIcon}{auther}</Typography>
+                      <Typography className={classes.title} variant="title"> {text}</Typography>
                       <Typography className={classes.pos}>{subtitle}</Typography>
                   </Grid>
     let thumbnail = <Grid item className={classes.thumbnailGrid}><CardMedia className={classes.cover}  image={imageUrl}/> </Grid>
     return ( <Paper className={classes.paper}>
-              <Grid container wrap="nowrap" spacing={0}>
+              <Grid container spacing={0}>
               {thumbnail}
               {summary}
               </Grid>
