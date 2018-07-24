@@ -85,6 +85,7 @@ class MessageDialog extends React.Component {
     }
   }
 
+
   openDialog(){
     var uuid = this.props.uuid;
     return getMessage(uuid).then((message) => {
@@ -105,11 +106,13 @@ class MessageDialog extends React.Component {
   };
 
   handleRequestClose = () => {
+    window.history.pushState("", "", '/');
     this.setState({ open: false });
   };
 
   handleRequestDelete = () => {
     return dropMessage(this.props.uuid).then((value) => {
+      window.history.pushState("", "", '/');
       this.setState({ open: false });
     });
   };
@@ -149,11 +152,13 @@ class MessageDialog extends React.Component {
                             <DeleteIcon />
                           </IconButton>
         }
-      }
+        window.history.pushState("", "", `/detail/${this.props.uuid}`);
+      } 
       detailView = <MessageDetailView message={m}  happyAndSad={this.happyAndSad}/>;
 
+    } else {
+      window.history.pushState("", "", "/");
     }
-
     return (
         <Dialog
           fullScreen

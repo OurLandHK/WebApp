@@ -19,6 +19,7 @@ class MessageDialogSSR extends Component {
 
   render() {
     const { user, uuid } = this.props;
+    let homeUrl = window.location.protocol + "//" + window.location.hostname;
     return (
       <div>
         {user &&
@@ -27,7 +28,7 @@ class MessageDialogSSR extends Component {
            open={true}
            openDialog={()=>{}} openDialog={openDialog => this.openDialog = openDialog}
            ref={(messageDialog) => {this.messageDialog = messageDialog;}}
-           closeDialog={() => {window.history.back();}} 
+           closeDialog={() => {window.location.href = homeUrl;}} 
          />
         }
       </div>
