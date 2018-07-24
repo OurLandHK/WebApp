@@ -53,7 +53,13 @@ class PublicProfile extends React.Component {
     this.state = {userProfile: null, bookmarkList: []};
     this.publishMessages = null;
     this.completeMessages = null;
+    this.onBackButtonEvent = this.onBackButtonEvent.bind(this);
   } 
+
+  onBackButtonEvent(e) {
+    e.preventDefault();
+    this.handleRequestClose();
+  }
 
   componentDidMount() {
     if (this.props.id != "") {
@@ -77,8 +83,6 @@ class PublicProfile extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-//    console.log(prevProps.id + " id  " + this.props.id);
-//    console.log(prevProps.open + " open " + this.props.open);
     if (prevProps.id != this.props.id && this.props.id != "") {
       var user = {uid: this.props.id};
       this.fetchUserProfile(user);
@@ -87,6 +91,7 @@ class PublicProfile extends React.Component {
 
 
   handleRequestClose = () => {
+//    window.onpopstate = this.lastOnPopState;
     this.props.togglePublicProfileDialog(false);
   };
 
@@ -126,6 +131,14 @@ class PublicProfile extends React.Component {
 
     
     const { classes, open, id } = this.props;
+  /*  can't handle back for publie profile proper yet
+    if(open) {
+      if(window.onpopstate != this.onBackButtonEvent) {
+        this.lastOnPopState = window.onpopstate;
+        window.onpopstate = this.onBackButtonEvent;
+      }
+    }
+  */  
     return (
       <div>
         <br/>

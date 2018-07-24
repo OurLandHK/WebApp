@@ -82,6 +82,7 @@ class BookmarkView extends Component {
         if(this.props.open != undefined) {
             open = this.props.open;
         }
+        this.onBackButtonEvent = this.onBackButtonEvent.bind(this);
         this.state = {
             popoverOpen: open,
             title: title,
@@ -118,6 +119,8 @@ class BookmarkView extends Component {
     }
 
     handleRequestOpen(evt) {
+        this.lastOnPopState = window.onpopstate;
+        window.onpopstate = this.onBackButtonEvent;
         evt.preventDefault();
         let title = "";
         let messages = [];
@@ -161,10 +164,17 @@ class BookmarkView extends Component {
       }
     
     handleRequestClose() {
+        window.onpopstate = this.lastOnPopState;
         this.setState({
           popoverOpen: false,
         });
     };   
+
+    onBackButtonEvent(e) {
+        e.preventDefault();
+        this.handleRequestClose();
+      }
+        
 
     onSubmit() {
         const { user } = this.props;

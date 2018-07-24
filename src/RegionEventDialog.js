@@ -58,6 +58,8 @@ const styles = theme =>  ({
 class RegionEventDialog extends React.Component {
   constructor(props) {
     super(props);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
+    this.onBackButtonEvent = this.onBackButtonEvent.bind(this);
     this.state = {
         eventNumber: this.props.eventNumber,
         distance: this.props.distance,
@@ -69,14 +71,23 @@ class RegionEventDialog extends React.Component {
 
   handleRequestOpen(evt, titleLabel, filter) {
     evt.preventDefault();
+    this.lastOnPopState = window.onpopstate;
+    window.onpopstate = this.onBackButtonEvent;
     console.log(filter, titleLabel)
     this.setState({filter: filter, titleLabel: titleLabel});
     this.props.toggleRegionEventDialog(true);
   }
 
   handleRequestClose = () => { // this function is not called
+    window.onpopstate = this.lastOnPopState;
     this.props.toggleRegionEventDialog(false);
   };
+
+  onBackButtonEvent(e) {
+    console.log("onBackButtonEvent Region" + JSON.stringify(e.state));
+    e.preventDefault();
+    this.handleRequestClose();
+  }
 
   renderMessages() {
     const { eventNumber, distance, geolocation, eventId } = this.state;

@@ -54,12 +54,19 @@ function Transition(props) {
 class MessageDialog extends React.Component {
   constructor(props) {
       super(props);
+      this.onBackButtonEvent = this.onBackButtonEvent.bind(this);
       this.state = {open: false};
       this.message = null;
       this.happyAndSad = happyAndSadEnum.nothing; // (1 = happy, -1 = sad)                
       this.openDialog = this.openDialog.bind(this);
       this.props.openDialog(this.openDialog);  
   }
+
+  onBackButtonEvent(e) {
+    e.preventDefault();
+    this.handleRequestClose();
+  }
+    
 
   componentDidMount() {
     if(this.props.open) {
@@ -88,6 +95,8 @@ class MessageDialog extends React.Component {
 
   openDialog(){
     var uuid = this.props.uuid;
+    this.lastOnPopState = window.onpopstate;
+    window.onpopstate = this.onBackButtonEvent;
     return getMessage(uuid).then((message) => {
       this.message = message;   
       if(this.props.user != null && this.props.user.user) {
@@ -106,6 +115,7 @@ class MessageDialog extends React.Component {
   };
 
   handleRequestClose = () => {
+    window.onpopstate = this.lastOnPopState;
     window.history.pushState("", "", '/');
     this.setState({ open: false });
   };
