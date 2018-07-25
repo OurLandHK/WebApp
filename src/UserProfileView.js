@@ -60,6 +60,7 @@ const styles = {
 class UserProfileView extends React.Component {
     constructor(props) {
         super(props);
+        this.onBackButtonEvent = this.onBackButtonEvent.bind(this);
         var id = uuid.v4();
         this.state = {
             open: false,
@@ -80,11 +81,20 @@ class UserProfileView extends React.Component {
     }    
 
   openDialog = () => {
+    this.lastOnPopState = window.onpopstate;
+    window.onpopstate = this.onBackButtonEvent;
     console.log('UserProfile Open'); 
     this.setState({ open: true });
   };
 
+  onBackButtonEvent(e) {
+    e.preventDefault();
+    this.handleRequestClose();
+  }
+    
+
   handleRequestClose = () => {
+    window.onpopstate = this.lastOnPopState;
     this.setState({ open: false });
   };
 

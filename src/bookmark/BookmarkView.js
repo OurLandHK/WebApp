@@ -82,6 +82,7 @@ class BookmarkView extends Component {
         if(this.props.open != undefined) {
             open = this.props.open;
         }
+        this.onBackButtonEvent = this.onBackButtonEvent.bind(this);
         this.state = {
             popoverOpen: open,
             title: title,
@@ -118,6 +119,8 @@ class BookmarkView extends Component {
     }
 
     handleRequestOpen(evt) {
+        this.lastOnPopState = window.onpopstate;
+        window.onpopstate = this.onBackButtonEvent;
         evt.preventDefault();
         let title = "";
         let messages = [];
@@ -161,10 +164,17 @@ class BookmarkView extends Component {
       }
     
     handleRequestClose() {
+        window.onpopstate = this.lastOnPopState;
         this.setState({
           popoverOpen: false,
         });
     };   
+
+    onBackButtonEvent(e) {
+        e.preventDefault();
+        this.handleRequestClose();
+      }
+        
 
     onSubmit() {
         const { user } = this.props;
@@ -239,7 +249,7 @@ class BookmarkView extends Component {
       }
 
     render() {
-        const { classes, user } = this.props;
+        const { classes, user, popoverOpen } = this.props;
         let addressButtonHtml = null;
         let deleteButtonHtml = null;
         let actionButtonHtml = null;
@@ -293,6 +303,11 @@ class BookmarkView extends Component {
         } else {
             actionButtonHtml = <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>{titleText}</Button>;
             titleEditHtml = <TextField disabled={this.state.readonly} autoFocus required inputRef={(tf) => {this.titleTextField = tf;}} id="title" fullWidth margin="normal" helperText={constant.bookmarkTitleLabel} value={this.state.title} onChange={event => this.setState({ title: event.target.value })}/>
+        }
+        if(popoverOpen) {
+
+        } else {
+            window.history.pushState("", "", "");
         }
         return(<span>
                     {addressButtonHtml}

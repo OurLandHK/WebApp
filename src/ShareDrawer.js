@@ -109,7 +109,7 @@ class ShareDrawer extends React.Component {
     if(this.props.message != undefined) {
       m = this.facebookQuote(this.props.message);
       hashtag = this.facebookHashTag(this.props.message.tag);
-      shareUrl = shareUrl + "/?eventid=" + this.props.message.key;
+      shareUrl = shareUrl + "/detail/" + this.props.message.key;
     }
 
     if(this.props.uid != undefined && this.props.displayName != undefined && this.props.displayName != "..." ){

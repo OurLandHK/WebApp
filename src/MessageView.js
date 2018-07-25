@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
+import MessageDialog from './MessageDialog';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid'
@@ -104,7 +104,7 @@ class MessageView extends Component {
         incViewCount = true;
       }
       updateRecentMessage(this.props.message.key, false);
-      //this.openDialog();
+      this.openDialog();
 
       if(incViewCount) {
         incMessageViewCount(this.props.message.key);
@@ -212,16 +212,25 @@ class MessageView extends Component {
     } else {
       card = this.sliceRender(m.text, auther, imageUrl, subtitle, isUpdate);
     }
-    return (
-      <div className='message-item'>
-        <a
-          target='detail'
-          href={'/detail/' + uuid}
-        >
-          {card}
-        </a>
-      </div>
-    );
+    if(false) {
+        return (
+          <div className='message-item'>
+            <a
+              target='detail'
+              href={'/detail/' + uuid}
+            >
+              {card}
+            </a>
+          </div>
+        );
+      } else {
+        return (
+          <div className='message-item'>
+              {card}
+              <MessageDialog uuid={uuid} open={o} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
+          </div>
+        );
+    }
   }
 }
 
