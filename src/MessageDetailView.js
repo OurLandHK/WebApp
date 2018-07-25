@@ -142,6 +142,7 @@ class MessageDetailView extends Component {
     } else {
       locationString = `地點: 近(${geoString(message.geolocation.latitude, message.geolocation.longitude)})`;
     }
+    let geolink =`geo:${message.geolocation.latitude},${message.geolocation.longitude}`;
     if(message.viewCount != null) {
       viewCountString += message.viewCount;
     } else {
@@ -150,9 +151,11 @@ class MessageDetailView extends Component {
     return (
       <Grid container direction='row' spacing={16}>
         <Grid item xs direction='column' className={classes.summaryGrid} >
-          <Typography variant="subheading">
-          {locationString}
-          </Typography>
+          <a href={geolink}>
+            <Typography variant="subheading">
+            {locationString}
+            </Typography>
+          </a>
           <Typography variant="subheading">
           {`現況: ${message.status} ${viewCountString}`}
           </Typography>
