@@ -212,25 +212,12 @@ class MessageView extends Component {
     } else {
       card = this.sliceRender(m.text, auther, imageUrl, subtitle, isUpdate);
     }
-    if(false) {
-        return (
-          <div className='message-item'>
-            <a
-              target='detail'
-              href={'/detail/' + uuid}
-            >
-              {card}
-            </a>
-          </div>
-        );
-      } else {
-        return (
-          <div className='message-item'>
-              {card}
-              <MessageDialog uuid={uuid} open={o} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
-          </div>
-        );
-    }
+    return (
+      <div className='message-item'>
+          {card}
+          <MessageDialog uuid={uuid} open={o} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
+      </div>
+    );
   }
 }
 

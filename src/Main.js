@@ -108,6 +108,11 @@ class Main extends Component {
       <div className={classes.container}>
         {recentMessage}
         {focusMessage}
+        <NearbyEventDialog
+          eventNumber={eventNumber}
+          distance={distance}
+          geolocation={geolocation}
+        />        
         <RegionEventDialog
           eventNumber={eventNumber}
           distance={distance}
