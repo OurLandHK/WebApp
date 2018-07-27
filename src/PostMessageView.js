@@ -507,9 +507,6 @@ class PostMessageView extends Component {
     let postButtonHtml =  <Button size="small" variant="contained" color="primary" onClick={(evt) => this.handleRequestOpen(evt)}>
                             +<br/>報料
                           </Button>;
-    if(false) {
-      postButtonHtml =<BottomNavigationAction label="報料" showLabel={true} icon={<AddIcon />} onClick={(evt) => this.handleRequestOpen(evt)}/>
-    }
     const classes = this.props.classes;
     const { tags } = this.state;
     if(this.locationButton != null && this.locationButton.geolocation != null) {
