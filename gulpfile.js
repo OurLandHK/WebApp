@@ -20,6 +20,10 @@ gulp.task('default', function () {
 
   // read in our handlebars template, compile it using
   // our manifest, and output it to index.html
+  gulp.src('public/userView.hbs')
+    .pipe(handlebars(manifest, handlebarOpts))
+    .pipe(rename('userView.template.html'))
+    .pipe(gulp.dest('functions/'));
   return gulp.src('public/detailView.hbs')
     .pipe(handlebars(manifest, handlebarOpts))
     .pipe(rename('detailView.template.html'))

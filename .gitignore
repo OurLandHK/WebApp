@@ -8,3 +8,4 @@ node_modules
 **.swo
 *.log
 functions/detailView.template.html
+functions/userView.template.html

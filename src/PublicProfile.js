@@ -64,9 +64,14 @@ class PublicProfile extends React.Component {
   componentDidMount() {
     if (this.props.id != "") {
       //console.log("componentDidMount id  " + this.props.id);
-      var user = {uid: this.props.id};
+      let user = {uid: this.props.id};
       this.fetchUserProfile(user);
     }
+    if (this.props.userid != null) {
+      //console.log("componentDidMount id  " + this.props.id);
+      let user = {uid: this.props.userid};
+      this.fetchUserProfile(user);
+    }    
   }
 
   fetchUserProfile(user) {
@@ -92,7 +97,11 @@ class PublicProfile extends React.Component {
 
   handleRequestClose = () => {
 //    window.onpopstate = this.lastOnPopState;
-    this.props.togglePublicProfileDialog(false);
+    if(this.props.closeDialog != null) {
+      this.props.closeDialog();
+    } else {
+      this.props.togglePublicProfileDialog(false);
+    }
   };
 
   
@@ -131,6 +140,12 @@ class PublicProfile extends React.Component {
 
     
     const { classes, open, id } = this.props;
+    let dialogOpen = open;
+    let userid = id;
+    if(this.props.userid != null) {
+      dialogOpen = true;
+      userid = this.props.userid;
+    }
   /*  can't handle back for publie profile proper yet
     if(open) {
       if(window.onpopstate != this.onBackButtonEvent) {
@@ -142,14 +157,14 @@ class PublicProfile extends React.Component {
     return (
       <div>
         <br/>
-        <Dialog fullScreen  open={open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
+        <Dialog fullScreen  open={dialogOpen} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                   <CloseIcon />
               </IconButton>
               <Typography variant="title" color="inherit" className={classes.flex}>{constant.publicProfileLabel}</Typography>           
-              <ShareDrawer uid={id} displayName={displayName}/>  
+              <ShareDrawer uid={userid} displayName={displayName}/>  
             </Toolbar>
           </AppBar>
           <div className={classes.container}>

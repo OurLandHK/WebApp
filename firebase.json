@@ -24,7 +24,15 @@
       {
         "source": "/detail/*",
         "function": "detailView"
-      }
+      },
+      {
+        "source": "/user/*",
+        "function": "userView"
+      },
+      {
+        "source": "/user/*/*",
+        "function": "userView"
+      }            
     ]
   },
   "firestore": {

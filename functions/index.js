@@ -24,6 +24,7 @@ const gcs = require('@google-cloud/storage')();
 const exec = require('child-process-promise').exec;
 const nodemailer = require('nodemailer');
 const detailView = require('./detailView');
+const userView = require('./userView');
 // Email Service
 
 
@@ -225,3 +226,4 @@ function blurImage(filePath) {
 }
 
 exports.detailView = detailView.detailView;
+exports.userView = userView.userView;

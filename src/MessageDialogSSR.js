@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {getMessage} from './MessageDB';
 import {connect} from "react-redux";
 import {
   checkAuthState,
@@ -7,7 +6,6 @@ import {
 } from './actions';
 
 import MessageDialog from './MessageDialog';
-import MessageDetailView from  './MessageDetailView';
 
 
 class MessageDialogSSR extends Component {

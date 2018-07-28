@@ -164,10 +164,14 @@ class BookmarkView extends Component {
       }
     
     handleRequestClose() {
-        window.onpopstate = this.lastOnPopState;
-        this.setState({
-          popoverOpen: false,
-        });
+        if(this.props.closeDialog != null) {
+            this.props.closeDialog();
+        } else {
+            window.onpopstate = this.lastOnPopState;
+            this.setState({
+               popoverOpen: false,
+            });
+        }
     };   
 
     onBackButtonEvent(e) {

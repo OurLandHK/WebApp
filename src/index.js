@@ -8,7 +8,8 @@ import { Provider } from 'react-redux';
 import rootReducer from './reducers';
 import App from './App';
 import MessageDialogSSR from './MessageDialogSSR';
-import {getMessage} from './MessageDB';
+import PublicProfileSSR from './PublicProfileSSR';
+import BookmarkViewSSR from './BookmarkViewSSR';
 import { init3rdPartyLibraries } from './actions';
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 const store = createStoreWithMiddleware(rootReducer);
@@ -54,4 +55,35 @@ if (detailRoot) {
       </Provider>
     </MuiThemeProvider>,
     detailRoot);
+}
+
+const userRoot = document.getElementById('userRoot');
+if (userRoot) {
+  const parts = document.URL.split('/');
+  let userIndex = parts.length - 1;
+  while(userIndex > 0) {
+    //console.log(req.url + "  " + parts[userIndex] + " " + userIndex)
+    if(parts[userIndex] == 'user') {
+          userIndex++;
+          break;
+    }
+    userIndex--;
+  }
+  const userid = parts[userIndex];
+  let bookmarkid = null;
+  if(userIndex < parts.length - 1) {
+    bookmarkid = parts[userIndex+1];
+  }
+  console.log(`userID ${userid} bookmarkID ${bookmarkid}`);
+  let userHtml = <PublicProfileSSR userid={userid} />;
+  if(bookmarkid != null) {
+    userHtml = <BookmarkViewSSR userid={userid} bookmarkid={bookmarkid} />
+  }
+  ReactDOM.render(
+    <MuiThemeProvider theme={theme}>
+      <Provider store={store}>
+        {userHtml}
+      </Provider>
+    </MuiThemeProvider>,
+    userRoot);
 }
