@@ -2,18 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-import ForumIcon from '@material-ui/icons/Forum';
-import classnames from 'classnames';
 import red from '@material-ui/core/colors/red';
 import Typography from '@material-ui/core/Typography';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
-import MessageDetailView from './MessageDetailView';
-import {updateMessageConcernUser} from './MessageDB';
-import BottomNavigation, { BottomNavigationAction } from '@material-ui/core/BottomNavigation';
-import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import yellow from '@material-ui/core/colors/yellow';
@@ -103,30 +95,8 @@ const EmailIcon = generateShareIcon('email');
 class ShareDrawer extends React.Component {
   constructor(props) {
     super(props);
-    let m = "";
-    let hashtag = "";
-    let shareUrl = window.location.protocol + "//" + window.location.hostname;
-    if(this.props.message != undefined) {
-      m = this.facebookQuote(this.props.message);
-      hashtag = this.facebookHashTag(this.props.message.tag);
-      shareUrl = shareUrl + "/detail/" + this.props.message.key;
-    }
-
-    if(this.props.uid != undefined && this.props.displayName != undefined && this.props.displayName != "..." ){
-      m = this.props.displayName;
-      hashtag = "#我地";
-      shareUrl = shareUrl + "/?userid=" + this.props.uid;
-    }
-    if(this.props.bookmark != undefined) {
-      m = this.props.bookmark.title;
-      hashtag = "#我地";
-      shareUrl = shareUrl + "/?userid=" + this.props.bookmark.uid + "&bookmark=" + this.props.bookmark.key;
-    }
     this.state = {
       bottom: false,
-      m: m,
-      hashtag: hashtag,
-      shareUrl: shareUrl
     };
   }
 
@@ -230,6 +200,25 @@ class ShareDrawer extends React.Component {
 
   render() {
     const { classes } = this.props;
+    let m = "";
+    let hashtag = "";
+    let shareUrl = window.location.protocol + "//" + window.location.hostname;
+    console.log(`message ${this.props.message} uid ${this.props.uid} book: ${this.props.bookmark}`);
+    if(this.props.message != undefined) {
+      m = this.facebookQuote(this.props.message);
+      hashtag = this.facebookHashTag(this.props.message.tag);
+      shareUrl = shareUrl + "/detail/" + this.props.message.key;
+    }
+    if(this.props.uid != undefined && this.props.displayName != undefined && this.props.displayName != "..." ){
+      m = this.props.displayName;
+      hashtag = "#我地";
+      shareUrl = shareUrl + "/user/" + this.props.uid;
+    }
+    if(this.props.bookmark != undefined) {
+      m = this.props.bookmark.title;
+      hashtag = "#我地";
+      shareUrl = shareUrl + "/user/" + this.props.bookmark.uid + "/" + this.props.bookmark.key;
+    }
 
 
     return (
@@ -262,10 +251,10 @@ class ShareDrawer extends React.Component {
             onClick={this.toggleDrawer('bottom', false)}
             onKeyDown={this.toggleDrawer('bottom', false)}
           >
-            { this.renderFacebook(this.state.shareUrl, this.state.m, this.state.hashtag) }
-            { this.renderWhatsapp(this.state.shareUrl, this.state.m) }
-            { this.renderEmail(this.state.shareUrl, this.state.m) }
-            { this.renderTelegram(this.state.shareUrl, this.state.m) }
+            { this.renderFacebook(shareUrl, m, hashtag) }
+            { this.renderWhatsapp(shareUrl, m) }
+            { this.renderEmail(shareUrl, m) }
+            { this.renderTelegram(shareUrl, m) }
           </div>
         </Drawer>
       </span>
