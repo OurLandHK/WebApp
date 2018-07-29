@@ -47,25 +47,25 @@ class MessageList extends Component {
       messageIds: messageIds,
       selectedTag: null,
       selectedSorting: null,
-      statusMessage: statusMessage
+      statusMessage: statusMessage,
     };
-    this.updateFilter = this.updateFilter.bind(this);
+    this.updateGlobalFilter = this.updateGlobalFilter.bind(this);
     this.setMessage = this.setMessage.bind(this);
     this.clear = this.clear.bind(this);
   }
 
   componentDidMount() {
     if(this.state.messageIds.length != 0) {
-      this.updateFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
+      this.updateGlobalFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
+      this.refreshMessageList();
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.filter.geolocation != prevProps.filter.geolocation ||
+    if (this.state.messageIds.length == 0 && (this.props.filter.geolocation != prevProps.filter.geolocation ||
       this.props.filter.distance != prevProps.filter.distance ||
-      this.props.filter.selectedSorting != prevProps.filter.selectedSorting) {
+      this.props.filter.selectedSorting != prevProps.filter.selectedSorting)) {
       if(!this.hori) {
-        //console.log("componentDidUpdate");
         this.refreshMessageList();
       }
     } else {
@@ -80,16 +80,16 @@ class MessageList extends Component {
     }
   }
 
-  updateFilter(eventNumber, distance, geolocation) {
+  updateGlobalFilter(eventNumber, distance, geolocation) {
     //console.log("ML Update Filter: " + geolocation);
     const { updateFilter } = this.props;
     updateFilter(eventNumber, distance, geolocation);
-    this.refreshMessageList();
   }
 
   refreshMessageList() {
-    this.setState({selectedTag: null});
-    this.setState({selectedSorting: null});
+    this.setState({
+      selectedTag: null,
+      selectedSorting: null});
     this.fetchMessages(this.props.filter);
   }
 
@@ -126,6 +126,7 @@ class MessageList extends Component {
         //console.log("Ids:" + Ids);
         getMessage(Ids).then((message) => {this.setMessage(message)});
       });
+      
     } else {
       switch (geolocation) {
         case constant.invalidLocation:
