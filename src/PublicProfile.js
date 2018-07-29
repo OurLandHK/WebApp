@@ -96,7 +96,8 @@ class PublicProfile extends React.Component {
 
 
   handleRequestClose = () => {
-//    window.onpopstate = this.lastOnPopState;
+    window.history.pushState("", "", `/`)
+    window.onpopstate = this.lastOnPopState;
     if(this.props.closeDialog != null) {
       this.props.closeDialog();
     } else {
@@ -146,14 +147,13 @@ class PublicProfile extends React.Component {
       dialogOpen = true;
       userid = this.props.userid;
     }
-  /*  can't handle back for publie profile proper yet
-    if(open) {
+    if(dialogOpen) {
+      window.history.pushState("", "", `/user/${userid}`)
       if(window.onpopstate != this.onBackButtonEvent) {
         this.lastOnPopState = window.onpopstate;
         window.onpopstate = this.onBackButtonEvent;
       }
     }
-  */  
     return (
       <div>
         <br/>

@@ -161,9 +161,11 @@ class BookmarkView extends Component {
             uid: uid,
             readonly: readonly
         });
+        window.history.pushState("", "", `/user/${uid}/${key}`)
       }
     
     handleRequestClose() {
+        window.history.pushState("", "", "/");
         if(this.props.closeDialog != null) {
             this.props.closeDialog();
         } else {
@@ -253,7 +255,7 @@ class BookmarkView extends Component {
       }
 
     render() {
-        const { classes, user, popoverOpen } = this.props;
+        const { classes, user} = this.props;
         let addressButtonHtml = null;
         let deleteButtonHtml = null;
         let actionButtonHtml = null;
@@ -307,11 +309,6 @@ class BookmarkView extends Component {
         } else {
             actionButtonHtml = <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>{titleText}</Button>;
             titleEditHtml = <TextField disabled={this.state.readonly} autoFocus required inputRef={(tf) => {this.titleTextField = tf;}} id="title" fullWidth margin="normal" helperText={constant.bookmarkTitleLabel} value={this.state.title} onChange={event => this.setState({ title: event.target.value })}/>
-        }
-        if(popoverOpen) {
-
-        } else {
-            window.history.pushState("", "", "");
         }
         return(<span>
                     {addressButtonHtml}
