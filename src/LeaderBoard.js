@@ -18,17 +18,18 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText  from '@material-ui/core/ListItemText';
 import {connect} from "react-redux";
+import Ranking from "./Ranking";
 import Tab  from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+import FilterBar from './FilterBar';
 import {
   toggleLeaderBoard,
   fetchTopTwenty,
   updatePublicProfileDialog,
+  updateFilterWithCurrentLocation,
 } from './actions';
 
 function Transition(props) {
@@ -36,12 +37,6 @@ function Transition(props) {
 }
 
 const styles = {
-  appBar: {
-    position: 'relative',
-  },
-  flex: {
-    flex: 1,
-  },
   container: {
     overflowY: 'auto'
   }
@@ -50,7 +45,7 @@ const styles = {
 class LeaderBoard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: 0};
+    this.state = { value: 'current'};
     this.openPublicProfileDialog = this.openPublicProfileDialog.bind(this);
   }
 
@@ -103,9 +98,26 @@ class LeaderBoard extends React.Component {
     );
   }
 
+  renderNearby() {
+    const { classes } = this.props;
+    return (
+        <div className={classes.container}>
+          <FilterBar/>
+          <Ranking
+            ref={(ranking) => {this.ranking = ranking}}
+            distance='1'
+            geolocation={constant.invalidLocation}
+          />
+        </div>
+    );
+  }
+
+
   render() {
-    const { classes, open } = this.props;
+    const { classes, open, user } = this.props;
     const { value } = this.state;
+    let homeTab = null;
+    let officeTab = null;
     return (
       <div class="leaderboard-wrapper">
         <div class="tabs-row">
@@ -114,11 +126,14 @@ class LeaderBoard extends React.Component {
             onChange={this.handleChange}
             fullWidth
           >
-            <Tab label="頭二十名" />
-            <Tab label="你的排名" />
+            <Tab label="附近排名" value="current"/>
+            {homeTab}
+            {officeTab}
+            <Tab label="全港頭二十名" value="hktop"/>
           </Tabs>
         </div>
-        {value == 0 && this.renderTopTwenty()}
+        {value == 'current' && this.renderNearby()}
+        {value == 'hktop' && this.renderTopTwenty()}
       </div>);
   }
 }
@@ -143,6 +158,8 @@ const mapDispatchToProps = (dispatch) => {
     updatePublicProfileDialog:
       (userId, fbuid, open) =>
         dispatch(updatePublicProfileDialog(userId, fbuid, open)),
+    updateFilterWithCurrentLocation:
+      () => dispatch(updateFilterWithCurrentLocation()),        
   }
 };
 

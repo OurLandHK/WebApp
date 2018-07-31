@@ -119,9 +119,8 @@ class LocationDrawer extends React.Component {
 
   fetchAddress(user) {
     this.setState({user:user});
-    if(!this.isUsePublicAddressBook) {
-      this.props.fetchAddressBookByUser(user);
-    } else {
+    this.props.fetchAddressBookByUser(user);
+    if(this.isUsePublicAddressBook) {
       this.props.fetchAddressBookFromOurLand();
     }
   }
@@ -164,17 +163,40 @@ class LocationDrawer extends React.Component {
   }
 
   renderAddressBook() {
-    const { classes, addressBook, geolocation } = this.props;
-    var addressList=addressBook.addresses;
+    const { classes, addressBook, geolocation, user } = this.props;
+    let addressList=addressBook.addresses;
     if(this.isUsePublicAddressBook) {
-      addressList=addressBook.publicAddresses;
+      if(user.userProfile == null) {
+        addressList=addressBook.publicAddresses;
+      } else {
+        //merge 2 addressLists
+        addressList = [];
+        let address;
+        for(address of addressBook.addresses) {
+          addressList.push({
+                            type: address.type, 
+                            text: address.text,
+                            geolocation: address.geolocation,
+                            streetAddress: address.streetAddress
+                          });
+          console.log(addressList[addressList.length - 1].text + " " + addressList.length);
+        };
+        for(address of addressBook.publicAddresses) {
+          if(address.type != addressEnum.home && address.type != addressEnum.office) {
+              addressList.push({
+                            type: address.type, 
+                            text: `十八社區/${address.text}`,
+                            geolocation: address.geolocation,
+                            streetAddress: address.streetAddress
+                          })
+                          console.log(addressList[addressList.length - 1].text + " " + addressList.length);
+          }
+        };                                                          
+      }
     }
     addressList = this.buildGrouppedAddressList(addressList || [], this.state.locationPrefix);
     return addressList.map(address => {
       let type = address.type;
-      if(this.isUsePublicAddressBook && (type == addressEnum.home || type == addressEnum.office)) {
-        return null;
-      }
       let icons = <PlaceIcon />;
       let text = address.text;
       let locationString = constant.addressNotSet;
@@ -202,7 +224,7 @@ class LocationDrawer extends React.Component {
       }
       if (address.isGroup) {
         return (
-          <ListItem button onClick={() => {this.setLocationPrefix(text + '/')}}>
+          <ListItem button onClick={() => {this.setLocationPrefix(this.state.locationPrefix + text + '/')}}>
             <ListItemIcon>
             {icons}
             </ListItemIcon>
@@ -238,7 +260,7 @@ class LocationDrawer extends React.Component {
 
   renderFirstListItem() {
     var addAddress = null;
-    if(!this.isUsePublicAddressBook) {
+    if(this.props.user.userProfile != null) {
       addAddress = <Button onClick={this.addLocationOnClick}>
                       <AddIcon />
                       {constant.addAddressLabel}
@@ -298,6 +320,7 @@ LocationDrawer.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    user: state.user,
     filter : state.filter,
     addressBook: state.addressBook,
     geolocation: state.geolocation,
