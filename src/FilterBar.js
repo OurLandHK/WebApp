@@ -30,6 +30,10 @@ class FilterBar extends  Component {
     super(props);
     this.isUsePublicAddressBook = false;
     this.disableLocationDrawer = false;
+    this.ranking = false;
+    if(this.props.ranking == true) {
+      this.ranking = true;
+    }
     if(this.props.disableLocationDrawer == true) {
       this.disableLocationDrawer = true;
     } else {
@@ -54,9 +58,15 @@ class FilterBar extends  Component {
          <TagDrawer /> 按 <SortingDrawer/> <div flex={1}/>
       </Toolbar>);
     } else {
-      return (<Toolbar className={classes.filter}>
+      if(this.ranking) {
+        return (<Toolbar className={classes.filter}>
+                  <LocationDrawer isUsePublicAddressBook={true}/>
+              </Toolbar>);
+      } else {
+        return (<Toolbar className={classes.filter}>
                   <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook}/> 的 <TagDrawer /> 按 <SortingDrawer/> <div flex={1}/>
                 </Toolbar>);
+      }
     }
   }
 }
