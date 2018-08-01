@@ -2,6 +2,28 @@ import * as firebase from 'firebase';
 import uuid from 'js-uuid';
 import config, {constant, addressEnum, RoleEnum} from './config/default';
 
+function fetchAllUser(callback) {
+    const db = firebase.firestore();
+    let collectionRef = db.collection(config.userDB);
+    collectionRef.onSnapshot(function() {})  
+    collectionRef.get().then(function(querySnapshot) {
+        if(querySnapshot.empty) {
+            return;
+        } else { 
+            querySnapshot.forEach(function(userRef) {
+                var val = userRef.data();
+                if(val) {
+                    val.uid = userRef.id;
+                    callback(val);
+                }
+            });
+        }
+    }).catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+ }
+
+
 function getUserProfile(user) {
     // Use firestore
     if(user==null) {
@@ -415,7 +437,7 @@ function upgradeAllUser() {
                 if(val) {
                     let changeCreatedAt = false;
                     let change = false;
-                    let user = {uid: userRef.id};
+                    let user = {id: userRef.id};
                     return fetchBookmarkList(user).then((bookmarkList) => {
                         if(bookmarkList.length == 0) {
                             const concernMessages = val.concernMessages;
@@ -437,6 +459,6 @@ function upgradeAllUser() {
     })         
 }
 
-export {addCompleteMessage, upsertAddress, upgradeAllUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
+export {fetchAllUser, addCompleteMessage, upsertAddress, upgradeAllUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
     dropBookmark, fetchBookmarkList, addBookmark, getBookmark, updateBookmark, incBookmarkViewCount};
 

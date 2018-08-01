@@ -163,7 +163,7 @@ class Ranking extends Component {
       ranking.sort((i, j) => (j.count) - (i.count));
       return (
         <div>
-            {ranking.map((t, i) => {this.renderUser(t, i + 1)})}
+            {ranking.map((t, i) => {return this.renderUser(t, i + 1);})}
         </div>);        
     }
   }

@@ -13,6 +13,7 @@ import ListItemText  from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import NearMeIcon from '@material-ui/icons/NearMe';
+import FolderIcon from '@material-ui/icons/Folder';
 import AddLocationIcon from '@material-ui/icons/AddLocation';
 import PlaceIcon from '@material-ui/icons/Place';
 import AddIcon from '@material-ui/icons/Add';
@@ -179,7 +180,6 @@ class LocationDrawer extends React.Component {
                             geolocation: address.geolocation,
                             streetAddress: address.streetAddress
                           });
-          console.log(addressList[addressList.length - 1].text + " " + addressList.length);
         };
         for(address of addressBook.publicAddresses) {
           if(address.type != addressEnum.home && address.type != addressEnum.office) {
@@ -189,7 +189,6 @@ class LocationDrawer extends React.Component {
                             geolocation: address.geolocation,
                             streetAddress: address.streetAddress
                           })
-                          console.log(addressList[addressList.length - 1].text + " " + addressList.length);
           }
         };                                                          
       }
@@ -223,6 +222,7 @@ class LocationDrawer extends React.Component {
           break;
       }
       if (address.isGroup) {
+        icons = <FolderIcon />
         return (
           <ListItem button onClick={() => {this.setLocationPrefix(this.state.locationPrefix + text + '/')}}>
             <ListItemIcon>

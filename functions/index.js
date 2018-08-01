@@ -143,9 +143,9 @@ return rv;
 
 function sendEmail(email, displayName, newEvent, address, message) {
   const eventId = message.key
-  let text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區事件 ${message.text} 有新發展. 詳細請瀏覽以下連結: https://ourland.hk/?eventid=${eventId}`;
+  let text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區事件 ${message.text} 有新發展. 詳細請瀏覽以下連結: https://ourland.hk/detial/${eventId}`;
   if(newEvent) {
-    text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區有新事件 ${message.text} 詳細請瀏覽以下連結: https://ourland.hk/?eventid=${eventId}`;
+    text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區有新事件 ${message.text} 詳細請瀏覽以下連結: https://ourland.hk/detail/${eventId}`;
   }
   const mailOptions = {
     to: email,

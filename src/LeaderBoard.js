@@ -1,7 +1,7 @@
 /*global FB*/
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
-import config, {constant} from './config/default';
+import config, {constant, RoleEnum} from './config/default';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -19,6 +19,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText  from '@material-ui/core/ListItemText';
 import {connect} from "react-redux";
 import Ranking from "./Ranking";
+import UserList from "./admin/UserList";
 import Tab  from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Avatar from '@material-ui/core/Avatar';
@@ -101,13 +102,15 @@ class LeaderBoard extends React.Component {
   renderNearby() {
     const { classes } = this.props;
     return (
-        <div className={classes.container}>
-          <FilterBar/>
-          <Ranking
-            ref={(ranking) => {this.ranking = ranking}}
-            distance='1'
-            geolocation={constant.invalidLocation}
-          />
+        <div>
+          <FilterBar ranking={true} />
+          <div className={classes.container}>
+            <Ranking
+              ref={(ranking) => {this.ranking = ranking}}
+              distance='1'
+              geolocation={constant.invalidLocation}
+            />
+          </div>
         </div>
     );
   }
@@ -116,8 +119,22 @@ class LeaderBoard extends React.Component {
   render() {
     const { classes, open, user } = this.props;
     const { value } = this.state;
-    let homeTab = null;
-    let officeTab = null;
+    let listHtml = null;
+    let allUser = null;
+    if(user.userProfile != null & user.userProfile.role == RoleEnum.admin) {
+      allUser = <Tab label="Admin" value="admin"/>;
+    }
+    switch(value) {
+      case 'current':
+        listHtml = this.renderNearby();
+        break;
+      case 'hktop':
+        listHtml = this.renderTopTwenty();
+        break;
+      case 'admin':
+        listHtml = <UserList />;
+        break;      
+    } 
     return (
       <div class="leaderboard-wrapper">
         <div class="tabs-row">
@@ -127,13 +144,11 @@ class LeaderBoard extends React.Component {
             fullWidth
           >
             <Tab label="附近排名" value="current"/>
-            {homeTab}
-            {officeTab}
             <Tab label="全港頭二十名" value="hktop"/>
+            {allUser}
           </Tabs>
         </div>
-        {value == 'current' && this.renderNearby()}
-        {value == 'hktop' && this.renderTopTwenty()}
+        {listHtml}
       </div>);
   }
 }
@@ -146,6 +161,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     open: state.leaderBoard.open,
     topTwenty: state.leaderBoard.topTwenty,
+    user: state.user,
   };
 }
 

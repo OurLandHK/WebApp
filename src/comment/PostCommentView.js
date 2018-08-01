@@ -148,10 +148,20 @@ class PostCommentView extends Component {
     return rv
   }
 
+  locationButtonSubmit = (geolocation, streetAddress) => {
+    console.log("locationButtonSubmit ");
+    this.setState({
+        geolocation: geolocation,
+        streetAddress: streetAddress,
+    });
+  };
+
+
   onSubmit() {
     if (this.props.user != null) {
       const {user, userProfile} = this.props.user;
       if (user) {
+        let isPost = true;
         var photo = null;
         var commentText = null;
         var tags = null;
@@ -162,13 +172,19 @@ class PostCommentView extends Component {
         switch(this.state.commentSelection) {
             case  constant.commentOptions[0]: //"發表回應":
                 commentText = this.state.text;
+                if(commentText == "") {
+                  isPost = false;
+                }
                 break;
             case constant.commentOptions[2]: //"要求更改現況":
                 status = this.state.changeStatus;
                 break;
             case constant.commentOptions[1]: //"要求更改地點":
-                geolocation = this.locationButton.geolocation;
-                streetAddress = this.locationButton.streetAddress;
+                geolocation = this.state.geolocation;
+                streetAddress = this.state.streetAddress;
+                if(geolocation == undefined) {
+                  isPost = false;
+                }
                 break;
             case constant.commentOptions[3]: //"要求更改外部連結":
                 link = this.state.link;
@@ -178,7 +194,11 @@ class PostCommentView extends Component {
                 break;
         }
         this.setState({popoverOpen: false});
-        return addComment(this.props.messageUUID, user, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status).then(function(commentId){return commentId;});
+        if(isPost) {
+          return addComment(this.props.messageUUID, user, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status).then(function(commentId){return commentId;});
+        } else {
+          return
+        }
       }
     }
     this.setState({popoverOpen: false});
@@ -240,7 +260,7 @@ class PostCommentView extends Component {
         if(this.state.commentSelection != constant.commentOptions[0]) { //"發表回應"
             switch(this.state.commentSelection) {
               case constant.commentOptions[1]: //"要求更改地點"
-                inputHtml = <LocationButton autoFocus ref={(locationButton) => {this.locationButton = locationButton;}}/>;
+                inputHtml = <LocationButton autoFocus ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>;
                 break;
               case constant.commentOptions[2]: // "要求更改現況"
                 inputHtml = <SelectedMenu autoFocus label="" options={constant.statusOptions} changeSelection={(selectedValue) => this.setState({changeStatus: selectedValue})} ref={(statusSelection) => {this.statusSelection = statusSelection}}/>;
