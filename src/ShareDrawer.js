@@ -128,7 +128,22 @@ class ShareDrawer extends React.Component {
 */
     var quote = "";
     if(message != null) {
-      quote = message.text;
+      quote = '【' + message.status + '】' + ' 社區事件: ' + message.text;
+
+      if(message.streetAddress != undefined && message.streetAddress != null) {
+        quote = quote + ' - 地點: ' + message.streetAddress 
+      }
+
+      if(message.start != undefined && message.start != null) {
+        let date = message.start.toDate();
+        if(date.getFullYear() > 1970) {
+          let dateTimeString = '';
+          dateTimeString = date.toLocaleDateString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });
+
+          quote = quote + ' - 開始日期: ' + dateTimeString
+        }
+        
+      }
     }
     return quote;    
   }
@@ -219,8 +234,7 @@ class ShareDrawer extends React.Component {
       hashtag = "#我地";
       shareUrl = shareUrl + "/user/" + this.props.bookmark.uid + "/" + this.props.bookmark.key;
     }
-
-
+    
     return (
       <span>
         <Button
