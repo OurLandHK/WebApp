@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import uuid from 'js-uuid';
 import PropTypes from 'prop-types';
+import {connect} from "react-redux";
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
@@ -17,20 +18,21 @@ import ListItemText  from '@material-ui/core/ListItemText';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import ShareDrawer from '../ShareDrawer';
-import timeOffsetStringInChinese from '../TimeString';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from '@material-ui/core/TextField';
-import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
+import ShareDrawer from '../ShareDrawer';
+import timeOffsetStringInChinese from '../TimeString';
 import  {constant, RoleEnum} from '../config/default';
 import  MessageList from '../MessageList';
+import TagDrawer from '../TagDrawer';
 import { dropBookmark, addBookmark, updateBookmark, incBookmarkViewCount, getUserProfile} from '../UserProfile';
 import {
     checkAuthState,
     updateRecentBookmark,
     updatePublicProfileDialog,
   } from '../actions';
+
 
 
 const styles = theme => ({
@@ -256,6 +258,7 @@ class BookmarkView extends Component {
 
     render() {
         const { classes, user} = this.props;
+        let isRenderTagList = false;
         let addressButtonHtml = null;
         let deleteButtonHtml = null;
         let actionButtonHtml = null;
@@ -263,6 +266,7 @@ class BookmarkView extends Component {
         let titleText = constant.updateBookmarkLabel;
         let messageHtml = null;
         let icons = <PlayListPlayIcon />;
+
         if(this.props.bookmark != null) {
             let c = this.props.bookmark;
             let text = c.title;
@@ -281,6 +285,7 @@ class BookmarkView extends Component {
                     distance={10}
                     messageIds={this.state.messages}
                 />
+                isRenderTagList = true;
             }
             if(user.user != null && user.user.uid == c.uid) {
                 deleteButtonHtml = <IconButton color="contrast" onClick={() => this.onDelete()} aria-label="Delete">
@@ -334,6 +339,7 @@ class BookmarkView extends Component {
                                 multiline
                                 rowsMax="20" 
                                 margin="normal" helperText={constant.descLabel} value={this.state.desc} onChange={event => this.setState({ desc: event.target.value })}/>
+                                <TagDrawer isRenderTagList={isRenderTagList}/>
                             {messageHtml}
                         </DialogContent>  
                     </Dialog>
