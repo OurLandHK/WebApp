@@ -1,10 +1,11 @@
 import React from 'react';
 import * as firebase from 'firebase';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
+import {connect} from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
-import classnames from 'classnames';
 import Chip from '@material-ui/core/Chip';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -22,7 +23,6 @@ import geoString from './GeoLocationString';
 import {
   selectedTag
 } from './actions';
-import {connect} from 'react-redux';
 
 
 const styles = theme => ({
@@ -73,7 +73,18 @@ class TagDrawer extends React.Component {
         open: false,
         selectedTag: null,
         isSelectedAll: true,
+        isRenderTagList: true
       };
+  }
+
+  componentDidMount() {
+    let {isRenderTagList} = this.props;
+
+    if(isRenderTagList != null) {
+      this.setState({
+        isRenderTagList
+      });
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -106,6 +117,7 @@ class TagDrawer extends React.Component {
   renderTagList() {
     const { filter } = this.props;
     var tagList=filter.tagList;
+
     return tagList.map(tag => {
       let icons = <LabelIcon />;
       return (
@@ -130,7 +142,10 @@ class TagDrawer extends React.Component {
 
   render() {
       let firstItem = this.renderFirstListItem();
+      let {isRenderTagList} = this.state;
+
       const { classes } = this.props;
+
       return (
       <div className={classes.container}>
           <Button
@@ -153,7 +168,7 @@ class TagDrawer extends React.Component {
                   <List>
                       {firstItem}
                       <Divider />
-                      {this.renderTagList()}
+                      {isRenderTagList && this.renderTagList()}
                   </List>
               </div>
           </Drawer>
