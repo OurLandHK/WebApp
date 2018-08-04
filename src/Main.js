@@ -71,6 +71,22 @@ class Main extends Component {
     }
   }
 
+  renderTagStat() {
+    const {tagStat} = this.props.ourland;
+    if(tagStat.length > 3) {
+      let actTag = null;
+      for(let i = 0; i < tagStat.length; i++) {
+        if(tagStat[i].tag == '活動') {
+          actTag = tagStat[i];
+        }
+      }
+      let tagStatText = `我地有${tagStat[0].count}個${tagStat[0].tag}，${tagStat[1].count}個${tagStat[1].tag}，${actTag.count}個社區活動將會舉行，你會唔會有一d我地冇既野呢?`;
+      return <p>{tagStatText}</p>
+    } else {
+      return null;
+    } 
+  }
+
   renderMessageFrontPage() {
     let recentMessage = null;
     const { eventNumber, distance, geolocation, eventId, queryMessage, bookmark} = this.state;
@@ -79,6 +95,7 @@ class Main extends Component {
     const {globalFocusMessages: focusMessages} = this.props.ourland;
     const { classes } = this.props;
     let focusMessage = null
+    let tagStatHtml = this.renderTagStat();
     if(queryMessage != null) {
       let message = queryMessage;
       recentMessage = <div className="recent-event-wrapper">
@@ -106,6 +123,7 @@ class Main extends Component {
 
     return (
       <div className={classes.container}>
+        {tagStatHtml}
         {recentMessage}
         {focusMessage}       
         <RegionEventDialog

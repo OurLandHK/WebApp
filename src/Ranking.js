@@ -70,7 +70,7 @@ class Ranking extends Component {
 
   setMessage(val) {
     if(val == null) {
-      this.setState({statusMessage: constant.messageListNoMessage});
+      this.setState({statusMessage: constant.rankingListNoMessage});
       return;
     }
     this.state.data.push(val);
@@ -89,7 +89,7 @@ class Ranking extends Component {
      distance,
      geolocation
     } = filter;
-    this.setState({geolocation: geolocation, statusMessage: constant.messageListLoadingStatus});
+    this.setState({geolocation: geolocation, statusMessage: constant.rankingListLoadingStatus});
     //console.log("Fetch MessageIDs: " + this.state.messageIds);
     this.clear();
     switch (geolocation) {

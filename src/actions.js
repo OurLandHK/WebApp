@@ -24,13 +24,14 @@ import {
   TOGGLE_LEADER_BOARD,
   FETCH_TOP_TWENTY,
   UPDATE_REGIONEVENT_BUTTONLIST,
+  FETCH_GLOBAL_TAG_STAT,
   UPDATE_FILTER_SORTING
 } from './actions/types';
 import * as firebase from 'firebase';
 import * as firestore from 'firebase/firestore';
 import config, {constant} from './config/default';
 import {getUserProfile, updateUserProfile, fetchBookmarkList} from './UserProfile';
-import {fetchFocusMessagesBaseOnGeo} from './GlobalDB';
+import {fetchFocusMessagesBaseOnGeo, getTagStat} from './GlobalDB';
 
 const currentLocationLabel = "現在位置";
 
@@ -64,6 +65,10 @@ function disableLocation() {
 
 function fetchAddressBook(address) {
   return {type: FETCH_ADDRESS_BOOK, addresses: address};
+}
+
+function fetchTagStat(tagStat) {
+  return {type: FETCH_GLOBAL_TAG_STAT, tagStat: tagStat};
 }
 
 function fetchPublicAddressBook(address) {
@@ -131,6 +136,7 @@ function dispatchTagsRest() {
 function dispatchSelectedTag(selectedTag) {
   return {type: UPDATE_FILTER_TAG, selectedTag: selectedTag}
 }
+
 
 function dispatchSelectedSorting(selectedSorting){
   return {type: UPDATE_FILTER_SORTING, selectedSorting: selectedSorting}
@@ -311,9 +317,7 @@ export function updateFilterWithCurrentLocation() {
 
 export function fetchAddressBookByUser(user) {
   return dispatch => {
-    const db = firebase.firestore();
-    
-    
+    const db = firebase.firestore(); 
     var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
     collectionRef.onSnapshot(function() {});
     collectionRef.get().then(function(querySnapshot) {
@@ -340,6 +344,20 @@ export function fetchAddressBookFromOurLand() {
         console.log("Error getting documents: ", error);
     });
   };  
+}
+
+export function fetchGlobalSetting() {
+  return dispatch => {
+    getTagStat().then((tagStat) => {
+      let tagListObject = {};
+      for (let key in tagStat) {
+        tagListObject[key] = {tag: key, count: tagStat[key]};
+      }
+      let tagList = Object.values(tagListObject);
+      tagList.sort((i, j) => (j.count) - (i.count));  
+      dispatch(fetchTagStat(tagList));
+    });
+  };
 }
 
 export function fetchConcernMessagesFromOurLand() {

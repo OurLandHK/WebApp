@@ -26,7 +26,8 @@ import {
   TOGGLE_LEADER_BOARD,
   FETCH_TOP_TWENTY,
   UPDATE_FILTER_SORTING,
-  UPDATE_REGIONEVENT_BUTTONLIST
+  UPDATE_REGIONEVENT_BUTTONLIST,
+  FETCH_GLOBAL_TAG_STAT,
 } from './actions/types';
 
 
@@ -251,12 +252,14 @@ function publicProfileDialogReducer(state={open: false, id: "", fbId: ""}, actio
   }
 }
 
-function ourlandReducer(state={focusMessages: [], globalFocusMessage: []}, action) {
+function ourlandReducer(state={focusMessages: [], globalFocusMessage: [], tagStat: []}, action) {
     switch (action.type) {
       case FETCH_FOCUS_MESSAGE:
         return {...state, focusMessages: action.messages};
       case FETCH_GLOBAL_FOCUS_MESSAGE:
-        return {...state, globalFocusMessages: action.messages};        
+        return {...state, globalFocusMessages: action.messages};
+      case FETCH_GLOBAL_TAG_STAT:
+        return {...state, tagStat: action.tagStat};
       default:
         return state;
     }

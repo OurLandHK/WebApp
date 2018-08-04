@@ -105,9 +105,9 @@ class LocationDrawer extends React.Component {
     if (nextProps.user !== this.props.user) {
       const { geolocation, fetchLocation } = this.props;
       const { user } = nextProps;
-      if (user) {
+      if (user && user.user) {
         this.fetchAddress(user.user);
-        if (geolocation === null || geolocation.pos === null) {
+        if (geolocation === null || geolocation === undefined|| geolocation.pos === null) {
           fetchLocation();
         }
       }

@@ -11,6 +11,10 @@
     "userProfile": {
       ".read": "auth !== null",
       ".write": "auth !== null"
+    },
+    "ourlandDB": {
+      ".read": "auth !== null",
+      ".write": "auth !== null"
     },         
     "fcmTokens": {
       "$token": {

@@ -32,6 +32,7 @@ import {
   updateRecentMessage,
   updatePublicProfileDialog,
   updateRecentBookmark,
+  fetchGlobalSetting,
   init3rdPartyLibraries
 } from './actions';
 import {constant} from './config/default';
@@ -89,6 +90,7 @@ class App extends Component {
     this.props.checkAuthState();
     this.props.fetchAddressBookFromOurLand();
     this.props.fetchConcernMessagesFromOurLand();
+    this.props.fetchGlobalSetting();
     this.props.updateFilterDefault(this.state.eventNumber, this.state.distance, null);
   }
 
@@ -190,7 +192,9 @@ const mapDispatchToProps = (dispatch) => {
         dispatch(updateRecentBookmark(userId, bookmark, open)),
     updatePublicProfileDialog:
       (userId, fbuid, open) =>
-        dispatch(updatePublicProfileDialog(userId, fbuid, open)),      
+        dispatch(updatePublicProfileDialog(userId, fbuid, open)), 
+    fetchGlobalSetting:
+      () => dispatch(fetchGlobalSetting())     
   }
 };
 
