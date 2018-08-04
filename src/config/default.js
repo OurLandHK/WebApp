@@ -64,6 +64,9 @@ let constant = {
   messageListNoMessage: '已選位置沒有任何社區事件，請選擇其他位置',
   messageListBlockLocation: '請允許Ourland.hk讀取所在位置，或選擇其他位置',
   messageListTimeOut: '未能讀取現在位置，請選擇其他位置或重試',
+  rankingListLoadingStatus: '讀取排行榜中...',
+  rankingListNoMessage: '已選位置未有任何人報料，不如你做第一個',
+
   focusTitleLabel: '焦點名稱',
   radiusLabel: '半徑',
   descLabel: '內文',

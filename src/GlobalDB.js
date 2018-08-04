@@ -194,16 +194,28 @@ function updateFocusMessage(messageKey, messageRecord, updateTime) {
 
 function updateTagStat(tagStat) {
     let db = firebase.firestore();
-    let now = Date.now();
     let collectionRef = db.collection(config.globalDB);
     if(tagStat != null) {
         return collectionRef.doc(config.TagStatisticKey).set(tagStat).then(function(tagRef) {
-            console.log("written: ", tagStat);
+            console.log("updateTagStat: ", tagStat);
             return(tagRef);
         }) 
     }   
 }
 
+function getTagStat() {
+    let db = firebase.firestore();
+    let collectionRef = db.collection(config.globalDB);
+    var docRef = collectionRef.doc(config.TagStatisticKey);
+    return docRef.get().then(function(doc) {
+        if (doc.exists) {
+            return(doc.data());
+        } else {
+            return null;
+        }
+    });     
+}
 
 
-export {dropFocusMessage, fetchFocusMessagesBaseOnGeo, addFocusMessage, getFocusMessage, updateFocusMessage, updateTagStat};
+
+export {getTagStat, dropFocusMessage, fetchFocusMessagesBaseOnGeo, addFocusMessage, getFocusMessage, updateFocusMessage, updateTagStat};

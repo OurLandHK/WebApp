@@ -2,6 +2,7 @@ import * as firebase from 'firebase';
 import uuid from 'js-uuid';
 import config, {constant} from './config/default';
 import distance from './Distance';
+import {updateTagStat} from './GlobalDB';
 import { light } from '@material-ui/core/styles/createPalette';
 import { getStreetAddressFromGeoLocation} from './Location';
 
@@ -59,13 +60,24 @@ function upgradeAllMessage() {
     const db = firebase.firestore();
     let collectionRef = db.collection(config.messageDB);
     collectionRef.onSnapshot(function() {})  
-    collectionRef.get().then(function(querySnapshot) {
+    let tagStat = {};
+    return collectionRef.get().then(function(querySnapshot) {
         if(querySnapshot.empty) {
             return
-        } else { 
+        } else {             
             querySnapshot.forEach(function(messageRef) {
                 var val = messageRef.data();
                 if(val) {
+                    // udpate tagStat
+                    let tags = tagfilterToTags(val.tagfilter);
+                    tags.map((tag) => {
+                        if(tagStat[tag] == null) {
+                            tagStat[tag] = 1;
+                        } else {
+                            tagStat[tag]++;
+                        }
+                    });
+                    // Update for data scheme
                     let changeCreatedAt = false;
                     let change = false;
                     let before =  val.createdAt;
@@ -84,7 +96,6 @@ function upgradeAllMessage() {
                             }
                         }
                         if(val.tagfilter != null) {
-                            let tags = tagfilterToTags(val.tagfilter);
                             if(!tags.includes("兒童遊戲室")) {
                                 tags.push("兒童遊戲室");
                                 var index = tags.indexOf("兒童遊樂場");
@@ -92,35 +103,16 @@ function upgradeAllMessage() {
                             val.tagfilter = tagsToTagfilter(tags);
                             change = true;    
                         }
-                    }
-                    if(changeCreatedAt) {
-                        change = true;
-                        val.createdAt = new Date(val.createdAt);
-                        //console.log(`Update: ${val.key} ${before} ${val.createdAt}`)
-                    }
-                    if(val.lastUpdate == null) {
-                        change = true;
-                        val.lastUpdate = val.createdAt;
-                    }
-                    if(val.streetAddress == null) {
-                        change = false;
-                        return getStreetAddressFromGeoLocation(val.geolocation, function(err, response){
-                            if (!err) {
-                                console.log(response.json.results);
-                                val.streetAddress = response.json.results[0].formatted_address;
-                                return updateMessage(val.key, val, false);
-                              }
-                        }, null);
-                    }
-                    
+                    }                 
                     if(change) {
                         return updateMessage(val.key, val, false);
                     } else {
                         return;
                     }
                 }                
-            });
+            });            
         }
+        return updateTagStat(tagStat);
     })         
 }
 
