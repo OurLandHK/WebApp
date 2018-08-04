@@ -504,8 +504,8 @@ class PostMessageView extends Component {
   render() {
     let startTime = new Date().toLocaleTimeString();
     let timeHtml = null;
-    let postButtonHtml =  <Button size="small" variant="contained" color="primary" onClick={(evt) => this.handleRequestOpen(evt)}>
-                            +<br/>報料
+    let postButtonHtml =  <Button size="small" variant="extendedFab" color="primary" onClick={(evt) => this.handleRequestOpen(evt)}>
+                            +報料
                           </Button>;
     const classes = this.props.classes;
     const { tags } = this.state;

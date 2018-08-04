@@ -3,7 +3,9 @@ import React, { Component } from 'react';
 import config, {constant} from './config/default';
 import Dialog from '@material-ui/core/Dialog';
 import Chip from '@material-ui/core/Chip';
+import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -30,6 +32,9 @@ const styles = theme =>  ({
     },
     flex: {
       flex: 1,
+    },
+    buttonGird: {
+      justify: 'center'
     },
     container: {
        overflowY: 'auto'
@@ -110,18 +115,22 @@ class RegionEventDialog extends React.Component {
   render() {
     const { classes, open, buttons } = this.props;
     let messageHtml = null;
-    const buttonList = buttons.map(buttonDetail => {
+    const TotalButton = buttons.length;
+    let buttonList1 = [];
+    let buttonList2 = [];
+    let firstLine = TotalButton/2 + TotalButton%2;
+    for(let i = 0; i < TotalButton; i++) {
+      let buttonHtml = <Button  variant="contained" size="small" aria-label={buttons[i].label}
+          onClick={(evt) => this.handleRequestOpen(evt, buttons[i].label, buttons[i].value)}>
+          {buttons[i].label}
+          </Button>
+      if(i<firstLine) {
+        buttonList1.push(buttonHtml);
+      } else {
+        buttonList2.push(buttonHtml);
+      }
+    } 
       //      return <Button  variant="outlined" color="primary" onClick={(evt) => this.handleRequestOpen(evt, buttonDetail.value)}>{buttonDetail.label}</Button>;
-              return <Chip
-                avatar={
-                  buttonDetail.avatar
-                }
-                key={buttonDetail.label}
-                label={buttonDetail.label}
-                onClick={(evt) => this.handleRequestOpen(evt, buttonDetail.label, buttonDetail.value)}
-                className={classes.chip}
-              />
-          });
     const cardImage = (
       <CardMedia
         className={classes.media}
@@ -129,7 +138,14 @@ class RegionEventDialog extends React.Component {
         title={constant.regionEventLabel}
       >
         <br/>
-        {buttonList}
+        <Grid container >
+          <Grid container className={classes.buttonGird}>
+            {buttonList1}
+          </Grid>
+          <Grid container className={classes.buttonGird}>
+            {buttonList2}
+          </Grid>
+        </Grid>
         <div
           className={classes.mediaCredit}
         >
@@ -145,11 +161,11 @@ class RegionEventDialog extends React.Component {
         <span>
             <Card>
                 <Typography variant="headline" component="h2" className={classes.title}>
-                    {constant.regionEventLabel}
+                    {constant.nearbyEventLabel}
                 </Typography>
                 {cardImage}
                 <CardContent>
-                查詢現在身處位置或十八社區的人和事
+                查詢自己社區附近及全港社區的人和事
                 </CardContent>
             </Card>
             <Dialog fullScreen  open={open} >

@@ -14,6 +14,7 @@ let config = {
   userAction: 'userAction',
 
   fbGroupId: '244493866025075', // Production https://www.facebook.com/groups/OurLandHK/?fref=nf
+  globalDB: 'ourlandDB', // for all globalDB setting
   messageDB: 'message', // Production
   userDB: 'userProfile', // Production
   focusMessageDB: 'focusMessage',
@@ -21,10 +22,12 @@ let config = {
   MasterUID: 'mUQgwxkmPBfVA47d9lHzB482Nmp1',
   addressBook: "AddressBook",
   commentDB: "comment",
-  bookDB: "Bookmark"
+  bookDB: "Bookmark",
+  TagStatisticKey: "TagStatistic"
 };
 
 let constant = {
+  allButtonLabel: '所有',
   invalidLocation: new firebase.firestore.GeoPoint(90, 0),
   timeoutLocation: new firebase.firestore.GeoPoint(90, 180),
   closeWholeDay:"全日關門",

@@ -93,7 +93,7 @@ class Main extends Component {
     }
     if(focusMessages != null && focusMessages.length > 0 && focusMessages[0].messages.length) {
       focusMessage = <div className="focus-message-wrapper">
-        <h4>{constant.focusMessagesLabel}</h4>
+        <h4>{focusMessages[0].title}</h4>
         <MessageList
           ref={(messageList) => {this.messageList = messageList;}}
           eventNumber={100}
@@ -107,12 +107,7 @@ class Main extends Component {
     return (
       <div className={classes.container}>
         {recentMessage}
-        {focusMessage}
-        <NearbyEventDialog
-          eventNumber={eventNumber}
-          distance={distance}
-          geolocation={geolocation}
-        />        
+        {focusMessage}       
         <RegionEventDialog
           eventNumber={eventNumber}
           distance={distance}
