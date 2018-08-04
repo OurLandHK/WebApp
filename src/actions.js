@@ -23,6 +23,7 @@ import {
   TOGGLE_EVENTLIST_DIALOG,
   TOGGLE_LEADER_BOARD,
   FETCH_TOP_TWENTY,
+  UPDATE_REGIONEVENT_BUTTONLIST,
   UPDATE_FILTER_SORTING
 } from './actions/types';
 import * as firebase from 'firebase';
@@ -117,6 +118,10 @@ function dispatchFilterLocation(geolocation, distance) {
 
 function dispatchFilterTagList(tagList) {
   return {type: UPDATE_FILTER_TAG_LIST, tagList: tagList}
+}
+
+function dispatchRegionButtonList(buttonList){
+  return {type: UPDATE_REGIONEVENT_BUTTONLIST, buttonList: buttonList}
 }
 
 function dispatchTagsRest() {
@@ -353,6 +358,19 @@ export function fetchConcernMessagesFromOurLand() {
   };  
 }
 
+export function updateRegionButtoneList(tagList) {
+  return dispatch => {let buttonList = [{label: constant.allButtonLabel, value: null}];
+    let numberOfButton = 7;
+    if(tagList.length < numberOfButton) {
+      numberOfButton = tagList.length;
+    }
+    for(let i = 0; i < numberOfButton; i++) {
+      let button = {label: tagList[i], value: tagList[i]};
+      buttonList.push(button);
+    }
+    dispatch(dispatchRegionButtonList(buttonList));
+  }
+}
 
 
 export function upsertAddress(user, key, type, text, geolocation, streetAddress) {

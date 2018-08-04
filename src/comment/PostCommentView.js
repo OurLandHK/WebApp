@@ -287,7 +287,7 @@ class PostCommentView extends Component {
         }
       return (
         <div className="cta-report-wrapper">
-            <Button className="cta-report"  variant="contained" color="primary" onClick={(evt) => this.handleRequestOpen(evt)}>
+            <Button className="cta-report"  variant="extendedFab" color="primary" onClick={(evt) => this.handleRequestOpen(evt)}>
               <AddIcon />參與
             </Button>
             <Dialog

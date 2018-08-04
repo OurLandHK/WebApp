@@ -42,6 +42,8 @@ function wrapLongitude(longitude) {
 }
 
 
+
+
 function fetchFocusMessagesBaseOnGeo(geocode, radius) {
 
     const db = firebase.firestore();
@@ -166,9 +168,9 @@ function getFocusMessage(key) {
 }
 
 function updateFocusMessage(messageKey, messageRecord, updateTime) {
-    var db = firebase.firestore();
-    var now = Date.now();
-    var collectionRef = db.collection(config.focusMessageDB);
+    let db = firebase.firestore();
+    let now = Date.now();
+    let collectionRef = db.collection(config.focusMessageDB);
     if(messageRecord == null) {
         if(updateTime) {
             return collectionRef.doc(messageKey).update({
@@ -190,5 +192,18 @@ function updateFocusMessage(messageKey, messageRecord, updateTime) {
     }
 }
 
+function updateTagStat(tagStat) {
+    let db = firebase.firestore();
+    let now = Date.now();
+    let collectionRef = db.collection(config.globalDB);
+    if(tagStat != null) {
+        return collectionRef.doc(config.TagStatisticKey).set(tagStat).then(function(tagRef) {
+            console.log("written: ", tagStat);
+            return(tagRef);
+        }) 
+    }   
+}
 
-export {dropFocusMessage, fetchFocusMessagesBaseOnGeo, addFocusMessage, getFocusMessage, updateFocusMessage};
+
+
+export {dropFocusMessage, fetchFocusMessagesBaseOnGeo, addFocusMessage, getFocusMessage, updateFocusMessage, updateTagStat};
