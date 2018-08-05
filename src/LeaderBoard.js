@@ -121,7 +121,7 @@ class LeaderBoard extends React.Component {
     const { value } = this.state;
     let listHtml = null;
     let allUser = null;
-    if(user.userProfile != null & user.userProfile.role == RoleEnum.admin) {
+    if(user.userProfile != null && user.userProfile.role == RoleEnum.admin) {
       allUser = <Tab label="Admin" value="admin"/>;
     }
     switch(value) {
