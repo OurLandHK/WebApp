@@ -354,7 +354,9 @@ export function fetchGlobalSetting() {
         tagListObject[key] = {tag: key, count: tagStat[key]};
       }
       let tagList = Object.values(tagListObject);
-      tagList.sort((i, j) => (j.count) - (i.count));  
+      tagList.sort((i, j) => (j.count) - (i.count));
+      let tagLabel = tagList.map((tag) => {return(tag.tag)});
+      dispatch(updateRegionButtoneList(tagLabel));  
       dispatch(fetchTagStat(tagList));
     });
   };
@@ -379,10 +381,12 @@ export function fetchConcernMessagesFromOurLand() {
 export function updateRegionButtoneList(tagList) {
   return dispatch => {let buttonList = [{label: constant.allButtonLabel, value: null}];
     let numberOfButton = 7;
+    //console.log(`updateRegionButtoneList ${tagList}`);
     if(tagList.length < numberOfButton) {
       numberOfButton = tagList.length;
     }
     for(let i = 0; i < numberOfButton; i++) {
+      //console.log(`button list ${tagList[i]}`);
       let button = {label: tagList[i], value: tagList[i]};
       buttonList.push(button);
     }

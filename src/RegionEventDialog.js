@@ -34,8 +34,15 @@ const styles = theme =>  ({
       flex: 1,
     },
     buttonGird: {
-      justify: 'center'
+      justify: 'center',
+      flexGrow: 1
     },
+    button: {
+      flex: 1,
+      padding: theme.spacing.unit,
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+    },    
     container: {
        overflowY: 'auto'
     },
@@ -120,7 +127,7 @@ class RegionEventDialog extends React.Component {
     let buttonList2 = [];
     let firstLine = TotalButton/2 + TotalButton%2;
     for(let i = 0; i < TotalButton; i++) {
-      let buttonHtml = <Button  variant="contained" size="small" aria-label={buttons[i].label}
+      let buttonHtml = <Button  className={classes.button} variant="contained" size="small" aria-label={buttons[i].label}
           onClick={(evt) => this.handleRequestOpen(evt, buttons[i].label, buttons[i].value)}>
           {buttons[i].label}
           </Button>
