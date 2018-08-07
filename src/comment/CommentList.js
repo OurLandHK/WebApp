@@ -27,7 +27,9 @@ class CommentList extends Component {
   setComment(doc) {
 //    var val = doc.data;
     this.state.data.push(doc);
+    this.state.data.sort((x,y) => x.data().createdAt.toDate() - y.data().createdAt.toDate());
     this.setState({data:this.state.data});
+    console.log(this.state.data)
   };
 
   
