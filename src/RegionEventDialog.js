@@ -181,7 +181,7 @@ class RegionEventDialog extends React.Component {
                         <IconButton onClick={this.handleRequestClose} aria-label="Close">
                             <CloseIcon />
                         </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>{constant.regionEventLabel}</Typography>
+                        <Typography variant="title" color="inherit" className={classes.flex}>{constant.nearbyEventLabel} - {this.state.titleLabel}</Typography>
                     </Toolbar>
                 </AppBar>
                 <FilterBar isUsePublicAddressBook={true}/>
