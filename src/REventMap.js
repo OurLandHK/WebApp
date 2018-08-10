@@ -24,14 +24,12 @@ export class EventMap extends Component {
     //   center: this.props.center,
     //   zoom: this.props.zoom
     // });
-    this.onMapClicked = this.onMapClicked.bind(this);
+    this.onDragEnd = this.onDragEnd.bind(this);
   }
 
-  onMapClicked(mapProps, map, clickEvent) {
-    console.log('mapProps', mapProps)
-    let newPosSet = { lat: clickEvent.latLng.lat(), lng: clickEvent.latLng.lng() };
-    this.state.center = newPosSet;
-    mapProps.google.maps.Marker;
+  onDragEnd(pos) {
+    console.log('mapProps', pos);
+    this.props.onCenterChange(pos);
   }
 
   render() {
@@ -49,11 +47,12 @@ export class EventMap extends Component {
         }
 
         return {
+          onDragEnd: () => {
+            let pos = refs.map.getCenter();
+            this.onDragEnd(pos);  
+          },
           onMapMounted: () => ref => {
             refs.map = ref
-          },
-          onClick: (wt) => {
-            console.log(refs.map.getCenter())
           },
           onZoomChanged: ({ onZoomChange }) => () => {
             onZoomChange(refs.map.getZoom())
@@ -66,8 +65,10 @@ export class EventMap extends Component {
       <GoogleMap
         defaultZoom={this.props.zoom}
         defaultCenter={this.props.center}
+        ref={props.onMapMounted}
+        onDragEnd={props.onDragEnd}
       >
-        <Marker position={this.props.center} onClick={props.onMarkerClick} />
+        <Marker position={this.props.center} />
       </GoogleMap>
     );
     return (
