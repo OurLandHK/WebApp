@@ -245,8 +245,8 @@ class PostMessageView extends Component {
     }
   }
 
-  handleChange = event => {
-    this.setState({ name: event.target.value });
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.checked });
   };
 
   handleExpandClick() {
@@ -601,6 +601,17 @@ class PostMessageView extends Component {
                   </FormGroup>
                   <br/>
                 </Collapse>
+                <FormGroup>
+                  <FormControlLabel
+                  label="緊急事項"
+                  control={
+                    <Checkbox
+                      checked={this.state.isUrgentEvent}
+                      onChange={() => this.handleChange('isUrgentEvent')}
+                      value="isUrgentEvent" />
+                    }
+                  />
+                </FormGroup>
               </Form>
               </div>
         </Dialog>
