@@ -84,6 +84,7 @@ class PostMessageView extends Component {
       status: "開放",
       expanded: false,
       isUrgentEvent: false,
+      isConfirmedUrgentEvent: false,
       opennings: this.props.opennings,
       timeSelection: constant.timeOptions[0],
       intervalSelection: this.props.intervalOptions[0],
@@ -235,7 +236,7 @@ class PostMessageView extends Component {
       postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress,
         startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link,
         imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
-        this.state.status, this.state.isUrgentEvent).then((messageKey) => {
+        this.state.status, this.state.isUrgentEvent, this.state.isConfirmedUrgentEvent).then((messageKey) => {
           const { updateRecentMessage, checkAuthState} = this.props;
           if(messageKey != null && messageKey != "") {
             updateRecentMessage(messageKey, false);

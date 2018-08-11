@@ -198,7 +198,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
     }
  }
 
- function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status, isUrgentEvent) {
+ function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status, isUrgentEvent, isConfirmedUrgentEvent) {
     let now = Date.now();
     if(startDate === null)
     {
@@ -243,7 +243,8 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         thumbnailPublicImageURL,
         status: status,
         viewCount: 0,
-        isUrgentEvent: isUrgentEvent
+        isUrgentEvent: isUrgentEvent,
+        isConfirmedUrgentEvent: isConfirmedUrgentEvent
       };
     // Use firestore
     const db = firebase.firestore();
