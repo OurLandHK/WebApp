@@ -150,6 +150,7 @@ class PostMessageView extends Component {
       startTime: this.startTime(),
       end: this.today(),
       expanded: false, rotate: 'rotate(0deg)',
+      isUrgentEvent: false,
       tags: [],
       popoverOpen: true,
       timeSelection: constant.timeOptions[0],
@@ -216,7 +217,6 @@ class PostMessageView extends Component {
       var publicImageURL = null;
       var thumbnailImageURL = null;
       var thumbnailPublicImageURL = null;
-      var isUrgentEvent = null;
 
       if(this.state.imageURL != null) {
         imageURL = this.state.imageURL;
@@ -229,9 +229,6 @@ class PostMessageView extends Component {
       }
       if(this.state.thumbnailPublicImageURL != null) {
         thumbnailPublicImageURL = this.state.thumbnailPublicImageURL;
-      }
-      if(this.state.isUrgentEvent != null) {
-        isUrgentEvent = this.state.isUrgentEvent;
       }
 
       var tags = this.state.tags.map((tag) => tag.text);
@@ -613,7 +610,7 @@ class PostMessageView extends Component {
                   control={
                     <Checkbox
                       checked={this.state.isUrgentEvent}
-                      onChange={() => this.handleChange('isUrgentEvent')}
+                      onChange={this.handleChange('isUrgentEvent')}
                       value="isUrgentEvent" />
                     }
                   />
