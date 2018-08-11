@@ -198,7 +198,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
     }
  }
 
- function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status, isUrgentEvent, isConfirmedUrgentEvent) {
+ function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status, isReportedUrgentEvent, isApprovedUrgentEvent) {
     let now = Date.now();
     if(startDate === null)
     {
@@ -243,8 +243,8 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         thumbnailPublicImageURL,
         status: status,
         viewCount: 0,
-        isUrgentEvent: isUrgentEvent,
-        isConfirmedUrgentEvent: isConfirmedUrgentEvent
+        isReportedUrgentEvent: isReportedUrgentEvent,
+        isApprovedUrgentEvent: isApprovedUrgentEvent
       };
     // Use firestore
     const db = firebase.firestore();
@@ -508,7 +508,7 @@ function setHappyAndSad(messageUuid, happyCount, sadCount, happAndSad, user) {
 }
 
 /// All about comment
-function addComment(messageUUID, currentUser, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status) {
+function addComment(messageUUID, currentUser, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent) {
     var now = Date.now();
     var fireBaseGeo = null;
 
@@ -528,9 +528,14 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
         photoUrl: photoUrl,
         createdAt: new Date(now),
         lastUpdate: null,
+        isApprovedUrgentEvent: null
     }; 
     if(commentText != null) {
         commentRecord.text = commentText;
+
+        if(isApprovedUrgentEvent != null) {
+            commentRecord.isApprovedUrgentEvent = isApprovedUrgentEvent;
+        }
     } else {
         if(geolocation != null) {
             commentRecord.geolocation =  new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude);
@@ -551,7 +556,6 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
             }
         }
     }
-    console.log(commentRecord);
     // Use firestore
     const db = firebase.firestore();
     
