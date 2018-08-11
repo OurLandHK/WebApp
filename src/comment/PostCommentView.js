@@ -162,6 +162,7 @@ class PostCommentView extends Component {
       const {user, userProfile} = this.props.user;
       if (user) {
         let isPost = true;
+        let isApprovedUrgentEvent = null;
         var photo = null;
         var commentText = null;
         var tags = null;
@@ -194,14 +195,16 @@ class PostCommentView extends Component {
               break;
             case constant.commentWithUrgentEventOptions[0]: //"確定為緊急事項"
               commentText = this.state.text;
+              isApprovedUrgentEvent = true;
               break;
             case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
               commentText = this.state.text;
+              isApprovedUrgentEvent = false;
               break;
         }
         this.setState({popoverOpen: false});
         if(isPost) {
-          return addComment(this.props.messageUUID, user, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status).then(function(commentId){return commentId;});
+          return addComment(this.props.messageUUID, user, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent).then(function(commentId){return commentId;});
         } else {
           return
         }
@@ -266,7 +269,7 @@ class PostCommentView extends Component {
         let inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="更新事件進度及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
         let commentOptions = constant.commentOptions;
         if(user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {
-          if(message.isUrgentEvent != 'undefined' && message.isUrgentEvent != null && message.isUrgentEvent == true) {
+          if(message.isReportedUrgentEvent != 'undefined' && message.isReportedUrgentEvent != null && message.isReportedUrgentEvent == true) {
             commentOptions = [...constant.commentOptions, ...constant.commentWithUrgentEventOptions];
           }
         }
