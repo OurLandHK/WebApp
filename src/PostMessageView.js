@@ -83,6 +83,7 @@ class PostMessageView extends Component {
       end: this.today(),
       status: "開放",
       expanded: false,
+      isUrgentEvent: false,
       opennings: this.props.opennings,
       timeSelection: constant.timeOptions[0],
       intervalSelection: this.props.intervalOptions[0],
@@ -215,6 +216,8 @@ class PostMessageView extends Component {
       var publicImageURL = null;
       var thumbnailImageURL = null;
       var thumbnailPublicImageURL = null;
+      var isUrgentEvent = null;
+
       if(this.state.imageURL != null) {
         imageURL = this.state.imageURL;
       }
@@ -227,12 +230,15 @@ class PostMessageView extends Component {
       if(this.state.thumbnailPublicImageURL != null) {
         thumbnailPublicImageURL = this.state.thumbnailPublicImageURL;
       }
+      if(this.state.isUrgentEvent != null) {
+        isUrgentEvent = this.state.isUrgentEvent;
+      }
 
       var tags = this.state.tags.map((tag) => tag.text);
       postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress,
         startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link,
         imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
-        this.state.status).then((messageKey) => {
+        this.state.status, this.state.isUrgentEvent).then((messageKey) => {
           const { updateRecentMessage, checkAuthState} = this.props;
           if(messageKey != null && messageKey != "") {
             updateRecentMessage(messageKey, false);
