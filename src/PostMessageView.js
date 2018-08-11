@@ -83,8 +83,8 @@ class PostMessageView extends Component {
       end: this.today(),
       status: "開放",
       expanded: false,
-      isUrgentEvent: false,
-      isConfirmedUrgentEvent: false,
+      isReportedUrgentEvent: false,
+      isApprovedUrgentEvent: false,
       opennings: this.props.opennings,
       timeSelection: constant.timeOptions[0],
       intervalSelection: this.props.intervalOptions[0],
@@ -151,7 +151,7 @@ class PostMessageView extends Component {
       startTime: this.startTime(),
       end: this.today(),
       expanded: false, rotate: 'rotate(0deg)',
-      isUrgentEvent: false,
+      isReportedUrgentEvent: false,
       tags: [],
       popoverOpen: true,
       timeSelection: constant.timeOptions[0],
@@ -236,7 +236,7 @@ class PostMessageView extends Component {
       postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress,
         startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link,
         imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
-        this.state.status, this.state.isUrgentEvent, this.state.isConfirmedUrgentEvent).then((messageKey) => {
+        this.state.status, this.state.isReportedUrgentEvent, this.state.isApprovedUrgentEvent).then((messageKey) => {
           const { updateRecentMessage, checkAuthState} = this.props;
           if(messageKey != null && messageKey != "") {
             updateRecentMessage(messageKey, false);
@@ -610,9 +610,9 @@ class PostMessageView extends Component {
                   label="緊急事項"
                   control={
                     <Checkbox
-                      checked={this.state.isUrgentEvent}
-                      onChange={this.handleChange('isUrgentEvent')}
-                      value="isUrgentEvent" />
+                      checked={this.state.isReportedUrgentEvent}
+                      onChange={this.handleChange('isReportedUrgentEvent')}
+                      value="isReportedUrgentEvent" />
                     }
                   />
                 </FormGroup>
