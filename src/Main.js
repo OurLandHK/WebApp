@@ -80,7 +80,7 @@ class Main extends Component {
           actTag = tagStat[i];
         }
       }
-      let tagStatText = `我地有${tagStat[0].count}個${tagStat[0].tag}，${tagStat[1].count}個${tagStat[1].tag}，${actTag.count}個社區活動將會舉行，你會唔會有一d我地冇既野呢?`;
+      let tagStatText = `「我地Ourland」有${tagStat[0].count}個${tagStat[0].tag}，${tagStat[1].count}個${tagStat[1].tag}，${actTag.count}個社區活動將會舉行，就等你同「我地」一齊更新我地的社區啦！`;
       return <p>{tagStatText}</p>
     } else {
       return null;
