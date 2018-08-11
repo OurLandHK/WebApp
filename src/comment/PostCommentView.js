@@ -18,7 +18,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Slide from '@material-ui/core/Slide';
 import LocationButton from '../LocationButton';
 import SelectedMenu from '../SelectedMenu';
-import {constant} from '../config/default';
+import {constant, RoleEnum} from '../config/default';
 import {addComment} from '../MessageDB';
 import IntegrationReactSelect from '../IntegrationReactSelect';
 import CustomTags from '../CustomTags';
@@ -170,28 +170,34 @@ class PostCommentView extends Component {
         var link = null;
         var status = null;
         switch(this.state.commentSelection) {
-            case  constant.commentOptions[0]: //"發表回應":
-                commentText = this.state.text;
-                if(commentText == "") {
-                  isPost = false;
-                }
-                break;
+            case constant.commentOptions[0]: //"發表回應":
+              commentText = this.state.text;
+              if(commentText == "") {
+                isPost = false;
+              }
+              break;
             case constant.commentOptions[2]: //"要求更改現況":
-                status = this.state.changeStatus;
-                break;
+              status = this.state.changeStatus;
+              break;
             case constant.commentOptions[1]: //"要求更改地點":
-                geolocation = this.state.geolocation;
-                streetAddress = this.state.streetAddress;
-                if(geolocation == undefined) {
-                  isPost = false;
-                }
-                break;
+              geolocation = this.state.geolocation;
+              streetAddress = this.state.streetAddress;
+              if(geolocation == undefined) {
+                isPost = false;
+              }
+              break;
             case constant.commentOptions[3]: //"要求更改外部連結":
-                link = this.state.link;
-                break;
+              link = this.state.link;
+              break;
             case constant.commentOptions[4]: //"要求更改分類"
-                tags = this.state.tags.map((tag) => tag.text);
-                break;
+              tags = this.state.tags.map((tag) => tag.text);
+              break;
+            case constant.commentWithUrgentEventOptions[0]: //"確定為緊急事項"
+              commentText = this.state.text;
+              break;
+            case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
+              commentText = this.state.text;
+              break;
         }
         this.setState({popoverOpen: false});
         if(isPost) {
@@ -253,10 +259,18 @@ class PostCommentView extends Component {
 
 
   render() {
-    const classes = this.props.classes;
+    const { classes, message, user } = this.props;
     const { tags } = this.state;
+
     if(this.state.buttonShow) {
         let inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="更新事件進度及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
+        let commentOptions = constant.commentOptions;
+        if(user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {
+          if(message.isUrgentEvent != 'undefined' && message.isUrgentEvent != null && message.isUrgentEvent == true) {
+            commentOptions = [...constant.commentOptions, ...constant.commentWithUrgentEventOptions];
+          }
+        }
+
         if(this.state.commentSelection != constant.commentOptions[0]) { //"發表回應"
             switch(this.state.commentSelection) {
               case constant.commentOptions[1]: //"要求更改地點"
@@ -276,12 +290,18 @@ class PostCommentView extends Component {
                   suggestions={this.props.suggestions.tag}
                   onChange={(value) => this.handleTagChange(value)}
                 />*/
-              inputHtml = <CustomTags tags={tags}
-                  inline={false}
-                  placeholder="新增分類"
-                  handleDelete={this.handleDelete}
-                  handleAddition={this.handleAddition}
-                  handleDrag={this.handleDrag} /> ;
+                inputHtml = <CustomTags tags={tags}
+                    inline={false}
+                    placeholder="新增分類"
+                    handleDelete={this.handleDelete}
+                    handleAddition={this.handleAddition}
+                    handleDrag={this.handleDrag} /> ;
+                  break;
+              case constant.commentWithUrgentEventOptions[0]: //"確定為緊急事項"
+                inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="緊急事件" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
+                break;
+              case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
+                inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="非緊急事件" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
                 break;
               }
         }
@@ -309,7 +329,7 @@ class PostCommentView extends Component {
                 </AppBar>
                 <DialogContent>
                     <DialogContentText>選擇更新範圍</DialogContentText>
-                    <SelectedMenu label="" options={constant.commentOptions} changeSelection={(selectedValue) => this.commentOptionSelection(selectedValue)} ref={(commentSelection) => {this.commentSelection = commentSelection}}/>
+                    <SelectedMenu label="" options={commentOptions} changeSelection={(selectedValue) => this.commentOptionSelection(selectedValue)} ref={(commentSelection) => {this.commentSelection = commentSelection}}/>
                     {inputHtml}
                 </DialogContent>
             </Dialog>
