@@ -67,6 +67,7 @@ let constant = {
   messageListTimeOut: '未能讀取現在位置，請選擇其他位置或重試',
   rankingListLoadingStatus: '讀取排行榜中...',
   rankingListNoMessage: '已選位置未有任何人報料，不如你做第一個',
+  urgent: "緊急",
 
   focusTitleLabel: '焦點名稱',
   radiusLabel: '半徑',

@@ -18,6 +18,9 @@ import {
 } from './actions';
 import {connect} from "react-redux";
 import green from '@material-ui/core/colors/green';
+import Chip from '@material-ui/core/Chip';
+
+import { constant } from './config/default';
 
 
 const styles = theme => ({
@@ -82,6 +85,11 @@ const styles = theme => ({
   },
   thumbnailGrid: {
     padding: '8px'
+  },
+  urgentEventTag: {
+    backgroundColor: '#AB003C',
+    color: '#E3F2FD',
+    height: '22px'
   }
 });
 
@@ -112,26 +120,44 @@ class MessageView extends Component {
     }
   };
 
-  tileRender(text, auther, imageUrl, subtitle) {
+  tileRender(text, auther, imageUrl, subtitle, isApprovedUrgentEvent) {
     const classes = this.props.classes;
+    let urgentEventTag = null;
+    if(isApprovedUrgentEvent) {
+       urgentEventTag = <Chip
+        label={constant.urgent}
+        className={classes.urgentEventTag}
+      />
+    }
+     
     return (<Card className={classes.tileCard} onClick={() => this.handleClick()}>
               <CardMedia className={classes.tileMedia} image={imageUrl} title={auther}/>
               <CardContent>
-                <Typography className={classes.title} variant="title">{text}</Typography>
+                <Typography className={classes.title} variant="title">{urgentEventTag} {text}</Typography>
                 <Typography className={classes.pos} component="p">{subtitle}</Typography>
               </CardContent>
             </Card>);
   };
 
-  sliceRender(text, auther, imageUrl, subtitle, isUpdate) {
+  sliceRender(text, auther, imageUrl, subtitle, isUpdate, isApprovedUrgentEvent) {
     const classes = this.props.classes;
     let newIcon = null;
+    let urgentEventTag = null;
     if(isUpdate) {
       newIcon = <FiberNewIcon className={classes.newIcon}/>
     }
+
+    
+    if(isApprovedUrgentEvent) {
+       urgentEventTag = <Chip
+        label={constant.urgent}
+        className={classes.urgentEventTag}
+      />
+    }
+
     let summary = <Grid className={classes.summaryGrid} item xs onClick={() => this.handleClick()}>
                       <Typography className={classes.auther}>{newIcon}{auther}</Typography>
-                      <Typography className={classes.title} variant="title"> {text}</Typography>
+                      <Typography className={classes.title} variant="title">{urgentEventTag} {text}</Typography>
                       <Typography className={classes.pos}>{subtitle}</Typography>
                   </Grid>
     let thumbnail = <Grid item className={classes.thumbnailGrid}><CardMedia className={classes.cover}  image={imageUrl}/> </Grid>
@@ -172,6 +198,7 @@ class MessageView extends Component {
         distanceSpan = "距離: " + dist;
       }
     }
+
     let timeOffset = 0;
     let createdAt = 0;
     try {
@@ -208,9 +235,9 @@ class MessageView extends Component {
       if(m.publicImageURL != null) {
         imageUrl = m.publicImageURL;
       }
-      card = this.tileRender(m.text, auther, imageUrl, subtitle);
+      card = this.tileRender(m.text, auther, imageUrl, subtitle, m.isApprovedUrgentEvent);
     } else {
-      card = this.sliceRender(m.text, auther, imageUrl, subtitle, isUpdate);
+      card = this.sliceRender(m.text, auther, imageUrl, subtitle, isUpdate, m.isApprovedUrgentEvent);
     }
     return (
       <div className='message-item'>

@@ -30,6 +30,7 @@ import PostCommentView from './comment/PostCommentView';
 import timeOffsetStringInChinese from './TimeString';
 import Avatar from '@material-ui/core/Avatar';
 import green from '@material-ui/core/colors/green';
+import Chip from '@material-ui/core/Chip';
 import {
   updateRecentMessage,
   updatePublicProfileDialog,
@@ -79,6 +80,11 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  urgentEventTag: {
+    backgroundColor: '#AB003C',
+    color: '#E3F2FD',
+    height: '22px'
+  }
 });
 
 
@@ -118,15 +124,22 @@ class MessageDetailView extends Component {
     let subheader = `於:${timeOffsetString}前${post}`;
     const photoUrl = message.photoUrl || '/images/profile_placeholder.png';
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
+    let urgentEventTag = null;
+    if(message.isApprovedUrgentEvent != null && message.isApprovedUrgentEvent) {
+       urgentEventTag = <Chip
+        label={constant.urgent}
+        className={classes.urgentEventTag}
+      />
+    }
     return (
       <Grid container spacing={16}>
         <Grid item className={classes.authorGrid}>
           {fbProfileImage}
-          <Typography color='primary' noWrap='true' >{message.name}</Typography>
+          <Typography color='primary' noWrap='true' > {message.name}</Typography>
           <Typography color='primary' noWrap='true' >{subheader}</Typography>
         </Grid>
         <Grid item xs className={classes.summaryGrid}>
-          <Typography variant="headline">{message.text}</Typography>
+          <Typography variant="headline">{urgentEventTag} {message.text}</Typography>
         </Grid>
       </Grid>    );
   }
