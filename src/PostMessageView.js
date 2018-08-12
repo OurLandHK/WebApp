@@ -185,6 +185,7 @@ class PostMessageView extends Component {
     let everydayOpenning = null;
     let weekdaysOpennings = null;
     let endDate = null;
+    let isUrgentEvent = null;
     if(this.state.expanded) { // detail for time
       startDate = this.state.start;
       // console.log('Now Time ' + startTimeInMs+ ' ' + this.state.start);
@@ -236,7 +237,7 @@ class PostMessageView extends Component {
       postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress,
         startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link,
         imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
-        this.state.status, this.state.isReportedUrgentEvent, this.state.isApprovedUrgentEvent).then((messageKey) => {
+        this.state.status, this.state.isReportedUrgentEvent, this.state.isApprovedUrgentEvent, isUrgentEvent).then((messageKey) => {
           const { updateRecentMessage, checkAuthState} = this.props;
           if(messageKey != null && messageKey != "") {
             updateRecentMessage(messageKey, false);

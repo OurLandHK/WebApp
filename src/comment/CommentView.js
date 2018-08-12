@@ -95,10 +95,12 @@ class CommentView extends Component {
             break;
         case constant.commentWithUrgentEventOptions[0]: //"確定為緊急事項"
             console.log('Option: ' + constant.commentWithUrgentEventOptions[0]);
+            messageRecord.isUrgentEvent = true;
             messageRecord.isApprovedUrgentEvent = true;
             break;
         case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
             console.log('Option: ' + constant.commentWithUrgentEventOptions[1]);
+            messageRecord.isUrgentEvent = false;
             messageRecord.isApprovedUrgentEvent = false;
             break;
         }

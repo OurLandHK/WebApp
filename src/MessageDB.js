@@ -198,7 +198,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
     }
  }
 
- function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status, isReportedUrgentEvent, isApprovedUrgentEvent) {
+ function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status, isReportedUrgentEvent, isApprovedUrgentEvent, isUrgentEvent) {
     let now = Date.now();
     if(startDate === null)
     {
@@ -244,7 +244,8 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         status: status,
         viewCount: 0,
         isReportedUrgentEvent: isReportedUrgentEvent,
-        isApprovedUrgentEvent: isApprovedUrgentEvent
+        isApprovedUrgentEvent: isApprovedUrgentEvent,
+        isUrgentEvent: isUrgentEvent
       };
     // Use firestore
     const db = firebase.firestore();
@@ -595,5 +596,22 @@ function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
     });
 }
 
+function fetchReportedUrgentMessages(callback) {
+    console.log("fetchReportedUrgentMessages DB")
+    const db = firebase.firestore();
+    
+    let collectionRef = db.collection(config.messageDB);
+    collectionRef.onSnapshot(function() {});         
+    return collectionRef.where("hide", "==", false).where("isReportedUrgentEvent", "==", true).where("isUrgentEvent", "==", null).orderBy("createdAt", "desc").get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(messageRef){
+            console.log("here DB")
+            let val = messageRef.data(); 
+            callback(val);
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+}
 
-export {getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser};
+export {getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages};
