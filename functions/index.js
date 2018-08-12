@@ -147,7 +147,11 @@ function sendEmail(email, displayName, newEvent, address, message) {
   if(newEvent) {
     text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區有新事件 ${message.text} 詳細請瀏覽以下連結: https://ourland.hk/detail/${eventId}`;
   }
-  
+
+  if(message.isUrgentEvent != null && message.isUrgentEvent) {
+     text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區有事件 ${message.text} 被列為緊急事件 詳細請瀏覽以下連結: https://ourland.hk/detail/${eventId}`;
+  }
+
   const mailOptions = {
     to: email,
     subject: `${APP_NAME} 通知`,
