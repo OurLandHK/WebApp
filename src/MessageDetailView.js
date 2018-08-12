@@ -36,7 +36,7 @@ import {
   updatePublicProfileDialog,
 } from './actions';
 import {connect} from 'react-redux';
-import { constant } from './config/default';
+import {constant, RoleEnum} from './config/default';
 
 const styles = theme => ({
   button: {
@@ -117,7 +117,7 @@ class MessageDetailView extends Component {
   };
 
   renderTitle() {
-    const { message, classes} = this.props;
+    const { user, message, classes} = this.props;
     let post = '張貼';
     let timeOffset = Date.now() - message.createdAt.toDate();
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
@@ -125,7 +125,17 @@ class MessageDetailView extends Component {
     const photoUrl = message.photoUrl || '/images/profile_placeholder.png';
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     let urgentEventTag = null;
-    if(message.isApprovedUrgentEvent != null && message.isApprovedUrgentEvent) {
+
+    if(user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {
+      if(message.isReportedUrgentEvent && message.isUrgentEvent == null){
+        urgentEventTag = <Chip
+          label={constant.reportedUrgent}
+          className={classes.urgentEventTag}
+        />
+      }
+    }
+
+    if(message.isUrgentEvent != null && message.isUrgentEvent) {
        urgentEventTag = <Chip
         label={constant.urgent}
         className={classes.urgentEventTag}

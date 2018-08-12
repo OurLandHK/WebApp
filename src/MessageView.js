@@ -20,8 +20,7 @@ import {connect} from "react-redux";
 import green from '@material-ui/core/colors/green';
 import Chip from '@material-ui/core/Chip';
 
-import { constant } from './config/default';
-
+import {constant, RoleEnum} from './config/default';
 
 const styles = theme => ({
   paper: {
@@ -120,15 +119,17 @@ class MessageView extends Component {
     }
   };
 
-  tileRender(text, auther, imageUrl, subtitle, isApprovedUrgentEvent) {
+  tileRender(text, auther, imageUrl, subtitle, isReportedUrgentEvent, isUrgentEvent) {
     const classes = this.props.classes;
     let urgentEventTag = null;
-    if(isApprovedUrgentEvent) {
+
+    if(isUrgentEvent) {
        urgentEventTag = <Chip
         label={constant.urgent}
         className={classes.urgentEventTag}
       />
     }
+
      
     return (<Card className={classes.tileCard} onClick={() => this.handleClick()}>
               <CardMedia className={classes.tileMedia} image={imageUrl} title={auther}/>
@@ -139,7 +140,7 @@ class MessageView extends Component {
             </Card>);
   };
 
-  sliceRender(text, auther, imageUrl, subtitle, isUpdate, isApprovedUrgentEvent) {
+  sliceRender(user, text, auther, imageUrl, subtitle, isUpdate, isReportedUrgentEvent, isUrgentEvent) {
     const classes = this.props.classes;
     let newIcon = null;
     let urgentEventTag = null;
@@ -147,8 +148,15 @@ class MessageView extends Component {
       newIcon = <FiberNewIcon className={classes.newIcon}/>
     }
 
-    
-    if(isApprovedUrgentEvent) {
+    if(user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {
+      if(isReportedUrgentEvent && isUrgentEvent == null){
+        urgentEventTag = <Chip
+          label={constant.reportedUrgent}
+          className={classes.urgentEventTag}
+        />
+      }
+    }
+    if(isUrgentEvent) {
        urgentEventTag = <Chip
         label={constant.urgent}
         className={classes.urgentEventTag}
@@ -235,9 +243,9 @@ class MessageView extends Component {
       if(m.publicImageURL != null) {
         imageUrl = m.publicImageURL;
       }
-      card = this.tileRender(m.text, auther, imageUrl, subtitle, m.isApprovedUrgentEvent);
+      card = this.tileRender(m.text, auther, imageUrl, subtitle, m.isReportedUrgentEvent, m.isUrgentEvent);
     } else {
-      card = this.sliceRender(m.text, auther, imageUrl, subtitle, isUpdate, m.isApprovedUrgentEvent);
+      card = this.sliceRender(user, m.text, auther, imageUrl, subtitle, isUpdate, m.isReportedUrgentEvent, m.isUrgentEvent);
     }
     return (
       <div className='message-item'>

@@ -68,7 +68,7 @@ let constant = {
   rankingListLoadingStatus: '讀取排行榜中...',
   rankingListNoMessage: '已選位置未有任何人報料，不如你做第一個',
   urgent: "緊急",
-
+  reportedUrgent: "用戶報告為緊急事件",
   focusTitleLabel: '焦點名稱',
   radiusLabel: '半徑',
   descLabel: '內文',
