@@ -597,14 +597,12 @@ function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
 }
 
 function fetchReportedUrgentMessages(callback) {
-    console.log("fetchReportedUrgentMessages DB")
     const db = firebase.firestore();
     
     let collectionRef = db.collection(config.messageDB);
     collectionRef.onSnapshot(function() {});         
     return collectionRef.where("hide", "==", false).where("isReportedUrgentEvent", "==", true).where("isUrgentEvent", "==", null).orderBy("createdAt", "desc").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(messageRef){
-            console.log("here DB")
             let val = messageRef.data(); 
             callback(val);
         });
