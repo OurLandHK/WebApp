@@ -26,7 +26,7 @@ import LocationButton from './LocationButton';
 import postMessage from './PostMessage';
 import SelectedMenu from './SelectedMenu';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import config, {constant} from './config/default';
+import config, {constant, RoleEnum} from './config/default';
 import UploadImageButton from './UploadImageButton';
 import IntegrationReactSelect from './IntegrationReactSelect';
 import SignInButton from './SignInButton';
@@ -507,8 +507,24 @@ class PostMessageView extends Component {
   }
 
   render() {
+    const { user } = this.props;
+    let userProfile = user.userProfile;
     let startTime = new Date().toLocaleTimeString();
     let timeHtml = null;
+    let urgentHtml = null;
+    if(userProfile != null && (userProfile.role == RoleEnum.admin ||  userProfile.role == RoleEnum.betaUser || userProfile.role == RoleEnum.monitor)) {
+      urgentHtml = <FormGroup>
+                    <FormControlLabel
+                    label="緊急事項"
+                    control={
+                      <Checkbox
+                        checked={this.state.isReportedUrgentEvent}
+                        onChange={this.handleChange('isReportedUrgentEvent')}
+                        value="isReportedUrgentEvent" />
+                      }
+                    />
+                </FormGroup>
+    }
     let postButtonHtml =  <Button size="small" variant="extendedFab" color="primary" onClick={(evt) => this.handleRequestOpen(evt)}>
                             +報料
                           </Button>;
@@ -606,17 +622,7 @@ class PostMessageView extends Component {
                   </FormGroup>
                   <br/>
                 </Collapse>
-                <FormGroup>
-                  <FormControlLabel
-                  label="緊急事項"
-                  control={
-                    <Checkbox
-                      checked={this.state.isReportedUrgentEvent}
-                      onChange={this.handleChange('isReportedUrgentEvent')}
-                      value="isReportedUrgentEvent" />
-                    }
-                  />
-                </FormGroup>
+                {urgentHtml}
               </Form>
               </div>
         </Dialog>

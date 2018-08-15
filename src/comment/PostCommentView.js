@@ -194,12 +194,20 @@ class PostCommentView extends Component {
               tags = this.state.tags.map((tag) => tag.text);
               break;
             case constant.commentWithUrgentEventOptions[0]: //"確定為緊急事項"
-              commentText = this.state.text;
-              isApprovedUrgentEvent = true;
+              if(this.state.text == "") {
+                isPost = false;
+              } else {
+                commentText = `${constant.commentWithUrgentEventOptions[0]}: ${this.state.text}`;
+                isApprovedUrgentEvent = true;
+              }
               break;
             case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
-              commentText = this.state.text;
-              isApprovedUrgentEvent = false;
+              if(this.state.text == "") {
+                isPost = false;
+              } else {
+                commentText = `${constant.commentWithUrgentEventOptions[1]}: ${this.state.text}`
+                isApprovedUrgentEvent = false;
+              }
               break;
         }
         this.setState({popoverOpen: false});
@@ -269,9 +277,10 @@ class PostCommentView extends Component {
         let inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="更新事件進度及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
         let commentOptions = constant.commentOptions;
         if(user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {
-          if(message.isReportedUrgentEvent != 'undefined' && message.isReportedUrgentEvent != null && message.isReportedUrgentEvent == true) {
+          // admin should able to enable any message as urgent.
+          //if(message.isReportedUrgentEvent != 'undefined' && message.isReportedUrgentEvent != null && message.isReportedUrgentEvent == true) {
             commentOptions = [...constant.commentOptions, ...constant.commentWithUrgentEventOptions];
-          }
+          //}
         }
 
         if(this.state.commentSelection != constant.commentOptions[0]) { //"發表回應"
