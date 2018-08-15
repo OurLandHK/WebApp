@@ -83,7 +83,7 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
         let userDoc = userRef.get().then(snapshot => {
           snapshot.forEach(userProfileRef => {
             let userProfile = userProfileRef.data();
-            if(receviedNotification(userProfile)) {
+            if(receviedNotification(userProfile, data)) {
               let emailAddress = userProfile.emailAddress;
               console.log('UserProfile ID for send email '+ userProfileRef.id);
               // get the home address for send notification
@@ -130,11 +130,14 @@ function getAddressDistance(address, userProfile) {
   return addressDistance;
 }
 
-function receviedNotification(userProfile) {
+function receviedNotification(userProfile, message) {
   let rv = false;
   let emailAddress = userProfile.emailAddress;
   if(emailAddress != undefined && emailAddress != null) {
     if(userProfile.role == RoleEnum.admin ||  userProfile.role == RoleEnum.betaUser || userProfile.role == RoleEnum.monitor) {
+      rv = true;
+    } else if(message.isUrgentEvent != null && message.isUrgentEvent) {
+      // for any user specified email address and event is urgent
       rv = true;
     }
   }
