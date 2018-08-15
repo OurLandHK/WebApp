@@ -86,7 +86,7 @@ class LocationButton extends Component {
     this.geoLocationSuccessCallBack = this.geoLocationSuccessCallBack.bind(this);
     this.geoLocationSearchSuccessCallBack = this.geoLocationSearchSuccessCallBack.bind(this);
     this.notSupportedCallBack = this.notSupportedCallBack.bind(this);
-
+    this.onMapCenterChange = this.onMapCenterChange.bind(this);
     console.log(this.state.geoLocationSearch)
   }
 
@@ -130,7 +130,15 @@ class LocationButton extends Component {
     this.setState({geolocation: pos.coords, disableSumbit: false});
   }
 
-
+  onMapCenterChange(center){
+    var pos = { coords:
+          {
+            latitude: center.lat(),
+            longitude: center.lng()
+          }
+        };
+    this.geoSuccessCallBack(pos);
+  }
 
   streetAddressSuccessCallBack(err, response) {
     if (!err) {
@@ -327,7 +335,7 @@ class LocationButton extends Component {
           {this.renderStreetAddressSearch()}
           {this.renderGeoLocationSearch()}
           <p>{locationString}</p>
-          {this.state.geolocation != null  && <EventMap center={geolocation} zoom={zoom}/>}
+          {this.state.geolocation != null  && <EventMap center={geolocation} zoom={zoom} onCenterChange={this.onMapCenterChange}/>}
         </Dialog>
 
       </div>);
