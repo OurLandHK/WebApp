@@ -83,6 +83,8 @@ class PostMessageView extends Component {
       end: this.today(),
       status: "開放",
       expanded: false,
+      isReportedUrgentEvent: false,
+      isApprovedUrgentEvent: false,
       opennings: this.props.opennings,
       timeSelection: constant.timeOptions[0],
       intervalSelection: this.props.intervalOptions[0],
@@ -149,6 +151,7 @@ class PostMessageView extends Component {
       startTime: this.startTime(),
       end: this.today(),
       expanded: false, rotate: 'rotate(0deg)',
+      isReportedUrgentEvent: false,
       tags: [],
       popoverOpen: true,
       timeSelection: constant.timeOptions[0],
@@ -182,6 +185,7 @@ class PostMessageView extends Component {
     let everydayOpenning = null;
     let weekdaysOpennings = null;
     let endDate = null;
+    let isUrgentEvent = null;
     if(this.state.expanded) { // detail for time
       startDate = this.state.start;
       // console.log('Now Time ' + startTimeInMs+ ' ' + this.state.start);
@@ -215,6 +219,7 @@ class PostMessageView extends Component {
       var publicImageURL = null;
       var thumbnailImageURL = null;
       var thumbnailPublicImageURL = null;
+
       if(this.state.imageURL != null) {
         imageURL = this.state.imageURL;
       }
@@ -232,7 +237,7 @@ class PostMessageView extends Component {
       postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress,
         startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link,
         imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
-        this.state.status).then((messageKey) => {
+        this.state.status, this.state.isReportedUrgentEvent, this.state.isApprovedUrgentEvent, isUrgentEvent).then((messageKey) => {
           const { updateRecentMessage, checkAuthState} = this.props;
           if(messageKey != null && messageKey != "") {
             updateRecentMessage(messageKey, false);
@@ -245,8 +250,8 @@ class PostMessageView extends Component {
     }
   }
 
-  handleChange = event => {
-    this.setState({ name: event.target.value });
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.checked });
   };
 
   handleExpandClick() {
@@ -601,6 +606,17 @@ class PostMessageView extends Component {
                   </FormGroup>
                   <br/>
                 </Collapse>
+                <FormGroup>
+                  <FormControlLabel
+                  label="緊急事項"
+                  control={
+                    <Checkbox
+                      checked={this.state.isReportedUrgentEvent}
+                      onChange={this.handleChange('isReportedUrgentEvent')}
+                      value="isReportedUrgentEvent" />
+                    }
+                  />
+                </FormGroup>
               </Form>
               </div>
         </Dialog>

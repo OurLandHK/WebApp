@@ -198,7 +198,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
     }
  }
 
- function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status) {
+ function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status, isReportedUrgentEvent, isApprovedUrgentEvent, isUrgentEvent) {
     let now = Date.now();
     if(startDate === null)
     {
@@ -243,6 +243,9 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         thumbnailPublicImageURL,
         status: status,
         viewCount: 0,
+        isReportedUrgentEvent: isReportedUrgentEvent,
+        isApprovedUrgentEvent: isApprovedUrgentEvent,
+        isUrgentEvent: isUrgentEvent
       };
     // Use firestore
     const db = firebase.firestore();
@@ -506,7 +509,7 @@ function setHappyAndSad(messageUuid, happyCount, sadCount, happAndSad, user) {
 }
 
 /// All about comment
-function addComment(messageUUID, currentUser, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status) {
+function addComment(messageUUID, currentUser, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent) {
     var now = Date.now();
     var fireBaseGeo = null;
 
@@ -526,9 +529,14 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
         photoUrl: photoUrl,
         createdAt: new Date(now),
         lastUpdate: null,
+        isApprovedUrgentEvent: null
     }; 
     if(commentText != null) {
         commentRecord.text = commentText;
+
+        if(isApprovedUrgentEvent != null) {
+            commentRecord.isApprovedUrgentEvent = isApprovedUrgentEvent;
+        }
     } else {
         if(geolocation != null) {
             commentRecord.geolocation =  new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude);
@@ -549,7 +557,6 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
             }
         }
     }
-    console.log(commentRecord);
     // Use firestore
     const db = firebase.firestore();
     
@@ -589,5 +596,20 @@ function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
     });
 }
 
+function fetchReportedUrgentMessages(callback) {
+    const db = firebase.firestore();
+    
+    let collectionRef = db.collection(config.messageDB);
+    collectionRef.onSnapshot(function() {});         
+    return collectionRef.where("hide", "==", false).where("isReportedUrgentEvent", "==", true).where("isUrgentEvent", "==", null).orderBy("createdAt", "desc").get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(messageRef){
+            let val = messageRef.data(); 
+            callback(val);
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+}
 
-export {getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser};
+export {getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages};

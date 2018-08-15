@@ -93,7 +93,18 @@ class CommentView extends Component {
             console.log('Option: ' + constant.commentOptions[4]);
             messageRecord.tag = tags;
             break;
+        case constant.commentWithUrgentEventOptions[0]: //"確定為緊急事項"
+            console.log('Option: ' + constant.commentWithUrgentEventOptions[0]);
+            messageRecord.isUrgentEvent = true;
+            messageRecord.isApprovedUrgentEvent = true;
+            break;
+        case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
+            console.log('Option: ' + constant.commentWithUrgentEventOptions[1]);
+            messageRecord.isUrgentEvent = false;
+            messageRecord.isApprovedUrgentEvent = false;
+            break;
         }
+
         return updateMessage(messageUUID, messageRecord, true).then(() => {
             let now = Date.now();
             let approvedStatus = {
@@ -148,7 +159,7 @@ class CommentView extends Component {
   render() {
     const { classes, theme, user, commentRef } = this.props;
     const comment = commentRef.data();
-    const {approvedStatus, geolocation, streetAddress, changeStatus, link, tags, createdAt, photoUrl} = comment;
+    const {approvedStatus, geolocation, streetAddress, changeStatus, link, tags, createdAt, photoUrl, isApprovedUrgentEvent} = comment;
     let text = comment.text;
     if(text == null) {
         if(geolocation != null) {
@@ -174,10 +185,15 @@ class CommentView extends Component {
                         text = constant.commentOptions[4] + ': ' + tagText;
                         this.commentOption = constant.commentOptions[4];
                     }
-                }
+                } 
             }          
         }
     }
+
+    if(isApprovedUrgentEvent != null) {
+        this.commentOption = isApprovedUrgentEvent? constant.commentWithUrgentEventOptions[0]: constant.commentWithUrgentEventOptions[1];
+    }
+
     let approvedButton = null;
     let approvedLog = "";    
     if(approvedStatus == null) {
