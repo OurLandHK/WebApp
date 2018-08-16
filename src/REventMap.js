@@ -29,7 +29,8 @@ export class EventMap extends Component {
 
   onDragEnd(pos) {
     console.log('mapProps', pos);
-    this.props.onCenterChange(pos);
+    if (this.props.onCenterChange != undefined)
+      this.props.onCenterChange(pos);
   }
 
   render() {
@@ -47,9 +48,9 @@ export class EventMap extends Component {
         }
 
         return {
-          onDragEnd: () => {
+          onDragEnd: () => () => {
             let pos = refs.map.getCenter();
-            this.onDragEnd(pos);  
+            this.onDragEnd(pos);
           },
           onMapMounted: () => ref => {
             refs.map = ref
