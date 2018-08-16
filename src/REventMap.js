@@ -68,6 +68,7 @@ export class EventMap extends Component {
         defaultCenter={this.props.center}
         ref={props.onMapMounted}
         onDragEnd={props.onDragEnd}
+        options={{streetViewControl: false}}
       >
         <Marker position={this.props.center} />
       </GoogleMap>
