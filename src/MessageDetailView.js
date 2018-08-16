@@ -126,7 +126,7 @@ class MessageDetailView extends Component {
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     let urgentEventTag = null;
 
-    if(user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {
+    if(user != null && user.userProfile != null && (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
       if(message.isReportedUrgentEvent && message.isUrgentEvent == null){
         urgentEventTag = <Chip
           label={constant.reportedUrgent}
