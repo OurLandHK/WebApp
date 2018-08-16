@@ -148,7 +148,7 @@ class MessageView extends Component {
       newIcon = <FiberNewIcon className={classes.newIcon}/>
     }
 
-    if(user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {
+    if(user != null && user.userProfile != null && (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
       if(isReportedUrgentEvent && isUrgentEvent == null){
         urgentEventTag = <Chip
           label={constant.reportedUrgent}
