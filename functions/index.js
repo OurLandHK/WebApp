@@ -83,7 +83,7 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
         let userDoc = userRef.get().then(snapshot => {
           snapshot.forEach(userProfileRef => {
             let userProfile = userProfileRef.data();
-            if(receviedNotification(userProfile)) {
+            if(receviedNotification(userProfile, data)) {
               let emailAddress = userProfile.emailAddress;
               console.log('UserProfile ID for send email '+ userProfileRef.id);
               // get the home address for send notification
@@ -130,11 +130,14 @@ function getAddressDistance(address, userProfile) {
   return addressDistance;
 }
 
-function receviedNotification(userProfile) {
+function receviedNotification(userProfile, message) {
   let rv = false;
   let emailAddress = userProfile.emailAddress;
   if(emailAddress != undefined && emailAddress != null) {
     if(userProfile.role == RoleEnum.admin ||  userProfile.role == RoleEnum.betaUser || userProfile.role == RoleEnum.monitor) {
+      rv = true;
+    } else if(message.isUrgentEvent != null && message.isUrgentEvent) {
+      // for any user specified email address and event is urgent
       rv = true;
     }
   }
@@ -143,10 +146,15 @@ return rv;
 
 function sendEmail(email, displayName, newEvent, address, message) {
   const eventId = message.key
-  let text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區事件 ${message.text} 有新發展. 詳細請瀏覽以下連結: https://ourland.hk/detial/${eventId}`;
+  let text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區事件 ${message.text} 有新發展. 詳細請瀏覽以下連結: https://ourland.hk/detail/${eventId}`;
   if(newEvent) {
     text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區有新事件 ${message.text} 詳細請瀏覽以下連結: https://ourland.hk/detail/${eventId}`;
   }
+
+  if(message.isUrgentEvent != null && message.isUrgentEvent) {
+     text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區有事件 ${message.text} 被列為緊急事件 詳細請瀏覽以下連結: https://ourland.hk/detail/${eventId}`;
+  }
+
   const mailOptions = {
     to: email,
     subject: `${APP_NAME} 通知`,

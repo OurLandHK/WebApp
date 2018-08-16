@@ -17,7 +17,7 @@ import MessageList from './MessageList';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Divider from '@material-ui/core/Divider';
 import FilterBar from './FilterBar';
-import {fetchMessagesBaseOnGeo} from './MessageDB';
+import {fetchMessagesBaseOnGeo, fetchReportedUrgentMessages} from './MessageDB';
 import {
   toggleAddressDialog,
 } from "./actions";
@@ -114,6 +114,9 @@ class NotificationsDialog extends React.Component {
         }
         //console.log(address.geolocation);
         fetchMessagesBaseOnGeo(address.geolocation, distance, constant.defaultEventNumber, lastLoginTime, null, this.setMessage);
+        if(user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {
+          fetchReportedUrgentMessages(this.setMessage);
+        }
       }
     });      
 
