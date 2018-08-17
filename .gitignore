@@ -7,5 +7,6 @@ node_modules
 **.swp
 **.swo
 *.log
+*.cache
 functions/detailView.template.html
 functions/userView.template.html

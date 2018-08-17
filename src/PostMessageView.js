@@ -324,7 +324,7 @@ class PostMessageView extends Component {
 
   today() {
     let now = new Date();
-    return `${now.getFullYear()}-${("0" + now.getMonth()).slice(-2)}-${("0" + now.getDate()).slice(-2)}`;
+    return `${now.getFullYear()}-${("0" + (now.getMonth()+1)).slice(-2)}-${("0" + now.getDate()).slice(-2)}`;
   }
 
   startTime() {
