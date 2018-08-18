@@ -408,7 +408,7 @@ export function upsertAddress(user, key, type, text, geolocation, streetAddress,
         text: text,
         geolocation: geoPoint,
         streetAddress: streetAddress,
-        interestedRadius: interestedRadius
+        distance: interestedRadius
     }; 
     console.log(addressRecord);
     // Use firestore

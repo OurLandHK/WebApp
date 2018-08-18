@@ -86,7 +86,6 @@ class AddressView extends Component {
         var streetAddress = null;
         var type = addressEnum.other;
         var distance = constant.distance;
-        var interestedRadius = 1;
 
         if(this.props.address != null) {
             var c = this.props.address;
@@ -102,10 +101,6 @@ class AddressView extends Component {
             }
         }
 
-        if(this.props.addressbook.addresses[idx] != null && this.props.addressbook.addresses[idx].interestedRadius != null) {
-            interestedRadius = this.props.addressbook.addresses[idx].interestedRadius;
-        }
-
         this.setState({
             popoverOpen: true,
             text: text,
@@ -113,7 +108,6 @@ class AddressView extends Component {
             streetAddress: streetAddress,
             distance: distance,
             type: type,
-            interestedRadius: interestedRadius
         });
       }
 
@@ -138,7 +132,7 @@ class AddressView extends Component {
               key = this.props.address.id;
           }
           console.log("addressbook submit" + this.state.streetAddress);
-          this.props.upsertAddress(user.user, key, this.state.type, this.state.text, this.state.geolocation, this.state.streetAddress, this.state.interestedRadius);
+          this.props.upsertAddress(user.user, key, this.state.type, this.state.text, this.state.geolocation, this.state.streetAddress, this.state.distance);
           this.setState({popoverOpen: false});
 
         }
@@ -218,10 +212,10 @@ class AddressView extends Component {
                             
                             <FormHelperText>{constant.interestedRadius}</FormHelperText>
                             <Select
-                                value={this.state.interestedRadius}
+                                value={this.state.distance}
                                 onChange={this.handleChange}
                                 inputProps={{
-                                  name: 'interestedRadius',
+                                  name: 'distance',
                                   id: 'interestedRadius',
                                 }}
                               >

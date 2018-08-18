@@ -174,21 +174,13 @@ class LocationDrawer extends React.Component {
         addressList = [];
         let address;
         for(address of addressBook.addresses) {
-          addressList.push({
-                            type: address.type, 
-                            text: address.text,
-                            geolocation: address.geolocation,
-                            streetAddress: address.streetAddress
-                          });
+          addressList.push(address);
         };
         for(address of addressBook.publicAddresses) {
           if(address.type != addressEnum.home && address.type != addressEnum.office) {
-              addressList.push({
-                            type: address.type, 
-                            text: `十八社區/${address.text}`,
-                            geolocation: address.geolocation,
-                            streetAddress: address.streetAddress
-                          })
+              let newAddress = Object.create(address);
+              newAddress.text = `十八社區/${address.text}`;
+              addressList.push(newAddress)
           }
         };                                                          
       }
@@ -232,6 +224,7 @@ class LocationDrawer extends React.Component {
           </ListItem>
         );
       } else if (locationString != constant.addressNotSet ) {
+       text = `${text} ${constant.nearby} ${distance}${constant.kilometre}`;
        return (
          <ListItem button onClick={() => {this.setLocation(this.state.locationPrefix + text, distance, geolocation)}}>
            <ListItemIcon>
@@ -293,8 +286,8 @@ class LocationDrawer extends React.Component {
             className={classes.button}
           >
             <div className={classes.buttonContainer}>
-                {`${this.state.isUsingCurrentLocation ? constant.currentLocation
-                          : this.state.locationName}${this.state.distance}公里`}
+                {`${this.state.isUsingCurrentLocation ? constant.currentLocation + this.state.distance + '公里'
+                          : this.state.locationName}`}
             </div>
           </Button>
           <Drawer anchor='bottom'
