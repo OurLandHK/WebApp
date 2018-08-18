@@ -17,6 +17,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import TextField from '@material-ui/core/TextField';
 import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
@@ -40,6 +44,7 @@ const styles = theme => ({
 class AddressView extends Component {
     constructor(props) {
         super(props);
+        console.log(this.props);
         var text = "";
         var geolocation = null;
         var streetAddress = null;
@@ -58,6 +63,7 @@ class AddressView extends Component {
                 distance = c.distance;
             }
         }
+
         this.state = {
             popoverOpen: false,
             text: text,
@@ -68,13 +74,20 @@ class AddressView extends Component {
         };
     }
 
-    handleRequestOpen(evt) {
+     handleChange = event => {
+        this.setState({ [event.target.name]: event.target.value });
+      };
+
+
+    handleRequestOpen(evt, idx) {
         evt.preventDefault();
         var text = "";
         var geolocation = null;
         var streetAddress = null;
         var type = addressEnum.other;
         var distance = constant.distance;
+        var interestedRadius = 1;
+
         if(this.props.address != null) {
             var c = this.props.address;
             text = c.text;
@@ -88,13 +101,19 @@ class AddressView extends Component {
                 distance = c.distance;
             }
         }
+
+        if(this.props.addressbook.addresses[idx] != null && this.props.addressbook.addresses[idx].interestedRadius != null) {
+            interestedRadius = this.props.addressbook.addresses[idx].interestedRadius;
+        }
+
         this.setState({
             popoverOpen: true,
             text: text,
             geolocation: geolocation,
             streetAddress: streetAddress,
             distance: distance,
-            type: type
+            type: type,
+            interestedRadius: interestedRadius
         });
       }
 
@@ -119,7 +138,7 @@ class AddressView extends Component {
               key = this.props.address.id;
           }
           console.log("addressbook submit" + this.state.streetAddress);
-          this.props.upsertAddress(user.user, key, this.state.type, this.state.text, this.state.geolocation, this.state.streetAddress);
+          this.props.upsertAddress(user.user, key, this.state.type, this.state.text, this.state.geolocation, this.state.streetAddress, this.state.interestedRadius);
           this.setState({popoverOpen: false});
 
         }
@@ -143,7 +162,7 @@ class AddressView extends Component {
 
 
     render() {
-        const { classes, theme } = this.props;
+        const { classes, theme, idx } = this.props;
         let addressButtonHtml = null;
         let titleText = constant.updateAddressLabel;
         let geolocation = null;
@@ -176,7 +195,7 @@ class AddressView extends Component {
                     locationString = "近" + geoString(c.geolocation.latitude, c.geolocation.longitude);
                 }
             }
-            addressButtonHtml = <ListItem button onClick={(evt) => this.handleRequestOpen(evt)}>
+            addressButtonHtml = <ListItem button onClick={(evt) => this.handleRequestOpen(evt, idx)}>
                                     <ListItemIcon>
                                         {icons}
                                     </ListItemIcon>
@@ -184,7 +203,7 @@ class AddressView extends Component {
                                 </ListItem>
         } else {
             titleText = constant.addAddressLabel;
-            addressButtonHtml = <Button variant="fab" color="primary" className={classes.fab} onClick={(evt) => this.handleRequestOpen(evt)}>
+            addressButtonHtml = <Button variant="fab" color="primary" className={classes.fab} onClick={(evt) => this.handleRequestOpen(evt, idx)}>
                                     <AddIcon />
                                 </Button>
         }
@@ -196,6 +215,20 @@ class AddressView extends Component {
                             {icons}
                             <TextField disabled={disableValue} autoFocus required id="message" fullWidth margin="normal" helperText="名稱" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>
                             <LocationButton autoFocus geolocation={geolocation} streetAddress={streetAddress} ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>
+                            
+                            <FormHelperText>{constant.interestedRadius}</FormHelperText>
+                            <Select
+                                value={this.state.interestedRadius}
+                                onChange={this.handleChange}
+                                inputProps={{
+                                  name: 'interestedRadius',
+                                  id: 'interestedRadius',
+                                }}
+                              >
+                                <MenuItem value={1}>1 {constant.kilometre}</MenuItem>
+                                <MenuItem value={2}>2 {constant.kilometre}</MenuItem>
+                                <MenuItem value={3}>3 {constant.kilometre}</MenuItem>
+                              </Select>
                         </DialogContent>
                         <DialogActions>
                             <Button disabled={disableValue} color="secondary" onClick={() => this.onDelete()} >刪除</Button>
@@ -217,6 +250,7 @@ const mapStateToProps = (state, ownProps) => {
     filter : state.filter,
     geolocation: state.geolocation,
     user: state.user,
+    addressbook: state.addressBook
   };
 }
 
@@ -226,8 +260,8 @@ const mapDispatchToProps = (dispatch) => {
       (user, key) =>
         dispatch(deleteAddress(user, key)),
     upsertAddress:
-      (user, key, type, text, geolocation, streetAddress) =>
-        dispatch(upsertAddress(user, key, type, text, geolocation, streetAddress)),
+      (user, key, type, text, geolocation, streetAddress, interestedRadius) =>
+        dispatch(upsertAddress(user, key, type, text, geolocation, streetAddress, interestedRadius)),
   }
 };
 
