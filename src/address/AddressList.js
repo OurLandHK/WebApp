@@ -15,8 +15,8 @@ class AddressList extends Component {
   render() {
     let elements = null;
     const { addressBook } = this.props;
-    elements = addressBook.addresses.map((address) => {
-        return (<AddressView address={address} OnChange={() => {this.componentWillMount()}}/>);
+    elements = addressBook.addresses.map((address, idx) => {
+        return (<AddressView idx={idx} address={address} OnChange={() => {this.componentWillMount()}}/>);
       });      
     return (<div width="100%" >{elements}</div>);
   }
