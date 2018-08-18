@@ -395,7 +395,7 @@ export function updateRegionButtoneList(tagList) {
 }
 
 
-export function upsertAddress(user, key, type, text, geolocation, streetAddress) {
+export function upsertAddress(user, key, type, text, geolocation, streetAddress, interestedRadius) {
   return dispatch => {
     var geoPoint = null;
     if(geolocation != null) {
@@ -407,7 +407,8 @@ export function upsertAddress(user, key, type, text, geolocation, streetAddress)
         updateAt: new Date(now),
         text: text,
         geolocation: geoPoint,
-        streetAddress: streetAddress
+        streetAddress: streetAddress,
+        interestedRadius: interestedRadius
     }; 
     console.log(addressRecord);
     // Use firestore
@@ -415,10 +416,13 @@ export function upsertAddress(user, key, type, text, geolocation, streetAddress)
     
     
     var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
+
     if(key != null) {
-        collectionRef.doc(key).set(addressRecord).then(function() {
-          dispatch(fetchAddressBookByUser(user))
-        });
+       collectionRef.doc(key).get().then((addressBookRecord) => {
+          collectionRef.doc(key).set(addressRecord).then(function() {
+            dispatch(fetchAddressBookByUser(user))
+          });
+       });
     } else {
         collectionRef.add(addressRecord).then(function(docRef) {
           console.log("comment written with ID: ", docRef.id);
