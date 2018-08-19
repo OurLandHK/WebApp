@@ -55,7 +55,7 @@ let constant = {
   homeLabel: "主頁",
   userLabel: "我的",
   timeOptions : ['活動時間', '設施開放時間'],
-  commentOptions : ['發表回應', '要求更改地點', '要求更改現況', '要求更改外部連結', '要求更改分類'],
+  commentOptions : ['參與討論', '要求更新地點', '要求更新現況', '要求更新外部連結', '要求更新分類'],
   commentWithUrgentEventOptions : ['確定為緊急事項', '確定為非緊急事項'],
   statusOptions : ['開放', '完結', '政府跟進中', '虛假訊息', '不恰當訊息'],
   approveOptions : ['接納', '駁回'],
@@ -85,6 +85,7 @@ let constant = {
   distance: 1,
   kilometre: '公里',
   nearby: "附近",
+  emptyComment: '按+參與討論或更新內容',
   interestedRadius: '有效半徑'
 }
 
