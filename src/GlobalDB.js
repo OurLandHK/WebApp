@@ -104,10 +104,11 @@ function fetchFocusMessagesBaseOnGeo(geocode, radius) {
     }
  }
 
- function addFocusMessage(key, title, geolocation, streetAddress, radius , desc, messages) {
+ function addFocusMessage(key, title, geolocation, streetAddress, radius , summary, desc, messages) {
     let now = Date.now();
     var focusMessageRecord = {
         title: title,
+        summary: summary,
         desc: desc,
         messages: messages,
         geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
@@ -115,6 +116,7 @@ function fetchFocusMessagesBaseOnGeo(geocode, radius) {
         radius: radius,
         createdAt: new Date(now),
         lastUpdate: new Date(now),
+        current: true,
         key: key,   
       };
     // Use firestore

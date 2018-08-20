@@ -42,6 +42,7 @@ class FocusView extends Component {
         let messages = [];
         let streetAddress ="";
         let geolocation = null;
+        let summary = "";
         let desc = "";
         let key = "";
         let radius = 1;
@@ -55,6 +56,7 @@ class FocusView extends Component {
             messages = c.messages;
             key = c.key;
             title = c.title;
+            summary = c.summary;
             desc = c.desc;
             radius = c.radius;
         }
@@ -64,6 +66,7 @@ class FocusView extends Component {
             geolocation: geolocation,
             messages: messages,
             streetAddress: streetAddress,
+            summary: summary,
             desc: desc,
             radius: radius,
             key: key
@@ -76,6 +79,7 @@ class FocusView extends Component {
         let messages = [];
         let geolocation = null;
         let streetAddress = "";
+        let summary = "";
         let desc = "";
         let key = "";
         let radius = 1;
@@ -89,6 +93,7 @@ class FocusView extends Component {
             messages = c.messages;
             key = c.key;
             title = c.title;
+            summary = c.summary;
             desc = c.desc;
             radius = c.radius;
         }
@@ -98,6 +103,7 @@ class FocusView extends Component {
             geolocation: geolocation,
             streetAddress: streetAddress,
             messages: messages,
+            summary: summary,
             desc: desc,
             radius: radius,
             key: key
@@ -126,6 +132,7 @@ class FocusView extends Component {
                 geolocation: this.state.geolocation,
                 streetAddress:this.state.streetAddress,
                 messages: this.state.messages,
+                summary: this.state.summary,
                 desc: this.state.desc,
                 radius: this.state.radius,
                 key: this.state.key
@@ -137,6 +144,7 @@ class FocusView extends Component {
                 this.state.geolocation,
                 this.state.streetAddress,
                 this.state.radius,
+                this.state.summary,
                 this.state.desc,
                 this.state.messages
             )
@@ -212,6 +220,7 @@ class FocusView extends Component {
                             <TextField autoFocus required id="title" fullWidth margin="normal" helperText={constant.focusTitleLabel} value={this.state.title} onChange={event => this.setState({ title: event.target.value })}/>
                             <LocationButton autoFocus geolocation={geolocation} streetAddress={streetAddress} ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>
                             <TextField autoFocus required id="radius" margin="normal" type="number" helperText={constant.radiusLabel} value={this.state.radius} onChange={event => this.setState({ radius: event.target.value })}/>
+                            <TextField autoFocus required id="summary" fullWidth margin="normal" helperText={constant.focusSummaryLabel} value={this.state.summary} onChange={event => this.setState({ summary: event.target.value })}/>
                             <TextField autoFocus required id="desc" fullWidth
                                 multiline
                                 rowsMax="20"
