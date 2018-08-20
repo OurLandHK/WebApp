@@ -93,7 +93,7 @@ class MessageDetailView extends Component {
     super(props);
     this.state = {expanded: false,
         rotate: 'rotate(0deg)',
-        tab: 0,
+        tab: "參與紀錄",
       };
     this.handleChangeTab = this.handleChangeTab.bind(this);
     this.handleAuthorClick = this.handleAuthorClick.bind(this);
@@ -143,6 +143,13 @@ class MessageDetailView extends Component {
     }
     return (
       <Grid container spacing={16}>
+        <Grid item xs className={classes.summaryGrid}>
+          <Typography variant="headline">{urgentEventTag} {message.text}</Typography>
+        </Grid>
+      </Grid>    );
+/*
+    return (
+      <Grid container spacing={16}>
         <Grid item className={classes.authorGrid}>
           {fbProfileImage}
           <Typography color='primary' noWrap='true' > {message.name}</Typography>
@@ -152,6 +159,7 @@ class MessageDetailView extends Component {
           <Typography variant="headline">{urgentEventTag} {message.text}</Typography>
         </Grid>
       </Grid>    );
+ */     
   }
 
 
@@ -160,6 +168,12 @@ class MessageDetailView extends Component {
     let locationString = null;
     let viewCountString = constant.viewCountLabel;
     const { message, classes } = this.props;
+    let post = '張貼';
+    let timeOffset = Date.now() - message.createdAt.toDate();
+    let timeOffsetString = timeOffsetStringInChinese(timeOffset);
+    let subheader = `${timeOffsetString}前${post}`;
+    const photoUrl = message.photoUrl || '/images/profile_placeholder.png';
+    let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     if (message.streetAddress) {
       locationString = `地點: ${message.streetAddress}`; // (${geoString(message.geolocation.latitude, message.geolocation.longitude)})`;
     } else {
@@ -171,6 +185,27 @@ class MessageDetailView extends Component {
     } else {
       viewCountString += 0;
     }
+    return (
+      <Grid container spacing={16}>
+        <Grid item className={classes.authorGrid}>
+          {fbProfileImage}
+          <Typography color='primary' noWrap='true' > {message.name}</Typography>
+          <Typography color='primary' noWrap='true' >{subheader}</Typography>
+        </Grid>
+        <Grid item xs direction='column' className={classes.summaryGrid} >
+          <a href={geolink}>
+            <Typography variant="subheading">
+            {locationString}
+            </Typography>
+          </a>
+          <Typography variant="subheading">
+          {`現況: ${message.status} ${viewCountString}`}
+          </Typography>
+        </Grid>
+      </Grid>  
+    );
+
+/*    
     return (
       <Grid container direction='row' spacing={16}>
         <Grid item xs direction='column' className={classes.summaryGrid} >
@@ -185,6 +220,8 @@ class MessageDetailView extends Component {
         </Grid>
       </Grid>
     );
+*/
+
   }
 
   renderTimeHtml() {
@@ -283,6 +320,10 @@ class MessageDetailView extends Component {
       photoUrl = m.photoUrl;
     }
     let linkHtml = null;
+    let imageHtml = null;
+    if(m.publicImageURL != null) {
+      imageHtml = <MessageDetailViewImage url={m.publicImageURL} messageUUID={m.key}/>
+    }
     if (this.validateExternalLink(link)) {
       linkHtml = <Typography variant="subheading"> 外部連結： <a href={link} target="_blank">前往</a> </Typography>
     } else {
@@ -295,12 +336,14 @@ class MessageDetailView extends Component {
     let dateHtml = this.renderTimeHtml();
 
     const tab = this.state.tab;
-
+    let imageTabLabel = <Tab label="相關照片" value="相關照片"/>
+    imageTabLabel = null;
     return(<div className={classes.container}>
             <Paper className={classes.paper}>
-            {title}
+            {baseHtml}
+            {imageHtml}
              <CardContent>
-             {baseHtml}
+             {title}
               <ChipArray chipData={chips} />
              {linkHtml}
              </CardContent>
@@ -310,15 +353,15 @@ class MessageDetailView extends Component {
              <div>
                <AppBar position="static" className={classes.appBar}>
                  <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
-                   <Tab label="參與紀錄" />
-                   <Tab label="相關照片" />
-                   <Tab label="準確地點"/>
+                   <Tab label="參與紀錄" value="參與紀錄"/>
+                   {imageTabLabel}
+                   <Tab label="準確地點" value="準確地點"/>
                  </Tabs>
                </AppBar>
              </div>
-             {tab == 0 && <div className="wrapper"><CommentList messageUUID={m.key}/><div className="nav-wrapper"><PostCommentView messageUUID={m.key} message={m}/></div></div>}
-             {tab == 1 && <MessageDetailViewImage url={m.publicImageURL} messageUUID={m.key}/>}
-             {tab == 2 && <EventMap center={geolocation} zoom={zoom}/>}
+             {tab == "參與紀錄" && <div className="wrapper"><CommentList messageUUID={m.key}/><div className="nav-wrapper"><PostCommentView messageUUID={m.key} message={m}/></div></div>}
+             {tab == "相關照片" && <MessageDetailViewImage url={m.publicImageURL} messageUUID={m.key}/>}
+             {tab == "準確地點" && <EventMap center={geolocation} zoom={zoom}/>}
          </div>);
 
     }

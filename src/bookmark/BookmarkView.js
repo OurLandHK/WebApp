@@ -102,7 +102,7 @@ class BookmarkView extends Component {
       }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.bookmark != prevProps.bookmark) {
+        if (this.props.bookmark != prevProps.bookmark || this.state.uid != prevState.uid) {
           return this.getUserProfile();
         } else {
             return;
@@ -174,6 +174,8 @@ class BookmarkView extends Component {
             window.onpopstate = this.lastOnPopState;
             this.setState({
                popoverOpen: false,
+               userProfile: null,
+               uid: ""
             });
         }
     };   
@@ -233,7 +235,6 @@ class BookmarkView extends Component {
         if(this.state.userProfile != null) {
             displayName =  this.state.userProfile.displayName,
             photoUrl = this.state.userProfile.photoURL;
-            console.log(photoUrl);
         }
         let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
         if(bookmark.viewCount != null) {

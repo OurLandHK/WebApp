@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
-import config from '../config/default';
+import config, {constant} from '../config/default';
 import CommentView from './CommentView';
 import {fetchCommentsBaseonMessageID} from '../MessageDB';
 import {connect} from "react-redux";
@@ -53,7 +53,7 @@ class CommentList extends Component {
       <div>
         <center>
           <br/>
-          <h4>按+成為第一個參與者</h4>
+          <h4>{constant.emptyComment}</h4>
         </center>
       </div>
     );
