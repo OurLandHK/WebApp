@@ -25,6 +25,7 @@ import { togglePublicProfileDialog } from './actions';
 import {fetchBookmarkList, getUserPublishMessages, getUserCompleteMessages, getUserProfile} from './UserProfile';
 import ShareDrawer from './ShareDrawer';
 import BookmarkList from './bookmark/BookmarkList';
+import {fileExists} from './util/http';
 import config, {constant, addressEnum, RoleEnum} from './config/default';
 
 function Transition(props) {
@@ -115,9 +116,13 @@ class PublicProfile extends React.Component {
     let desc = null;
     let facebookhtml = null;
     if(this.state.userProfile != null) {
+      var imgURL = '/images/profile_placeholder.png';
+      if(fileExists(this.state.userProfile.photoURL)) {
+        imgURL = this.state.userProfile.photoURL;
+      }      
       displayName = this.state.userProfile.displayName;
       var displayNameLabel = "名字:" + displayName;
-      imageHtml =  <img src={this.state.userProfile.photoURL}/>;
+      imageHtml =  <img src={imgURL}/>;
       if(this.state.userProfile.desc != null && this.state.userProfile.desc != "") {
         desc = <ListItem >
           <ListItemText primary={"簡介: " + this.state.userProfile.desc}/> 

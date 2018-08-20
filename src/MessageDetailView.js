@@ -31,6 +31,7 @@ import timeOffsetStringInChinese from './TimeString';
 import Avatar from '@material-ui/core/Avatar';
 import green from '@material-ui/core/colors/green';
 import Chip from '@material-ui/core/Chip';
+import {fileExists} from './util/http';
 import {
   updateRecentMessage,
   updatePublicProfileDialog,
@@ -122,7 +123,10 @@ class MessageDetailView extends Component {
     let timeOffset = Date.now() - message.createdAt.toDate();
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     let subheader = `於:${timeOffsetString}前${post}`;
-    const photoUrl = message.photoUrl || '/images/profile_placeholder.png';
+    let photoUrl = message.photoUrl;
+    if(!fileExists(photoUrl)) {
+      photoUrl = '/images/profile_placeholder.png';
+    }
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     let urgentEventTag = null;
 
@@ -172,7 +176,10 @@ class MessageDetailView extends Component {
     let timeOffset = Date.now() - message.createdAt.toDate();
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     let subheader = `${timeOffsetString}前${post}`;
-    const photoUrl = message.photoUrl || '/images/profile_placeholder.png';
+    let photoUrl = message.photoUrl;
+    if(!fileExists(photoUrl)) {
+      photoUrl = '/images/profile_placeholder.png';
+    }
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     if (message.streetAddress) {
       locationString = `地點: ${message.streetAddress}`; // (${geoString(message.geolocation.latitude, message.geolocation.longitude)})`;
@@ -311,14 +318,8 @@ class MessageDetailView extends Component {
             chips.push(chip);
         }
     }
-//    var facebookURL = "https://facebook.com/" + m.fbpost;
-//    console.log('facebookURL: '+facebookURL);
     var zoom=15;
-    var photoUrl = '/images/profile_placeholder.png';
     var geolocation = {lat: m.geolocation.latitude, lng: m.geolocation.longitude};
-    if (m.photoUrl) {
-      photoUrl = m.photoUrl;
-    }
     let linkHtml = null;
     let imageHtml = null;
     if(m.publicImageURL != null) {

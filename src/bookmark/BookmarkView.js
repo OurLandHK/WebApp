@@ -26,6 +26,7 @@ import timeOffsetStringInChinese from '../TimeString';
 import  {constant, RoleEnum} from '../config/default';
 import  MessageList from '../MessageList';
 import TagDrawer from '../TagDrawer';
+import {fileExists} from '../util/http';
 import { dropBookmark, addBookmark, updateBookmark, incBookmarkViewCount, getUserProfile} from '../UserProfile';
 import {
     checkAuthState,
@@ -232,7 +233,7 @@ class BookmarkView extends Component {
         let subheader = `於:${timeOffsetString}前${post}`;
         let photoUrl = '/images/profile_placeholder.png';
         let displayName = "";
-        if(this.state.userProfile != null) {
+        if(this.state.userProfile != null && fileExists(this.state.userProfile.photoURL)) {
             displayName =  this.state.userProfile.displayName,
             photoUrl = this.state.userProfile.photoURL;
         }

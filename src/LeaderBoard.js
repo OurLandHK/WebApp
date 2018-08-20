@@ -13,10 +13,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText  from '@material-ui/core/ListItemText';
+import {useFirestore} from './util/http';
 import {connect} from "react-redux";
 import Ranking from "./Ranking";
 import UserList from "./admin/UserList";
@@ -71,6 +68,10 @@ class LeaderBoard extends React.Component {
 
   renderUser(user, rank) {
     const { classes } = this.props;
+    var imgURL = '/images/profile_placeholder.png';
+    if(useFirestore(user.photoURL)) {
+      imgURL = user.photoURL;
+    } 
     return (
       <div>
         <Card className={classes.card}>
@@ -78,7 +79,7 @@ class LeaderBoard extends React.Component {
             avatar={
               <Avatar
                 className={classes.avatar}
-                src={user.photoURL}
+                src={imgURL}
               />
             }
             title={`第${rank}名`}

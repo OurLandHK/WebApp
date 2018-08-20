@@ -5,8 +5,10 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import {fetchMessagesBaseOnGeo} from './MessageDB';
 import { updatePublicProfileDialog} from './actions';
+import {useFirestore} from './util/http';
 import {connect} from "react-redux";
 import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
@@ -115,13 +117,17 @@ class Ranking extends Component {
 
   renderUser(user, rank) {
     const { classes } = this.props;
+    var imgURL = '/images/profile_placeholder.png';
+    if(useFirestore(user.photoURL)) {
+      imgURL = user.photoURL;
+    }   
     return (
     <Card className={classes.card}>
         <CardHeader
         avatar={
             <Avatar
             className={classes.avatar}
-            src={user.photoURL}
+            src={imgURL}
             />
         }
         title={`第${rank}名`}
