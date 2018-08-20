@@ -8,6 +8,7 @@ import {getBookmark} from './UserProfile';
 import React, { Component } from 'react';
 import MessageList from './MessageList';
 import config, {constant} from './config/default';
+import FocusMessage from './FocusMessage';
 import {
   updateRecentMessage,
   updatePublicProfileDialog,
@@ -91,11 +92,9 @@ class Main extends Component {
     let recentMessage = null;
     const { eventNumber, distance, geolocation, eventId, queryMessage, bookmark} = this.state;
     const {open: openRecent} = this.props.recentMessage;
-//    const {focusMessages} = this.props.ourland;
-    const {globalFocusMessages: focusMessages} = this.props.ourland;
     const { classes } = this.props;
-    let focusMessage = null
     let tagStatHtml = this.renderTagStat();
+
     if(queryMessage != null) {
       let message = queryMessage;
       recentMessage = <div className="recent-event-wrapper">
@@ -108,24 +107,12 @@ class Main extends Component {
                         <BookmarkView bookmark={bookmark} open={openRecent} />
                       </div>;
     }
-    if(focusMessages != null && focusMessages.length > 0 && focusMessages[0].messages.length) {
-      focusMessage = <div className="focus-message-wrapper">
-        <h4>{focusMessages[0].title}</h4>
-        <MessageList
-          ref={(messageList) => {this.messageList = messageList;}}
-          eventNumber={100}
-          distance={10}
-          messageIds={focusMessages[0].messages}
-          hori={true}
-        />
-      </div>
-    }
 
     return (
       <div className={classes.container}>
         {tagStatHtml}
         {recentMessage}
-        {focusMessage}       
+        <FocusMessage/>      
         <RegionEventDialog
           eventNumber={eventNumber}
           distance={distance}
