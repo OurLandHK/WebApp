@@ -22,6 +22,7 @@ class FocusMessage extends Component {
       let focusMsgIdx = this.generateFocusMessagesIndex(focusMessages.length);
       return <div className="focus-message-wrapper">
           <h4>{focusMessages[focusMsgIdx].title}</h4>
+          <p>{focusMessages[focusMsgIdx].summary}</p>
           <MessageList
             ref={(messageList) => {this.messageList = messageList;}}
             eventNumber={100}
@@ -60,16 +61,25 @@ class FocusMessage extends Component {
     if(focusMessages != null  && focusMessages.length > 0 && addressBook != null && addressBook.addresses.length > 0) {
       // home
       var homeAddress = addressBook.addresses[0];
-      var homeAddressInterestRadius = homeAddress.distance || 1;
+      var homeAddressInterestRadiusOrig = homeAddress.distance || 1;
+
       // office
       var officeAddress = addressBook.addresses[1];
-      var officeAddressInterestRadius = officeAddress.distance || 1;
+      var officeAddressInterestRadiusOrig = officeAddress.distance || 1;
 
       // generating focus message html array 
       focusMessageHtml = focusMessages.map((focusMessage, focusMsgIdx) => {
         let homeAddressDistDiff = null;
         let officeAddressDistDiff = null;
-
+        var homeAddressInterestRadius = homeAddressInterestRadiusOrig;
+        if(focusMessage.radius > homeAddressInterestRadius) {
+          homeAddressInterestRadius = focusMessage.radius;
+        }
+        var officeAddressInterestRadius = officeAddressInterestRadiusOrig;
+        if(focusMessage.radius > officeAddressInterestRadius) {
+          officeAddressInterestRadius = focusMessage.radius;
+        }
+  
         if(homeAddress.geolocation != null) {
           homeAddressDistDiff = dist(focusMessage.geolocation.longitude, focusMessage.geolocation.latitude, homeAddress.geolocation.longitude, homeAddress.geolocation.latitude);
         }
@@ -82,6 +92,7 @@ class FocusMessage extends Component {
           return (
             <div key={focusMsgIdx}>
               <h4>{focusMessages[focusMsgIdx].title}</h4>
+              <p>{focusMessages[focusMsgIdx].summary}</p>
               <MessageList
                 ref={(messageList) => {this.messageList = messageList;}}
                 eventNumber={100}

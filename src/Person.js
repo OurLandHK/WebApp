@@ -19,6 +19,7 @@ import {upgradeAllUser} from './UserProfile';
 import AddressDialog from './address/AddressDialog';
 import FocusDialog from './admin/FocusDialog';
 import {connect} from "react-redux";
+import {fileExists} from './util/http';
 import Divider from '@material-ui/core/Divider';
 import {
   toggleAddressDialog,
@@ -78,7 +79,10 @@ class Person extends Component {
     const { user } = this.props;
 
     if (user && user.user && user.userProfile) {
-        let imgURL = (user.userProfile.photoURL || '/images/profile_placeholder.png');
+        let imgURL = user.userProfile.photoURL;
+        if(!fileExists(imgURL)) {
+          imgURL = '/images/profile_placeholder.png';
+        }
         userSection = (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{user.userProfile.displayName}&nbsp;&nbsp;</div>);
         signOutSection = (<ListItem><SignOutButton/></ListItem>);
         userLoginDisplay = (<span>

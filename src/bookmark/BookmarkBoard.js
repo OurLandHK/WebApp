@@ -46,7 +46,7 @@ class BookmarkBoard extends React.Component {
 //    console.log("createEventListDialog");
     super(props);
     this.state = {
-      tabValue: 0,
+      tabValue: constant.myBookmarkLabel,
     };
   }
 
@@ -79,12 +79,12 @@ class BookmarkBoard extends React.Component {
             onChange={this.handleChange}
             fullWidth
           >
-            <Tab label={constant.myBookmarkLabel} />
-            <Tab label={constant.publicBookmarkLabel} />
+            <Tab label={constant.myBookmarkLabel} value={constant.myBookmarkLabel}/>
+            <Tab label={constant.publicBookmarkLabel} value={constant.publicBookmarkLabel}/>
             <BookmarkView/>
           </Tabs>
         </div>
-        {tabValue == 0 && this.renderMessages()}  
+        {tabValue == constant.myBookmarkLabel && this.renderMessages()}  
       </div>);
   }
 }

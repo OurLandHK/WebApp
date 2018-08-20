@@ -70,6 +70,7 @@ let constant = {
   urgent: "緊急",
   reportedUrgent: "用戶報告為緊急事件",
   focusTitleLabel: '焦點名稱',
+  focusSummaryLabel: '焦點簡介',
   radiusLabel: '半徑',
   descLabel: '內文',
   focusMessagesLabel: '焦點社區事件',
