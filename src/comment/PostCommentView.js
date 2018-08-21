@@ -276,7 +276,7 @@ class PostCommentView extends Component {
     if(this.state.buttonShow) {
         let inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="更新事件進度及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
         let commentOptions = constant.commentOptions;
-        if(user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {
+        if(user.userProfile != null && (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
           // admin should able to enable any message as urgent.
           //if(message.isReportedUrgentEvent != 'undefined' && message.isReportedUrgentEvent != null && message.isReportedUrgentEvent == true) {
             commentOptions = [...constant.commentOptions, ...constant.commentWithUrgentEventOptions];
