@@ -25,7 +25,7 @@ import { togglePublicProfileDialog } from './actions';
 import {fetchBookmarkList, getUserPublishMessages, getUserCompleteMessages, getUserProfile} from './UserProfile';
 import ShareDrawer from './ShareDrawer';
 import BookmarkList from './bookmark/BookmarkList';
-import {fileExists} from './util/http';
+import {fileExists, checkImageExists} from './util/http';
 import config, {constant, addressEnum, RoleEnum} from './config/default';
 import {trackEvent} from './track';
 
@@ -119,7 +119,7 @@ class PublicProfile extends React.Component {
     let facebookhtml = null;
     if(this.state.userProfile != null) {
       var imgURL = '/images/profile_placeholder.png';
-      if(fileExists(this.state.userProfile.photoURL)) {
+      if(checkImageExists(this.state.userProfile.photoURL)) {
         imgURL = this.state.userProfile.photoURL;
       }      
       displayName = this.state.userProfile.displayName;

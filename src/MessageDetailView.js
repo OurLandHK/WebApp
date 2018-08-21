@@ -31,7 +31,7 @@ import timeOffsetStringInChinese from './TimeString';
 import Avatar from '@material-ui/core/Avatar';
 import green from '@material-ui/core/colors/green';
 import Chip from '@material-ui/core/Chip';
-import {fileExists} from './util/http';
+import {fileExists, checkImageExists} from './util/http';
 import {
   updateRecentMessage,
   updatePublicProfileDialog,
@@ -129,7 +129,7 @@ class MessageDetailView extends Component {
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     let subheader = `於:${timeOffsetString}前${post}`;
     let photoUrl = message.photoUrl;
-    if(!fileExists(photoUrl)) {
+    if(!checkImageExists(photoUrl)) {
       photoUrl = '/images/profile_placeholder.png';
     }
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
@@ -182,7 +182,7 @@ class MessageDetailView extends Component {
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     let subheader = `${timeOffsetString}前${post}`;
     let photoUrl = message.photoUrl;
-    if(!fileExists(photoUrl)) {
+    if(!checkImageExists(photoUrl)) {
       photoUrl = '/images/profile_placeholder.png';
     }
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
