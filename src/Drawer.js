@@ -19,7 +19,7 @@ import EventListDialog from './EventListDialog';
 import LeaderBoard from './LeaderBoard';
 import {connect} from "react-redux";
 import Divider from '@material-ui/core/Divider';
-import {fileExists} from './util/http';
+import {fileExists, checkImageExists} from './util/http';
 import {
   fetchLocation,
   toggleAddressDialog,
@@ -106,7 +106,7 @@ class DrawerMenu extends Component {
     if(this.state.open) {
       if (user && user.user && user.userProfile) {
         var imgURL = user.userProfile.photoURL;
-        if(!fileExists(imgURL)) {
+        if(!checkImageExists(imgURL)) {
           imgURL = '/images/profile_placeholder.png';
         }
         userSection = (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{user.userProfile.displayName}&nbsp;&nbsp;</div>);

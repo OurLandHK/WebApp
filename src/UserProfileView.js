@@ -24,7 +24,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import {fileExists} from './util/http';
+import {fileExists, checkImageExists} from './util/http';
 import {getUserProfile, updateUserLocation, getUserRecords, updateUserProfile} from './UserProfile';
 import UploadImageButton from './UploadImageButton';
 import uuid from 'js-uuid';
@@ -195,7 +195,7 @@ class UserProfileView extends React.Component {
     let emailHtml = null;
     let dialogHtml = null;
     if (this.state.user != null && this.state.userProfile != null) {
-        if(fileExists(this.state.userProfile.photoURL)) {
+        if(checkImageExists(this.state.userProfile.photoURL)) {
           imgURL = this.state.userProfile.photoURL;
         }
         this.path = "UserProfile/" + this.state.user.uid + "/";

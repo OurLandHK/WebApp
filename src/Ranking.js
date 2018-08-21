@@ -5,7 +5,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import {fetchMessagesBaseOnGeo} from './MessageDB';
 import { updatePublicProfileDialog} from './actions';
-import {useFirestore} from './util/http';
+import {checkImageExists} from './util/http';
 import {connect} from "react-redux";
 import PropTypes from 'prop-types';
 
@@ -118,7 +118,7 @@ class Ranking extends Component {
   renderUser(user, rank) {
     const { classes } = this.props;
     var imgURL = '/images/profile_placeholder.png';
-    if(useFirestore(user.photoURL)) {
+    if(checkImageExists(user.photoURL)) {
       imgURL = user.photoURL;
     }   
     return (
