@@ -116,13 +116,13 @@ class MessageDialog extends React.Component {
 
   handleRequestClose = () => {
     window.onpopstate = this.lastOnPopState;
-    window.history.pushState("", "", '/');
+    //window.history.pushState("", "", '/');
     this.setState({ open: false });
   };
 
   handleRequestDelete = () => {
     return dropMessage(this.props.uuid).then((value) => {
-      window.history.pushState("", "", '/');
+      window.onpopstate = this.lastOnPopState;
       this.setState({ open: false });
     });
   };
@@ -156,18 +156,18 @@ class MessageDialog extends React.Component {
         } catch(error) {
           eventCreateTimeDiff = nowDateTime - m.createdAt;
         };
-        console.log("User id: " + user.uid + " " + m.uid + " " + eventCreateTimeDiff  )
+        //console.log("User id: " + user.uid + " " + m.uid + " " + eventCreateTimeDiff  )
         if(user.uid == m.uid && ( eventCreateTimeDiff < (10 * 60 * 1000))) {
           deleteButton = <IconButton color="contrast" onClick={this.handleRequestDelete} aria-label="Close">
                             <DeleteIcon />
                           </IconButton>
         }
-        window.history.pushState("", "", `/detail/${this.props.uuid}`);
+        if(!this.props.publicProfileDialogOpen) {
+          window.history.pushState("", "", `/detail/${this.props.uuid}`);
+          console.log("Push state");
+        }
       } 
       detailView = <MessageDetailView message={m}  happyAndSad={this.happyAndSad}/>;
-
-    } else {
-      window.history.pushState("", "", "/");
     }
     return (
         <Dialog
@@ -200,6 +200,7 @@ MessageDialog.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   return {
     user          :   state.user,
+    publicProfileDialogOpen: state.publicProfileDialog.open,
   };
 }
 

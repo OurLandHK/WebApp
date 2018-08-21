@@ -79,7 +79,7 @@ class PostCommentView extends Component {
 
     this.state = {popoverOpen: false, buttonShow: false,
       // comment
-      commentSelection: '發表回應',
+      commentSelection: constant.commentOptions[0],
       text: "",
       geolocation: null,
       streetAddress: null,
@@ -121,7 +121,7 @@ class PostCommentView extends Component {
     //console.log("Request for open " + this.state.popoverOpen);
     this.setState({
      // Comment
-        commentSelection: '發表回應',
+        commentSelection: constant.commentOptions[0],
         text: "",
         geolocation: null,
         streetAddress: null,

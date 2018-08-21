@@ -168,7 +168,7 @@ class BookmarkView extends Component {
       }
     
     handleRequestClose() {
-        window.history.pushState("", "", "/");
+        //window.history.pushState("", "", "/");
         if(this.props.closeDialog != null) {
             this.props.closeDialog();
         } else {
