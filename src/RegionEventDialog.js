@@ -20,6 +20,7 @@ import MessageList from './MessageList';
 import {connect} from "react-redux";
 import { toggleRegionEventDialog } from './actions';
 import FilterBar from './FilterBar';
+import {trackEvent} from './track';
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
@@ -85,7 +86,8 @@ class RegionEventDialog extends React.Component {
     evt.preventDefault();
     this.lastOnPopState = window.onpopstate;
     window.onpopstate = this.onBackButtonEvent;
-    console.log(filter, titleLabel)
+    console.log(filter, titleLabel);
+    trackEvent('Event', titleLabel);
     this.setState({filter: filter, titleLabel: titleLabel});
     this.props.toggleRegionEventDialog(true);
   }

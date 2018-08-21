@@ -9,6 +9,8 @@ import React, { Component } from 'react';
 import MessageList from './MessageList';
 import config, {constant} from './config/default';
 import FocusMessage from './FocusMessage';
+import {trackEvent} from  './track';
+
 import {
   updateRecentMessage,
   updatePublicProfileDialog,
@@ -54,6 +56,10 @@ class Main extends Component {
       this.init = false;
       this.refreshQueryMessage();
     }
+  }
+
+  componentDidMount() {
+    trackEvent('main', 'main');
   }
 
   refreshQueryMessage() {
