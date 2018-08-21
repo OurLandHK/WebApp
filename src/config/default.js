@@ -2,7 +2,12 @@ import './firebase';
 import 'firebase/firestore';
 import * as firebase from 'firebase';
 import * as firestore from 'firebase/firestore';
-//import 'firebase/firestore-types';
+
+const isProduction = () => {
+  const location = window.location;
+  console.log(location.hostname);
+  return location.hostname == "ourland.hk";
+};
 
 let config = {
   fbApp: {
@@ -23,7 +28,8 @@ let config = {
   addressBook: "AddressBook",
   commentDB: "comment",
   bookDB: "Bookmark",
-  TagStatisticKey: "TagStatistic"
+  TagStatisticKey: "TagStatistic",
+  analyticsID: isProduction() ? "UA-124203709-1" : "UA-124203709-2",
 };
 
 let constant = {
@@ -109,6 +115,7 @@ const RoleEnum = {
   monitor: "監察員",
   admin: "我地管理員", 
 }
+
 
 export  default config;
 export {constant, addressEnum, happyAndSadEnum, RoleEnum};

@@ -22,6 +22,7 @@ import WorkIcon from '@material-ui/icons/Work';
 import HomeIcon from '@material-ui/icons/Home';
 import LocationIcon from '@material-ui/icons/LocationOn';
 import green from '@material-ui/core/colors/green';
+import {connect} from 'react-redux';
 import config,  {constant, addressEnum} from './config/default';
 import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
 import geoString from './GeoLocationString';
@@ -33,7 +34,7 @@ import {
   updateFilterWithCurrentLocation,
   toggleAddressDialog,
 } from './actions';
-import {connect} from 'react-redux';
+import {trackEvent} from './track';
 
 
 const styles = theme => ({
@@ -130,9 +131,11 @@ class LocationDrawer extends React.Component {
       this.geolocation = coords;
       this.setState({...this.state, isUsingCurrentLocation: isUsingCurrentLocation})
       console.log('set ' + text + '(' + this.geolocation.latitude + ',' +  this.geolocation.longitude + ') radius' + distance);
+      trackEvent('Filter', text);
       this.setState({locationName: text, distance: distance, geolocation: coords});
       this.toggleDrawer(false);
       const { updateFilterLocation } = this.props;
+
       updateFilterLocation(coords, distance);
   }
 

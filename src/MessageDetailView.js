@@ -38,6 +38,7 @@ import {
 } from './actions';
 import {connect} from 'react-redux';
 import {constant, RoleEnum} from './config/default';
+import {trackEvent} from './track';
 
 const styles = theme => ({
   button: {
@@ -116,6 +117,10 @@ class MessageDetailView extends Component {
       updatePublicProfileDialog(message.uid, message.fbuid, true)
     }
   };
+
+  componentDidMount() {
+    trackEvent('detail', this.props.message.text + '|' + this.props.message.key);
+  }
 
   renderTitle() {
     const { user, message, classes} = this.props;

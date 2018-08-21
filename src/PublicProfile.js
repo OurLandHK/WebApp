@@ -27,6 +27,7 @@ import ShareDrawer from './ShareDrawer';
 import BookmarkList from './bookmark/BookmarkList';
 import {fileExists} from './util/http';
 import config, {constant, addressEnum, RoleEnum} from './config/default';
+import {trackEvent} from './track';
 
 function Transition(props) {
   return <Slide direction="left" {...props} />;
@@ -83,6 +84,7 @@ class PublicProfile extends React.Component {
       fetchBookmarkList(user).then((bookmarkList)=>{
       this.completeMessages = userProfile.completeMessages;
       this.publishMessages = userProfile.publishMessages;
+      trackEvent('PublicProfile', userProfile.displayName);
       this.setState({user: user, userProfile: userProfile, bookmarkList: bookmarkList});
       });
     });
