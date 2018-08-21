@@ -109,7 +109,7 @@ class EventListDialog extends React.Component {
   render() {
     const { classes} = this.props;let messageHtml = null;let buttonHtml = null;
     let titleText = this.state.title + ": " + this.state.messageIds.length;
-    let open = this.state.open || this.props.open; 
+    let open = this.state.open; 
     if(open)  {
         messageHtml = this.renderMessages();
     }
@@ -146,7 +146,7 @@ EventListDialog.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    open: state.regionEventDialog.open,
+    user: state.user,
   };
 }
 

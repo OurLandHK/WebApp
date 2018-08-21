@@ -99,7 +99,7 @@ class PublicProfile extends React.Component {
 
 
   handleRequestClose = () => {
-    window.history.pushState("", "", `/`)
+//    window.history.pushState("", "", `/`)
     window.onpopstate = this.lastOnPopState;
     if(this.props.closeDialog != null) {
       this.props.closeDialog();
@@ -155,8 +155,8 @@ class PublicProfile extends React.Component {
       userid = this.props.userid;
     }
     if(dialogOpen) {
-      window.history.pushState("", "", `/user/${userid}`)
       if(window.onpopstate != this.onBackButtonEvent) {
+        window.history.pushState("", "", `/user/${userid}`)
         this.lastOnPopState = window.onpopstate;
         window.onpopstate = this.onBackButtonEvent;
       }
