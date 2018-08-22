@@ -27,6 +27,7 @@ import Slide from '@material-ui/core/Slide';
 import {fileExists, checkImageExists} from './util/http';
 import {getUserProfile, updateUserLocation, getUserRecords, updateUserProfile} from './UserProfile';
 import UploadImageButton from './UploadImageButton';
+import IntegrationReactSelect from './IntegrationReactSelect';
 import uuid from 'js-uuid';
 import thunk from 'redux-thunk';  
 import {connect} from "react-redux";
@@ -77,6 +78,7 @@ class UserProfileView extends React.Component {
         this.path = 'UserProfile';
         this.thumbnailFilename = 'profile_' + id + '.jpg';
         this.openDialog = this.openDialog.bind(this);
+        this.handleTagChange = this.handleTagChange.bind(this);
         this.props.openDialog(this.openDialog);
     }    
 
@@ -183,6 +185,20 @@ class UserProfileView extends React.Component {
     });
     }
 
+  handleTagChange(value) {
+    let tags = [];
+    if(value != null && value != '') {
+      var partsOfStr = value.split(',');
+      let i = 0;
+      partsOfStr.forEach(function(element) {
+        tags.push({
+          id: tags.length + 1,
+          text: element
+        });
+      });
+    }
+    this.setState({tags: tags});
+  }
   render() {
     const { classes, user } = this.props;
     var imgURL = '/images/profile_placeholder.png';
@@ -235,27 +251,33 @@ class UserProfileView extends React.Component {
          <div className={classes.container}>
           <FormGroup>  
           <TextField
-                    autoFocus
-                    required
-                    id="name"
-                    label="姓名"
-                    fullWidth
-                    margin="normal"
-                    value={this.state.displayName}
-                    onChange={event => this.setState({ displayName: event.target.value })}
-                    inputRef={(tf) => {this.nameTextField = tf;}}
-                  />
+            autoFocus
+            required
+            id="name"
+            label="姓名"
+            fullWidth
+            margin="normal"
+            value={this.state.displayName}
+            onChange={event => this.setState({ displayName: event.target.value })}
+            inputRef={(tf) => {this.nameTextField = tf;}}
+          />
           <TextField
-                    id="desc"
-                    label="個人簡介"
-                    fullWidth
-                    margin="normal"
-                    helperText="介紹自己,或寫下聯絡方法"
-                    value={this.state.desc}
-                    onChange={event => this.setState({ desc: event.target.value })}
-                    inputRef={(tf) => {this.descTextField = tf;}}
-                  />
+            id="desc"
+            label="個人簡介"
+            fullWidth
+            margin="normal"
+            helperText="介紹自己,或寫下聯絡方法"
+            value={this.state.desc}
+            onChange={event => this.setState({ desc: event.target.value })}
+            inputRef={(tf) => {this.descTextField = tf;}}
+          />
             {emailHtml}
+          <IntegrationReactSelect
+            showLabel={false}
+            placeholder={constant.interestedTagPlaceholder}
+            suggestions={this.props.suggestions.tag}
+            onChange={(value) => this.handleTagChange(value)}
+          />
             <br/>
             <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} thumbnailFilename={this.thumbnailFilename} isThumbnailOnly={true} path={this.path} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
           </FormGroup>
@@ -278,6 +300,7 @@ UserProfileView.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   return {
     user: state.user,
+    suggestions: state.suggestions
   };
 }
 
