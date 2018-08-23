@@ -2,8 +2,23 @@
 import * as firebase from 'firebase';
 import config from './config/default';
 import geoString from './GeoLocationString';
-import {addMessageFB_Post} from './MessageDB';
+//import {addMessageFB_Post} from './MessageDB';
 
+function fbUserProfile(fbId) {
+  FB.login((response)=>{
+    // Note: The call will only work if you accept the permission request
+      console.log(response);
+      FB.api(
+        '/' + fbId,
+        {
+          fields: 'link',
+        },
+        (response1) => {
+          console.log(response1);
+          return response1.link;
+        });        
+    }, {scope: 'user_link'});
+}
 
 function postFbMessage(fbpostmessage, geolocation, snapshot, tags, messageKey){
     var tagsLength = tags.length;
@@ -39,7 +54,7 @@ function postFbTextMessage(fbpostmessage, geolocation, tags, messageKey){
           console.log('Post ID: ' + response.id);
           fbpost = '/groups/' + config.fbGroupId + '/permalink/' + response.id.split("_")[1];
           console.log('URL: ' + fbpost);
-          addMessageFB_Post(messageKey, fbpost);
+          //addMessageFB_Post(messageKey, fbpost);
         } else {
           console.log('Error:' + response.error.message + ' code ' + response.error.code);
           console.log(fbpostmessage);
@@ -76,7 +91,7 @@ function postFbPhotoMessage(fbpostmessage, geolocation, snapshot, tags, messageK
               console.log('Post ID: ' + response.id);
               fbpost = "/photo.php?fbid=" + response.id;
               console.log('URL: ' + fbpost);
-              addMessageFB_Post(messageKey, fbpost);
+              //addMessageFB_Post(messageKey, fbpost);
             } else {
               console.log('Error:' + response.error.message + ' code ' + response.error.code);
               console.log(fbpostmessage);
@@ -86,4 +101,5 @@ function postFbPhotoMessage(fbpostmessage, geolocation, snapshot, tags, messageK
     });
 };
 
-export default postFbMessage;
+export default postFbMessage 
+export {fbUserProfile}

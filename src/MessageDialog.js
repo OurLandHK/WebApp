@@ -98,11 +98,11 @@ class MessageDialog extends React.Component {
     this.lastOnPopState = window.onpopstate;
     window.onpopstate = this.onBackButtonEvent;
     return getMessage(uuid).then((message) => {
-      this.message = message;   
+      this.message = message;  
+      window.history.pushState("", "", `/detail/${this.props.uuid}`); 
       if(this.props.user != null && this.props.user.user) {
         // get sad and happy inital value
         return getHappyAndSad(uuid, this.props.user.user).then((data) => {
-          console.log("Data: " + data);
           if(data != null) {
             this.happyAndSad = data;
           }
@@ -161,10 +161,6 @@ class MessageDialog extends React.Component {
           deleteButton = <IconButton color="contrast" onClick={this.handleRequestDelete} aria-label="Close">
                             <DeleteIcon />
                           </IconButton>
-        }
-        if(!this.props.publicProfileDialogOpen) {
-          window.history.pushState("", "", `/detail/${this.props.uuid}`);
-          console.log("Push state");
         }
       } 
       detailView = <MessageDetailView message={m}  happyAndSad={this.happyAndSad}/>;
