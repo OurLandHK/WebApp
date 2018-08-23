@@ -73,7 +73,9 @@ class UserProfileView extends React.Component {
             displayName: '',
             displayRole: '權限: ',
             desc: '',
-            emailAddress: ''
+            emailAddress: '',
+            interestedTags: [],
+            multiLabel: ''
         };
         this.path = 'UserProfile';
         this.thumbnailFilename = 'profile_' + id + '.jpg';
@@ -115,13 +117,28 @@ class UserProfileView extends React.Component {
           if(user.userProfile.emailAddress != null) {
             emailAddress = user.userProfile.emailAddress;
           }
+
+          var interestedTags = [];
+          if(user.userProfile.interestedTags != null) {
+            interestedTags = user.userProfile.interestedTags;
+            console.log(interestedTags)
+          }
+
+
+          var multiLabel = '';
+          multiLabel = this.interestedTagsToMultiLabel(interestedTags)
+          console.log("multiLabel=" + multiLabel)
           this.setState({
             user: user.user, 
             userProfile: user.userProfile,
             displayName: user.userProfile.displayName,
             displayRole: '權限: ' + user.userProfile.role,
             desc: desc,
-            emailAddress: emailAddress});
+            emailAddress: emailAddress,
+            interestedTags: interestedTags,
+            multiLabel: multiLabel});
+
+
         } else {
           this.setState({user: user.user});         
         }
@@ -129,6 +146,15 @@ class UserProfileView extends React.Component {
         this.setState({user: null, userProfile: null});
       }
     }
+  }
+
+  interestedTagsToMultiLabel(interestedTags){
+    var tags = [];
+    interestedTags.map(interestedTag => {
+      tags.push(interestedTag.text);
+    });
+
+    return tags.join();
   }
 
   onSubmit() {
@@ -152,6 +178,11 @@ class UserProfileView extends React.Component {
       User's Description
     */
     userProfile.desc = this.state.desc;
+
+    /*
+      User's Interested Tags
+    */
+    userProfile.interestedTags = this.state.interestedTags;
 
     /*
       User's Email Address
@@ -186,18 +217,19 @@ class UserProfileView extends React.Component {
     }
 
   handleTagChange(value) {
-    let tags = [];
+    let interestedTags = [];
     if(value != null && value != '') {
       var partsOfStr = value.split(',');
       let i = 0;
       partsOfStr.forEach(function(element) {
-        tags.push({
-          id: tags.length + 1,
+        interestedTags.push({
+          id: interestedTags.length + 1,
           text: element
         });
       });
     }
-    this.setState({tags: tags});
+    
+    this.setState({interestedTags});
   }
   render() {
     const { classes, user } = this.props;
@@ -276,6 +308,7 @@ class UserProfileView extends React.Component {
             showLabel={false}
             placeholder={constant.interestedTagPlaceholder}
             suggestions={this.props.suggestions.tag}
+            value={this.state.multiLabel}
             onChange={(value) => this.handleTagChange(value)}
           />
             <br/>
