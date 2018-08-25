@@ -84,6 +84,7 @@ let constant = {
   addFocusMessagesLabel: '新增焦點社區事件',
   tagLabel: '分類',
   tagPlaceholder: '新增分類',
+  interestedTagPlaceholder: '新增喜愛分類',
   notificationLabel: '通知',
   weekdayLabel : ['日', '一', '二', '三', '四', '五', '六'],
   openningOptions : ['每日', '自訂'],
