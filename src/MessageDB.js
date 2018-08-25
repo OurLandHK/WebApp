@@ -612,4 +612,29 @@ function fetchReportedUrgentMessages(callback) {
     });
 }
 
-export {getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages};
+function fetchMessagesBasedOnInterestedTags(interestedTags, geolocation, dis, callback) {
+    const db = firebase.firestore();
+    var msgs = [];
+    var collectionRef = db.collection(config.messageDB);
+
+    collectionRef.onSnapshot(function() {});         
+    return collectionRef.where("hide", "==", false).orderBy("createdAt", "desc").get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(messageRef){
+            let val = messageRef.data(); 
+            var disDiff = distance(val.geolocation.longitude,val.geolocation.latitude, geolocation.longitude, geolocation.latitude);
+            if(dis > disDiff) {
+                let tags = tagfilterToTags(val.tagfilter);
+                for(var i=0; i<interestedTags.length; i++) {
+                    if(tags.includes(interestedTags[0].text)){
+                        callback(val);
+                    }
+                }
+            }
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+}
+
+export {getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags};
