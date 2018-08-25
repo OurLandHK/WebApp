@@ -139,6 +139,18 @@ function receviedNotification(userProfile, message) {
     } else if(message.isUrgentEvent != null && message.isUrgentEvent) {
       // for any user specified email address and event is urgent
       rv = true;
+    } else {
+      // check this message contain user interested Tags or not.
+      if(userProfile.interestedTags != null && userProfile.interestedTags.length> 0) {
+      let interestedTags = userProfile.interestedTags;
+      let tags = tagfilterToTags(message.tagfilter);
+        for(let i=0; i<interestedTags.length; i++) {
+            if(tags.includes(interestedTags[i].text)){
+                rv =true;
+                break;
+            }
+        }
+      }
     }
   }
 return rv;
@@ -166,6 +178,8 @@ function sendEmail(email, displayName, newEvent, address, message) {
   });
 }
 
+// support function for send mail
+
 function distance(lon1, lat1, lon2, lat2) {
     var R = 6371; // Radius of the earth in km
     var dLat = (lat2-lat1).toRad();  // Javascript functions in radians
@@ -178,11 +192,23 @@ function distance(lon1, lat1, lon2, lat2) {
     return d;
 }
 
+function tagfilterToTags(tagfilter) {
+  let rv = [];
+  if(tagfilter != null) {
+      for(let key in tagfilter) {
+          rv.push(key);
+      }
+  }
+  return rv;
+}
+
+/*
 if (typeof(Number.prototype.toRad) === "undefined") {
   Number.prototype.toRad = function() {
     return this * Math.PI / 180;
   }
 }
+*/
 
 // Checks if uploaded images are flagged as Adult or Violence and if so blurs them.
 exports.blurOffensiveImages = functions.storage.object().onFinalize((object) => {

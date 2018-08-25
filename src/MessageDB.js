@@ -147,8 +147,8 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         } else {
             query = collectionRef.where("hide", "==", false);
             if(lastUpdate != null) {
-            console.log("Last Update: " + lastUpdate.toDate());
-            query = query.where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc");
+                console.log("Last Update: " + lastUpdate.toDate());
+                query = query.where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc");
             } else {
                     query = query.where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc");
             }      
@@ -612,20 +612,20 @@ function fetchReportedUrgentMessages(callback) {
     });
 }
 
-function fetchMessagesBasedOnInterestedTags(interestedTags, geolocation, dis, callback) {
+function fetchMessagesBasedOnInterestedTags(interestedTags, geolocation, dis, lastUpdate, callback) {
     const db = firebase.firestore();
     var msgs = [];
     var collectionRef = db.collection(config.messageDB);
 
     collectionRef.onSnapshot(function() {});         
-    return collectionRef.where("hide", "==", false).orderBy("createdAt", "desc").get().then(function(querySnapshot) {
+    return collectionRef.where("hide", "==", false).where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(messageRef){
             let val = messageRef.data(); 
             var disDiff = distance(val.geolocation.longitude,val.geolocation.latitude, geolocation.longitude, geolocation.latitude);
             if(dis > disDiff) {
                 let tags = tagfilterToTags(val.tagfilter);
                 for(var i=0; i<interestedTags.length; i++) {
-                    if(tags.includes(interestedTags[0].text)){
+                    if(tags.includes(interestedTags[i].text)){
                         callback(val);
                     }
                 }
