@@ -5,7 +5,6 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import IconButton from '@material-ui/core/IconButton';
@@ -21,7 +20,6 @@ import SelectedMenu from '../SelectedMenu';
 import {constant, RoleEnum} from '../config/default';
 import {addComment} from '../MessageDB';
 import IntegrationReactSelect from '../IntegrationReactSelect';
-import CustomTags from '../CustomTags';
 import {
   checkAuthState,
 } from '../actions';
@@ -72,9 +70,9 @@ function Transition(props) {
 class PostCommentView extends Component {
   constructor(props) {
     super(props);
-    var tags = [];
+    var tags = '';
     if(this.props.message.tag) {
-      tags = this.tagTextToTags(this.props.message.tag);
+      tags = this.props.message.tag.join();
     }
 
     this.state = {popoverOpen: false, buttonShow: false,
@@ -114,9 +112,10 @@ class PostCommentView extends Component {
 
   handleRequestOpen(evt) {
     evt.preventDefault();
-    var tags = [];
+    var tags = '';
     if(this.props.message.tag) {
-      tags = this.tagTextToTags(this.props.message.tag);
+      tags = this.props.message.tag.join();
+      console.log(this.props.message.tag + " ->   " + tags);
     }
     //console.log("Request for open " + this.state.popoverOpen);
     this.setState({
@@ -295,19 +294,20 @@ class PostCommentView extends Component {
                 inputHtml = <TextField autoFocus id="link" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>;
                 break;
               case constant.commentOptions[4]: //"要求更改分類"
-               /* inputHtml =
+                inputHtml =
                   <IntegrationReactSelect value={tags}
                   label={constant.tagLabel}
                   placeholder={constant.tagPlaceholder}
                   suggestions={this.props.suggestions.tag}
                   onChange={(value) => this.handleTagChange(value)}
-                />*/
+                />
+                /*
                 inputHtml = <CustomTags tags={tags}
                     inline={false}
                     placeholder="新增分類"
                     handleDelete={this.handleDelete}
                     handleAddition={this.handleAddition}
-                    handleDrag={this.handleDrag} /> ;
+                    handleDrag={this.handleDrag} /> ; */
                   break;
               case constant.commentWithUrgentEventOptions[0]: //"確定為緊急事項"
                 inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="緊急事件" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;

@@ -63,7 +63,27 @@ class PublicProfile extends React.Component {
     this.handleRequestClose();
   }
 
+  loadFbLoginApi() {
+    window.fbAsyncInit = function() {
+      window.FB.init({
+        appId: '640276812834634',
+        cookie: true,
+        xfbml: true,
+        version: 'v2.10'
+      });
+    };
+
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));  
+  }
+
   componentDidMount() {
+    //this.loadFbLoginApi();
     if (this.props.id != "") {
       //console.log("componentDidMount id  " + this.props.id);
       let user = {uid: this.props.id};
@@ -86,8 +106,25 @@ class PublicProfile extends React.Component {
       this.publishMessages = userProfile.publishMessages;
       trackEvent('PublicProfile', userProfile.displayName);
       this.setState({user: user, userProfile: userProfile, bookmarkList: bookmarkList});
+      //this.fbUserProfile();
       });
     });
+  }
+
+  fbUserProfile() {
+    console.log('fbUserProfile');
+    window.FB.getLoginStatus(function(response) {
+      console.log("Good to see you, %o,", response);
+      if (response.status === 'connected') {
+        let accessToken = response.authResponse.accessToken;
+        accessToken = "640276812834634|pIjBcwr-KsmubfPz9f1oOhhxQ3E";
+        console.log('Welcome!  Fetching your information.... ' + this.fbId);
+        window.FB.api('/' + this.fbId, 'get',{access_token :accessToken,  fields: 'link'}, function(response1) {
+          console.log("Good to see you, %o,", response1);
+          this.setState({link: response1.link});
+        });
+      } 
+    } );
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -139,10 +176,10 @@ class PublicProfile extends React.Component {
 
 
 
-    if(this.fbId && false){
+    if(this.state.link){
      facebookhtml = 
      <ListItem button >
-      <ListItemText primary="臉書連結:"/> <a href={"https://www.facebook.com/" + this.fbId} target="_blank">前往</a>
+      <ListItemText primary="臉書連結:"/> <a href={this.state.link} target="_blank">前往</a>
     </ListItem>;
     }
 

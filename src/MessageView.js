@@ -232,12 +232,18 @@ class MessageView extends Component {
 
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
 
-    var auther = `${m.name} 於: ${timeOffsetString}前${post}`;
+    var auther = `${m.name} 於: ${timeOffsetString}前${post} ${distanceSpan} 現況：${m.status}`;
     var tag = '';
     if(m.tag != null && m.tag.length > 0) {
-      tag = ' #' + m.tag[0];
+      let loop = 3;
+      if(m.tag.length < loop) {
+        loop = m.tag.length;
+      }
+      for(let i = 0; i< loop; i++ ){
+        tag += `${m.tag[i]} `;
+      }
     }
-    var subtitle = distanceSpan + ' 現況：' + m.status + tag;
+    var subtitle =  tag;
     let card = null;
     if(this.tile) {
       if(m.publicImageURL != null) {
