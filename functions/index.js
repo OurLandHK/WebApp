@@ -202,13 +202,13 @@ function tagfilterToTags(tagfilter) {
   return rv;
 }
 
-/*
+
 if (typeof(Number.prototype.toRad) === "undefined") {
   Number.prototype.toRad = function() {
     return this * Math.PI / 180;
   }
 }
-*/
+
 
 // Checks if uploaded images are flagged as Adult or Violence and if so blurs them.
 exports.blurOffensiveImages = functions.storage.object().onFinalize((object) => {

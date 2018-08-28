@@ -161,6 +161,8 @@ class LocationDrawer extends React.Component {
             text: address.text.slice(prefix.length)
           });
         }
+      } else {
+        //console.log(address.text + "\  " + prefix);
       }
       return grouppedList;
     }, []);
@@ -183,11 +185,14 @@ class LocationDrawer extends React.Component {
           if(address.type != addressEnum.home && address.type != addressEnum.office) {
               let newAddress = Object.create(address);
               newAddress.text = `十八社區/${address.text}`;
+              newAddress.geolocation = address.geolocation;
+              //console.log(newAddress.text);
               addressList.push(newAddress)
           }
         };                                                          
       }
     }
+    //console.log(this.state.locationPrefix);
     addressList = this.buildGrouppedAddressList(addressList || [], this.state.locationPrefix);
     return addressList.map(address => {
       let type = address.type;
@@ -217,6 +222,7 @@ class LocationDrawer extends React.Component {
           break;
       }
       if (address.isGroup) {
+        //console.log(text);
         icons = <FolderIcon />
         return (
           <ListItem button onClick={() => {this.setLocationPrefix(this.state.locationPrefix + text + '/')}}>
@@ -237,6 +243,7 @@ class LocationDrawer extends React.Component {
          </ListItem>
        );
      } else {
+       console.log(text + " " +  address.geolocation + " " + locationString)
        return (null);
      }
     });
