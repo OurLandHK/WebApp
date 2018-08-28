@@ -116,7 +116,7 @@ class LocationDrawer extends React.Component {
   }
 
   toggleDrawer(open){
-    this.setState({open: open});
+    this.setState({open: open, locationPrefix: ''});
   };
 
   fetchAddress(user) {
