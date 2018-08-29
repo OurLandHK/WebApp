@@ -113,17 +113,27 @@ class Main extends Component {
                         <BookmarkView bookmark={bookmark} open={openRecent} />
                       </div>;
     }
+    let messageList = null;
+    if(true) {
+      messageList = <NearbyEventDialog
+            eventNumber={eventNumber}
+            distance={distance}
+            geolocation={geolocation}
+          />
+    } else {
+      messageList = <RegionEventDialog
+            eventNumber={eventNumber}
+            distance={distance}
+            geolocation={geolocation}
+          />
+    }
 
     return (
       <div className={classes.container}>
         {tagStatHtml}
         {recentMessage}
         <FocusMessage/>      
-        <RegionEventDialog
-          eventNumber={eventNumber}
-          distance={distance}
-          geolocation={geolocation}
-        />
+        {messageList}
       </div>
     );
   }

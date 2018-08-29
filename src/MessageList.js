@@ -29,7 +29,7 @@ class MessageList extends Component {
     }
     let messageIds = [];
     let statusMessage = constant.messageListReadingLocation;
-//    console.log("Message List" + this.props.messageIds);
+    console.log("geolocation" + geolocation);
     if(this.props.messageIds != null) {
       messageIds = this.props.messageIds;
       statusMessage = constant.messageListLoadingStatus;

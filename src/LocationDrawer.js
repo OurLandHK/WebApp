@@ -243,7 +243,7 @@ class LocationDrawer extends React.Component {
          </ListItem>
        );
      } else {
-       console.log(text + " " +  address.geolocation + " " + locationString)
+//       console.log(text + " " +  address.geolocation + " " + locationString)
        return (null);
      }
     });
