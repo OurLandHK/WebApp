@@ -114,6 +114,7 @@ class Main extends Component {
                       </div>;
     }
     let messageList = null;
+    let messageList1 = null;
     if(true) {
       messageList = <NearbyEventDialog
             eventNumber={eventNumber}
@@ -132,7 +133,8 @@ class Main extends Component {
       <div className={classes.container}>
         {tagStatHtml}
         {recentMessage}
-        <FocusMessage/>      
+        <FocusMessage/> 
+        {messageList1}     
         {messageList}
       </div>
     );

@@ -107,7 +107,6 @@ class NearbyEventDialog extends React.Component {
   renderMessages() {
     const { eventNumber, distance, geolocation, eventId } = this.state;
     const { classes } = this.props;
-    //fetchLocation();
     return (
       <div className={classes.container}>
         <MessageList
@@ -127,6 +126,7 @@ class NearbyEventDialog extends React.Component {
     const { classes, buttons } = this.props;
     let open = true;
     let messageHtml = null;
+    let filterBar = null;
     const TotalButton = buttons.length;
     let buttonList1 = [];
     let buttonList2 = [];
@@ -167,9 +167,10 @@ class NearbyEventDialog extends React.Component {
 
     if(this.state.showList)  {
       messageHtml = this.renderMessages();
+      filterBar = <FilterBar isUsePublicAddressBook={true}/>;
     } else {
       this.setState({showList: true});
-      console.log('offthe List');
+      //console.log('offthe List');
     }
     return (
         <span>
@@ -182,7 +183,7 @@ class NearbyEventDialog extends React.Component {
                 查詢自己社區附近及全港社區的人和事
                 </CardContent>
             </Card>
-            <FilterBar isUsePublicAddressBook={true}/>
+            {filterBar}
             {messageHtml}
         </span>);
   }
