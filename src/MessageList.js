@@ -4,7 +4,7 @@ import config, {constant} from './config/default';
 import MessageView from './MessageView';
 import distance from './Distance';
 import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
-import { updateFilter, updateFilterTagList} from './actions';
+import { fetchLocation, updateFilter, updateFilterTagList} from './actions';
 import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
 
@@ -29,7 +29,7 @@ class MessageList extends Component {
     }
     let messageIds = [];
     let statusMessage = constant.messageListReadingLocation;
-//    console.log("Message List" + this.props.messageIds);
+    //console.log("geolocation" + geolocation);
     if(this.props.messageIds != null) {
       messageIds = this.props.messageIds;
       statusMessage = constant.messageListLoadingStatus;
@@ -55,8 +55,11 @@ class MessageList extends Component {
   }
 
   componentDidMount() {
+    //console.log('componentDidMount');
     if(this.state.messageIds.length != 0) {
-      this.updateGlobalFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
+      if(!this.hori) {
+       this.updateGlobalFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
+      }
       this.refreshMessageList();
     }
   }
@@ -64,7 +67,8 @@ class MessageList extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.state.messageIds.length == 0 && (this.props.filter.geolocation != prevProps.filter.geolocation ||
       this.props.filter.distance != prevProps.filter.distance ||
-      this.props.filter.selectedSorting != prevProps.filter.selectedSorting)) {
+      this.props.filter.selectedSorting != prevProps.filter.selectedSorting ||
+      this.props.tagFilter != prevProps.tagFilter)) {
       if(!this.hori) {
         this.refreshMessageList();
       }
@@ -87,6 +91,7 @@ class MessageList extends Component {
   }
 
   refreshMessageList() {
+    //console.log("refreshMessageList");
     this.setState({
       selectedTag: null,
       selectedSorting: null});
@@ -130,6 +135,7 @@ class MessageList extends Component {
     } else {
       switch (geolocation) {
         case constant.invalidLocation:
+          //console.log("invalidLocation");
           this.setState({statusMessage: constant.messageListBlockLocation});
           break;
         case constant.timeoutLocation:
@@ -200,6 +206,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchLocation: () => dispatch(fetchLocation()),
     updateFilter:
       (eventNumber, distance, geolocation) =>
         dispatch(updateFilter(eventNumber, distance, geolocation)),
