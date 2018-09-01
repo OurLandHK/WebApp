@@ -86,7 +86,7 @@ class LocationButton extends Component {
     this.geoLocationSuccessCallBack = this.geoLocationSuccessCallBack.bind(this);
     this.geoLocationSearchSuccessCallBack = this.geoLocationSearchSuccessCallBack.bind(this);
     this.notSupportedCallBack = this.notSupportedCallBack.bind(this);
-
+    this.onMapCenterChange = this.onMapCenterChange.bind(this);
     console.log(this.state.geoLocationSearch)
   }
 
@@ -130,7 +130,15 @@ class LocationButton extends Component {
     this.setState({geolocation: pos.coords, disableSumbit: false});
   }
 
-
+  onMapCenterChange(center){
+    var pos = { coords:
+          {
+            latitude: center.lat(),
+            longitude: center.lng()
+          }
+        };
+    this.geoSuccessCallBack(pos);
+  }
 
   streetAddressSuccessCallBack(err, response) {
     if (!err) {
@@ -213,7 +221,7 @@ class LocationButton extends Component {
     const classes = this.props.classes;
     const user = this.props.user;
 
-    if(user.userProfile != null && (user.userProfile.role == RoleEnum.advancedUser || user.userProfile.role != RoleEnum.admin)) {
+    if(user.userProfile != null && (user.userProfile.role == RoleEnum.advancedUser || user.userProfile.role == RoleEnum.admin)) {
       if (this.state.streetAddress === null || this.state.streetAddress === "" || (this.state.geoLocationSearch.latitude != "" || this.state.geoLocationSearch.longitude != "") ) {
            let geoLocationSearchClass = "";
           if(this.state.geoLocationSearch != null) {
@@ -228,7 +236,6 @@ class LocationButton extends Component {
             <div className={this.state.geolocation != null && classes.dialogContentWrapper}>
                 <DialogContent className={classes.geoDialogContent}>
                  <TextField
-                    autoFocus
                     fullWidth
                     id="geoLocationSearchLatitude"
                     placeholder="地理位置"
@@ -237,7 +244,6 @@ class LocationButton extends Component {
                     value={this.state.geoLocationSearch.latitude} onChange={event => this.setState({ geoLocationSearch: {latitude: event.target.value, longitude: this.state.geoLocationSearch.longitude}, disableSumbit: true,  geolocation: null})}
                   /> 
                   <TextField
-                    autoFocus
                     fullWidth
                     id="geoLocationSearchLongitude"
                     placeholder="地理位置"
@@ -329,7 +335,7 @@ class LocationButton extends Component {
           {this.renderStreetAddressSearch()}
           {this.renderGeoLocationSearch()}
           <p>{locationString}</p>
-          {this.state.geolocation != null  && <EventMap center={geolocation} zoom={zoom}/>}
+          {this.state.geolocation != null  && <EventMap center={geolocation} zoom={zoom} onCenterChange={this.onMapCenterChange}/>}
         </Dialog>
 
       </div>);

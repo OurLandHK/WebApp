@@ -21,9 +21,7 @@ const styles = {
     borderColor: 'primary',
     fontWeight: 'bold',
     fontSize: '0.8rem',
-    textAlign: 'left',
-    //    width: '100%',
-    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+    textAlign: 'center'
   }
 };
 
@@ -32,6 +30,10 @@ class FilterBar extends  Component {
     super(props);
     this.isUsePublicAddressBook = false;
     this.disableLocationDrawer = false;
+    this.ranking = false;
+    if(this.props.ranking == true) {
+      this.ranking = true;
+    }
     if(this.props.disableLocationDrawer == true) {
       this.disableLocationDrawer = true;
     } else {
@@ -47,7 +49,7 @@ class FilterBar extends  Component {
 
   errorCallBack(error) {
     console.warn('ERROR(${err.code}): ${err.message}');
-  }  
+  }
 
   render() {
     const classes = this.props.classes;
@@ -56,9 +58,15 @@ class FilterBar extends  Component {
          <TagDrawer /> 按 <SortingDrawer/> <div flex={1}/>
       </Toolbar>);
     } else {
-      return (<Toolbar className={classes.filter}>
+      if(this.ranking) {
+        return (<Toolbar className={classes.filter}>
+                  <LocationDrawer isUsePublicAddressBook={true}/>
+              </Toolbar>);
+      } else {
+        return (<Toolbar className={classes.filter}>
                   <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook}/> 的 <TagDrawer /> 按 <SortingDrawer/> <div flex={1}/>
                 </Toolbar>);
+      }
     }
   }
 }

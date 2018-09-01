@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import uuid from 'js-uuid';
 import PropTypes from 'prop-types';
+import {connect} from "react-redux";
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
@@ -17,20 +18,22 @@ import ListItemText  from '@material-ui/core/ListItemText';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import ShareDrawer from '../ShareDrawer';
-import timeOffsetStringInChinese from '../TimeString';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from '@material-ui/core/TextField';
-import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
+import ShareDrawer from '../ShareDrawer';
+import timeOffsetStringInChinese from '../TimeString';
 import  {constant, RoleEnum} from '../config/default';
 import  MessageList from '../MessageList';
+import TagDrawer from '../TagDrawer';
+import {fileExists, checkImageExists} from '../util/http';
 import { dropBookmark, addBookmark, updateBookmark, incBookmarkViewCount, getUserProfile} from '../UserProfile';
 import {
     checkAuthState,
     updateRecentBookmark,
     updatePublicProfileDialog,
   } from '../actions';
+
 
 
 const styles = theme => ({
@@ -82,6 +85,7 @@ class BookmarkView extends Component {
         if(this.props.open != undefined) {
             open = this.props.open;
         }
+        this.onBackButtonEvent = this.onBackButtonEvent.bind(this);
         this.state = {
             popoverOpen: open,
             title: title,
@@ -95,23 +99,31 @@ class BookmarkView extends Component {
 
     componentDidMount() {
         //console.log("componentDidMolunt");
-        this.getUserProfile();
+        return this.getUserProfile();
       }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.bookmark != prevProps.bookmark) {
-          this.getUserProfile();
+        if (this.props.bookmark != prevProps.bookmark || this.state.uid != prevState.uid) {
+          return this.getUserProfile();
+        } else {
+            return;
         }
       }
 
     getUserProfile() {
         if(this.state.uid != "") {
             let user = {uid: this.state.uid};
-            getUserProfile(user).then((userProfile) => this.setState({userProfile: userProfile}));
+            return getUserProfile(user).then((userProfile) => {
+                this.setState({userProfile: userProfile});
+                return;});
+        } else {
+            return
         }
     }
 
     handleRequestOpen(evt) {
+        this.lastOnPopState = window.onpopstate;
+        window.onpopstate = this.onBackButtonEvent;
         evt.preventDefault();
         let title = "";
         let messages = [];
@@ -152,13 +164,28 @@ class BookmarkView extends Component {
             uid: uid,
             readonly: readonly
         });
+        window.history.pushState("", "", `/user/${uid}/${key}`)
       }
     
     handleRequestClose() {
-        this.setState({
-          popoverOpen: false,
-        });
+        //window.history.pushState("", "", "/");
+        if(this.props.closeDialog != null) {
+            this.props.closeDialog();
+        } else {
+            window.onpopstate = this.lastOnPopState;
+            this.setState({
+               popoverOpen: false,
+               userProfile: null,
+               uid: ""
+            });
+        }
     };   
+
+    onBackButtonEvent(e) {
+        e.preventDefault();
+        this.handleRequestClose();
+      }
+        
 
     onSubmit() {
         const { user } = this.props;
@@ -206,10 +233,9 @@ class BookmarkView extends Component {
         let subheader = `於:${timeOffsetString}前${post}`;
         let photoUrl = '/images/profile_placeholder.png';
         let displayName = "";
-        if(this.state.userProfile != null) {
+        if(this.state.userProfile != null && checkImageExists(this.state.userProfile.photoURL)) {
             displayName =  this.state.userProfile.displayName,
             photoUrl = this.state.userProfile.photoURL;
-            console.log(photoUrl);
         }
         let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
         if(bookmark.viewCount != null) {
@@ -233,7 +259,8 @@ class BookmarkView extends Component {
       }
 
     render() {
-        const { classes, user } = this.props;
+        const { classes, user} = this.props;
+        let isRenderTagList = false;
         let addressButtonHtml = null;
         let deleteButtonHtml = null;
         let actionButtonHtml = null;
@@ -241,6 +268,7 @@ class BookmarkView extends Component {
         let titleText = constant.updateBookmarkLabel;
         let messageHtml = null;
         let icons = <PlayListPlayIcon />;
+
         if(this.props.bookmark != null) {
             let c = this.props.bookmark;
             let text = c.title;
@@ -259,6 +287,7 @@ class BookmarkView extends Component {
                     distance={10}
                     messageIds={this.state.messages}
                 />
+                isRenderTagList = true;
             }
             if(user.user != null && user.user.uid == c.uid) {
                 deleteButtonHtml = <IconButton color="contrast" onClick={() => this.onDelete()} aria-label="Delete">
@@ -312,6 +341,7 @@ class BookmarkView extends Component {
                                 multiline
                                 rowsMax="20" 
                                 margin="normal" helperText={constant.descLabel} value={this.state.desc} onChange={event => this.setState({ desc: event.target.value })}/>
+                                <TagDrawer isRenderTagList={isRenderTagList}/>
                             {messageHtml}
                         </DialogContent>  
                     </Dialog>

@@ -5,7 +5,6 @@ import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,10 +17,9 @@ import { withStyles } from '@material-ui/core/styles';
 import Slide from '@material-ui/core/Slide';
 import LocationButton from '../LocationButton';
 import SelectedMenu from '../SelectedMenu';
-import {constant} from '../config/default';
+import {constant, RoleEnum} from '../config/default';
 import {addComment} from '../MessageDB';
 import IntegrationReactSelect from '../IntegrationReactSelect';
-import CustomTags from '../CustomTags';
 import {
   checkAuthState,
 } from '../actions';
@@ -49,7 +47,7 @@ const styles = theme => ({
   },
   flex: {
     flex: 1,
-  },  
+  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
@@ -61,7 +59,7 @@ const styles = theme => ({
     padding: '0.5rem'
   },
   dialogTitle: {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'  
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
   }
 });
 
@@ -72,14 +70,14 @@ function Transition(props) {
 class PostCommentView extends Component {
   constructor(props) {
     super(props);
-    var tags = [];
+    var tags = '';
     if(this.props.message.tag) {
-      tags = this.tagTextToTags(this.props.message.tag);
+      tags = this.props.message.tag.join();
     }
 
-    this.state = {popoverOpen: false, buttonShow: false, 
+    this.state = {popoverOpen: false, buttonShow: false,
       // comment
-      commentSelection: '發表回應',
+      commentSelection: constant.commentOptions[0],
       text: "",
       geolocation: null,
       streetAddress: null,
@@ -90,7 +88,7 @@ class PostCommentView extends Component {
     this.handleTagChange = this.handleTagChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleAddition = this.handleAddition.bind(this);
-    this.handleDrag = this.handleDrag.bind(this);      
+    this.handleDrag = this.handleDrag.bind(this);
   }
 
   componentDidMount() {
@@ -110,18 +108,19 @@ class PostCommentView extends Component {
         this.setState({buttonShow: false});
       }
     }
-  }  
+  }
 
   handleRequestOpen(evt) {
     evt.preventDefault();
-    var tags = [];
+    var tags = '';
     if(this.props.message.tag) {
-      tags = this.tagTextToTags(this.props.message.tag);
+      tags = this.props.message.tag.join();
+      console.log(this.props.message.tag + " ->   " + tags);
     }
     //console.log("Request for open " + this.state.popoverOpen);
     this.setState({
      // Comment
-        commentSelection: '發表回應',
+        commentSelection: constant.commentOptions[0],
         text: "",
         geolocation: null,
         streetAddress: null,
@@ -148,10 +147,21 @@ class PostCommentView extends Component {
     return rv
   }
 
+  locationButtonSubmit = (geolocation, streetAddress) => {
+    console.log("locationButtonSubmit ");
+    this.setState({
+        geolocation: geolocation,
+        streetAddress: streetAddress,
+    });
+  };
+
+
   onSubmit() {
     if (this.props.user != null) {
       const {user, userProfile} = this.props.user;
       if (user) {
+        let isPost = true;
+        let isApprovedUrgentEvent = null;
         var photo = null;
         var commentText = null;
         var tags = null;
@@ -160,25 +170,51 @@ class PostCommentView extends Component {
         var link = null;
         var status = null;
         switch(this.state.commentSelection) {
-            case  constant.commentOptions[0]: //"發表回應":
-                commentText = this.state.text;
-                break;
-            case constant.commentOptions[2]: //"要求更改現況": 
-                status = this.state.changeStatus;
-                break;
-            case constant.commentOptions[1]: //"要求更改地點": 
-                geolocation = this.locationButton.geolocation;
-                streetAddress = this.locationButton.streetAddress;
-                break;
+            case constant.commentOptions[0]: //"發表回應":
+              commentText = this.state.text;
+              if(commentText == "") {
+                isPost = false;
+              }
+              break;
+            case constant.commentOptions[2]: //"要求更改現況":
+              status = this.state.changeStatus;
+              break;
+            case constant.commentOptions[1]: //"要求更改地點":
+              geolocation = this.state.geolocation;
+              streetAddress = this.state.streetAddress;
+              if(geolocation == undefined) {
+                isPost = false;
+              }
+              break;
             case constant.commentOptions[3]: //"要求更改外部連結":
-                link = this.state.link;
-                break;
+              link = this.state.link;
+              break;
             case constant.commentOptions[4]: //"要求更改分類"
-                tags = this.state.tags.map((tag) => tag.text);
-                break;
+              tags = this.state.tags.map((tag) => tag.text);
+              break;
+            case constant.commentWithUrgentEventOptions[0]: //"確定為緊急事項"
+              if(this.state.text == "") {
+                isPost = false;
+              } else {
+                commentText = `${constant.commentWithUrgentEventOptions[0]}: ${this.state.text}`;
+                isApprovedUrgentEvent = true;
+              }
+              break;
+            case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
+              if(this.state.text == "") {
+                isPost = false;
+              } else {
+                commentText = `${constant.commentWithUrgentEventOptions[1]}: ${this.state.text}`
+                isApprovedUrgentEvent = false;
+              }
+              break;
         }
         this.setState({popoverOpen: false});
-        return addComment(this.props.messageUUID, user, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status).then(function(commentId){return commentId;});
+        if(isPost) {
+          return addComment(this.props.messageUUID, user, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent).then(function(commentId){return commentId;});
+        } else {
+          return
+        }
       }
     }
     this.setState({popoverOpen: false});
@@ -200,7 +236,7 @@ class PostCommentView extends Component {
           text: element
         });
       });
-    } 
+    }
     this.setState({tags: tags});
   }
 
@@ -233,15 +269,24 @@ class PostCommentView extends Component {
 
 
   render() {
-    const classes = this.props.classes;
-    const { tags } = this.state; 
+    const { classes, message, user } = this.props;
+    const { tags } = this.state;
+
     if(this.state.buttonShow) {
         let inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="更新事件進度及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
+        let commentOptions = constant.commentOptions;
+        if(user.userProfile != null && (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
+          // admin should able to enable any message as urgent.
+          //if(message.isReportedUrgentEvent != 'undefined' && message.isReportedUrgentEvent != null && message.isReportedUrgentEvent == true) {
+            commentOptions = [...constant.commentOptions, ...constant.commentWithUrgentEventOptions];
+          //}
+        }
+
         if(this.state.commentSelection != constant.commentOptions[0]) { //"發表回應"
             switch(this.state.commentSelection) {
               case constant.commentOptions[1]: //"要求更改地點"
-                inputHtml = <LocationButton autoFocus ref={(locationButton) => {this.locationButton = locationButton;}}/>;
-                break;              
+                inputHtml = <LocationButton autoFocus ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>;
+                break;
               case constant.commentOptions[2]: // "要求更改現況"
                 inputHtml = <SelectedMenu autoFocus label="" options={constant.statusOptions} changeSelection={(selectedValue) => this.setState({changeStatus: selectedValue})} ref={(statusSelection) => {this.statusSelection = statusSelection}}/>;
                 break;
@@ -249,25 +294,32 @@ class PostCommentView extends Component {
                 inputHtml = <TextField autoFocus id="link" className={classes.textField} value={this.state.link} onChange={event => this.setState({ link: event.target.value })}/>;
                 break;
               case constant.commentOptions[4]: //"要求更改分類"
-               /* inputHtml = 
+                inputHtml =
                   <IntegrationReactSelect value={tags}
                   label={constant.tagLabel}
                   placeholder={constant.tagPlaceholder}
                   suggestions={this.props.suggestions.tag}
                   onChange={(value) => this.handleTagChange(value)}
-                />*/
-              inputHtml = <CustomTags tags={tags}
-                  inline={false}
-                  placeholder="新增分類"
-                  handleDelete={this.handleDelete}
-                  handleAddition={this.handleAddition}
-                  handleDrag={this.handleDrag} /> ;
+                />
+                /*
+                inputHtml = <CustomTags tags={tags}
+                    inline={false}
+                    placeholder="新增分類"
+                    handleDelete={this.handleDelete}
+                    handleAddition={this.handleAddition}
+                    handleDrag={this.handleDrag} /> ; */
+                  break;
+              case constant.commentWithUrgentEventOptions[0]: //"確定為緊急事項"
+                inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="緊急事件" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
+                break;
+              case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
+                inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="非緊急事件" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
                 break;
               }
         }
       return (
         <div className="cta-report-wrapper">
-            <Button className="cta-report"  variant="contained" color="primary"  raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
+            <Button className="cta-report"  variant="extendedFab" color="primary" onClick={(evt) => this.handleRequestOpen(evt)}>
               <AddIcon />參與
             </Button>
             <Dialog
@@ -289,10 +341,10 @@ class PostCommentView extends Component {
                 </AppBar>
                 <DialogContent>
                     <DialogContentText>選擇更新範圍</DialogContentText>
-                    <SelectedMenu label="" options={constant.commentOptions} changeSelection={(selectedValue) => this.commentOptionSelection(selectedValue)} ref={(commentSelection) => {this.commentSelection = commentSelection}}/>
+                    <SelectedMenu label="" options={commentOptions} changeSelection={(selectedValue) => this.commentOptionSelection(selectedValue)} ref={(commentSelection) => {this.commentSelection = commentSelection}}/>
                     {inputHtml}
-                </DialogContent>  
-            </Dialog>     
+                </DialogContent>
+            </Dialog>
         </div>
       )
     } else {
@@ -315,8 +367,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
       checkAuthState:
-          () => 
-              dispatch(checkAuthState()),   
+          () =>
+              dispatch(checkAuthState()),
   }
 };
 

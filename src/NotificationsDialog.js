@@ -17,7 +17,7 @@ import MessageList from './MessageList';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import Divider from '@material-ui/core/Divider';
 import FilterBar from './FilterBar';
-import {fetchMessagesBaseOnGeo} from './MessageDB';
+import {fetchMessagesBaseOnGeo, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags} from './MessageDB';
 import {
   toggleAddressDialog,
 } from "./actions";
@@ -112,8 +112,15 @@ class NotificationsDialog extends React.Component {
         if(user.userProfile.role == RoleEnum.admin) {
           distance = 100;
         }
-        //console.log(address.geolocation);
-        fetchMessagesBaseOnGeo(address.geolocation, distance, constant.defaultEventNumber, lastLoginTime, null, this.setMessage);
+        if(user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {
+          fetchReportedUrgentMessages(this.setMessage);
+        }
+        // If user didn't config all interested Tag, assume they should receive all.
+        if(user.userProfile.interestedTags != null && user.userProfile.interestedTags.length > 0) {
+          fetchMessagesBasedOnInterestedTags(user.userProfile.interestedTags, address.geolocation, distance, lastLoginTime, this.setMessage);
+        } else {
+          fetchMessagesBaseOnGeo(address.geolocation, distance, constant.defaultEventNumber, lastLoginTime, null, this.setMessage);
+        }
       }
     });      
 

@@ -45,10 +45,6 @@ class Header extends  Component {
   }
 }
 
-Header.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
 const mapStateToProps = (state, ownProps) => {
   return {
     geoLocation : state.geoLocation,

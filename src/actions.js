@@ -23,13 +23,15 @@ import {
   TOGGLE_EVENTLIST_DIALOG,
   TOGGLE_LEADER_BOARD,
   FETCH_TOP_TWENTY,
+  UPDATE_REGIONEVENT_BUTTONLIST,
+  FETCH_GLOBAL_TAG_STAT,
   UPDATE_FILTER_SORTING
 } from './actions/types';
 import * as firebase from 'firebase';
 import * as firestore from 'firebase/firestore';
 import config, {constant} from './config/default';
 import {getUserProfile, updateUserProfile, fetchBookmarkList} from './UserProfile';
-import {fetchFocusMessagesBaseOnGeo} from './GlobalDB';
+import {fetchFocusMessagesBaseOnGeo, getTagStat} from './GlobalDB';
 
 const currentLocationLabel = "現在位置";
 
@@ -63,6 +65,10 @@ function disableLocation() {
 
 function fetchAddressBook(address) {
   return {type: FETCH_ADDRESS_BOOK, addresses: address};
+}
+
+function fetchTagStat(tagStat) {
+  return {type: FETCH_GLOBAL_TAG_STAT, tagStat: tagStat};
 }
 
 function fetchPublicAddressBook(address) {
@@ -119,6 +125,10 @@ function dispatchFilterTagList(tagList) {
   return {type: UPDATE_FILTER_TAG_LIST, tagList: tagList}
 }
 
+function dispatchRegionButtonList(buttonList){
+  return {type: UPDATE_REGIONEVENT_BUTTONLIST, buttonList: buttonList}
+}
+
 function dispatchTagsRest() {
   return {type: RESET_FILTER_TAGS}
 }
@@ -126,6 +136,7 @@ function dispatchTagsRest() {
 function dispatchSelectedTag(selectedTag) {
   return {type: UPDATE_FILTER_TAG, selectedTag: selectedTag}
 }
+
 
 function dispatchSelectedSorting(selectedSorting){
   return {type: UPDATE_FILTER_SORTING, selectedSorting: selectedSorting}
@@ -204,8 +215,8 @@ export function refreshUserProfile(user) {
 export function signIn() {
   return dispatch => {
     var provider = new firebase.auth.FacebookAuthProvider();
-    //provider.addScope('user_friends');
-    //provider.addScope('publish_actions');
+    provider.addScope('user_friends');
+    provider.addScope('user_link');
     //provider.addScope('user_managed_groups');
     //provider.addScope('user_birthday');
     firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -306,9 +317,7 @@ export function updateFilterWithCurrentLocation() {
 
 export function fetchAddressBookByUser(user) {
   return dispatch => {
-    const db = firebase.firestore();
-    
-    
+    const db = firebase.firestore(); 
     var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
     collectionRef.onSnapshot(function() {});
     collectionRef.get().then(function(querySnapshot) {
@@ -337,6 +346,22 @@ export function fetchAddressBookFromOurLand() {
   };  
 }
 
+export function fetchGlobalSetting() {
+  return dispatch => {
+    getTagStat().then((tagStat) => {
+      let tagListObject = {};
+      for (let key in tagStat) {
+        tagListObject[key] = {tag: key, count: tagStat[key]};
+      }
+      let tagList = Object.values(tagListObject);
+      tagList.sort((i, j) => (j.count) - (i.count));
+      let tagLabel = tagList.map((tag) => {return(tag.tag)});
+      dispatch(updateRegionButtoneList(tagLabel));  
+      dispatch(fetchTagStat(tagList));
+    });
+  };
+}
+
 export function fetchConcernMessagesFromOurLand() {
   return dispatch => {
     var db = firebase.firestore();
@@ -353,9 +378,24 @@ export function fetchConcernMessagesFromOurLand() {
   };  
 }
 
+export function updateRegionButtoneList(tagList) {
+  return dispatch => {let buttonList = [{label: constant.allButtonLabel, value: null}];
+    let numberOfButton = 7;
+    //console.log(`updateRegionButtoneList ${tagList}`);
+    if(tagList.length < numberOfButton) {
+      numberOfButton = tagList.length;
+    }
+    for(let i = 0; i < numberOfButton; i++) {
+      //console.log(`button list ${tagList[i]}`);
+      let button = {label: tagList[i], value: tagList[i]};
+      buttonList.push(button);
+    }
+    dispatch(dispatchRegionButtonList(buttonList));
+  }
+}
 
 
-export function upsertAddress(user, key, type, text, geolocation, streetAddress) {
+export function upsertAddress(user, key, type, text, geolocation, streetAddress, interestedRadius) {
   return dispatch => {
     var geoPoint = null;
     if(geolocation != null) {
@@ -367,7 +407,8 @@ export function upsertAddress(user, key, type, text, geolocation, streetAddress)
         updateAt: new Date(now),
         text: text,
         geolocation: geoPoint,
-        streetAddress: streetAddress
+        streetAddress: streetAddress,
+        distance: interestedRadius
     }; 
     console.log(addressRecord);
     // Use firestore
@@ -375,10 +416,13 @@ export function upsertAddress(user, key, type, text, geolocation, streetAddress)
     
     
     var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
+
     if(key != null) {
-        collectionRef.doc(key).set(addressRecord).then(function() {
-          dispatch(fetchAddressBookByUser(user))
-        });
+       collectionRef.doc(key).get().then((addressBookRecord) => {
+          collectionRef.doc(key).set(addressRecord).then(function() {
+            dispatch(fetchAddressBookByUser(user))
+          });
+       });
     } else {
         collectionRef.add(addressRecord).then(function(docRef) {
           console.log("comment written with ID: ", docRef.id);

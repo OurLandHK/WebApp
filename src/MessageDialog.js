@@ -54,12 +54,19 @@ function Transition(props) {
 class MessageDialog extends React.Component {
   constructor(props) {
       super(props);
+      this.onBackButtonEvent = this.onBackButtonEvent.bind(this);
       this.state = {open: false};
       this.message = null;
       this.happyAndSad = happyAndSadEnum.nothing; // (1 = happy, -1 = sad)                
       this.openDialog = this.openDialog.bind(this);
       this.props.openDialog(this.openDialog);  
   }
+
+  onBackButtonEvent(e) {
+    e.preventDefault();
+    this.handleRequestClose();
+  }
+    
 
   componentDidMount() {
     if(this.props.open) {
@@ -85,14 +92,17 @@ class MessageDialog extends React.Component {
     }
   }
 
+
   openDialog(){
     var uuid = this.props.uuid;
+    this.lastOnPopState = window.onpopstate;
+    window.onpopstate = this.onBackButtonEvent;
     return getMessage(uuid).then((message) => {
-      this.message = message;   
+      this.message = message;  
+      window.history.pushState("", "", `/detail/${this.props.uuid}`); 
       if(this.props.user != null && this.props.user.user) {
         // get sad and happy inital value
         return getHappyAndSad(uuid, this.props.user.user).then((data) => {
-          console.log("Data: " + data);
           if(data != null) {
             this.happyAndSad = data;
           }
@@ -105,11 +115,15 @@ class MessageDialog extends React.Component {
   };
 
   handleRequestClose = () => {
+    //console.log('close');
+    window.onpopstate = this.lastOnPopState;
+    window.history.pushState("", "", '/');
     this.setState({ open: false });
   };
 
   handleRequestDelete = () => {
     return dropMessage(this.props.uuid).then((value) => {
+      window.onpopstate = this.lastOnPopState;
       this.setState({ open: false });
     });
   };
@@ -121,7 +135,7 @@ class MessageDialog extends React.Component {
     let titleHtml = null;
     let detailView = null;
     let deleteButton = null;
-    let shareUrl = window.location.protocol + "//" + window.location.hostname + "/?eventid=" + uuid;
+    let shareUrl = window.location.protocol + "//" + window.location.hostname + "/detail/" + uuid;
     let title = "";
     let imageUrl = "";
     let m = this.message;
@@ -142,17 +156,15 @@ class MessageDialog extends React.Component {
         } catch(error) {
           eventCreateTimeDiff = nowDateTime - m.createdAt;
         };
-        console.log("User id: " + user.uid + " " + m.uid + " " + eventCreateTimeDiff  )
+        //console.log("User id: " + user.uid + " " + m.uid + " " + eventCreateTimeDiff  )
         if(user.uid == m.uid && ( eventCreateTimeDiff < (10 * 60 * 1000))) {
           deleteButton = <IconButton color="contrast" onClick={this.handleRequestDelete} aria-label="Close">
                             <DeleteIcon />
                           </IconButton>
         }
-      }
+      } 
       detailView = <MessageDetailView message={m}  happyAndSad={this.happyAndSad}/>;
-
     }
-
     return (
         <Dialog
           fullScreen
@@ -184,6 +196,7 @@ MessageDialog.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   return {
     user          :   state.user,
+    publicProfileDialogOpen: state.publicProfileDialog.open,
   };
 }
 

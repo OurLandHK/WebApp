@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
+import MessageDialog from './MessageDialog';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid'
@@ -11,7 +11,6 @@ import { withStyles } from '@material-ui/core/styles';
 import FiberNewIcon from '@material-ui/icons/FiberNew';
 import Paper from '@material-ui/core/Paper';
 import red from '@material-ui/core/colors/red';
-import MessageDialog from './MessageDialog';
 import Typography from '@material-ui/core/Typography';
 import {incMessageViewCount} from './MessageDB';
 import {
@@ -19,7 +18,9 @@ import {
 } from './actions';
 import {connect} from "react-redux";
 import green from '@material-ui/core/colors/green';
+import Chip from '@material-ui/core/Chip';
 
+import {constant, RoleEnum} from './config/default';
 
 const styles = theme => ({
   paper: {
@@ -45,14 +46,19 @@ const styles = theme => ({
   flexGrow: {
     flex: '1 1 auto',
   },
-  title: {
+  auther: {
 //    marginBottom: 16,
     fontSize: 14,
     color: theme.palette.text.secondary,
+//    textOverflow: 'ellipsis',
+  },
+  title: {
+//    textOverflow: 'ellipsis', 
   },
   pos: {
 //    marginBottom: 12,
     color: theme.palette.text.secondary,
+//    textOverflow: 'ellipsis'
   },
   details: {
     display: 'flex',
@@ -73,10 +79,16 @@ const styles = theme => ({
   },
   summaryGrid: {
     display: 'inline-grid',
-    padding: '8px'
+    padding: '8px',
+    textOverflow: 'ellipsis',
   },
   thumbnailGrid: {
     padding: '8px'
+  },
+  urgentEventTag: {
+    backgroundColor: '#AB003C',
+    color: '#E3F2FD',
+    height: '22px'
   }
 });
 
@@ -107,52 +119,58 @@ class MessageView extends Component {
     }
   };
 
-  tileRender(text, auther, imageUrl, subtitle) {
+  tileRender(text, auther, imageUrl, subtitle, isReportedUrgentEvent, isUrgentEvent) {
     const classes = this.props.classes;
+    let urgentEventTag = null;
+
+    if(isUrgentEvent) {
+       urgentEventTag = <Chip
+        label={constant.urgent}
+        className={classes.urgentEventTag}
+      />
+    }
+
+     
     return (<Card className={classes.tileCard} onClick={() => this.handleClick()}>
               <CardMedia className={classes.tileMedia} image={imageUrl} title={auther}/>
               <CardContent>
-                <Typography noWrap='true' variant="title">{text}</Typography>
-                <Typography noWrap='true' component="p">{subtitle}</Typography>
+                <Typography className={classes.title} variant="title">{urgentEventTag} {text}</Typography>
+                <Typography className={classes.pos} component="p">{subtitle}</Typography>
               </CardContent>
             </Card>);
   };
-/*
-  sliceRender(text, auther, imageUrl, subtitle, isUpdate) {
-    const classes = this.props.classes;
-    let newIcon = null;
-    if(isUpdate) {
-      newIcon = <FiberNewIcon className={classes.newIcon}/>
-    }
-    let summary = <div className={classes.details}>
-                    <CardContent className={classes.content}>
-                      <Typography className={classes.title}>{newIcon}{auther}</Typography>
-                      <Typography noWrap='true' variant="headline"> {text}</Typography>
-                      <Typography className={classes.pos}>{subtitle}</Typography>
-                    </CardContent>
-                  </div>
-    let thumbnail = <CardMedia className={classes.cover}  image={imageUrl}/>;
-    return (<Card container className={classes.card}  onClick={() => this.handleClick()}>
-              {thumbnail}
-              {summary}
-            </Card>);
-  }
-*/
 
-  sliceRender(text, auther, imageUrl, subtitle, isUpdate) {
+  sliceRender(user, text, auther, imageUrl, subtitle, isUpdate, isReportedUrgentEvent, isUrgentEvent) {
     const classes = this.props.classes;
     let newIcon = null;
+    let urgentEventTag = null;
     if(isUpdate) {
       newIcon = <FiberNewIcon className={classes.newIcon}/>
     }
+
+    if(user != null && user.userProfile != null && (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
+      if(isReportedUrgentEvent && isUrgentEvent == null){
+        urgentEventTag = <Chip
+          label={constant.reportedUrgent}
+          className={classes.urgentEventTag}
+        />
+      }
+    }
+    if(isUrgentEvent) {
+       urgentEventTag = <Chip
+        label={constant.urgent}
+        className={classes.urgentEventTag}
+      />
+    }
+
     let summary = <Grid className={classes.summaryGrid} item xs onClick={() => this.handleClick()}>
-                      <Typography noWrap='true'className={classes.title}>{newIcon}{auther}</Typography>
-                      <Typography noWrap='true' variant="title"> {text}</Typography>
-                      <Typography noWrap='true' className={classes.pos}>{subtitle}</Typography>
+                      <Typography className={classes.auther}>{newIcon}{auther}</Typography>
+                      <Typography className={classes.title} variant="title">{urgentEventTag} {text}</Typography>
+                      <Typography className={classes.pos}>{subtitle}</Typography>
                   </Grid>
     let thumbnail = <Grid item className={classes.thumbnailGrid}><CardMedia className={classes.cover}  image={imageUrl}/> </Grid>
     return ( <Paper className={classes.paper}>
-              <Grid container wrap="nowrap" spacing={0}>
+              <Grid container spacing={0}>
               {thumbnail}
               {summary}
               </Grid>
@@ -188,6 +206,7 @@ class MessageView extends Component {
         distanceSpan = "距離: " + dist;
       }
     }
+
     let timeOffset = 0;
     let createdAt = 0;
     try {
@@ -213,25 +232,33 @@ class MessageView extends Component {
 
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
 
-    var auther = `${m.name} 於: ${timeOffsetString}前${post}`;
+    var auther = `${m.name} 於: ${timeOffsetString}前${post} ${distanceSpan} 現況：${m.status}`;
     var tag = '';
     if(m.tag != null && m.tag.length > 0) {
-      tag = ' #' + m.tag[0];
+      let loop = 3;
+      if(m.tag.length < loop) {
+        loop = m.tag.length;
+      }
+      for(let i = 0; i< loop; i++ ){
+        tag += `${m.tag[i]} `;
+      }
     }
-    var subtitle = distanceSpan + ' 現況：' + m.status + tag;
+    var subtitle =  tag;
     let card = null;
     if(this.tile) {
       if(m.publicImageURL != null) {
         imageUrl = m.publicImageURL;
       }
-      card = this.tileRender(m.text, auther, imageUrl, subtitle);
+      card = this.tileRender(m.text, auther, imageUrl, subtitle, m.isReportedUrgentEvent, m.isUrgentEvent);
     } else {
-      card = this.sliceRender(m.text, auther, imageUrl, subtitle, isUpdate);
+      card = this.sliceRender(user, m.text, auther, imageUrl, subtitle, isUpdate, m.isReportedUrgentEvent, m.isUrgentEvent);
     }
-    return (<div className="message-item">
-              {card}
-              <MessageDialog uuid={uuid} open={o} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
-            </div>);
+    return (
+      <div className='message-item'>
+          {card}
+          <MessageDialog uuid={uuid} open={o} openDialog={openDialog => this.openDialog = openDialog} ref={(messageDialog) => {this.messageDialog = messageDialog;}} />
+      </div>
+    );
   }
 }
 

@@ -25,7 +25,9 @@ import {
   TOGGLE_PUBLIC_PROFILE_DIALOG,  
   TOGGLE_LEADER_BOARD,
   FETCH_TOP_TWENTY,
-  UPDATE_FILTER_SORTING
+  UPDATE_FILTER_SORTING,
+  UPDATE_REGIONEVENT_BUTTONLIST,
+  FETCH_GLOBAL_TAG_STAT,
 } from './actions/types';
 
 
@@ -55,7 +57,7 @@ function userReducer(state={user: null, userProfile: null, lastLogin: null, book
   }
 }
 
-function addressBookReducer(state={addresses:[], publicAddress:[]}, action) {
+function addressBookReducer(state={addresses:[], publicAddresses:[]}, action) {
   switch (action.type) {
     case FETCH_ADDRESS_BOOK:
       return {...state,
@@ -176,6 +178,8 @@ function nearbyEventDialogReducer(state={open: false, buttons: buttonList}, acti
   switch (action.type) {
     case TOGGLE_NEARBYEVENT_DIALOG:
       return {...state, open: action.open};
+    case UPDATE_REGIONEVENT_BUTTONLIST:
+      return {...state, buttons: action.buttonList};
     default:
       return state;
   }
@@ -185,6 +189,8 @@ function regionEventDialogReducer(state={open: false, buttons: buttonList}, acti
   switch (action.type) {
     case TOGGLE_REGIONEVENT_DIALOG:
       return {...state, open: action.open};
+    case UPDATE_REGIONEVENT_BUTTONLIST:
+      return {...state, buttons: action.buttonList};      
     default:
       return state;
   }
@@ -246,12 +252,14 @@ function publicProfileDialogReducer(state={open: false, id: "", fbId: ""}, actio
   }
 }
 
-function ourlandReducer(state={focusMessages: [], globalFocusMessage: []}, action) {
+function ourlandReducer(state={focusMessages: [], globalFocusMessage: [], tagStat: []}, action) {
     switch (action.type) {
       case FETCH_FOCUS_MESSAGE:
         return {...state, focusMessages: action.messages};
       case FETCH_GLOBAL_FOCUS_MESSAGE:
-        return {...state, globalFocusMessages: action.messages};        
+        return {...state, globalFocusMessages: action.messages};
+      case FETCH_GLOBAL_TAG_STAT:
+        return {...state, tagStat: action.tagStat};
       default:
         return state;
     }

@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@google/maps": "^0.4.6",
-    "@material-ui/core": "^1.2.3",
+    "@material-ui/core": "^1.4.1",
     "@material-ui/icons": "^1.1.0",
     "ajv": "^6.5.1",
     "babel-core": "^6.26.3",
@@ -17,6 +17,7 @@
     "js-uuid": "0.0.6",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
+    "react-ga": "^2.5.3",
     "react-google-maps": "^9.4.5",
     "react-helmet": "^5.2.0",
     "react-redux": "^5.0.7",
@@ -35,12 +36,15 @@
     "webpack": "^3.1.0"
   },
   "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-compile-handlebars": "^0.6.1",
+    "gulp-rename": "^1.3.0",
     "react-scripts": "^1.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "generate_firebase_config": "node bin/generate_config.js",
-    "build": "react-scripts build",
+    "build": "react-scripts build && gulp",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

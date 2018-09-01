@@ -24,6 +24,7 @@ const gcs = require('@google-cloud/storage')();
 const exec = require('child-process-promise').exec;
 const nodemailer = require('nodemailer');
 const detailView = require('./detailView');
+const userView = require('./userView');
 // Email Service
 
 
@@ -82,7 +83,7 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
         let userDoc = userRef.get().then(snapshot => {
           snapshot.forEach(userProfileRef => {
             let userProfile = userProfileRef.data();
-            if(receviedNotification(userProfile)) {
+            if(receviedNotification(userProfile, data)) {
               let emailAddress = userProfile.emailAddress;
               console.log('UserProfile ID for send email '+ userProfileRef.id);
               // get the home address for send notification
@@ -129,12 +130,27 @@ function getAddressDistance(address, userProfile) {
   return addressDistance;
 }
 
-function receviedNotification(userProfile) {
+function receviedNotification(userProfile, message) {
   let rv = false;
   let emailAddress = userProfile.emailAddress;
   if(emailAddress != undefined && emailAddress != null) {
     if(userProfile.role == RoleEnum.admin ||  userProfile.role == RoleEnum.betaUser || userProfile.role == RoleEnum.monitor) {
       rv = true;
+    } else if(message.isUrgentEvent != null && message.isUrgentEvent) {
+      // for any user specified email address and event is urgent
+      rv = true;
+    } else {
+      // check this message contain user interested Tags or not.
+      if(userProfile.interestedTags != null && userProfile.interestedTags.length> 0) {
+      let interestedTags = userProfile.interestedTags;
+      let tags = tagfilterToTags(message.tagfilter);
+        for(let i=0; i<interestedTags.length; i++) {
+            if(tags.includes(interestedTags[i].text)){
+                rv =true;
+                break;
+            }
+        }
+      }
     }
   }
 return rv;
@@ -142,10 +158,15 @@ return rv;
 
 function sendEmail(email, displayName, newEvent, address, message) {
   const eventId = message.key
-  let text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區事件 ${message.text} 有新發展. 詳細請瀏覽以下連結: https://ourland.hk/?eventid=${eventId}`;
+  let text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區事件 ${message.text} 有新發展. 詳細請瀏覽以下連結: https://ourland.hk/detail/${eventId}`;
   if(newEvent) {
-    text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區有新事件 ${message.text} 詳細請瀏覽以下連結: https://ourland.hk/?eventid=${eventId}`;
+    text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區有新事件 ${message.text} 詳細請瀏覽以下連結: https://ourland.hk/detail/${eventId}`;
   }
+
+  if(message.isUrgentEvent != null && message.isUrgentEvent) {
+     text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區有事件 ${message.text} 被列為緊急事件 詳細請瀏覽以下連結: https://ourland.hk/detail/${eventId}`;
+  }
+
   const mailOptions = {
     to: email,
     subject: `${APP_NAME} 通知`,
@@ -156,6 +177,8 @@ function sendEmail(email, displayName, newEvent, address, message) {
     return console.log('Email sent to:', email);
   });
 }
+
+// support function for send mail
 
 function distance(lon1, lat1, lon2, lat2) {
     var R = 6371; // Radius of the earth in km
@@ -169,11 +192,23 @@ function distance(lon1, lat1, lon2, lat2) {
     return d;
 }
 
+function tagfilterToTags(tagfilter) {
+  let rv = [];
+  if(tagfilter != null) {
+      for(let key in tagfilter) {
+          rv.push(key);
+      }
+  }
+  return rv;
+}
+
+
 if (typeof(Number.prototype.toRad) === "undefined") {
   Number.prototype.toRad = function() {
     return this * Math.PI / 180;
   }
 }
+
 
 // Checks if uploaded images are flagged as Adult or Violence and if so blurs them.
 exports.blurOffensiveImages = functions.storage.object().onFinalize((object) => {
@@ -225,3 +260,4 @@ function blurImage(filePath) {
 }
 
 exports.detailView = detailView.detailView;
+exports.userView = userView.userView;

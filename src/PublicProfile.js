@@ -25,7 +25,9 @@ import { togglePublicProfileDialog } from './actions';
 import {fetchBookmarkList, getUserPublishMessages, getUserCompleteMessages, getUserProfile} from './UserProfile';
 import ShareDrawer from './ShareDrawer';
 import BookmarkList from './bookmark/BookmarkList';
+import {fileExists, checkImageExists} from './util/http';
 import config, {constant, addressEnum, RoleEnum} from './config/default';
+import {trackEvent} from './track';
 
 function Transition(props) {
   return <Slide direction="left" {...props} />;
@@ -53,14 +55,45 @@ class PublicProfile extends React.Component {
     this.state = {userProfile: null, bookmarkList: []};
     this.publishMessages = null;
     this.completeMessages = null;
+    this.onBackButtonEvent = this.onBackButtonEvent.bind(this);
   } 
 
+  onBackButtonEvent(e) {
+    e.preventDefault();
+    this.handleRequestClose();
+  }
+
+  loadFbLoginApi() {
+    window.fbAsyncInit = function() {
+      window.FB.init({
+        appId: '640276812834634',
+        cookie: true,
+        xfbml: true,
+        version: 'v2.10'
+      });
+    };
+
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));  
+  }
+
   componentDidMount() {
+    //this.loadFbLoginApi();
     if (this.props.id != "") {
       //console.log("componentDidMount id  " + this.props.id);
-      var user = {uid: this.props.id};
+      let user = {uid: this.props.id};
       this.fetchUserProfile(user);
     }
+    if (this.props.userid != null) {
+      //console.log("componentDidMount id  " + this.props.id);
+      let user = {uid: this.props.userid};
+      this.fetchUserProfile(user);
+    }    
   }
 
   fetchUserProfile(user) {
@@ -71,14 +104,30 @@ class PublicProfile extends React.Component {
       fetchBookmarkList(user).then((bookmarkList)=>{
       this.completeMessages = userProfile.completeMessages;
       this.publishMessages = userProfile.publishMessages;
+      trackEvent('PublicProfile', userProfile.displayName);
       this.setState({user: user, userProfile: userProfile, bookmarkList: bookmarkList});
+      //this.fbUserProfile();
       });
     });
   }
 
+  fbUserProfile() {
+    console.log('fbUserProfile');
+    window.FB.getLoginStatus(function(response) {
+      console.log("Good to see you, %o,", response);
+      if (response.status === 'connected') {
+        let accessToken = response.authResponse.accessToken;
+        accessToken = "640276812834634|pIjBcwr-KsmubfPz9f1oOhhxQ3E";
+        console.log('Welcome!  Fetching your information.... ' + this.fbId);
+        window.FB.api('/' + this.fbId, 'get',{access_token :accessToken,  fields: 'link'}, function(response1) {
+          console.log("Good to see you, %o,", response1);
+          this.setState({link: response1.link});
+        });
+      } 
+    } );
+  }
+
   componentDidUpdate(prevProps, prevState) {
-//    console.log(prevProps.id + " id  " + this.props.id);
-//    console.log(prevProps.open + " open " + this.props.open);
     if (prevProps.id != this.props.id && this.props.id != "") {
       var user = {uid: this.props.id};
       this.fetchUserProfile(user);
@@ -87,7 +136,13 @@ class PublicProfile extends React.Component {
 
 
   handleRequestClose = () => {
-    this.props.togglePublicProfileDialog(false);
+//    window.history.pushState("", "", `/`)
+    window.onpopstate = this.lastOnPopState;
+    if(this.props.closeDialog != null) {
+      this.props.closeDialog();
+    } else {
+      this.props.togglePublicProfileDialog(false);
+    }
   };
 
   
@@ -100,9 +155,13 @@ class PublicProfile extends React.Component {
     let desc = null;
     let facebookhtml = null;
     if(this.state.userProfile != null) {
+      var imgURL = '/images/profile_placeholder.png';
+      if(checkImageExists(this.state.userProfile.photoURL)) {
+        imgURL = this.state.userProfile.photoURL;
+      }      
       displayName = this.state.userProfile.displayName;
       var displayNameLabel = "名字:" + displayName;
-      imageHtml =  <img src={this.state.userProfile.photoURL}/>;
+      imageHtml =  <img src={imgURL}/>;
       if(this.state.userProfile.desc != null && this.state.userProfile.desc != "") {
         desc = <ListItem >
           <ListItemText primary={"簡介: " + this.state.userProfile.desc}/> 
@@ -117,26 +176,39 @@ class PublicProfile extends React.Component {
 
 
 
-    if(this.fbId && false){
+    if(this.state.link){
      facebookhtml = 
      <ListItem button >
-      <ListItemText primary="臉書連結:"/> <a href={"https://www.facebook.com/" + this.fbId} target="_blank">前往</a>
+      <ListItemText primary="臉書連結:"/> <a href={this.state.link} target="_blank">前往</a>
     </ListItem>;
     }
 
     
     const { classes, open, id } = this.props;
+    let dialogOpen = open;
+    let userid = id;
+    if(this.props.userid != null) {
+      dialogOpen = true;
+      userid = this.props.userid;
+    }
+    if(dialogOpen) {
+      if(window.onpopstate != this.onBackButtonEvent) {
+        window.history.pushState("", "", `/user/${userid}`)
+        this.lastOnPopState = window.onpopstate;
+        window.onpopstate = this.onBackButtonEvent;
+      }
+    }
     return (
       <div>
         <br/>
-        <Dialog fullScreen  open={open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
+        <Dialog fullScreen  open={dialogOpen} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                   <CloseIcon />
               </IconButton>
               <Typography variant="title" color="inherit" className={classes.flex}>{constant.publicProfileLabel}</Typography>           
-              <ShareDrawer uid={id} displayName={displayName}/>  
+              <ShareDrawer uid={userid} displayName={displayName}/>  
             </Toolbar>
           </AppBar>
           <div className={classes.container}>

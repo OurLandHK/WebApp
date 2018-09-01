@@ -2,6 +2,29 @@ import * as firebase from 'firebase';
 import uuid from 'js-uuid';
 import config, {constant, addressEnum, RoleEnum} from './config/default';
 
+function fetchAllUser(callback) {
+    const db = firebase.firestore();
+    let collectionRef = db.collection(config.userDB);
+    collectionRef.onSnapshot(function() {})  
+    collectionRef = collectionRef.orderBy("createdAt", "desc").
+    get().then(function(querySnapshot) {
+        if(querySnapshot.empty) {
+            return;
+        } else { 
+            querySnapshot.forEach(function(userRef) {
+                var val = userRef.data();
+                if(val) {
+                    val.uid = userRef.id;
+                    callback(val);
+                }
+            });
+        }
+    }).catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+ }
+
+
 function getUserProfile(user) {
     // Use firestore
     if(user==null) {
@@ -22,6 +45,7 @@ function getUserProfile(user) {
                 photoURL: user.photoURL,
                 fbuid: user.providerData[0].uid,
                 desc: "",
+                createdAt: new Date(now),
                 role: RoleEnum.user,
                 publishMessages: [],
                 concernMessages: [],
@@ -216,18 +240,10 @@ function updateUserRecords(userid, userRecord) {
     if(userRecord != null) {
       /* remoe temporary for test new icon */
         userRecord.lastLogin = lastLogin;
-       /* */
         return collectionRef.doc(userid).set(userRecord).then(function(userRecordRef) {
             return(userRecordRef);
         }) 
-    } else {
-/*        return collectionRef.doc(userid).update({
-            lastLogin: lastLogin
-        }).then(function(userRecordRef) {
-            return(userRecordRef);
-        }) 
-*/        
-    }
+    } 
 }
 
 function addPublishMessagesKeyToUserProfile(user, messageUUID) {
@@ -410,33 +426,26 @@ function upgradeAllUser() {
         if(querySnapshot.empty) {
             return;
         } else { 
-            querySnapshot.forEach(function(userRef) {
+            return querySnapshot.forEach(function(userRef) {
                 var val = userRef.data();
                 if(val) {
-                    let changeCreatedAt = false;
-                    let change = false;
-                    let user = {uid: userRef.id};
-                    return fetchBookmarkList(user).then((bookmarkList) => {
-                        if(bookmarkList.length == 0) {
-                            const concernMessages = val.concernMessages;
-                            
-                            return addBookmark(uuid.v4(), user, 
-                            constant.concernLabel, "", concernMessages).then(()=>{
-                                if(val.concernMessages.length > 0) {
-                                    val.concernMessages = [];
-                                    updateUserProfile(user, val);
-                                }
-                            })
-                        } else {
-                            return;
+                    if(val.createdAt == null) {
+                        if(val.lastLogin == null) {
+                            let now = Date.now();
+                            val.lastLogin = new Date(now);
                         }
-                    });
+                        val.createdAt = val.lastLogin;
+                        let collectionRef2 = db.collection(config.userDB);
+                        return collectionRef2.doc(userRef.id).set(val).then(function(userRecordRef) {
+                            return(userRecordRef);
+                        });
+                    }
                 }                
             });
         }
     })         
 }
 
-export {addCompleteMessage, upsertAddress, upgradeAllUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
+export {fetchAllUser, addCompleteMessage, upsertAddress, upgradeAllUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
     dropBookmark, fetchBookmarkList, addBookmark, getBookmark, updateBookmark, incBookmarkViewCount};
 

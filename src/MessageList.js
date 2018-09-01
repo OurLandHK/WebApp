@@ -4,7 +4,7 @@ import config, {constant} from './config/default';
 import MessageView from './MessageView';
 import distance from './Distance';
 import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
-import { updateFilter, updateFilterTagList} from './actions';
+import { fetchLocation, updateFilter, updateFilterTagList} from './actions';
 import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
 
@@ -24,12 +24,12 @@ class MessageList extends Component {
   constructor(props) {
     super(props);
     let geolocation = this.props.geolocation;
-    if(geolocation == null) {
+    if (geolocation == null) {
       geolocation = constant.invalidLocation;
     }
     let messageIds = [];
     let statusMessage = constant.messageListReadingLocation;
-//    console.log("Message List" + this.props.messageIds);
+    //console.log("geolocation" + geolocation);
     if(this.props.messageIds != null) {
       messageIds = this.props.messageIds;
       statusMessage = constant.messageListLoadingStatus;
@@ -47,26 +47,29 @@ class MessageList extends Component {
       messageIds: messageIds,
       selectedTag: null,
       selectedSorting: null,
-      statusMessage: statusMessage
+      statusMessage: statusMessage,
     };
-    this.updateFilter = this.updateFilter.bind(this);
+    this.updateGlobalFilter = this.updateGlobalFilter.bind(this);
     this.setMessage = this.setMessage.bind(this);
     this.clear = this.clear.bind(this);
   }
 
   componentDidMount() {
-    //console.log("componentDidMolunt");
+    //console.log('componentDidMount');
     if(this.state.messageIds.length != 0) {
-      this.updateFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
+      if(!this.hori) {
+       this.updateGlobalFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
+      }
+      this.refreshMessageList();
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.filter.geolocation != prevProps.filter.geolocation ||
+    if (this.state.messageIds.length == 0 && (this.props.filter.geolocation != prevProps.filter.geolocation ||
       this.props.filter.distance != prevProps.filter.distance ||
-      this.props.filter.selectedSorting != prevProps.filter.selectedSorting) {
+      this.props.filter.selectedSorting != prevProps.filter.selectedSorting ||
+      this.props.tagFilter != prevProps.tagFilter)) {
       if(!this.hori) {
-        //console.log("componentDidUpdate");
         this.refreshMessageList();
       }
     } else {
@@ -81,16 +84,17 @@ class MessageList extends Component {
     }
   }
 
-  updateFilter(eventNumber, distance, geolocation) {
+  updateGlobalFilter(eventNumber, distance, geolocation) {
     //console.log("ML Update Filter: " + geolocation);
     const { updateFilter } = this.props;
     updateFilter(eventNumber, distance, geolocation);
-    this.refreshMessageList();
   }
 
   refreshMessageList() {
-    this.setState({selectedTag: null});
-    this.setState({selectedSorting: null});
+    //console.log("refreshMessageList");
+    this.setState({
+      selectedTag: null,
+      selectedSorting: null});
     this.fetchMessages(this.props.filter);
   }
 
@@ -127,9 +131,11 @@ class MessageList extends Component {
         //console.log("Ids:" + Ids);
         getMessage(Ids).then((message) => {this.setMessage(message)});
       });
+      
     } else {
       switch (geolocation) {
         case constant.invalidLocation:
+          //console.log("invalidLocation");
           this.setState({statusMessage: constant.messageListBlockLocation});
           break;
         case constant.timeoutLocation:
@@ -175,7 +181,7 @@ class MessageList extends Component {
           return null;
         } else {
           if(this.hori) {
-            return (<div className={classes.scrollingItem}><MessageView message={message} key={message.key} tile={this.hori} lon={lon} lat={lat}/></div>);
+            return (<div className={classes.scrollingItem} key={message.key}><MessageView message={message} key={message.key} tile={this.hori} lon={lon} lat={lat}/></div>);
           } else {
             return (<MessageView message={message} key={message.key} tile={this.hori} lon={lon} lat={lat}/>);
           }
@@ -200,6 +206,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    fetchLocation: () => dispatch(fetchLocation()),
     updateFilter:
       (eventNumber, distance, geolocation) =>
         dispatch(updateFilter(eventNumber, distance, geolocation)),

@@ -2,6 +2,7 @@ import * as firebase from 'firebase';
 import uuid from 'js-uuid';
 import config, {constant} from './config/default';
 import distance from './Distance';
+import {updateTagStat} from './GlobalDB';
 import { light } from '@material-ui/core/styles/createPalette';
 import { getStreetAddressFromGeoLocation} from './Location';
 
@@ -59,13 +60,24 @@ function upgradeAllMessage() {
     const db = firebase.firestore();
     let collectionRef = db.collection(config.messageDB);
     collectionRef.onSnapshot(function() {})  
-    collectionRef.get().then(function(querySnapshot) {
+    let tagStat = {};
+    return collectionRef.get().then(function(querySnapshot) {
         if(querySnapshot.empty) {
             return
-        } else { 
+        } else {             
             querySnapshot.forEach(function(messageRef) {
                 var val = messageRef.data();
                 if(val) {
+                    // udpate tagStat
+                    let tags = tagfilterToTags(val.tagfilter);
+                    tags.map((tag) => {
+                        if(tagStat[tag] == null) {
+                            tagStat[tag] = 1;
+                        } else {
+                            tagStat[tag]++;
+                        }
+                    });
+                    // Update for data scheme
                     let changeCreatedAt = false;
                     let change = false;
                     let before =  val.createdAt;
@@ -84,7 +96,6 @@ function upgradeAllMessage() {
                             }
                         }
                         if(val.tagfilter != null) {
-                            let tags = tagfilterToTags(val.tagfilter);
                             if(!tags.includes("兒童遊戲室")) {
                                 tags.push("兒童遊戲室");
                                 var index = tags.indexOf("兒童遊樂場");
@@ -92,35 +103,16 @@ function upgradeAllMessage() {
                             val.tagfilter = tagsToTagfilter(tags);
                             change = true;    
                         }
-                    }
-                    if(changeCreatedAt) {
-                        change = true;
-                        val.createdAt = new Date(val.createdAt);
-                        //console.log(`Update: ${val.key} ${before} ${val.createdAt}`)
-                    }
-                    if(val.lastUpdate == null) {
-                        change = true;
-                        val.lastUpdate = val.createdAt;
-                    }
-                    if(val.streetAddress == null) {
-                        change = false;
-                        return getStreetAddressFromGeoLocation(val.geolocation, function(err, response){
-                            if (!err) {
-                                console.log(response.json.results);
-                                val.streetAddress = response.json.results[0].formatted_address;
-                                return updateMessage(val.key, val, false);
-                              }
-                        }, null);
-                    }
-                    
+                    }                 
                     if(change) {
                         return updateMessage(val.key, val, false);
                     } else {
                         return;
                     }
                 }                
-            });
+            });            
         }
+        return updateTagStat(tagStat);
     })         
 }
 
@@ -155,8 +147,8 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         } else {
             query = collectionRef.where("hide", "==", false);
             if(lastUpdate != null) {
-            console.log("Last Update: " + lastUpdate.toDate());
-            query = query.where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc");
+                console.log("Last Update: " + lastUpdate.toDate());
+                query = query.where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc");
             } else {
                     query = query.where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc");
             }      
@@ -206,7 +198,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
     }
  }
 
- function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status) {
+ function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status, isReportedUrgentEvent, isApprovedUrgentEvent, isUrgentEvent) {
     let now = Date.now();
     if(startDate === null)
     {
@@ -251,6 +243,9 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         thumbnailPublicImageURL,
         status: status,
         viewCount: 0,
+        isReportedUrgentEvent: isReportedUrgentEvent,
+        isApprovedUrgentEvent: isApprovedUrgentEvent,
+        isUrgentEvent: isUrgentEvent
       };
     // Use firestore
     const db = firebase.firestore();
@@ -514,7 +509,7 @@ function setHappyAndSad(messageUuid, happyCount, sadCount, happAndSad, user) {
 }
 
 /// All about comment
-function addComment(messageUUID, currentUser, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status) {
+function addComment(messageUUID, currentUser, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent) {
     var now = Date.now();
     var fireBaseGeo = null;
 
@@ -534,9 +529,14 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
         photoUrl: photoUrl,
         createdAt: new Date(now),
         lastUpdate: null,
+        isApprovedUrgentEvent: null
     }; 
     if(commentText != null) {
         commentRecord.text = commentText;
+
+        if(isApprovedUrgentEvent != null) {
+            commentRecord.isApprovedUrgentEvent = isApprovedUrgentEvent;
+        }
     } else {
         if(geolocation != null) {
             commentRecord.geolocation =  new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude);
@@ -557,7 +557,6 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
             }
         }
     }
-    console.log(commentRecord);
     // Use firestore
     const db = firebase.firestore();
     
@@ -597,5 +596,45 @@ function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
     });
 }
 
+function fetchReportedUrgentMessages(callback) {
+    const db = firebase.firestore();
+    
+    let collectionRef = db.collection(config.messageDB);
+    collectionRef.onSnapshot(function() {});         
+    return collectionRef.where("hide", "==", false).where("isReportedUrgentEvent", "==", true).where("isUrgentEvent", "==", null).orderBy("createdAt", "desc").get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(messageRef){
+            let val = messageRef.data(); 
+            callback(val);
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+}
 
-export {getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser};
+function fetchMessagesBasedOnInterestedTags(interestedTags, geolocation, dis, lastUpdate, callback) {
+    const db = firebase.firestore();
+    var msgs = [];
+    var collectionRef = db.collection(config.messageDB);
+
+    collectionRef.onSnapshot(function() {});         
+    return collectionRef.where("hide", "==", false).where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc").get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(messageRef){
+            let val = messageRef.data(); 
+            var disDiff = distance(val.geolocation.longitude,val.geolocation.latitude, geolocation.longitude, geolocation.latitude);
+            if(dis > disDiff) {
+                let tags = tagfilterToTags(val.tagfilter);
+                for(var i=0; i<interestedTags.length; i++) {
+                    if(tags.includes(interestedTags[i].text)){
+                        callback(val);
+                    }
+                }
+            }
+        });
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+}
+
+export {getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags};

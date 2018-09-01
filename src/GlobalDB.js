@@ -42,6 +42,8 @@ function wrapLongitude(longitude) {
 }
 
 
+
+
 function fetchFocusMessagesBaseOnGeo(geocode, radius) {
 
     const db = firebase.firestore();
@@ -102,10 +104,11 @@ function fetchFocusMessagesBaseOnGeo(geocode, radius) {
     }
  }
 
- function addFocusMessage(key, title, geolocation, streetAddress, radius , desc, messages) {
+ function addFocusMessage(key, title, geolocation, streetAddress, radius , summary, desc, messages) {
     let now = Date.now();
     var focusMessageRecord = {
         title: title,
+        summary: summary,
         desc: desc,
         messages: messages,
         geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
@@ -113,6 +116,7 @@ function fetchFocusMessagesBaseOnGeo(geocode, radius) {
         radius: radius,
         createdAt: new Date(now),
         lastUpdate: new Date(now),
+        current: true,
         key: key,   
       };
     // Use firestore
@@ -166,9 +170,9 @@ function getFocusMessage(key) {
 }
 
 function updateFocusMessage(messageKey, messageRecord, updateTime) {
-    var db = firebase.firestore();
-    var now = Date.now();
-    var collectionRef = db.collection(config.focusMessageDB);
+    let db = firebase.firestore();
+    let now = Date.now();
+    let collectionRef = db.collection(config.focusMessageDB);
     if(messageRecord == null) {
         if(updateTime) {
             return collectionRef.doc(messageKey).update({
@@ -190,5 +194,30 @@ function updateFocusMessage(messageKey, messageRecord, updateTime) {
     }
 }
 
+function updateTagStat(tagStat) {
+    let db = firebase.firestore();
+    let collectionRef = db.collection(config.globalDB);
+    if(tagStat != null) {
+        return collectionRef.doc(config.TagStatisticKey).set(tagStat).then(function(tagRef) {
+            console.log("updateTagStat: ", tagStat);
+            return(tagRef);
+        }) 
+    }   
+}
 
-export {dropFocusMessage, fetchFocusMessagesBaseOnGeo, addFocusMessage, getFocusMessage, updateFocusMessage};
+function getTagStat() {
+    let db = firebase.firestore();
+    let collectionRef = db.collection(config.globalDB);
+    var docRef = collectionRef.doc(config.TagStatisticKey);
+    return docRef.get().then(function(doc) {
+        if (doc.exists) {
+            return(doc.data());
+        } else {
+            return null;
+        }
+    });     
+}
+
+
+
+export {getTagStat, dropFocusMessage, fetchFocusMessagesBaseOnGeo, addFocusMessage, getFocusMessage, updateFocusMessage, updateTagStat};

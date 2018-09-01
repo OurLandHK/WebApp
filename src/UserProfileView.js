@@ -1,32 +1,25 @@
 /*global FB*/
 import React, { Component } from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import LocationButton from './LocationButton';
 import config from './config/default';
 import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
-import InputLabel from '@material-ui/core/InputLabel';
 import IconButton from '@material-ui/core/IconButton';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText  from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import geoString from './GeoLocationString';
+import {fileExists, checkImageExists} from './util/http';
 import {getUserProfile, updateUserLocation, getUserRecords, updateUserProfile} from './UserProfile';
 import UploadImageButton from './UploadImageButton';
+import IntegrationReactSelect from './IntegrationReactSelect';
 import uuid from 'js-uuid';
 import thunk from 'redux-thunk';  
 import {connect} from "react-redux";
@@ -60,6 +53,7 @@ const styles = {
 class UserProfileView extends React.Component {
     constructor(props) {
         super(props);
+        this.onBackButtonEvent = this.onBackButtonEvent.bind(this);
         var id = uuid.v4();
         this.state = {
             open: false,
@@ -71,20 +65,32 @@ class UserProfileView extends React.Component {
             displayName: '',
             displayRole: '權限: ',
             desc: '',
-            emailAddress: ''
+            emailAddress: '',
+            interestedTags: [],
+            multiLabel: ''
         };
         this.path = 'UserProfile';
         this.thumbnailFilename = 'profile_' + id + '.jpg';
         this.openDialog = this.openDialog.bind(this);
+        this.handleTagChange = this.handleTagChange.bind(this);
         this.props.openDialog(this.openDialog);
     }    
 
   openDialog = () => {
+    this.lastOnPopState = window.onpopstate;
+    window.onpopstate = this.onBackButtonEvent;
     console.log('UserProfile Open'); 
     this.setState({ open: true });
   };
 
+  onBackButtonEvent(e) {
+    e.preventDefault();
+    this.handleRequestClose();
+  }
+    
+
   handleRequestClose = () => {
+    window.onpopstate = this.lastOnPopState;
     this.setState({ open: false });
   };
 
@@ -103,13 +109,28 @@ class UserProfileView extends React.Component {
           if(user.userProfile.emailAddress != null) {
             emailAddress = user.userProfile.emailAddress;
           }
+
+          var interestedTags = [];
+          if(user.userProfile.interestedTags != null) {
+            interestedTags = user.userProfile.interestedTags;
+            console.log(interestedTags)
+          }
+
+
+          var multiLabel = '';
+          multiLabel = this.interestedTagsToMultiLabel(interestedTags)
+          console.log("multiLabel=" + multiLabel)
           this.setState({
             user: user.user, 
             userProfile: user.userProfile,
             displayName: user.userProfile.displayName,
             displayRole: '權限: ' + user.userProfile.role,
             desc: desc,
-            emailAddress: emailAddress});
+            emailAddress: emailAddress,
+            interestedTags: interestedTags,
+            multiLabel: multiLabel});
+
+
         } else {
           this.setState({user: user.user});         
         }
@@ -117,6 +138,15 @@ class UserProfileView extends React.Component {
         this.setState({user: null, userProfile: null});
       }
     }
+  }
+
+  interestedTagsToMultiLabel(interestedTags){
+    var tags = [];
+    interestedTags.map(interestedTag => {
+      tags.push(interestedTag.text);
+    });
+
+    return tags.join();
   }
 
   onSubmit() {
@@ -140,6 +170,11 @@ class UserProfileView extends React.Component {
       User's Description
     */
     userProfile.desc = this.state.desc;
+
+    /*
+      User's Interested Tags
+    */
+    userProfile.interestedTags = this.state.interestedTags;
 
     /*
       User's Email Address
@@ -173,6 +208,21 @@ class UserProfileView extends React.Component {
     });
     }
 
+  handleTagChange(value) {
+    let interestedTags = [];
+    if(value != null && value != '') {
+      var partsOfStr = value.split(',');
+      let i = 0;
+      partsOfStr.forEach(function(element) {
+        interestedTags.push({
+          id: interestedTags.length + 1,
+          text: element
+        });
+      });
+    }
+    
+    this.setState({interestedTags});
+  }
   render() {
     const { classes, user } = this.props;
     var imgURL = '/images/profile_placeholder.png';
@@ -185,7 +235,9 @@ class UserProfileView extends React.Component {
     let emailHtml = null;
     let dialogHtml = null;
     if (this.state.user != null && this.state.userProfile != null) {
-        imgURL = this.state.userProfile.photoURL;
+        if(checkImageExists(this.state.userProfile.photoURL)) {
+          imgURL = this.state.userProfile.photoURL;
+        }
         this.path = "UserProfile/" + this.state.user.uid + "/";
         var desc = '';
         if(this.state.userProfile.desc) {
@@ -223,27 +275,34 @@ class UserProfileView extends React.Component {
          <div className={classes.container}>
           <FormGroup>  
           <TextField
-                    autoFocus
-                    required
-                    id="name"
-                    label="姓名"
-                    fullWidth
-                    margin="normal"
-                    value={this.state.displayName}
-                    onChange={event => this.setState({ displayName: event.target.value })}
-                    inputRef={(tf) => {this.nameTextField = tf;}}
-                  />
+            autoFocus
+            required
+            id="name"
+            label="姓名"
+            fullWidth
+            margin="normal"
+            value={this.state.displayName}
+            onChange={event => this.setState({ displayName: event.target.value })}
+            inputRef={(tf) => {this.nameTextField = tf;}}
+          />
           <TextField
-                    id="desc"
-                    label="個人簡介"
-                    fullWidth
-                    margin="normal"
-                    helperText="介紹自己,或寫下聯絡方法"
-                    value={this.state.desc}
-                    onChange={event => this.setState({ desc: event.target.value })}
-                    inputRef={(tf) => {this.descTextField = tf;}}
-                  />
+            id="desc"
+            label="個人簡介"
+            fullWidth
+            margin="normal"
+            helperText="介紹自己,或寫下聯絡方法"
+            value={this.state.desc}
+            onChange={event => this.setState({ desc: event.target.value })}
+            inputRef={(tf) => {this.descTextField = tf;}}
+          />
             {emailHtml}
+          <IntegrationReactSelect
+            showLabel={false}
+            placeholder={constant.interestedTagPlaceholder}
+            suggestions={this.props.suggestions.tag}
+            value={this.state.multiLabel}
+            onChange={(value) => this.handleTagChange(value)}
+          />
             <br/>
             <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} thumbnailFilename={this.thumbnailFilename} isThumbnailOnly={true} path={this.path} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
           </FormGroup>
@@ -266,6 +325,7 @@ UserProfileView.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   return {
     user: state.user,
+    suggestions: state.suggestions
   };
 }
 

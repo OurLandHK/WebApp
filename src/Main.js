@@ -8,6 +8,9 @@ import {getBookmark} from './UserProfile';
 import React, { Component } from 'react';
 import MessageList from './MessageList';
 import config, {constant} from './config/default';
+import FocusMessage from './FocusMessage';
+import {trackEvent} from  './track';
+
 import {
   updateRecentMessage,
   updatePublicProfileDialog,
@@ -43,6 +46,7 @@ class Main extends Component {
 
   }
 
+
   handleClick() {
     this.openDialog();
   };
@@ -52,6 +56,10 @@ class Main extends Component {
       this.init = false;
       this.refreshQueryMessage();
     }
+  }
+
+  componentDidMount() {
+    trackEvent('main', 'main');
   }
 
   refreshQueryMessage() {
@@ -70,14 +78,29 @@ class Main extends Component {
     }
   }
 
+  renderTagStat() {
+    const {tagStat} = this.props.ourland;
+    if(tagStat.length > 3) {
+      let actTag = null;
+      for(let i = 0; i < tagStat.length; i++) {
+        if(tagStat[i].tag == '活動') {
+          actTag = tagStat[i];
+        }
+      }
+      let tagStatText = `「我地Ourland」有${tagStat[0].count}個${tagStat[0].tag}，${tagStat[1].count}個${tagStat[1].tag}，${actTag.count}個社區活動將會舉行，就等你同「我地」一齊更新我地的社區啦！`;
+      return <p>{tagStatText}</p>
+    } else {
+      return null;
+    } 
+  }
+
   renderMessageFrontPage() {
     let recentMessage = null;
     const { eventNumber, distance, geolocation, eventId, queryMessage, bookmark} = this.state;
     const {open: openRecent} = this.props.recentMessage;
-//    const {focusMessages} = this.props.ourland;
-    const {globalFocusMessages: focusMessages} = this.props.ourland;
     const { classes } = this.props;
-    let focusMessage = null
+    let tagStatHtml = this.renderTagStat();
+
     if(queryMessage != null) {
       let message = queryMessage;
       recentMessage = <div className="recent-event-wrapper">
@@ -89,34 +112,30 @@ class Main extends Component {
                         <h4>{constant.recentEventLabel}</h4>
                         <BookmarkView bookmark={bookmark} open={openRecent} />
                       </div>;
-    }    
-    if(focusMessages != null && focusMessages.length > 0 && focusMessages[0].messages.length) {
-      focusMessage = <div className="focus-message-wrapper">
-        <h4>{constant.focusMessagesLabel}</h4>
-        <MessageList
-          ref={(messageList) => {this.messageList = messageList;}}
-          eventNumber={100}
-          distance={10}
-          messageIds={focusMessages[0].messages}
-          hori={true}
-        />
-      </div>
+    }
+    let messageList = null;
+    let messageList1 = null;
+    if(true) {
+      messageList = <NearbyEventDialog
+            eventNumber={eventNumber}
+            distance={distance}
+            geolocation={geolocation}
+          />
+    } else {
+      messageList = <RegionEventDialog
+            eventNumber={eventNumber}
+            distance={distance}
+            geolocation={geolocation}
+          />
     }
 
     return (
       <div className={classes.container}>
+        {tagStatHtml}
         {recentMessage}
-        {focusMessage}
-        <NearbyEventDialog
-          eventNumber={eventNumber}
-          distance={distance}
-          geolocation={geolocation}
-        />
-        <RegionEventDialog
-          eventNumber={eventNumber}
-          distance={distance}
-          geolocation={geolocation}
-        />
+        <FocusMessage/> 
+        {messageList1}     
+        {messageList}
       </div>
     );
   }
@@ -126,7 +145,7 @@ class Main extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.contentWrapper}>
-          {messageHtml}       
+          {messageHtml}
       </div>
     );
   }

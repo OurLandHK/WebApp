@@ -42,8 +42,9 @@ class FocusView extends Component {
         let messages = [];
         let streetAddress ="";
         let geolocation = null;
+        let summary = "";
         let desc = "";
-        let key = "";   
+        let key = "";
         let radius = 1;
         if(this.props.focus != null) {
             let c = this.props.focus;
@@ -55,15 +56,17 @@ class FocusView extends Component {
             messages = c.messages;
             key = c.key;
             title = c.title;
+            summary = c.summary;
             desc = c.desc;
             radius = c.radius;
-        }        
+        }
         this.state = {
             popoverOpen: false,
             title: title,
             geolocation: geolocation,
             messages: messages,
             streetAddress: streetAddress,
+            summary: summary,
             desc: desc,
             radius: radius,
             key: key
@@ -76,8 +79,9 @@ class FocusView extends Component {
         let messages = [];
         let geolocation = null;
         let streetAddress = "";
+        let summary = "";
         let desc = "";
-        let key = "";   
+        let key = "";
         let radius = 1;
         if(this.props.focus != null) {
             let c = this.props.focus;
@@ -89,33 +93,35 @@ class FocusView extends Component {
             messages = c.messages;
             key = c.key;
             title = c.title;
+            summary = c.summary;
             desc = c.desc;
             radius = c.radius;
-        }  
+        }
         this.setState({
             popoverOpen: true,
             title: title,
             geolocation: geolocation,
             streetAddress: streetAddress,
             messages: messages,
+            summary: summary,
             desc: desc,
             radius: radius,
             key: key
         });
       }
-    
+
     handleRequestClose() {
         this.setState({
           popoverOpen: false,
         });
-    };   
+    };
 
     locationButtonSubmit = (geolocation, streetAddress) => {
         this.setState({
             geolocation: geolocation,
             streetAddress: streetAddress,
         });
-    }; 
+    };
 
     onSubmit() {
         const { user } = this.props;
@@ -126,35 +132,37 @@ class FocusView extends Component {
                 geolocation: this.state.geolocation,
                 streetAddress:this.state.streetAddress,
                 messages: this.state.messages,
+                summary: this.state.summary,
                 desc: this.state.desc,
                 radius: this.state.radius,
-                key: this.state.key                    
+                key: this.state.key
               }
               updateFocusMessage(this.state.key, focusMessage);
           } else {
-              addFocusMessage(uuid.v4(), 
+              addFocusMessage(uuid.v4(),
                 this.state.title,
                 this.state.geolocation,
                 this.state.streetAddress,
                 this.state.radius,
+                this.state.summary,
                 this.state.desc,
                 this.state.messages
             )
           }
         }
-        
-        this.setState({popoverOpen: false});  
+
+        this.setState({popoverOpen: false});
     }
 
-    
+
     onDelete() {
       const { user } = this.props;
-      if (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {         
+      if (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {
         dropFocusMessage(this.state.key)
-      }  
+      }
       this.setState({popoverOpen: false});
     }
-    
+
 
 
     render() {
@@ -178,8 +186,8 @@ class FocusView extends Component {
                 if(c.streetAddress != null) {
                     locationString =  c.streetAddress + " (" + geoString(c.geolocation.latitude, c.geolocation.longitude) + ")";
                 } else {
-                    locationString = "近" + geoString(c.geolocation.latitude, c.geolocation.longitude);      
-                } 
+                    locationString = "近" + geoString(c.geolocation.latitude, c.geolocation.longitude);
+                }
             }
             addressButtonHtml = <ListItem button onClick={(evt) => this.handleRequestOpen(evt)}>
                                     <ListItemIcon>
@@ -199,7 +207,7 @@ class FocusView extends Component {
             }
         } else {
             titleText = constant.addFocusMessagesLabel;
-            addressButtonHtml = <Button variant="fab" color="primary" className={classes.fab} raised={true} onClick={(evt) => this.handleRequestOpen(evt)}>
+            addressButtonHtml = <Button variant="fab" color="primary" className={classes.fab} onClick={(evt) => this.handleRequestOpen(evt)}>
                                     <AddIcon />
                                 </Button>
         }
@@ -212,17 +220,18 @@ class FocusView extends Component {
                             <TextField autoFocus required id="title" fullWidth margin="normal" helperText={constant.focusTitleLabel} value={this.state.title} onChange={event => this.setState({ title: event.target.value })}/>
                             <LocationButton autoFocus geolocation={geolocation} streetAddress={streetAddress} ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>
                             <TextField autoFocus required id="radius" margin="normal" type="number" helperText={constant.radiusLabel} value={this.state.radius} onChange={event => this.setState({ radius: event.target.value })}/>
-                            <TextField autoFocus required id="desc" fullWidth  
+                            <TextField autoFocus required id="summary" fullWidth margin="normal" helperText={constant.focusSummaryLabel} value={this.state.summary} onChange={event => this.setState({ summary: event.target.value })}/>
+                            <TextField autoFocus required id="desc" fullWidth
                                 multiline
-                                rowsMax="20" 
+                                rowsMax="20"
                                 margin="normal" helperText={constant.descLabel} value={this.state.desc} onChange={event => this.setState({ desc: event.target.value })}/>
                             {messageHtml}
-                        </DialogContent>  
+                        </DialogContent>
                         <DialogActions>
                             <Button disabled={disableValue} color="secondary" onClick={() => this.onDelete()} >刪除</Button>
                             <Button color="primary" onClick={() => this.handleRequestClose()} >取消</Button>
-                            <Button color="primary" onClick={() => this.onSubmit()}>提交</Button> 
-                        </DialogActions>          
+                            <Button color="primary" onClick={() => this.onSubmit()}>提交</Button>
+                        </DialogActions>
                     </Dialog>
                 </span>);
     }

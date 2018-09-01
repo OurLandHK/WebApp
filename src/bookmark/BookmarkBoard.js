@@ -1,13 +1,9 @@
 
 import React from 'react';
-import IconButton from '@material-ui/core/IconButton';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Toolbar from '@material-ui/core/Toolbar';
 import Tab  from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import {connect} from "react-redux";
 import config, {constant} from '../config/default';
@@ -50,7 +46,7 @@ class BookmarkBoard extends React.Component {
 //    console.log("createEventListDialog");
     super(props);
     this.state = {
-      tabValue: 0,
+      tabValue: constant.myBookmarkLabel,
     };
   }
 
@@ -83,12 +79,12 @@ class BookmarkBoard extends React.Component {
             onChange={this.handleChange}
             fullWidth
           >
-            <Tab label={constant.myBookmarkLabel} />
-            <Tab label={constant.publicBookmarkLabel} />
+            <Tab label={constant.myBookmarkLabel} value={constant.myBookmarkLabel}/>
+            <Tab label={constant.publicBookmarkLabel} value={constant.publicBookmarkLabel}/>
             <BookmarkView/>
           </Tabs>
         </div>
-        {tabValue == 0 && this.renderMessages()}  
+        {tabValue == constant.myBookmarkLabel && this.renderMessages()}  
       </div>);
   }
 }
