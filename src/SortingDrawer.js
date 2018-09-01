@@ -1,21 +1,14 @@
 import React from 'react';
-import * as firebase from 'firebase';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
 import classnames from 'classnames';
 import Chip from '@material-ui/core/Chip';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText  from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-import LabelIcon from '@material-ui/icons/LabelOutline';
-import AllIcon from '@material-ui/icons/AllInclusive';
-import ArrowIcon from '@material-ui/icons/ArrowDropDownCircle';
-import green from '@material-ui/core/colors/green';
 import config,  {constant, addressEnum} from './config/default';
 import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
 import geoString from './GeoLocationString';
@@ -48,6 +41,12 @@ const styles = theme => ({
         margin: theme.spacing.unit,
     //    color: '#FFFFFF',
         textAlign: 'left',
+        padding: 0,
+        border: 0,
+        borderBottom: '1px solid',
+        padding: 0,
+        borderRadius: 0,
+        minHeight: 'auto'
     //    backgroundColor: green[500],
     //    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
     //    display:'flex',
@@ -63,7 +62,7 @@ const styles = theme => ({
   },
   container: {
     width: '98vw'
-  } 
+  }
 });
 
 
@@ -76,7 +75,7 @@ class SortingDrawer extends React.Component {
         isSortByLastUpdate: true,
         isSortByDistance: false
       };
-  }    
+  }
 
   toggleDrawer(open){
     this.setState({open: open});
@@ -132,11 +131,11 @@ class SortingDrawer extends React.Component {
   	  let sortByLastUpdate = this.renderSortByLastUpdate();
   	  let sortByDistance = this.renderSortByDistance();
       let sortBtnLabel = this.renderSortBtnLabel();
-      const { classes } = this.props;      
+      const { classes } = this.props;
       return (
       <div className={classes.container}>
           <Button
-            variant="outlined" color="primary" 
+            variant="outlined" color="primary"
             onClick={() => {this.toggleDrawer(true)}}
             className={classes.button}
           >

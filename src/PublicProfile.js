@@ -1,12 +1,6 @@
-
-
-import React, { Component } from 'react';
-import * as firebase from 'firebase';
-import Button from '@material-ui/core/Button';
+import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/Inbox';
 import Divider from '@material-ui/core/Divider';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -18,15 +12,14 @@ import Slide from '@material-ui/core/Slide';
 import EventListDialog from './EventListDialog';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText  from '@material-ui/core/ListItemText';
 import {connect} from "react-redux";
 import { togglePublicProfileDialog } from './actions';
-import {fetchBookmarkList, getUserPublishMessages, getUserCompleteMessages, getUserProfile} from './UserProfile';
+import {fetchBookmarkList, getUserProfile} from './UserProfile';
 import ShareDrawer from './ShareDrawer';
 import BookmarkList from './bookmark/BookmarkList';
-import {fileExists, checkImageExists} from './util/http';
-import config, {constant, addressEnum, RoleEnum} from './config/default';
+import {checkImageExists} from './util/http';
+import {constant} from './config/default';
 import {trackEvent} from './track';
 
 function Transition(props) {
@@ -56,7 +49,7 @@ class PublicProfile extends React.Component {
     this.publishMessages = null;
     this.completeMessages = null;
     this.onBackButtonEvent = this.onBackButtonEvent.bind(this);
-  } 
+  }
 
   onBackButtonEvent(e) {
     e.preventDefault();
@@ -79,7 +72,7 @@ class PublicProfile extends React.Component {
       js = d.createElement(s); js.id = id;
       js.src = "https://connect.facebook.net/en_US/sdk.js";
       fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));  
+    }(document, 'script', 'facebook-jssdk'));
   }
 
   componentDidMount() {
@@ -93,7 +86,7 @@ class PublicProfile extends React.Component {
       //console.log("componentDidMount id  " + this.props.id);
       let user = {uid: this.props.userid};
       this.fetchUserProfile(user);
-    }    
+    }
   }
 
   fetchUserProfile(user) {
@@ -123,7 +116,7 @@ class PublicProfile extends React.Component {
           console.log("Good to see you, %o,", response1);
           this.setState({link: response1.link});
         });
-      } 
+      }
     } );
   }
 
@@ -145,7 +138,7 @@ class PublicProfile extends React.Component {
     }
   };
 
-  
+
   render() {
     var displayName = "...";
     let imageHtml = "等一下";
@@ -158,32 +151,32 @@ class PublicProfile extends React.Component {
       var imgURL = '/images/profile_placeholder.png';
       if(checkImageExists(this.state.userProfile.photoURL)) {
         imgURL = this.state.userProfile.photoURL;
-      }      
+      }
       displayName = this.state.userProfile.displayName;
       var displayNameLabel = "名字:" + displayName;
       imageHtml =  <img src={imgURL}/>;
       if(this.state.userProfile.desc != null && this.state.userProfile.desc != "") {
         desc = <ListItem >
-          <ListItemText primary={"簡介: " + this.state.userProfile.desc}/> 
-        </ListItem> 
+          <ListItemText primary={"簡介: " + this.state.userProfile.desc}/>
+        </ListItem>
       }
       publishMessage = <EventListDialog title="發表事件: " displayName={displayName} messageIds={this.publishMessages}/>
-      completeMessage = <EventListDialog title="完成事件: " displayName={displayName} messageIds={this.completeMessages}/> 
+      completeMessage = <EventListDialog title="完成事件: " displayName={displayName} messageIds={this.completeMessages}/>
       if(this.state.userProfile.fbuid) {
         this.fbId=this.state.userProfile.fbuid;
       }
-    }    
+    }
 
 
 
     if(this.state.link){
-     facebookhtml = 
+     facebookhtml =
      <ListItem button >
       <ListItemText primary="臉書連結:"/> <a href={this.state.link} target="_blank">前往</a>
     </ListItem>;
     }
 
-    
+
     const { classes, open, id } = this.props;
     let dialogOpen = open;
     let userid = id;
@@ -207,8 +200,8 @@ class PublicProfile extends React.Component {
               <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                   <CloseIcon />
               </IconButton>
-              <Typography variant="title" color="inherit" className={classes.flex}>{constant.publicProfileLabel}</Typography>           
-              <ShareDrawer uid={userid} displayName={displayName}/>  
+              <Typography variant="title" color="inherit" className={classes.flex}>{constant.publicProfileLabel}</Typography>
+              <ShareDrawer uid={userid} displayName={displayName}/>
             </Toolbar>
           </AppBar>
           <div className={classes.container}>
@@ -216,16 +209,16 @@ class PublicProfile extends React.Component {
             <br/>
             <List>
               <ListItem >
-                <ListItemText primary={displayNameLabel}/> <br/> {imageHtml} 
-              </ListItem> 
-              {desc}  
+                <ListItemText primary={displayNameLabel}/> <br/> {imageHtml}
+              </ListItem>
+              {desc}
               {facebookhtml}
-              <Divider/>            
+              <Divider/>
               {publishMessage}
-              {completeMessage}                                                          
-            </List> 
+              {completeMessage}
+            </List>
             {constant.bookmarkTitleLabel}
-            <BookmarkList bookmarkList={this.state.bookmarkList} /> 
+            <BookmarkList bookmarkList={this.state.bookmarkList} />
           </div>
         </Dialog>
       </div>);
@@ -246,11 +239,10 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    togglePublicProfileDialog: flag => 
+    togglePublicProfileDialog: flag =>
       dispatch(togglePublicProfileDialog(flag)),
   }
 };
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(PublicProfile));
-

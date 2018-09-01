@@ -5,23 +5,23 @@ import config, {constant, addressEnum, RoleEnum} from './config/default';
 function fetchAllUser(callback) {
     const db = firebase.firestore();
     let collectionRef = db.collection(config.userDB);
-    collectionRef.onSnapshot(function() {})  
-    collectionRef = collectionRef.orderBy("createdAt", "desc").
-    get().then(function(querySnapshot) {
-        if(querySnapshot.empty) {
-            return;
-        } else { 
-            querySnapshot.forEach(function(userRef) {
-                var val = userRef.data();
-                if(val) {
-                    val.uid = userRef.id;
-                    callback(val);
-                }
-            });
-        }
-    }).catch(function(error) {
-        console.log("Error getting documents: ", error);
-    });
+    collectionRef.onSnapshot(function() {})
+    collectionRef = collectionRef.orderBy("createdAt", "desc")
+                                  .get().then(function(querySnapshot) {
+                                      if(querySnapshot.empty) {
+                                          return;
+                                      } else {
+                                          querySnapshot.forEach(function(userRef) {
+                                              var val = userRef.data();
+                                              if(val) {
+                                                  val.uid = userRef.id;
+                                                  callback(val);
+                                              }
+                                          });
+                                      }
+                                  }).catch(function(error) {
+                                      console.log("Error getting documents: ", error);
+                                  });
  }
 
 
@@ -31,8 +31,8 @@ function getUserProfile(user) {
         return null;
     }
     const db = firebase.firestore();
-    
-    
+
+
     let collectionRef = db.collection(config.userDB);
     let docRef = collectionRef.doc(user.uid);
     let now = Date.now();
@@ -56,10 +56,10 @@ function getUserProfile(user) {
                 console.log("Document written with ID: ", user.uid);
                 upsertAddress(user, "0", addressEnum.home, addressEnum.home, null, null).then(function() {
                     upsertAddress(user, "1", addressEnum.office, addressEnum.office, null, null).then(function() {
-                        addBookmark(uuid.v4(), user, 
+                        addBookmark(uuid.v4(), user,
                             constant.concernLabel, "", []).then(() => {return(userRecord);})
                     });
-                });         
+                });
             })
             .catch(function(error) {
                 console.error("Error adding document: ", error);
@@ -84,12 +84,12 @@ function upsertAddress(user, key, type, text, geolocation, streetAddress) {
         text: text,
         geolocation: geoPoint,
         streetAddress: streetAddress
-    }; 
+    };
     console.log(addressRecord);
     // Use firestore
     const db = firebase.firestore();
-    
-    
+
+
     let collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
     if(key != null) {
         return collectionRef.doc(key).set(addressRecord).then(function() {
@@ -100,13 +100,13 @@ function upsertAddress(user, key, type, text, geolocation, streetAddress) {
             console.log("comment written with ID: ", docRef.id);
             return;
         });
-    }  
+    }
 }
 
 function getUserConcernMessages(user) {
     const db = firebase.firestore();
-    
-    
+
+
     const collectionRef = db.collection(config.userDB);
     const docRef = collectionRef.doc(user.uid);
     return docRef.get().then(function(doc) {
@@ -123,8 +123,8 @@ function getUserConcernMessages(user) {
 
 function getUserPublishMessages(user) {
     const db = firebase.firestore();
-    
-    
+
+
     let collectionRef = db.collection(config.userDB);
     let docRef = collectionRef.doc(user.uid);
     return docRef.get().then(function(doc) {
@@ -141,8 +141,8 @@ function getUserPublishMessages(user) {
 
 function getUserCompleteMessages(user) {
     const db = firebase.firestore();
-    
-    
+
+
     let collectionRef = db.collection(config.userDB);
     let docRef = collectionRef.doc(user.uid);
     return docRef.get().then(function(doc) {
@@ -162,7 +162,7 @@ function addCompleteMessage(user, messageUUID) {
         var rv = true;
         if(userRecord.completeMessages != null)
         {
-//            console.log("concernMessages:" + userRecord.concernMessages);            
+//            console.log("concernMessages:" + userRecord.concernMessages);
             var index = userRecord.completeMessages.indexOf(messageUUID);
             if(index == -1)
             {
@@ -170,14 +170,14 @@ function addCompleteMessage(user, messageUUID) {
             }
             else
             {
-                rv = false;   
+                rv = false;
             }
         }
         else
         {
             userRecord.completeMessages = [messageUUID];
         }
-        if(rv) {      
+        if(rv) {
             return updateUserRecords(user.uid, userRecord).then(() =>{
                 return rv;
             });
@@ -191,7 +191,7 @@ function toggleConcernMessage(user, messageUUID) {
         var rv = true;
         if(userRecord.concernMessages != null)
         {
-//            console.log("concernMessages:" + userRecord.concernMessages);            
+//            console.log("concernMessages:" + userRecord.concernMessages);
             var index = userRecord.concernMessages.indexOf(messageUUID);
             if(index == -1)
             {
@@ -201,7 +201,7 @@ function toggleConcernMessage(user, messageUUID) {
             {
                 userRecord.concernMessages.splice(index, 1);
                 rv = false;
-                
+
             }
         }
         else
@@ -209,7 +209,7 @@ function toggleConcernMessage(user, messageUUID) {
             userRecord.concernMessages = [messageUUID];
         }
         var path = "";
-//        console.log("UserRecord.concernMessages" + userRecord.concernMessages);        
+//        console.log("UserRecord.concernMessages" + userRecord.concernMessages);
         return updateUserRecords(user.uid, userRecord).then(function(userRecordRef){
             return rv;
         });
@@ -242,8 +242,8 @@ function updateUserRecords(userid, userRecord) {
         userRecord.lastLogin = lastLogin;
         return collectionRef.doc(userid).set(userRecord).then(function(userRecordRef) {
             return(userRecordRef);
-        }) 
-    } 
+        })
+    }
 }
 
 function addPublishMessagesKeyToUserProfile(user, messageUUID) {
@@ -286,17 +286,17 @@ function fetchBookmarkList(user) {
     const db = firebase.firestore();
     let userID = user.uid;
     let collectionRef = db.collection(config.userDB).doc(userID).collection(config.bookDB);
-    collectionRef.onSnapshot(function() {})         
+    collectionRef.onSnapshot(function() {})
     let query = collectionRef.orderBy("lastUpdate", "desc");
     return query.get().then(function(querySnapshot) {
         if(querySnapshot.empty) {
             return [];
-        } else { 
+        } else {
             const bookmarks = querySnapshot.docs.map(bookmarkRef => {
                 let val = bookmarkRef.data();
                 if(val) {
-                    return(val); 
-                }                    
+                    return(val);
+                }
             });
             return(bookmarks);
         }
@@ -307,7 +307,7 @@ function fetchBookmarkList(user) {
     });
  }
 
- function addBookmark(key, user, 
+ function addBookmark(key, user,
     title, desc, messages) {
     let uid = user.uid;
     let now = Date.now();
@@ -318,10 +318,10 @@ function fetchBookmarkList(user) {
         messages: messages,
         createdAt: new Date(now),
         lastUpdate: new Date(now),
-        key: key,   
+        key: key,
         uid: uid,
         viewCount: 0,
-    };      
+    };
     // Use firestore
     const db = firebase.firestore();
     return db.collection(config.userDB).doc(uid).collection(config.bookDB).doc(key).set(bookmarkRecord).then(function(recordRef) {
@@ -346,7 +346,7 @@ function dropBookmark(user, key) {
         }
     });
 }
-  
+
 function getBookmarkRef(user, key) {
     // firestore
     // Use firestore
@@ -360,7 +360,7 @@ function getBookmarkRef(user, key) {
         } else {
             return null;
         }
-    });     
+    });
 }
 
 function getBookmark(user, key) {
@@ -404,7 +404,7 @@ function updateBookmark(user, key, bookmarkRecord, isUpdateTime) {
             }).then(function(bookmarkRecordRef) {
                 console.log("Document written with ID: ", key);
                 return(bookmarkRecordRef);
-            }) 
+            })
         }
     } else {
         // we can use this to update the scheme if needed.
@@ -414,18 +414,18 @@ function updateBookmark(user, key, bookmarkRecord, isUpdateTime) {
         return collectionRef.doc(key).set(bookmarkRecord).then(function(bookmarkRecordRef) {
             console.log("Document written with ID: ", key);
             return(bookmarkRecordRef);
-        })      
+        })
     }
 }
 
 function upgradeAllUser() {
     const db = firebase.firestore();
     let collectionRef = db.collection(config.userDB);
-    collectionRef.onSnapshot(function() {})  
+    collectionRef.onSnapshot(function() {})
     collectionRef.get().then(function(querySnapshot) {
         if(querySnapshot.empty) {
             return;
-        } else { 
+        } else {
             return querySnapshot.forEach(function(userRef) {
                 var val = userRef.data();
                 if(val) {
@@ -440,12 +440,11 @@ function upgradeAllUser() {
                             return(userRecordRef);
                         });
                     }
-                }                
+                }
             });
         }
-    })         
+    })
 }
 
 export {fetchAllUser, addCompleteMessage, upsertAddress, upgradeAllUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
     dropBookmark, fetchBookmarkList, addBookmark, getBookmark, updateBookmark, incBookmarkViewCount};
-

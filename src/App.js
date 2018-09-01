@@ -4,12 +4,10 @@ import {
   Route,
   Link
 } from 'react-router-dom';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import Main from './Main';
 import PublicProfile from './PublicProfile';
 import Header from './Header';
 import PostMessageView from './PostMessageView';
-import {getMessage} from './MessageDB';
 import { createStore, applyMiddleware } from 'redux';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import HomeIcon from '@material-ui/icons/Home';
@@ -83,7 +81,7 @@ class App extends Component {
       }
       if(this.state.bookmark != "" && this.state.userId != "") {
         updateRecentBookmark(this.state.userId, this.state.bookmark, true);
-      }      
+      }
   }
 
   componentWillMount() {
@@ -192,9 +190,9 @@ const mapDispatchToProps = (dispatch) => {
         dispatch(updateRecentBookmark(userId, bookmark, open)),
     updatePublicProfileDialog:
       (userId, fbuid, open) =>
-        dispatch(updatePublicProfileDialog(userId, fbuid, open)), 
+        dispatch(updatePublicProfileDialog(userId, fbuid, open)),
     fetchGlobalSetting:
-      () => dispatch(fetchGlobalSetting())     
+      () => dispatch(fetchGlobalSetting())
   }
 };
 

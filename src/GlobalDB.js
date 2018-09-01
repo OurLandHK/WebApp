@@ -5,8 +5,7 @@ This is the abstraction layer to get all Global Setting for the Appl
 */
 
 import * as firebase from 'firebase';
-import uuid from 'js-uuid';
-import config, {constant} from './config/default';
+import config from './config/default';
 import distance from './Distance';
 import { getStreetAddressFromGeoLocation} from './Location';
 
@@ -47,9 +46,9 @@ function wrapLongitude(longitude) {
 function fetchFocusMessagesBaseOnGeo(geocode, radius) {
 
     const db = firebase.firestore();
-    
+
     let collectionRef = db.collection(config.focusMessageDB);
-    collectionRef.onSnapshot(function() {})         
+    collectionRef.onSnapshot(function() {})
     if(geocode != null && geocode != NaN && geocode.latitude != undefined) {
         const KM_PER_DEGREE_LATITUDE = 110.574;
         const latDegrees = radius / KM_PER_DEGREE_LATITUDE;
@@ -70,7 +69,7 @@ function fetchFocusMessagesBaseOnGeo(geocode, radius) {
         return query.get().then(function(querySnapshot) {
             if(querySnapshot.empty) {
                 return [];
-            } else { 
+            } else {
                 const focusMessages = querySnapshot.docs.map(messageRef => {
                     let val = messageRef.data();
                     if(val) {
@@ -78,11 +77,11 @@ function fetchFocusMessagesBaseOnGeo(geocode, radius) {
                         let lat = geocode.latitude;
                         let dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
                         if(dis < radius) {
-                            return(val); 
+                            return(val);
                         } else {
                             return(null);
                         }
-                    }                    
+                    }
                 });
                 return(focusMessages);
             }
@@ -117,7 +116,7 @@ function fetchFocusMessagesBaseOnGeo(geocode, radius) {
         createdAt: new Date(now),
         lastUpdate: new Date(now),
         current: true,
-        key: key,   
+        key: key,
       };
     // Use firestore
     const db = firebase.firestore();
@@ -142,7 +141,7 @@ function dropFocusMessage(key) {
         }
     });
 }
-  
+
 function getFocusMessageRef(key) {
     // firestore
     // Use firestore
@@ -155,7 +154,7 @@ function getFocusMessageRef(key) {
         } else {
             return null;
         }
-    });     
+    });
 }
 
 function getFocusMessage(key) {
@@ -180,7 +179,7 @@ function updateFocusMessage(messageKey, messageRecord, updateTime) {
             }).then(function(messageRecordRef) {
                 console.log("Document written with ID: ", messageKey);
                 return(messageRecordRef);
-            }) 
+            })
         }
     } else {
         // we can use this to update the scheme if needed.
@@ -190,7 +189,7 @@ function updateFocusMessage(messageKey, messageRecord, updateTime) {
         return collectionRef.doc(messageKey).set(messageRecord).then(function(messageRecordRef) {
             console.log("Document written with ID: ", messageKey);
             return(messageRecordRef);
-        })      
+        })
     }
 }
 
@@ -201,8 +200,8 @@ function updateTagStat(tagStat) {
         return collectionRef.doc(config.TagStatisticKey).set(tagStat).then(function(tagRef) {
             console.log("updateTagStat: ", tagStat);
             return(tagRef);
-        }) 
-    }   
+        })
+    }
 }
 
 function getTagStat() {
@@ -215,7 +214,7 @@ function getTagStat() {
         } else {
             return null;
         }
-    });     
+    });
 }
 
 

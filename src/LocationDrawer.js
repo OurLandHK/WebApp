@@ -1,11 +1,9 @@
 import React from 'react';
-import * as firebase from 'firebase';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import classnames from 'classnames';
-import Chip from '@material-ui/core/Chip';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -14,14 +12,10 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import NearMeIcon from '@material-ui/icons/NearMe';
 import FolderIcon from '@material-ui/icons/Folder';
-import AddLocationIcon from '@material-ui/icons/AddLocation';
 import PlaceIcon from '@material-ui/icons/Place';
 import AddIcon from '@material-ui/icons/Add';
-import ArrowIcon from '@material-ui/icons/ArrowDropDownCircle';
 import WorkIcon from '@material-ui/icons/Work';
 import HomeIcon from '@material-ui/icons/Home';
-import LocationIcon from '@material-ui/icons/LocationOn';
-import green from '@material-ui/core/colors/green';
 import {connect} from 'react-redux';
 import config,  {constant, addressEnum} from './config/default';
 import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
@@ -59,6 +53,12 @@ const styles = theme => ({
     margin: theme.spacing.unit,
 //    color: '#FFFFFF',
     textAlign: 'left',
+    padding: 0,
+    border: 0,
+    borderBottom: '1px solid',
+    padding: 0,
+    borderRadius: 0,
+    minHeight: 'auto'
 //    backgroundColor: green[500],
 //    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
 //    display:'flex',
@@ -189,7 +189,7 @@ class LocationDrawer extends React.Component {
               //console.log(newAddress.text);
               addressList.push(newAddress)
           }
-        };                                                          
+        };
       }
     }
     //console.log(this.state.locationPrefix);

@@ -1,16 +1,12 @@
-import * as firebase from 'firebase';
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied'; 
-import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied'; 
+import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
+import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
 import IconButton from '@material-ui/core/IconButton';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
-import FavoriteButton from './FavoriteButton';
 import BookmarkToggleButton from './bookmark/BookmarkToggleButton';
 import {setHappyAndSad} from './MessageDB';
 import FocusToggleButton from './admin/FocusToggleButton';
@@ -18,7 +14,7 @@ import {
   updatePublicProfileDialog,
 } from './actions';
 import {connect} from 'react-redux';
-import { constant, happyAndSadEnum, RoleEnum } from './config/default';
+import { happyAndSadEnum, RoleEnum } from './config/default';
 
 const styles = theme => ({
   button: {
@@ -36,7 +32,7 @@ const styles = theme => ({
   authorGrid: {
     alignItems: 'center',
     alignContent: 'center',
-    
+
     padding: '8px'
   },
   container: {
@@ -89,7 +85,7 @@ class MessageAction extends Component {
           sadCount++;
         } else {
           happyAndSadValue = happyAndSadEnum.nothing;
-        }      
+        }
         break;
       case happyAndSadEnum.sad:
         sadCount--;
@@ -117,7 +113,7 @@ class MessageAction extends Component {
     let sadColor = "";
     let focusButton = null;
     switch(this.state.happyAndSad) {
-      case happyAndSadEnum.happy: 
+      case happyAndSadEnum.happy:
         happyColor = "secondary";
         break;
       case happyAndSadEnum.sad:
@@ -130,33 +126,33 @@ class MessageAction extends Component {
     }
     if (user.userProfile != null && (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
       focusButton =  <Grid item ><FocusToggleButton message={m}/></Grid>;
-    } 
+    }
     return(<Paper role="button" >
         <Grid container className={classes.actionContainer} spacing={16}>
-        <Grid item className={classes.authorGrid}> 
+        <Grid item className={classes.authorGrid}>
             <IconButton
                         className={classes.button}
                         disabled={disable}
-                        color={happyColor}   
-                        onClick={() => this.handleHappySadClick(happyAndSadEnum.happy)}                     
+                        color={happyColor}
+                        onClick={() => this.handleHappySadClick(happyAndSadEnum.happy)}
                         >
               <SentimentSatisfiedIcon />
               : {happyCount}
-            </IconButton>            
-          </Grid> 
-          <Grid item className={classes.authorGrid}> 
+            </IconButton>
+          </Grid>
+          <Grid item className={classes.authorGrid}>
             <IconButton
                         className={classes.button}
                         disabled={disable}
                         color={sadColor}
-                        onClick={() => this.handleHappySadClick(happyAndSadEnum.sad)}                        
+                        onClick={() => this.handleHappySadClick(happyAndSadEnum.sad)}
                         >
               <SentimentDissatisfiedIcon/>
               : {sadCount}
             </IconButton>
-          </Grid>  
+          </Grid>
         <Grid item >
-          <BookmarkToggleButton message={m}/>    
+          <BookmarkToggleButton message={m}/>
         </Grid>
         {focusButton}
       </Grid>

@@ -1,9 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import Divider from '@material-ui/core/Divider';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -26,7 +24,7 @@ const styles = theme => ({
   },
   flex: {
     flex: 1,
-  }, 
+  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
@@ -44,7 +42,7 @@ const styles = theme => ({
   root: {
      paddingRight: 0
   }
-  
+
 });
 
 function Transition(props) {
@@ -57,24 +55,24 @@ class MessageDialog extends React.Component {
       this.onBackButtonEvent = this.onBackButtonEvent.bind(this);
       this.state = {open: false};
       this.message = null;
-      this.happyAndSad = happyAndSadEnum.nothing; // (1 = happy, -1 = sad)                
+      this.happyAndSad = happyAndSadEnum.nothing; // (1 = happy, -1 = sad)
       this.openDialog = this.openDialog.bind(this);
-      this.props.openDialog(this.openDialog);  
+      this.props.openDialog(this.openDialog);
   }
 
   onBackButtonEvent(e) {
     e.preventDefault();
     this.handleRequestClose();
   }
-    
+
 
   componentDidMount() {
     if(this.props.open) {
       var uuid = this.props.uuid;
       console.log("openDialog uuid: " + uuid);
       return getMessage(uuid).then((message) => {
-        console.log("Message: " + message);            
-        this.message = message;   
+        console.log("Message: " + message);
+        this.message = message;
 
         if(this.props.user != null && this.props.user.user) {
           // get sad and happy inital value
@@ -83,11 +81,11 @@ class MessageDialog extends React.Component {
             if(data != null) {
               this.happyAndSad = data.happyAndSad;
             }
-            this.setState({open: true }); 
+            this.setState({open: true });
           });
         } else {
-          this.setState({open: true });   
-        }       
+          this.setState({open: true });
+        }
       });
     }
   }
@@ -98,19 +96,19 @@ class MessageDialog extends React.Component {
     this.lastOnPopState = window.onpopstate;
     window.onpopstate = this.onBackButtonEvent;
     return getMessage(uuid).then((message) => {
-      this.message = message;  
-      window.history.pushState("", "", `/detail/${this.props.uuid}`); 
+      this.message = message;
+      window.history.pushState("", "", `/detail/${this.props.uuid}`);
       if(this.props.user != null && this.props.user.user) {
         // get sad and happy inital value
         return getHappyAndSad(uuid, this.props.user.user).then((data) => {
           if(data != null) {
             this.happyAndSad = data;
           }
-          this.setState({open: true }); 
+          this.setState({open: true });
         });
       } else {
-        this.setState({open: true });   
-      }        
+        this.setState({open: true });
+      }
     });
   };
 
@@ -162,7 +160,7 @@ class MessageDialog extends React.Component {
                             <DeleteIcon />
                           </IconButton>
         }
-      } 
+      }
       detailView = <MessageDetailView message={m}  happyAndSad={this.happyAndSad}/>;
     }
     return (
@@ -172,7 +170,7 @@ class MessageDialog extends React.Component {
           onRequestClose={this.handleRequestClose}
           transition={Transition}
           unmountOnExit
-        >      
+        >
           <AppBar className={classes.dialogTitle}>
             <Toolbar className={classes.root}>
               <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
@@ -180,7 +178,7 @@ class MessageDialog extends React.Component {
               </IconButton>
               {titleHtml}
               {deleteButton}
-              <ShareDrawer message={m}/>      
+              <ShareDrawer message={m}/>
             </Toolbar>
           </AppBar>
           {detailView}
@@ -203,8 +201,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
       checkAuthState:
-          () => 
-              dispatch(checkAuthState()),   
+          () =>
+              dispatch(checkAuthState()),
   }
 };
 

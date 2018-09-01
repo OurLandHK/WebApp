@@ -3,8 +3,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Input from '@material-ui/core/Input';
 import TextField from '@material-ui/core/TextField';
 import MenuItem  from '@material-ui/core/MenuItem';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -207,7 +205,7 @@ class IntegrationReactSelect extends React.Component {
     if(this.props.suggestions != null) {
         this.suggestions = this.props.suggestions;
     }
-    
+
     this.placeholder = 'placeholder';
     if(this.props.placeholder != null){
         this.placeholder = this.props.placeholder;
