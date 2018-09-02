@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
+//import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
@@ -226,21 +226,17 @@ class CommentView extends Component {
     let subtitle = '張貼於：' + timeOffsetString + '前 ' + approvedLog;
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     return (<Card container className={classes.card}>
-                <CardActionArea>
-                    {galleryImage}
-                    <div>
-                        {fbProfileImage}               
-                        <div className={classes.details}>
-                            <CardContent className={classes.content} zeroMinWidth>
-                                <Typography variant="subheading">{text}</Typography>
-                                <Typography variant="caption" color="textSecondary">
-                                {subtitle}
-                                </Typography>
-                            </CardContent>
-                        </div>
-                    {approvedButton}
+                {galleryImage}     
+                {fbProfileImage}               
+                <div className={classes.details}>
+                    <CardContent className={classes.content} zeroMinWidth>
+                        <Typography variant="subheading">{text}</Typography>
+                        <Typography variant="caption" color="textSecondary">
+                        {subtitle}
+                        </Typography>
+                    </CardContent>
                 </div>
-                </CardActionArea>
+                {approvedButton}
             </Card>);
   }
 }
