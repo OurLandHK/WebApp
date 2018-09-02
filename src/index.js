@@ -63,7 +63,7 @@ if (userRoot) {
   let userIndex = parts.length - 1;
   while(userIndex > 0) {
     //console.log(req.url + "  " + parts[userIndex] + " " + userIndex)
-    if(parts[userIndex] == 'user') {
+    if(parts[userIndex] === 'user') {
           userIndex++;
           break;
     }

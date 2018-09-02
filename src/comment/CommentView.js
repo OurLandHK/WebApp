@@ -7,19 +7,17 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import timeOffsetStringInChinese from '../TimeString';
 import { withStyles } from '@material-ui/core/styles';
-import red from '@material-ui/core/colors/red';
 import Avatar from '@material-ui/core/Avatar';
 import geoString from '../GeoLocationString';
-import config, {constant, RoleEnum} from '../config/default';
+import {constant, RoleEnum} from '../config/default';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import {
     checkAuthState,
-    updateRecentMessage,
     updatePublicProfileDialog,
   } from '../actions';
 
-import {updateCommentApproveStatus, getMessage, updateMessage} from '../MessageDB';
+import {updateCommentApproveStatus, getMessage, updateMessage, addMessageGalleryEntry} from '../MessageDB';
 import {addCompleteMessage} from '../UserProfile';
 import {connect} from 'react-redux';
 import Button from '@material-ui/core/Button';
@@ -37,10 +35,10 @@ const styles = theme => ({
     content: {
         flex: '1 0 auto',
     },
-    cover: {
-        width: 64,
-        height: 64,
-    },
+    tileMedia: {
+        height: 256,
+        //paddingTop: '56.25%', // 16:9
+    },    
 });
 
 class CommentView extends Component {
@@ -54,7 +52,7 @@ class CommentView extends Component {
 
   approve() {
     const {messageUUID, commentRef, user} = this.props;
-    const {geolocation, streetAddress, changeStatus, link, tags} = commentRef.data();
+    const {geolocation, streetAddress, changeStatus, link, tags, galleryEntry, text} = commentRef.data();
     let isCommplete = false;
     return getMessage(messageUUID).then((messageRecord) => {
         let messageuid=messageRecord.uid;
@@ -63,7 +61,7 @@ class CommentView extends Component {
             console.log('Option: ' + constant.commentOptions[0]);
             messageRecord = null; // for update time
             break;
-        case constant.commentOptions[2]: //"要求更改現況": 
+        case constant.commentOptions[2]: //"要求更改現況":
             console.log('Option: ' + constant.commentOptions[2]);
             switch(changeStatus) {
               case constant.statusOptions[0]: //'開放'
@@ -80,7 +78,7 @@ class CommentView extends Component {
                 break;
             }
             break;
-        case constant.commentOptions[1]: //"要求更改地點": 
+        case constant.commentOptions[1]: //"要求更改地點":
             console.log('Option: ' + constant.commentOptions[1]);
             messageRecord.geolocation = geolocation;
             messageRecord.streetAddress = streetAddress;
@@ -117,7 +115,7 @@ class CommentView extends Component {
                 let commentUser = {uid: commentRef.data().uid};
                 return addCompleteMessage(commentUser, messageUUID).then(() => {
                     return updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus).then((ref) => {
-                        if(messageuid != commentUser.uid) {
+                        if(messageuid !== commentUser.uid) {
                             let messageUser = {uid: messageuid};
                             return addCompleteMessage(messageUser, messageUUID).then(() => {
                                 return ref;
@@ -128,6 +126,9 @@ class CommentView extends Component {
                     });
                 })
             } else {
+                if(galleryEntry  != null  && galleryEntry !== undefined) {
+                    return addMessageGalleryEntry(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL, text);
+                }
                 return updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus);
             }
         })
@@ -162,48 +163,45 @@ class CommentView extends Component {
     const {galleryEntry, approvedStatus, geolocation, streetAddress, changeStatus, link, tags, createdAt, photoUrl, isApprovedUrgentEvent} = comment;
     let text = comment.text;
     let galleryImage = null;
-    if(text == null) {
-        if(geolocation != null) {
+    if(text === null) {
+        if(geolocation  != null ) {
             var locationString = null;
-            if(streetAddress != null) {
+            if(streetAddress  != null ) {
                 locationString =  streetAddress + " (" + geoString(geolocation.latitude, geolocation.longitude) + ")";
               } else {
-                locationString = "近" + geoString(geolocation.latitude, geolocation.longitude);      
-              } 
+                locationString = "近" + geoString(geolocation.latitude, geolocation.longitude);
+              }
             text = constant.commentOptions[1] + locationString;
             this.commentOption = constant.commentOptions[1];
         } else {
-            if(changeStatus != null) {
+            if(changeStatus  != null ) {
                 text = constant.commentOptions[2] + changeStatus;
                 this.commentOption = constant.commentOptions[2];
             } else {
-                if(link != null) {
+                if(link  != null ) {
                     text = constant.commentOptions[3] + link;
                     this.commentOption = constant.commentOptions[3];
                 } else {
-                    if(tags != null) {
+                    if(tags  != null ) {
                         var tagText = tags.map((text) => {return ('#'+text+' ')});
                         text = constant.commentOptions[4] + ': ' + tagText;
                         this.commentOption = constant.commentOptions[4];
                     }
-                } 
-            }          
+                }
+            }
         }
     } 
-    if(galleryEntry != null) {
-        galleryImage =         <CardMedia
-        component="img"
-        image={galleryEntry.publicImageURL}
-      />
+    if(galleryEntry  != null ) {
+        galleryImage =  <CardMedia className={classes.tileMedia} image={galleryEntry.publicImageURL}/>
     }
-    if(isApprovedUrgentEvent != null) {
+    if(isApprovedUrgentEvent  != null ) {
         this.commentOption = isApprovedUrgentEvent? constant.commentWithUrgentEventOptions[0]: constant.commentWithUrgentEventOptions[1];
     }
 
     let approvedButton = null;
-    let approvedLog = "";    
-    if(approvedStatus == null) {
-      if(user != null && user.userProfile != null && user.userProfile.role === RoleEnum.admin) {
+    let approvedLog = "";
+    if(approvedStatus === null || approvedStatus === undefined) {
+      if(user  != null  && user.userProfile  != null  && user.userProfile.role === RoleEnum.admin) {
         approvedButton = <div>
                             <Button variant="raised" color="primary" className={classes.uploadButton} raised={true} onClick={() => this.approve()}>
                                 <ThumbUpIcon />
@@ -212,12 +210,12 @@ class CommentView extends Component {
                             <Button variant="raised" color="primary" className={classes.uploadButton} raised={true} onClick={() => this.reject()}>
                                 <ThumbDownIcon />
                                     {constant.approveOptions[1]}
-                            </Button>                            
+                            </Button>
                         </div>
       }
     } else {
         let approvedTimeOffset = Date.now() - approvedStatus.createdAt.toDate();
-        let approvedTimeOffsetString = timeOffsetStringInChinese(approvedTimeOffset); 
+        let approvedTimeOffsetString = timeOffsetStringInChinese(approvedTimeOffset);
         approvedLog ='由' + approvedStatus.name + '於 ' + approvedTimeOffsetString + ' 前 ' + approvedStatus.isConfirm;
     }
 
@@ -251,18 +249,18 @@ CommentView.propTypes = {
       user          :   state.user,
     };
   }
-  
+
   const mapDispatchToProps = (dispatch) => {
     return {
         updatePublicProfileDialog:
             (userId, fbuid, open) =>
                 dispatch(updatePublicProfileDialog(userId, fbuid, open)),
         checkAuthState:
-            () => 
-                dispatch(checkAuthState()),   
+            () =>
+                dispatch(checkAuthState()),
     }
   };
-  
+
 
   export default connect(
     mapStateToProps,

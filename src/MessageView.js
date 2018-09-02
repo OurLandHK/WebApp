@@ -53,11 +53,12 @@ const styles = theme => ({
 //    textOverflow: 'ellipsis',
   },
   title: {
-//    textOverflow: 'ellipsis', 
+//    textOverflow: 'ellipsis',
   },
   pos: {
 //    marginBottom: 12,
     color: theme.palette.text.secondary,
+    fontSize: '11px'
 //    textOverflow: 'ellipsis'
   },
   details: {
@@ -130,12 +131,12 @@ class MessageView extends Component {
       />
     }
 
-     
+
     return (<Card className={classes.tileCard} onClick={() => this.handleClick()}>
               <CardMedia className={classes.tileMedia} image={imageUrl} title={auther}/>
               <CardContent>
                 <Typography className={classes.title} variant="title">{urgentEventTag} {text}</Typography>
-                <Typography className={classes.pos} component="p">{subtitle}</Typography>
+                <p className={classes.pos}>{subtitle}</p>
               </CardContent>
             </Card>);
   };
@@ -166,7 +167,7 @@ class MessageView extends Component {
     let summary = <Grid className={classes.summaryGrid} item xs onClick={() => this.handleClick()}>
                       <Typography className={classes.auther}>{newIcon}{auther}</Typography>
                       <Typography className={classes.title} variant="title">{urgentEventTag} {text}</Typography>
-                      <Typography className={classes.pos}>{subtitle}</Typography>
+                      <p className={classes.pos}>{subtitle}</p>
                   </Grid>
     let thumbnail = <Grid item className={classes.thumbnailGrid}><CardMedia className={classes.cover}  image={imageUrl}/> </Grid>
     return ( <Paper className={classes.paper}>

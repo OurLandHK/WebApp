@@ -1,14 +1,11 @@
 import * as firebase from 'firebase';
-import uuid from 'js-uuid';
-import config, {constant} from './config/default';
+import config from './config/default';
 import distance from './Distance';
 import {updateTagStat} from './GlobalDB';
-import { light } from '@material-ui/core/styles/createPalette';
-import { getStreetAddressFromGeoLocation} from './Location';
 
 function tagsToTagfilter(tags) {
         let rv = {};
-        if(tags != null && tags.length > 0) {
+        if(tags  != null  && tags.length > 0) {
             tags.map((tag) => {
                 rv[tag] = 1;
             });
@@ -18,7 +15,7 @@ function tagsToTagfilter(tags) {
 
 function tagfilterToTags(tagfilter) {
     let rv = [];
-    if(tagfilter != null) {
+    if(tagfilter  != null ) {
         for(let key in tagfilter) {
             rv.push(key);
         }
@@ -59,19 +56,19 @@ function wrapLongitude(longitude) {
 function upgradeAllMessage() {
     const db = firebase.firestore();
     let collectionRef = db.collection(config.messageDB);
-    collectionRef.onSnapshot(function() {})  
+    collectionRef.onSnapshot(function() {})
     let tagStat = {};
     return collectionRef.get().then(function(querySnapshot) {
         if(querySnapshot.empty) {
             return
-        } else {             
+        } else {
             querySnapshot.forEach(function(messageRef) {
                 var val = messageRef.data();
                 if(val) {
                     // udpate tagStat
                     let tags = tagfilterToTags(val.tagfilter);
                     tags.map((tag) => {
-                        if(tagStat[tag] == null) {
+                        if(tagStat[tag] === null) {
                             tagStat[tag] = 1;
                         } else {
                             tagStat[tag]++;
@@ -87,7 +84,7 @@ function upgradeAllMessage() {
                         changeCreatedAt = true;
                     };
                     if(val.text.includes("遊戲室")) {
-                        if(val.tag != null) {
+                        if(val.tag  != null ) {
                             change = true;
                             if(!val.tag.includes("兒童遊戲室")) {
                                 val.tag.push("兒童遊戲室");
@@ -95,38 +92,38 @@ function upgradeAllMessage() {
                                 if (index !== -1) val.tag.splice(index, 1);
                             }
                         }
-                        if(val.tagfilter != null) {
+                        if(val.tagfilter  != null ) {
                             if(!tags.includes("兒童遊戲室")) {
                                 tags.push("兒童遊戲室");
                                 var index = tags.indexOf("兒童遊樂場");
                                 if (index !== -1) tags.splice(index, 1);                            }
                             val.tagfilter = tagsToTagfilter(tags);
-                            change = true;    
+                            change = true;
                         }
                     }
                              
                     if(change) {
                         return updateMessage(val.key, val, false);
                     } else {
-                        if(val.imageUrl != null) {
+                        if(val.imageUrl  != null ) {
                             return addMessageGalleryEntry(val.key, val.imageUrl, val.publicImageURL, val.thumbnailImageURL, val.thumbnailPublicImageURL, val.text);
                         }
                     }
-                }                
-            });            
+                }
+            });
         }
         return updateTagStat(tagStat);
-    })         
+    })
 }
 
 function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, tag, callback) {
 
     const db = firebase.firestore();
-    
-    
+
+
     let collectionRef = db.collection(config.messageDB);
-    collectionRef.onSnapshot(function() {})         
-    if(geocode != null && geocode != NaN && geocode.latitude != undefined) {
+    collectionRef.onSnapshot(function() {})
+    if(geocode  != null  && geocode !== NaN && geocode.latitude !== undefined) {
 //        console.log("Get message base on Location: (" + geocode.latitude + " ," + geocode.longitude + ") with Radius: " + radius);
 //        boundingBoxCoordinates(center, radius) {
             const KM_PER_DEGREE_LATITUDE = 110.574;
@@ -145,39 +142,39 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         // Use firestore
 
         let query = null;
-        if(tag != null) {
+        if(tag  != null ) {
             query = collectionRef.where(`tagfilter.${tag}`, ">" , 0);
         } else {
             query = collectionRef.where("hide", "==", false);
-            if(lastUpdate != null) {
+            if(lastUpdate  != null ) {
                 console.log("Last Update: " + lastUpdate.toDate());
                 query = query.where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc");
             } else {
                     query = query.where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc");
-            }      
+            }
         }
         query.limit(numberOfMessage).get().then(function(querySnapshot) {
             if(querySnapshot.empty) {
                 callback(null);
-            } else { 
+            } else {
                 querySnapshot.forEach(function(messageRef) {
                     var val = messageRef.data();
                     if(val) {
                         var lon = geocode.longitude;
                         var lat = geocode.latitude;
                         var dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
-                        if(dis < radius && val.hide == false) {
+                        if(dis < radius && val.hide === false) {
                             let tags = tagfilterToTags(val.tagfilter);
                             //console.log(`${tags} ${val.tagfilter}`)
                             val.tag = tags;
                             val.tagfilter = null;
                             //console.log('message key: ' + val.key );
-                            callback(val); 
+                            callback(val);
                         } else {
                             callback(null);
                         }
                     }
-                    
+
                 });
             }
         })
@@ -197,7 +194,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         });
 /*        collectionRef.where("hide", "==", false).onSnapshot(function(querySnapshot) {
             querySnapshot.forEach(callback);
-        })  */     
+        })  */
     }
  }
 
@@ -212,16 +209,16 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
     let displayName = currentUser.displayName;
 
     if(userProfile !=null) {
-        if(userProfile.photoURL != null) {
+        if(userProfile.photoURL  != null ) {
             photoUrl = userProfile.photoURL;
         }
-        if(userProfile.displayName != null) {
+        if(userProfile.displayName  != null ) {
             displayName = userProfile.displayName;
         }
     }
     let tagfilter = tagsToTagfilter(tags);
     let gallery = [];
-    if(imageUrl != null) {
+    if(imageUrl  != null ) {
         let galleryEntry = {imageURL: imageUrl, 
             publicImageURL: publicImageURL, 
             thumbnailImageURL: thumbnailImageURL, 
@@ -239,7 +236,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         tagfilter: tagfilter,
         createdAt: new Date(now),
         lastUpdate: new Date(now),
-        key: key,   
+        key: key,
         uid: currentUser.uid,
         fbuid: currentUser.providerData[0].uid,
         start: new Date(startDate),
@@ -248,7 +245,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         interval: interval,
         everydayOpenning: everydayOpenning,
         weekdaysOpennings: weekdaysOpennings,
-        endDate: endDate, 
+        endDate: endDate,
         link: link,
         imageUrl: imageUrl, 
         publicImageURL: publicImageURL, 
@@ -263,14 +260,14 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
       };
     // Use firestore
     const db = firebase.firestore();
-    
-    
+
+
     const messageRef = db.collection(config.messageDB).doc(key);
     const userRef = db.collection(config.userDB).doc(currentUser.uid);
     return db.runTransaction(transaction => {
       return transaction.get(userRef).then(userDoc => {
         let publishMessages = userDoc.data().publishMessages;
-        if (publishMessages == null) {
+        if (publishMessages === null) {
           publishMessages = [key]
         } else {
           publishMessages.push(key);
@@ -291,20 +288,20 @@ function dropMessage(key) {
     // Drop message
     // Drop publishMessages and reduce
     return getMessage(key).then(function(message) {
-        if(message != null) {
+        if(message  != null ) {
             const uid = message.uid;
             var storage = firebase.storage();
-            if(message.imageUrl != null) {
+            if(message.imageUrl  != null ) {
                 console.log("Document image: " + message.imageUrl);
                 storage.refFromURL(message.imageUrl).delete();
             }
-            if(message.thumbnailImageURL != null) {
+            if(message.thumbnailImageURL  != null ) {
                 console.log("Document thumbnail image: " + message.imageUrl);
                 storage.refFromURL(message.thumbnailImageURL).delete();
             }
             const db = firebase.firestore();
-            
-            
+
+
             var messageRef = db.collection(config.messageDB).doc(key);
             var userRef = db.collection(config.userDB).doc(uid);
             var commentRef = messageRef.collection(config.commentDB);
@@ -318,7 +315,7 @@ function dropMessage(key) {
                     return db.runTransaction(transaction => {
                         return transaction.get(userRef).then(userDoc => {
                             let publishMessages = userDoc.data().publishMessages;
-                            if (publishMessages != null) {
+                            if (publishMessages  != null ) {
                                 var index = publishMessages.indexOf(key);
                                 if (index !== -1) publishMessages.splice(index, 1);
                             }
@@ -330,15 +327,15 @@ function dropMessage(key) {
                             console.log("Document written with ID: ", key);
                             return true;
                         });
-                    });    
+                    });
                 });
-            });            
+            });
         } else {
             return false;
         }
     });
 }
-  
+
 function getMessageRef(uuid) {
     // firestore
     // Use firestore
@@ -351,14 +348,14 @@ function getMessageRef(uuid) {
         } else {
             return null;
         }
-    });     
+    });
 }
 
 function getMessage(uuid) {
     return getMessageRef(uuid).then(function (messageRef) {
-        if(messageRef != null) {
+        if(messageRef  != null ) {
             let rv = messageRef.data();
-            if(rv.tagfilter != null) {
+            if(rv.tagfilter  != null ) {
                 let tags = tagfilterToTags(rv.tagfilter);
                 //console.log(`${tags} ${rv.tagfilter}`)
                 rv.tag = tags;
@@ -373,25 +370,25 @@ function getMessage(uuid) {
 
 function updateMessage(messageKey, messageRecord, updateTime) {
     var db = firebase.firestore();
-    
-    
+
+
     var now = Date.now();
     var collectionRef = db.collection(config.messageDB);
-    if(messageRecord == null) {
+    if(messageRecord === null) {
         if(updateTime) {
             return collectionRef.doc(messageKey).update({
                 lastUpdate: new Date(now)
             }).then(function(messageRecordRef) {
                 console.log("Document written with ID: ", messageKey);
                 return(messageRecordRef);
-            }) 
+            })
         }
     } else {
         // we can use this to update the scheme if needed.
         if(updateTime) {
             messageRecord.lastUpdate = new Date(now);
         }
-        if(messageRecord.tagfilter == null && messageRecord.tag != null) {
+        if(messageRecord.tagfilter === null && messageRecord.tag  != null ) {
             let tagfilter = tagsToTagfilter(messageRecord.tag);
             messageRecord.tagfilter = tagfilter;
             messageRecord.tag = null;
@@ -399,15 +396,15 @@ function updateMessage(messageKey, messageRecord, updateTime) {
         return collectionRef.doc(messageKey).set(messageRecord).then(function(messageRecordRef) {
             console.log("Document written with ID: ", messageKey);
             return(messageRecordRef);
-        })      
+        })
     }
 }
 
 function incMessageViewCount(messageKey) {
     return getMessageRef(messageKey).then(function (messageRef) {
-        if(messageRef != null) {
+        if(messageRef  != null ) {
             let viewCount = 1;
-            if(messageRef.data().viewCount != null) {
+            if(messageRef.data().viewCount  != null ) {
                 viewCount = messageRef.data().viewCount + 1;
             }
             const db = firebase.firestore();
@@ -424,25 +421,25 @@ function incMessageViewCount(messageKey) {
 
 function updateMessageImageURL(messageKey, imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {
     return getMessage(messageKey).then((messageRecord) => {
-        if(imageURL != messageRecord.imageUrl) {
+        if(imageURL !== messageRecord.imageUrl) {
             messageRecord.imageUrl = imageURL;
         }
-        if(publicImageURL != messageRecord.publicImageURL) {
+        if(publicImageURL !== messageRecord.publicImageURL) {
             messageRecord.publicImageURL = publicImageURL;
-        } 
-        if(thumbnailImageURL != messageRecord.thumbnailImageURL) {
+        }
+        if(thumbnailImageURL !== messageRecord.thumbnailImageURL) {
             messageRecord.thumbnailImageURL = thumbnailImageURL;
         }
-        if(thumbnailPublicImageURL != messageRecord.thumbnailPublicImageURL) {
+        if(thumbnailPublicImageURL !== messageRecord.thumbnailPublicImageURL) {
             messageRecord.thumbnailPublicImageURL = thumbnailPublicImageURL;
-        }       
+        }
         return updateMessage(messageKey, messageRecord, true);
     });
 }
 
 // add image to gallery to show in message detail. This will take effect after approved photocomment.
 function addMessageGalleryEntry(messageKey, imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, caption) {
-    if(imageURL != null) {
+    if(imageURL  != null ) {
         let galleryEntry = {imageURL: imageURL, 
             publicImageURL: publicImageURL, 
             thumbnailImageURL: thumbnailImageURL, 
@@ -450,9 +447,9 @@ function addMessageGalleryEntry(messageKey, imageURL, publicImageURL, thumbnailI
             caption: caption} 
         return getMessage(messageKey).then((messageRecord) => {
             let add = true;
-            if(messageRecord.gallery != null) {
+            if(messageRecord.gallery  != null ) {
                 messageRecord.gallery.forEach((entry, index) => {
-                    if(imageURL == entry.imageURL) {
+                    if(imageURL === entry.imageURL) {
                         add = false;
                     }
                 });
@@ -474,11 +471,11 @@ function addMessageGalleryEntry(messageKey, imageURL, publicImageURL, thumbnailI
 function updateMessageConcernUser(messageUuid, user, isConcern) {
     // Use firestore
     return getMessage(messageUuid).then((messageRecord) => {
-        if(messageRecord != null) {
-            if(messageRecord.concernRecord != null)
+        if(messageRecord  != null ) {
+            if(messageRecord.concernRecord  != null )
             {
                 var index = messageRecord.concernRecord.indexOf(user.uid);
-                if(index == -1 && isConcern)
+                if(index === -1 && isConcern)
                 {
                     messageRecord.concernRecord.push(user.uid);
                     return updateMessage(messageUuid, messageRecord, false);
@@ -495,24 +492,24 @@ function updateMessageConcernUser(messageUuid, user, isConcern) {
                 {
                     console.log("message Uuid " + messageUuid + " User Id " + user.uid)
                     messageRecord.concernRecord = [user.uid];
-                    return updateMessage(messageUuid, messageRecord, false); 
+                    return updateMessage(messageUuid, messageRecord, false);
                 }
             }
         } else {
             return null;
         }
-    });        
+    });
 }
 
 function getHappyAndSad(messageUuid, user) {
     const db = firebase.firestore();
     let collectionRef = db.collection(config.messageDB).doc(messageUuid).collection(config.userAction);
-    if(user != null && collectionRef) {
+    if(user  != null  && collectionRef) {
         return collectionRef.doc(user.uid).get().then(function(doc) {
             if(doc.exists) {
                 let userAction = doc.data();
                 let rv = 0;
-                if(userAction.happAndSad != null) {
+                if(userAction.happAndSad  != null ) {
                     rv = userAction.happAndSad;
                 }
                 return rv;
@@ -523,11 +520,11 @@ function getHappyAndSad(messageUuid, user) {
     } else {
         return 0
         ;
-    } 
+    }
 }
 
 function setHappyAndSad(messageUuid, happyCount, sadCount, happAndSad, user) {
-    if(user == null) {
+    if(user === null) {
         return null;
     }
     const db = firebase.firestore();
@@ -539,11 +536,11 @@ function setHappyAndSad(messageUuid, happyCount, sadCount, happAndSad, user) {
         if(actionDoc.exists) {
             transaction.update(userActionRef, {
                 happAndSad: happAndSad
-            });            
+            });
         } else {
             transaction.set(userActionRef, {
                 happAndSad: happAndSad
-            });            
+            });
         }
         transaction.update(messageRef, {
             happyCount: happyCount,
@@ -556,14 +553,13 @@ function setHappyAndSad(messageUuid, happyCount, sadCount, happAndSad, user) {
 /// All about comment
 function addComment(messageUUID, currentUser, userProfile, photo, commentText, galleryEntry, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent) {
     var now = Date.now();
-    var fireBaseGeo = null;
 
     var photoUrl = currentUser.providerData[0].photoURL || '/images/profile_placeholder.png';
-    if(userProfile.photoURL != null) {
+    if(userProfile.photoURL  != null ) {
         photoUrl = userProfile.photoURL;
     }
     var displayName = currentUser.displayName;
-    if(userProfile.displayName != null) {
+    if(userProfile.displayName  != null ) {
         displayName = userProfile.displayName;
     }
 
@@ -575,30 +571,30 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, g
         createdAt: new Date(now),
         lastUpdate: null,
         isApprovedUrgentEvent: null
-    }; 
-    if(commentText != null) {
+    };
+    if(commentText  != null ) {
         commentRecord.text = commentText;
-        if(galleryEntry != null) {
+        if(galleryEntry  != null ) {
             commentRecord.galleryEntry = galleryEntry;
         }
 
-        if(isApprovedUrgentEvent != null) {
+        if(isApprovedUrgentEvent  != null ) {
             commentRecord.isApprovedUrgentEvent = isApprovedUrgentEvent;
         }
     } else {
-        if(geolocation != null) {
+        if(geolocation  != null ) {
             commentRecord.geolocation =  new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude);
-            if(streetAddress != null) {
+            if(streetAddress  != null ) {
                 commentRecord.streetAddress = streetAddress;
             }
         } else {
-            if(status != null) {
+            if(status  != null ) {
                 commentRecord.changeStatus = status;
             } else {
-                if(link != null) {
+                if(link  != null ) {
                     commentRecord.link = link;
                 } else {
-                    if(tags != null) {
+                    if(tags  != null ) {
                         commentRecord.tags = tags;
                     }
                 }
@@ -607,21 +603,21 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, g
     }
     // Use firestore
     const db = firebase.firestore();
-    
-    
-    var collectionRef = db.collection(config.messageDB);  
+
+
+    var collectionRef = db.collection(config.messageDB);
     return collectionRef.doc(messageUUID).collection(config.commentDB).add(commentRecord).then(function(docRef) {
         return getMessage(messageUUID).then((messageRecord) => {
             return updateMessage(messageUUID, messageRecord, true);
         });
-    });  
+    });
 }
 
 function updateCommentApproveStatus(messageUUID, commentid, approvedStatus){
     const db = firebase.firestore();
-    
-    
-    let collectionRef = db.collection(config.messageDB);  
+
+
+    let collectionRef = db.collection(config.messageDB);
     let field = {approvedStatus: approvedStatus};
     return collectionRef.doc(messageUUID).collection(config.commentDB).doc(commentid).update(field).then(function(commentRecordRef) {
         console.log("Document written with ID: ", commentid);
@@ -631,10 +627,10 @@ function updateCommentApproveStatus(messageUUID, commentid, approvedStatus){
 
 function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
     const db = firebase.firestore();
-    
-    
+
+
     var collectionRef = db.collection(config.messageDB).doc(messageUUID).collection(config.commentDB);
-    collectionRef.onSnapshot(function() {})         
+    collectionRef.onSnapshot(function() {})
     // Use firestore
     collectionRef.where("hide", "==", false).get().then(function(querySnapshot) {
         querySnapshot.forEach(callback);
@@ -646,12 +642,12 @@ function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
 
 function fetchReportedUrgentMessages(callback) {
     const db = firebase.firestore();
-    
+
     let collectionRef = db.collection(config.messageDB);
-    collectionRef.onSnapshot(function() {});         
+    collectionRef.onSnapshot(function() {});
     return collectionRef.where("hide", "==", false).where("isReportedUrgentEvent", "==", true).where("isUrgentEvent", "==", null).orderBy("createdAt", "desc").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(messageRef){
-            let val = messageRef.data(); 
+            let val = messageRef.data();
             callback(val);
         });
     })
@@ -662,13 +658,12 @@ function fetchReportedUrgentMessages(callback) {
 
 function fetchMessagesBasedOnInterestedTags(interestedTags, geolocation, dis, lastUpdate, callback) {
     const db = firebase.firestore();
-    var msgs = [];
     var collectionRef = db.collection(config.messageDB);
 
-    collectionRef.onSnapshot(function() {});         
+    collectionRef.onSnapshot(function() {});
     return collectionRef.where("hide", "==", false).where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(messageRef){
-            let val = messageRef.data(); 
+            let val = messageRef.data();
             var disDiff = distance(val.geolocation.longitude,val.geolocation.latitude, geolocation.longitude, geolocation.latitude);
             if(dis > disDiff) {
                 let tags = tagfilterToTags(val.tagfilter);

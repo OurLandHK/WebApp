@@ -1,17 +1,7 @@
-import * as firebase from 'firebase';
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import Paper from '@material-ui/core/Paper';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import ProgressiveCardImg from './ProgressiveCardImg';
 import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import IconButton from '@material-ui/core/IconButton';
-import ForumIcon from '@material-ui/icons/Forum';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -29,7 +19,6 @@ import geoString from './GeoLocationString';
 import PostCommentView from './comment/PostCommentView';
 import timeOffsetStringInChinese from './TimeString';
 import Avatar from '@material-ui/core/Avatar';
-import green from '@material-ui/core/colors/green';
 import Chip from '@material-ui/core/Chip';
 import {fileExists, checkImageExists} from './util/http';
 import {
@@ -63,8 +52,7 @@ const styles = theme => ({
   authorGrid: {
     alignItems: 'center',
     alignContent: 'center',
-
-    padding: '8px'
+    padding: '16px'
   },
   appBar: {
     backgroundColor: theme.palette.secondary['200'],
@@ -168,7 +156,7 @@ class MessageDetailView extends Component {
           <Typography variant="headline">{urgentEventTag} {message.text}</Typography>
         </Grid>
       </Grid>    );
- */     
+ */
   }
 
 
@@ -214,10 +202,10 @@ class MessageDetailView extends Component {
           {`現況: ${message.status} ${viewCountString}`}
           </Typography>
         </Grid>
-      </Grid>  
+      </Grid>
     );
 
-/*    
+/*
     return (
       <Grid container direction='row' spacing={16}>
         <Grid item xs direction='column' className={classes.summaryGrid} >

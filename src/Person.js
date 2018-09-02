@@ -1,15 +1,8 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
-import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/Inbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText  from '@material-ui/core/ListItemText';
-import Icon from '@material-ui/core/Icon';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import StarIcon from '@material-ui/icons/Star';
 import LocationOn from '@material-ui/icons/LocationOn';
 import EventListDialog from './EventListDialog';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubbleOutline';
@@ -19,7 +12,7 @@ import {upgradeAllUser} from './UserProfile';
 import AddressDialog from './address/AddressDialog';
 import FocusDialog from './admin/FocusDialog';
 import {connect} from "react-redux";
-import {fileExists, checkImageExists} from './util/http';
+import {checkImageExists} from './util/http';
 import Divider from '@material-ui/core/Divider';
 import {
   toggleAddressDialog,
@@ -28,9 +21,6 @@ import {upgradeAllMessage} from './MessageDB';
 import { constant, RoleEnum } from './config/default';
 import AboutDialog from './AboutDialog';
 import SignOutButton from './SignOutButton';
-
-
-
 
 class Person extends Component {
 
@@ -99,10 +89,10 @@ class Person extends Component {
                                 <ListItemText primary={constant.addressBookLabel} onClick={() => this.addressDialogClick()}/>
                             </ListItem></span>);
         publishMessage = <EventListDialog title="發表事件: " messageIds={user.userProfile.publishMessages}/>
-        completeMessage = <EventListDialog title="完成事件: " messageIds={user.userProfile.completeMessages}/>          
+        completeMessage = <EventListDialog title="完成事件: " messageIds={user.userProfile.completeMessages}/>
         if (user.userProfile != null & (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
           focusButton = <FocusDialog/>;
-        }   
+        }
         if(user.userProfile != null & user.userProfile.role == RoleEnum.admin) {
             adminButton = <ListItem button>
             <ListItemIcon>
@@ -129,7 +119,7 @@ class Person extends Component {
         <List disablePadding>
             {userLoginDisplay}
             {publishMessage}
-            {completeMessage}  
+            {completeMessage}
             <ListItem button>
             <ListItemIcon>
                 <ChatBubbleIcon />

@@ -47,6 +47,12 @@ const styles = theme => ({
         margin: theme.spacing.unit,
     //    color: '#FFFFFF',
         textAlign: 'left',
+        padding: 0,
+        border: 0,
+        borderBottom: '1px solid',
+        padding: 0,
+        borderRadius: 0,
+        minHeight: 'auto'
     //    backgroundColor: green[500],
     //    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
     //    display:'flex',
