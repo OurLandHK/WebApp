@@ -29,7 +29,7 @@ class MessageDetailViewImage extends Component {
    }
 
    onSubmit(){
-    if(this.props.messageUUID != null && this.state.imageURL != null && this.state.publicImageURL){
+    if(this.props.messageUUID  != null  && this.state.imageURL  != null  && this.state.publicImageURL){
       updateMessageImageURL(this.props.messageUUID, this.state.imageURL, this.state.publicImageURL, this.state.thumbnailImageURL, this.state.thumbnailPublicImageURL);
       this.setState({url: this.state.publicImageURL});
     }
@@ -37,7 +37,7 @@ class MessageDetailViewImage extends Component {
 
   render() {
     var url = (this.state.url || this.props.url);
-    if(url != null) {
+    if(url  != null ) {
       return (<ProgressiveCardImg gs_src={url}/>);
     }
     return (

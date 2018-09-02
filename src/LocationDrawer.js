@@ -89,7 +89,7 @@ class LocationDrawer extends React.Component {
         locationPrefix: ''
       };
       this.isUsePublicAddressBook = false;
-      if(this.props.isUsePublicAddressBook == true) {
+      if(this.props.isUsePublicAddressBook === true) {
         this.isUsePublicAddressBook = true;
       }
       this.geolocation = null;
@@ -149,7 +149,7 @@ class LocationDrawer extends React.Component {
         const childPart = address.text.slice(prefix.length);
         if (childPart.includes('/')) {
           const group = childPart.split('/', 2)[0];
-          if (!grouppedList.find(a => a.text == group)) {
+          if (!grouppedList.find(a => a.text === group)) {
             grouppedList.push({
               text: group,
               isGroup: true
@@ -172,7 +172,7 @@ class LocationDrawer extends React.Component {
     const { classes, addressBook, geolocation, user } = this.props;
     let addressList=addressBook.addresses;
     if(this.isUsePublicAddressBook) {
-      if(user.userProfile == null) {
+      if(user.userProfile === null) {
         addressList=addressBook.publicAddresses;
       } else {
         //merge 2 addressLists
@@ -182,7 +182,7 @@ class LocationDrawer extends React.Component {
           addressList.push(address);
         };
         for(address of addressBook.publicAddresses) {
-          if(address.type != addressEnum.home && address.type != addressEnum.office) {
+          if(address.type !== addressEnum.home && address.type !== addressEnum.office) {
               let newAddress = Object.create(address);
               newAddress.text = `十八社區/${address.text}`;
               newAddress.geolocation = address.geolocation;
@@ -201,13 +201,13 @@ class LocationDrawer extends React.Component {
       let locationString = constant.addressNotSet;
       let distance = this.props.filter.defaultDistance;
       let geolocation = null;
-      if (address.geolocation != null) {
+      if (address.geolocation  != null ) {
         geolocation = {latitude :address.geolocation.latitude,
         longitude: address.geolocation.longitude};
-        if(address.distance != null && address.distance > distance) {
+        if(address.distance  != null  && address.distance > distance) {
           distance = address.distance;
         }
-        if (address.streetAddress != null) {
+        if (address.streetAddress  != null ) {
           locationString =  address.streetAddress + ' (' + geoString(geolocation.latitude, geolocation.longitude) + ')';
         } else {
           locationString = '近' + geoString(geolocation.latitude, geolocation.longitude);
@@ -232,7 +232,7 @@ class LocationDrawer extends React.Component {
             <ListItemText primary={text}/>
           </ListItem>
         );
-      } else if (locationString != constant.addressNotSet ) {
+      } else if (locationString !== constant.addressNotSet ) {
        text = `${text} ${constant.nearby} ${distance}${constant.kilometre}`;
        return (
          <ListItem button onClick={() => {this.setLocation(this.state.locationPrefix + text, distance, geolocation)}}>
@@ -263,7 +263,7 @@ class LocationDrawer extends React.Component {
 
   renderFirstListItem() {
     var addAddress = null;
-    if(this.props.user.userProfile != null) {
+    if(this.props.user.userProfile  != null ) {
       addAddress = <Button onClick={this.addLocationOnClick}>
                       <AddIcon />
                       {constant.addAddressLabel}

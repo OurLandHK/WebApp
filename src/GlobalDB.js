@@ -49,7 +49,7 @@ function fetchFocusMessagesBaseOnGeo(geocode, radius) {
 
     let collectionRef = db.collection(config.focusMessageDB);
     collectionRef.onSnapshot(function() {})
-    if(geocode != null && geocode != NaN && geocode.latitude != undefined) {
+    if(geocode  != null  && geocode !== NaN && geocode.latitude !== undefined) {
         const KM_PER_DEGREE_LATITUDE = 110.574;
         const latDegrees = radius / KM_PER_DEGREE_LATITUDE;
         const latitudeNorth = Math.min(90, geocode.latitude + latDegrees);
@@ -127,7 +127,7 @@ function fetchFocusMessagesBaseOnGeo(geocode, radius) {
 
 function dropFocusMessage(key) {
     return getFocusMessage(key).then(function(message) {
-        if(message != null) {
+        if(message  != null ) {
             const db = firebase.firestore();
             db.collection(config.focusMessageDB).doc(key).delete().then(function() {
                 console.log("Document successfully deleted!");
@@ -159,7 +159,7 @@ function getFocusMessageRef(key) {
 
 function getFocusMessage(key) {
     return getFocusMessageRef(key).then(function (messageRef) {
-        if(messageRef != null) {
+        if(messageRef  != null ) {
             let rv = messageRef.data();
             return rv
         } else {
@@ -172,7 +172,7 @@ function updateFocusMessage(messageKey, messageRecord, updateTime) {
     let db = firebase.firestore();
     let now = Date.now();
     let collectionRef = db.collection(config.focusMessageDB);
-    if(messageRecord == null) {
+    if(messageRecord === null) {
         if(updateTime) {
             return collectionRef.doc(messageKey).update({
                 lastUpdate: new Date(now)
@@ -196,7 +196,7 @@ function updateFocusMessage(messageKey, messageRecord, updateTime) {
 function updateTagStat(tagStat) {
     let db = firebase.firestore();
     let collectionRef = db.collection(config.globalDB);
-    if(tagStat != null) {
+    if(tagStat  != null ) {
         return collectionRef.doc(config.TagStatisticKey).set(tagStat).then(function(tagRef) {
             console.log("updateTagStat: ", tagStat);
             return(tagRef);

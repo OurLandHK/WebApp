@@ -63,12 +63,12 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
     let updateContent = false;
     let newEvent = false;
     // check for any real update for the content
-    if(beforeData == null) {
+    if(beforeData === null) {
       newEvent = true;
       updateContent = true;
-    } else if(afterData == null) {
+    } else if(afterData === null) {
       updateContent = true;
-    } else if (afterData.lastUpdate.getTime() != beforeData.lastUpdate.getTime()) {
+    } else if (afterData.lastUpdate.getTime() !== beforeData.lastUpdate.getTime()) {
       console.log(`Last update ${afterData.lastUpdate} and ${beforeData.lastUpdate}`);
       updateContent = true;
     }
@@ -92,10 +92,10 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
                 snapshot.forEach(addressBook => {
                   let address = addressBook.data();
                   let addressDistance = getAddressDistance(address, userProfile);
-                  if(sent == false && addressDistance > 0) {
+                  if(sent === false && addressDistance > 0) {
                     let userAddressGeoLocation = addressBook.data().geolocation;
                     console.log(`email ${emailAddress}, ${userProfile.displayName}, ${data.key}`);
-                    if(userAddressGeoLocation.longitude != null && userAddressGeoLocation.latitude != null){
+                    if(userAddressGeoLocation.longitude  != null  && userAddressGeoLocation.latitude  != null ){
                       var dis = distance(messageLongitude, messageLatitude, userAddressGeoLocation.longitude, userAddressGeoLocation.latitude);
                       if(dis < addressDistance) {
                         sent = true;
@@ -118,12 +118,12 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
 
 function getAddressDistance(address, userProfile) {
   let addressDistance = 0;
-  if(address.geolocation != null && (address.type == addressEnum.home || address.type == addressEnum.office)) {
+  if(address.geolocation  != null  && (address.type === addressEnum.home || address.type === addressEnum.office)) {
     addressDistance = 1;
-    if(address.distance != null) {
+    if(address.distance  != null ) {
       addressDistance = address.distance;
     }
-    if(userProfile.role == RoleEnum.admin) {
+    if(userProfile.role === RoleEnum.admin) {
       addressDistance = 100;
     }
   }
@@ -133,15 +133,15 @@ function getAddressDistance(address, userProfile) {
 function receviedNotification(userProfile, message) {
   let rv = false;
   let emailAddress = userProfile.emailAddress;
-  if(emailAddress != undefined && emailAddress != null) {
-    if(userProfile.role == RoleEnum.admin ||  userProfile.role == RoleEnum.betaUser || userProfile.role == RoleEnum.monitor) {
+  if(emailAddress !== undefined && emailAddress  != null ) {
+    if(userProfile.role === RoleEnum.admin ||  userProfile.role === RoleEnum.betaUser || userProfile.role === RoleEnum.monitor) {
       rv = true;
-    } else if(message.isUrgentEvent != null && message.isUrgentEvent) {
+    } else if(message.isUrgentEvent  != null  && message.isUrgentEvent) {
       // for any user specified email address and event is urgent
       rv = true;
     } else {
       // check this message contain user interested Tags or not.
-      if(userProfile.interestedTags != null && userProfile.interestedTags.length> 0) {
+      if(userProfile.interestedTags  != null  && userProfile.interestedTags.length> 0) {
       let interestedTags = userProfile.interestedTags;
       let tags = tagfilterToTags(message.tagfilter);
         for(let i=0; i<interestedTags.length; i++) {
@@ -163,7 +163,7 @@ function sendEmail(email, displayName, newEvent, address, message) {
     text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區有新事件 ${message.text} 詳細請瀏覽以下連結: https://ourland.hk/detail/${eventId}`;
   }
 
-  if(message.isUrgentEvent != null && message.isUrgentEvent) {
+  if(message.isUrgentEvent  != null  && message.isUrgentEvent) {
      text = `您好 ${displayName || ''}! 閣下關注${address.text}附近的社區有事件 ${message.text} 被列為緊急事件 詳細請瀏覽以下連結: https://ourland.hk/detail/${eventId}`;
   }
 
@@ -194,7 +194,7 @@ function distance(lon1, lat1, lon2, lat2) {
 
 function tagfilterToTags(tagfilter) {
   let rv = [];
-  if(tagfilter != null) {
+  if(tagfilter  != null ) {
       for(let key in tagfilter) {
           rv.push(key);
       }

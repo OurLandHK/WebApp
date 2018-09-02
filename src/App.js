@@ -48,20 +48,20 @@ class App extends Component {
     let bookmark = params.get("bookmark");
     let eventNumber = params.get("eventnumber");
     let distance = params.get("distance");
-    if(userId == null) {
+    if(userId === null) {
       userId = "";
     }
-    if(eventId == null) {
+    if(eventId === null) {
       eventId = "";
     }
-    if(bookmark == null) {
+    if(bookmark === null) {
       bookmark = "";
     }
-    if(eventNumber == null) {
+    if(eventNumber === null) {
       eventNumber = constant.defaultEventNumber;
     }
     // distance in KM
-    if(distance == null) {
+    if(distance === null) {
       distance = 1;
     }
     this.state = {
@@ -73,13 +73,13 @@ class App extends Component {
         bookmark: bookmark,
       };
       const { updateRecentMessage, updatePublicProfileDialog, updateRecentBookmark } = this.props;
-      if(this.state.userId != "" && this.state.bookmark == "") {
+      if(this.state.userId !== "" && this.state.bookmark === "") {
         updatePublicProfileDialog(this.state.userId, "", true);
       }
-      if(this.state.eventId != "") {
+      if(this.state.eventId !== "") {
         updateRecentMessage(this.state.eventId, true);
       }
-      if(this.state.bookmark != "" && this.state.userId != "") {
+      if(this.state.bookmark !== "" && this.state.userId !== "") {
         updateRecentBookmark(this.state.userId, this.state.bookmark, true);
       }
   }
@@ -93,7 +93,7 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.user != this.props.user && this.props.user.user) {
+    if (prevProps.user !== this.props.user && this.props.user.user) {
       this.props.fetchAddressBookByUser(this.props.user.user);
     }
   }

@@ -35,7 +35,7 @@ class CommentList extends Component {
   
   fetchComments(user) {
     this.setState({user:user});
-    if(this.props.messageUUID != null) {
+    if(this.props.messageUUID  != null ) {
         fetchCommentsBaseonMessageID(user, this.props.messageUUID, this.setComment)
     }    
   }

@@ -6,7 +6,7 @@ import * as firestore from 'firebase/firestore';
 const isProduction = () => {
   const location = window.location;
   console.log(location.hostname);
-  return location.hostname == "ourland.hk";
+  return location.hostname === "ourland.hk";
 };
 
 let config = {

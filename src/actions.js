@@ -162,7 +162,7 @@ export function fetchLocation(callback=receiveLocation) {
       (error) => {
         console.log(error);
         let coords = constant.timeoutLocation;
-        if(error.code == 1) {
+        if(error.code === 1) {
           coords = constant.invalidLocation;
         }
         let geoLocation = {coords: coords};
@@ -187,7 +187,7 @@ export function checkAuthState() {
       if(user!=null) {
         return getUserProfile(user).then((userProfile)=>{
           let lastLogin = Date.now();
-          if(userProfile.lastLogin != null) {
+          if(userProfile.lastLogin  != null ) {
             lastLogin = userProfile.lastLogin;
           }
           console.log("Last Login: " + lastLogin);
@@ -397,7 +397,7 @@ export function updateRegionButtoneList(tagList) {
 export function upsertAddress(user, key, type, text, geolocation, streetAddress, interestedRadius) {
   return dispatch => {
     var geoPoint = null;
-    if(geolocation != null) {
+    if(geolocation  != null ) {
       geoPoint = new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude);
     }
     var now = Date.now();
@@ -416,7 +416,7 @@ export function upsertAddress(user, key, type, text, geolocation, streetAddress,
 
     var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
 
-    if(key != null) {
+    if(key  != null ) {
        collectionRef.doc(key).get().then((addressBookRecord) => {
           collectionRef.doc(key).set(addressRecord).then(function() {
             dispatch(fetchAddressBookByUser(user))

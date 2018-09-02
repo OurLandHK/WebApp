@@ -56,16 +56,16 @@ class EventListDialog extends React.Component {
     if(this.props.invisible) {
       invisible = this.props.invisible;
     }
-    if(this.props.messageIds != null) {  
+    if(this.props.messageIds  != null ) {  
       messageIds = this.props.messageIds;
     }
     var title = "EventList";
-    if(this.props.title != undefined) {
+    if(this.props.title !== undefined) {
       title = this.props.title;
     }
 
     var userName = "";
-    if(this.props.displayName != undefined) {
+    if(this.props.displayName !== undefined) {
       userName = this.props.displayName;
     }
 

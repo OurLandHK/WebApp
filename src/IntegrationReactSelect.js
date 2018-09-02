@@ -198,24 +198,24 @@ class IntegrationReactSelect extends React.Component {
     super(props);
     this.selectType = 'multiLabel';
     this.addSuggestions = this.addSuggestions.bind(this);
-    if(this.props.selectType != null) {
+    if(this.props.selectType  != null ) {
         this.selectType = this.props.selectType;
     }
     this.suggestions = suggestions;
-    if(this.props.suggestions != null) {
+    if(this.props.suggestions  != null ) {
         this.suggestions = this.props.suggestions;
     }
 
     this.placeholder = 'placeholder';
-    if(this.props.placeholder != null){
+    if(this.props.placeholder  != null ){
         this.placeholder = this.props.placeholder;
     }
     this.name = 'name';
-    if(this.props.name != null) {
+    if(this.props.name  != null ) {
         this.name = this.props.name;
     }
     this.label = '';
-    if(this.props.label != null) {
+    if(this.props.label  != null ) {
         this.label = this.props.label;
     }
     let state = {
@@ -224,8 +224,8 @@ class IntegrationReactSelect extends React.Component {
       multiLabel: null,
     };
     state[this.selectType] = this.props.value;
-    if(this.props.value != null) {
-      if(this.selectType == 'single') {
+    if(this.props.value  != null ) {
+      if(this.selectType === 'single') {
         this.addSuggestions(this.props.value);
       } else {
         let array =  this.props.value.split(',');
@@ -239,7 +239,7 @@ class IntegrationReactSelect extends React.Component {
 
   addSuggestions(value) {
     for(let i = 0; i < this.suggestions.length; i++) {
-      if(this.suggestions[i].value == value) {
+      if(this.suggestions[i].value === value) {
         return;
       }
     }
@@ -253,7 +253,7 @@ class IntegrationReactSelect extends React.Component {
       [name]: value,
     });
     console.log('multi Label:' + this.state.multiLabel + ' ' + value);
-    if(this.props.onChange != null) {
+    if(this.props.onChange  != null ) {
         this.props.onChange(value);
     }
   };

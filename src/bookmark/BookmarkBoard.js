@@ -83,7 +83,7 @@ class BookmarkBoard extends React.Component {
             <BookmarkView/>
           </Tabs>
         </div>
-        {tabValue == constant.myBookmarkLabel && this.renderMessages()}
+        {tabValue === constant.myBookmarkLabel && this.renderMessages()}
       </div>);
   }
 }

@@ -73,7 +73,7 @@ class BookmarkView extends Component {
         let uid = "";
         let readonly = false;
         let open = false;
-        if(this.props.bookmark != null) {
+        if(this.props.bookmark !== undefined && this.props.bookmark  != null ) {
             let c = this.props.bookmark;
             title = c.title;
             messages = c.messages;
@@ -82,7 +82,7 @@ class BookmarkView extends Component {
             uid = c.uid;
             readonly = true;
         }        
-        if(this.props.open != undefined) {
+        if(this.props.open !== undefined) {
             open = this.props.open;
         }
         this.onBackButtonEvent = this.onBackButtonEvent.bind(this);
@@ -103,7 +103,7 @@ class BookmarkView extends Component {
       }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.bookmark != prevProps.bookmark || this.state.uid != prevState.uid) {
+        if (this.props.bookmark !== prevProps.bookmark || this.state.uid !== prevState.uid) {
           return this.getUserProfile();
         } else {
             return;
@@ -111,7 +111,7 @@ class BookmarkView extends Component {
       }
 
     getUserProfile() {
-        if(this.state.uid != "") {
+        if(this.state.uid !== "") {
             let user = {uid: this.state.uid};
             return getUserProfile(user).then((userProfile) => {
                 this.setState({userProfile: userProfile});
@@ -131,7 +131,7 @@ class BookmarkView extends Component {
         let key = "";  
         let uid = "";
         let readonly = false;
-        if(this.props.bookmark != null) {
+        if(this.props.bookmark  != null ) {
             let c = this.props.bookmark;
             messages = c.messages;
             key = c.key;
@@ -140,10 +140,10 @@ class BookmarkView extends Component {
             uid = c.uid;
             readonly = true;
             const { updateRecentBookmark, recentMessage } = this.props;
-            if(key != null && key != "") {
+            if(key  != null  && key !== "") {
               let incViewCount = false;
               // check the message viewed in this session or not.
-              if(recentMessage.recentbookmarks.indexOf(key) == -1) {
+              if(recentMessage.recentbookmarks.indexOf(key) === -1) {
                 incViewCount = true;
               }
               updateRecentBookmark(uid, key, false);
@@ -169,7 +169,7 @@ class BookmarkView extends Component {
     
     handleRequestClose() {
         //window.history.pushState("", "", "/");
-        if(this.props.closeDialog != null) {
+        if(this.props.closeDialog  != null ) {
             this.props.closeDialog();
         } else {
             window.onpopstate = this.lastOnPopState;
@@ -189,10 +189,10 @@ class BookmarkView extends Component {
 
     onSubmit() {
         const { user } = this.props;
-        if (this.state.title == null || this.state.title.length == 0) {
+        if (this.state.title === null || this.state.title.length === 0) {
             this.titleTextField.select();
         } else {
-            if (this.state.key != "" && user.user.uid == this.state.uid) {
+            if (this.state.key !== "" && user.user.uid === this.state.uid) {
                 let bookmark = this.props.bookmark;
                 bookmark.title = this.state.title;
                 bookmark.messages = this.state.messages;
@@ -218,7 +218,7 @@ class BookmarkView extends Component {
     
     onDelete() {
       const { user } = this.props;
-      if (user.user.uid == this.state.uid) {         
+      if (user.user.uid === this.state.uid) {         
         dropBookmark(user.user, this.state.key).then(()=> {this.props.checkAuthState();});
       }  
       this.setState({popoverOpen: false});
@@ -233,12 +233,12 @@ class BookmarkView extends Component {
         let subheader = `於:${timeOffsetString}前${post}`;
         let photoUrl = '/images/profile_placeholder.png';
         let displayName = "";
-        if(this.state.userProfile != null && checkImageExists(this.state.userProfile.photoURL)) {
+        if(this.state.userProfile  != null  && checkImageExists(this.state.userProfile.photoURL)) {
             displayName =  this.state.userProfile.displayName,
             photoUrl = this.state.userProfile.photoURL;
         }
         let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
-        if(bookmark.viewCount != null) {
+        if(bookmark.viewCount  != null ) {
             viewCountString += bookmark.viewCount;
         } else {
             viewCountString += 0;
@@ -269,7 +269,7 @@ class BookmarkView extends Component {
         let messageHtml = null;
         let icons = <PlayListPlayIcon />;
 
-        if(this.props.bookmark != null) {
+        if(this.props.bookmark  != null ) {
             let c = this.props.bookmark;
             let text = c.title;
             addressButtonHtml = <ListItem button onClick={(evt) => this.handleRequestOpen(evt)}>
@@ -278,7 +278,7 @@ class BookmarkView extends Component {
                                     </ListItemIcon>
                                     <ListItemText primary={text} />
                                 </ListItem>
-            if(this.state.messages.length != 0) {
+            if(this.state.messages.length !== 0) {
                 messageHtml = <MessageList
                     disableLocationDrawer={true}
                     isUsePublicAddressBook={false}
@@ -289,7 +289,7 @@ class BookmarkView extends Component {
                 />
                 isRenderTagList = true;
             }
-            if(user.user != null && user.user.uid == c.uid) {
+            if(user.user  != null  && user.user.uid === c.uid) {
                 deleteButtonHtml = <IconButton color="contrast" onClick={() => this.onDelete()} aria-label="Delete">
                                     <DeleteIcon />  
                                     </IconButton>
@@ -307,7 +307,7 @@ class BookmarkView extends Component {
         if(this.state.readonly) {
             readonlyHtml = this.renderReadonly();
             titleTextHtml = constant.bookmarkTitleLabel;
-            if(user.user && user.user.uid == this.props.bookmark.uid) {
+            if(user.user && user.user.uid === this.props.bookmark.uid) {
                 deleteButtonHtml = <IconButton color="contrast" onClick={() => this.setState({readonly: false})} aria-label="Close">
                                     <EditIcon />
                                 </IconButton>

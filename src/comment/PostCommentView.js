@@ -102,14 +102,14 @@ class PostCommentView extends Component {
   }
 
   componentDidMount() {
-    if (this.props.user != null && this.props.user.user != null) {
+    if (this.props.user  != null  && this.props.user.user  != null ) {
       //console.log("DidMount Enable Post");
       this.setState({buttonShow: true});
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.user != this.props.user && this.props.user != null) {
+    if (prevProps.user !== this.props.user && this.props.user  != null ) {
       //console.log("DidUpdate Enable Post");
       const {user} = this.props.user;
       if (user) {
@@ -184,7 +184,7 @@ class PostCommentView extends Component {
 
 
   onSubmit() {
-    if (this.props.user != null) {
+    if (this.props.user  != null ) {
       const {user, userProfile} = this.props.user;
       if (user) {
         let isPost = true;
@@ -200,10 +200,10 @@ class PostCommentView extends Component {
         switch(this.state.commentSelection) {
             case constant.commentOptions[0]: //"發表回應":
               commentText = this.state.text;
-              if(this.state.galleryEntry.imageURL != null) {
+              if(this.state.galleryEntry.imageURL  != null ) {
                 galleryEntry = this.state.galleryEntry;
               }
-              if(commentText == "") {
+              if(commentText === "") {
                 isPost = false;
               }
               break;
@@ -213,7 +213,7 @@ class PostCommentView extends Component {
             case constant.commentOptions[1]: //"要求更改地點":
               geolocation = this.state.geolocation;
               streetAddress = this.state.streetAddress;
-              if(geolocation == undefined) {
+              if(geolocation === undefined) {
                 isPost = false;
               }
               break;
@@ -224,7 +224,7 @@ class PostCommentView extends Component {
               tags = this.state.tags.map((tag) => tag.text);
               break;
             case constant.commentWithUrgentEventOptions[0]: //"確定為緊急事項"
-              if(this.state.text == "") {
+              if(this.state.text === "") {
                 isPost = false;
               } else {
                 commentText = `${constant.commentWithUrgentEventOptions[0]}: ${this.state.text}`;
@@ -232,7 +232,7 @@ class PostCommentView extends Component {
               }
               break;
             case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
-              if(this.state.text == "") {
+              if(this.state.text === "") {
                 isPost = false;
               } else {
                 commentText = `${constant.commentWithUrgentEventOptions[1]}: ${this.state.text}`
@@ -258,7 +258,7 @@ class PostCommentView extends Component {
 
   handleTagChange(value) {
     let tags = [];
-    if(value != null && value != '') {
+    if(value  != null  && value !== '') {
       var partsOfStr = value.split(',');
       let i = 0;
       partsOfStr.forEach(function(element) {
@@ -309,14 +309,14 @@ class PostCommentView extends Component {
           <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.imagePath} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
           </div>;
         let commentOptions = constant.commentOptions;
-        if(user.userProfile != null && (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
+        if(user.userProfile  != null  && (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor)) {
           // admin should able to enable any message as urgent.
-          //if(message.isReportedUrgentEvent != 'undefined' && message.isReportedUrgentEvent != null && message.isReportedUrgentEvent == true) {
+          //if(message.isReportedUrgentEvent !== 'undefined' && message.isReportedUrgentEvent  != null  && message.isReportedUrgentEvent === true) {
             commentOptions = [...constant.commentOptions, ...constant.commentWithUrgentEventOptions];
           //}
         }
 
-        if(this.state.commentSelection != constant.commentOptions[0]) { //"發表回應"
+        if(this.state.commentSelection !== constant.commentOptions[0]) { //"發表回應"
             switch(this.state.commentSelection) {
               case constant.commentOptions[1]: //"要求更改地點"
                 inputHtml = <LocationButton autoFocus ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>;

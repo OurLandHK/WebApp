@@ -75,10 +75,10 @@ class UploadImageButton extends Component {
     this.defaultThumbnail = "thumbnail.jpg";
     this.isOriginalOnly = false;
     this.isThumbnailOnly = false;
-    if(this.props.isOriginalOnly == true) {
+    if(this.props.isOriginalOnly === true) {
       this.isOriginalOnly = true;
     }
-    if(this.props.isThumbnailOnly == true) {
+    if(this.props.isThumbnailOnly === true) {
       this.isThumbnailOnly = true;
     }
 
@@ -115,7 +115,7 @@ pushOriginal(blob) {
           imageResizer(this.thumbnailFile, 128, 128, "image/jpeg", 0.5, this.pushThumbnail);
         }else{
           this.setState({publicThumbnailImagURL: this.publicImageURL});
-          if(this.props.uploadFinish != null) {
+          if(this.props.uploadFinish  != null ) {
             this.props.uploadFinish(this.imageURL, this.publicImageURL, this.thumbnailImageURL, this.publicThumbnailImagURL);
           }
         }
@@ -132,14 +132,14 @@ pushOriginal(blob) {
         this.thumbnailImageURL = thumbnailFirebaseImageURL;
         this.publicThumbnailImagURL = thumbnailPublicImageURL;
         this.setState({publicThumbnailImagURL: this.publicThumbnailImagURL});
-        if(this.props.uploadFinish != null) {
+        if(this.props.uploadFinish  != null ) {
             this.props.uploadFinish(this.imageURL, this.publicImageURL, this.thumbnailImageURL, this.publicThumbnailImagURL);
         }
     });
 }
 
   handleClickOpen(){
-    if(this.props.path != null) {
+    if(this.props.path  != null ) {
         this.setState({ open: true, disableSumbit: true});
     }
   };
@@ -147,17 +147,17 @@ pushOriginal(blob) {
   onDelete(){
     // delete
     // Delete the file
-    if(this.imageUrlRef != null) {
+    if(this.imageUrlRef  != null ) {
       console.log('delete image: '+ this.imageUrlRef);
       this.imageUrlRef.delete();
       this.imageUrlRef = null;
     }
-    if(this.thumbnailImageURLRef != null) {
+    if(this.thumbnailImageURLRef  != null ) {
       console.log('delete thumbnailImage: '+ this.thumbnailImageURLRef);
       this.thumbnailImageURLRef.delete();
       this.thumbnailImageURLRef = null;
     }
-    if(this.props.uploadFinish != null) {
+    if(this.props.uploadFinish  != null ) {
       this.props.uploadFinish(null, null, null, null);
     }
     this.setState({ disableSumbit: true, disableDelete: true, publicThumbnailImagURL: null, open: false });
@@ -169,13 +169,13 @@ pushOriginal(blob) {
 
   onSubmit(){
     this.setState({ open: false });
-    if(this.props.path != null) {
+    if(this.props.path  != null ) {
         this.postImage();
     }
   };
 
   inputOnchange() {
-      if(this.file != null && this.file.files[0] != null && this.file.files[0] != "") {
+      if(this.file  != null  && this.file.files[0]  != null  && this.file.files[0] !== "") {
         this.setState({ disableSumbit: false , disableDelete: false});
       } else {
         this.setState({ disableSumbit: true, disableDelete: true});
@@ -186,7 +186,7 @@ pushOriginal(blob) {
   render() {
     const { classes, theme } = this.props;
     let thumbnail = "沒有相片";
-    if(this.state.publicThumbnailImagURL != null) {
+    if(this.state.publicThumbnailImagURL  != null ) {
       thumbnail = <img src={this.state.publicThumbnailImagURL} className={classes.previewThumbnail}/>
     }
     return (

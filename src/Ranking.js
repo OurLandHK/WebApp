@@ -30,7 +30,7 @@ class Ranking extends Component {
   constructor(props) {
     super(props);
     let geolocation = this.props.geolocation;
-    if (geolocation == null) {
+    if (geolocation === null) {
       geolocation = constant.invalidLocation;
     }
     let statusMessage = constant.messageListReadingLocation;
@@ -51,13 +51,13 @@ class Ranking extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.filter.geolocation != prevProps.filter.geolocation ||
-      this.props.filter.distance != prevProps.filter.distance ||
-      this.props.filter.selectedSorting != prevProps.filter.selectedSorting) {
+    if (this.props.filter.geolocation !== prevProps.filter.geolocation ||
+      this.props.filter.distance !== prevProps.filter.distance ||
+      this.props.filter.selectedSorting !== prevProps.filter.selectedSorting) {
         this.refreshMessageList();
     } else {
-      if(this.props.filter.selectedTag != undefined &&
-            this.props.filter.selectedTag != prevProps.filter.selectedTag) {
+      if(this.props.filter.selectedTag !== undefined &&
+            this.props.filter.selectedTag !== prevProps.filter.selectedTag) {
         this.setState({selectedTag: this.props.filter.selectedTag});
       }
     }
@@ -71,7 +71,7 @@ class Ranking extends Component {
   }
 
   setMessage(val) {
-    if(val == null) {
+    if(val === null) {
       this.setState({statusMessage: constant.rankingListNoMessage});
       return;
     }
@@ -143,18 +143,18 @@ class Ranking extends Component {
     let lon = 0;
     let lat = 0;
 
-    if(this.state.geolocation != null && this.state.geolocation != constant.invalidLocation) {
+    if(this.state.geolocation  != null  && this.state.geolocation !== constant.invalidLocation) {
       lon = this.state.geolocation.longitude;
       lat = this.state.geolocation.latitude;
     }
-    if(this.state.data.length == 0) {
+    if(this.state.data.length === 0) {
       let statusMessage = this.state.statusMessage;
       return(<div><h4>{statusMessage}</h4></div>);
     } else {
       let userList = {};
       for (let i in this.state.data) {
           let message = this.state.data[i];
-          if(userList[message.uid] == null) {
+          if(userList[message.uid] === undefined || userList[message.uid] === null) {
             userList[message.uid] = {id: message.uid,
                                     fbuid: message.fbuid,
                                     count: 1,

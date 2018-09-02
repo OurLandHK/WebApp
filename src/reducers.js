@@ -47,7 +47,7 @@ function userReducer(state={user: null, userProfile: null, lastLogin: null, book
     case FETCH_USER:
       return {...state, user: action.user, loading: action.loading};
     case FETCH_USER_PROFILE:
-      if(action.lastLogin != null) {
+      if(action.lastLogin  != null ) {
         return {...state, userProfile: action.userProfile, lastLogin: action.lastLogin, bookmarkList: action.bookmarkList};
       } else {
         return {...state, userProfile: action.userProfile, bookmarkList: action.bookmarkList};
@@ -102,7 +102,7 @@ function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, e
       };
     case UPDATE_FILTER_LOCATION:
       var distance = action.distance;
-      if(state.defaultDistance > distance || distance == undefined) {
+      if(state.defaultDistance > distance || distance === undefined) {
         distance = state.defaultDistance;
       }    
       return {
@@ -115,7 +115,7 @@ function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, e
     case UPDATE_FILTER_TAG_LIST:
       var tagList = state.tagList;
       var newTagList = action.tagList;
-      if(newTagList != null) {
+      if(newTagList  != null ) {
         newTagList.map((tag) => {
           if(!tagList.includes(tag)) {
             tagList.push(tag);
@@ -215,7 +215,7 @@ function recentMessageReducer(state={open: false, id: "", recentids: [], bookmar
     case UPDATE_RECENT_MESSAGE:
       let recentids = state.recentids;
       index = recentids.indexOf(action.id);
-      if(index == -1)
+      if(index === -1)
       {
           recentids.push(action.id);
       }
@@ -226,7 +226,7 @@ function recentMessageReducer(state={open: false, id: "", recentids: [], bookmar
       console.log("UPDATE_RECENT_BOOKMARK Bookmark: " + bookmark);
       let recentbookmarks = state.recentbookmarks;
       index = recentbookmarks.indexOf(action.bookmark);
-      if(index == -1)
+      if(index === -1)
       {
         recentbookmarks.push(action.bookmark);
       }
@@ -242,7 +242,7 @@ function publicProfileDialogReducer(state={open: false, id: "", fbId: ""}, actio
     case UPDATE_PUBLIC_PROFILE_DIALOG:
       return {open: action.open, id: action.id, fbId: action.fbId};
     case TOGGLE_PUBLIC_PROFILE_DIALOG:
-      if(action.open == false) {
+      if(action.open === false) {
         return {...state, id: "", open: action.open};
       } else {
         return {...state, open: action.open};

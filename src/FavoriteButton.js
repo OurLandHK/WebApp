@@ -69,7 +69,7 @@ class FavoriteButton extends Component {
     const baseClass = classes.base;
     const iconHtml = favor ? <PlaylistAddCheckIcon/> : <PlaylistAddIcon/>;
     let disable = true;
-    if(this.props.user != null && this.props.user.user != null) {
+    if(this.props.user  != null  && this.props.user.user  != null ) {
       disable = false;
     }
     let outputHtml = <IconButton

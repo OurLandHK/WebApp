@@ -70,7 +70,7 @@ class NotificationsDialog extends React.Component {
   }
  
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.user != this.props.user &&  this.props.user && this.props.user.lastLogin && this.state.messageIds.length == 0) {
+    if (prevProps.user !== this.props.user &&  this.props.user && this.props.user.lastLogin && this.state.messageIds.length === 0) {
       this.refreshMessageList();
     } 
   }    
@@ -80,13 +80,13 @@ class NotificationsDialog extends React.Component {
   }
 
   setMessage(val) {
-    if(val == null) {
+    if(val === null) {
       return;
     }
     let messageIds = this.state.messageIds;
     const messageUUID = val.key;
     var index = messageIds.indexOf(messageUUID);
-    if(index == -1)
+    if(index === -1)
     {
       messageIds.push(messageUUID);
     }
@@ -104,19 +104,19 @@ class NotificationsDialog extends React.Component {
     const { addressBook, user} = this.props;
     const lastLoginTime = user.lastLogin;
     addressBook.addresses.map((address) => {
-      if(address.geolocation != null && (address.type == addressEnum.home || address.type == addressEnum.office)) {
+      if(address.geolocation  != null  && (address.type === addressEnum.home || address.type === addressEnum.office)) {
         let distance = constant.distance;
-        if(address.distance != null) {
+        if(address.distance  != null ) {
           distance = address.distance;
         }
-        if(user.userProfile.role == RoleEnum.admin) {
+        if(user.userProfile.role === RoleEnum.admin) {
           distance = 100;
         }
-        if(user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {
+        if(user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor) {
           fetchReportedUrgentMessages(this.setMessage);
         }
         // If user didn't config all interested Tag, assume they should receive all.
-        if(user.userProfile.interestedTags != null && user.userProfile.interestedTags.length > 0) {
+        if(user.userProfile.interestedTags  != null  && user.userProfile.interestedTags.length > 0) {
           fetchMessagesBasedOnInterestedTags(user.userProfile.interestedTags, address.geolocation, distance, lastLoginTime, this.setMessage);
         } else {
           fetchMessagesBaseOnGeo(address.geolocation, distance, constant.defaultEventNumber, lastLoginTime, null, this.setMessage);

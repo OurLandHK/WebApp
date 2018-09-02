@@ -43,7 +43,7 @@ class ChipArray extends Component {
 
   renderReadOnlyChips() {
     const { classes, chipData } = this.props;
-    if (chipData.length == 0) {
+    if (chipData.length === 0) {
       return (<div></div>);
     }
     return (

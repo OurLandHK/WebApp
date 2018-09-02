@@ -53,7 +53,7 @@ app.get('**', (req, res) => {
   let userIndex = parts.length - 1;
   while(userIndex > 0) {
       //console.log(req.url + "  " + parts[userIndex] + " " + userIndex)
-      if(parts[userIndex] == 'user') {
+      if(parts[userIndex] === 'user') {
             userIndex++;
             break;
       }
@@ -74,7 +74,7 @@ app.get('**', (req, res) => {
         finalHtml = finalHtml.replace('<!--og:type-->', 'article');
         finalHtml = finalHtml.replace('<!--og:url-->', req.url);
         res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
-        if(bookmarkid == null ) {
+        if(bookmarkid === null ) {
             finalHtml = finalHtml.replace('<!--og:title-->', userPrfile.displayName);
             finalHtml = finalHtml.replace('<!--og:description-->', userPrfile.desc);
             return res.send(finalHtml);

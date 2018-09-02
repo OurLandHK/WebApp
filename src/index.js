@@ -76,7 +76,7 @@ if (userRoot) {
   }
   console.log(`userID ${userid} bookmarkID ${bookmarkid}`);
   let userHtml = <PublicProfileSSR userid={userid} />;
-  if(bookmarkid != null) {
+  if(bookmarkid  != null ) {
     userHtml = <BookmarkViewSSR userid={userid} bookmarkid={bookmarkid} />
   }
   ReactDOM.render(

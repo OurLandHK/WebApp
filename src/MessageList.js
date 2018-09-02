@@ -24,18 +24,18 @@ class MessageList extends Component {
   constructor(props) {
     super(props);
     let geolocation = this.props.geolocation;
-    if (geolocation == null) {
+    if (geolocation === null) {
       geolocation = constant.invalidLocation;
     }
     let messageIds = [];
     let statusMessage = constant.messageListReadingLocation;
     //console.log("geolocation" + geolocation);
-    if(this.props.messageIds != null) {
+    if(this.props.messageIds  != null ) {
       messageIds = this.props.messageIds;
       statusMessage = constant.messageListLoadingStatus;
     }
     this.hori = false;
-    if(this.props.hori == true) {
+    if(this.props.hori === true) {
       this.hori = true;
     }
     this.state = {
@@ -56,7 +56,7 @@ class MessageList extends Component {
 
   componentDidMount() {
     //console.log('componentDidMount');
-    if(this.state.messageIds.length != 0) {
+    if(this.state.messageIds.length !== 0) {
       if(!this.hori) {
        this.updateGlobalFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
       }
@@ -65,20 +65,20 @@ class MessageList extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.messageIds.length == 0 && (this.props.filter.geolocation != prevProps.filter.geolocation ||
-      this.props.filter.distance != prevProps.filter.distance ||
-      this.props.filter.selectedSorting != prevProps.filter.selectedSorting ||
-      this.props.tagFilter != prevProps.tagFilter)) {
+    if (this.state.messageIds.length === 0 && (this.props.filter.geolocation !== prevProps.filter.geolocation ||
+      this.props.filter.distance !== prevProps.filter.distance ||
+      this.props.filter.selectedSorting !== prevProps.filter.selectedSorting ||
+      this.props.tagFilter !== prevProps.tagFilter)) {
       if(!this.hori) {
         this.refreshMessageList();
       }
     } else {
-      if(this.props.filter.selectedTag != undefined &&
-            this.props.filter.selectedTag != prevProps.filter.selectedTag) {
+      if(this.props.filter.selectedTag !== undefined &&
+            this.props.filter.selectedTag !== prevProps.filter.selectedTag) {
         this.setState({selectedTag: this.props.filter.selectedTag});
       }
 
-      if(this.props.filter.sorting != undefined &&  this.props.filter.sorting != prevProps.filter.sorting){
+      if(this.props.filter.sorting !== undefined &&  this.props.filter.sorting !== prevProps.filter.sorting){
         this.setState({selectedSorting: this.props.filter.selectedSorting});
       }
     }
@@ -99,11 +99,11 @@ class MessageList extends Component {
   }
 
   setMessage(val) {
-    if(val == null) {
+    if(val === null) {
       this.setState({statusMessage: constant.messageListNoMessage});
       return;
     }
-    if(val.tag != null && val.tag.length > 0) {
+    if(val.tag  != null  && val.tag.length > 0) {
       this.props.updateFilterTagList(val.tag);
     }
     this.state.data.push(val);
@@ -125,7 +125,7 @@ class MessageList extends Component {
     this.setState({geolocation: geolocation, statusMessage: constant.messageListLoadingStatus});
     //console.log("Fetch MessageIDs: " + this.state.messageIds);
     this.clear();
-    if(this.state.messageIds.length != 0) {
+    if(this.state.messageIds.length !== 0) {
       //console.log("List" + this.state.messageIds);
       this.state.messageIds.map((Ids) => {
         //console.log("Ids:" + Ids);
@@ -156,27 +156,27 @@ class MessageList extends Component {
     let lon = 0;
     let lat = 0;
 
-    if(this.state.geolocation != null && this.state.geolocation != constant.invalidLocation) {
+    if(this.state.geolocation !== undefined && this.state.geolocation !== constant.invalidLocation) {
       lon = this.state.geolocation.longitude;
       lat = this.state.geolocation.latitude;
     }
 
     let sorting = this.props.filter.selectedSorting;
-    if(sorting == 'sortByLastUpdate'){
+    if(sorting === 'sortByLastUpdate'){
       this.state.data.sort((i, j) => (j.lastUpdate==null?j.createdAt.toDate():j.lastUpdate.toDate()) - (i.lastUpdate==null?i.createdAt.toDate():i.lastUpdate.toDate()));
-    }else if(sorting == 'sortByDistance'){
+    }else if(sorting === 'sortByDistance'){
       this.state.data.sort((i, j) => (distance(i.geolocation.longitude,i.geolocation.latitude,lon,lat))
         - (distance(j.geolocation.longitude,j.geolocation.latitude,lon,lat)));
     }
 
 
-    if(this.state.data.length == 0) {
+    if(this.state.data.length === 0) {
       let statusMessage = this.state.statusMessage;
       return(<div><h4>{statusMessage}</h4></div>);
     } else {
       let messageList = null;
       let elements = this.state.data.map((message) => {
-        if(this.state.selectedTag != null && !message.tag.includes(this.state.selectedTag)) {
+        if(this.state.selectedTag  != null  && !message.tag.includes(this.state.selectedTag)) {
           // filter by selected tag.
           return null;
         } else {

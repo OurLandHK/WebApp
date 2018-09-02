@@ -47,7 +47,7 @@ class BookmarkToggleButton extends Component {
     const { message, user } = this.props;
     return user.bookmarkList.map(bookmark => {
       let icons = null;
-      if(bookmark.messages.indexOf(message.key) != -1) {
+      if(bookmark.messages.indexOf(message.key) !== -1) {
           icons = <ListItemIcon><CheckIcon/></ListItemIcon>;
       }
       return (
@@ -61,7 +61,7 @@ class BookmarkToggleButton extends Component {
 
   toggleBookmarkMessage(bookmark, messageKey) {
     const index = bookmark.messages.indexOf(messageKey);
-    if(index == -1) {
+    if(index === -1) {
         bookmark.messages.push(messageKey);
     } else {
         bookmark.messages.splice(index, 1);
@@ -75,7 +75,7 @@ class BookmarkToggleButton extends Component {
     const baseClass = classes.base;
     const iconHtml = <PlayListPlayIcon />;
     let disable = true;
-    if(this.props.user != null && this.props.user.user != null) {
+    if(this.props.user  != null  && this.props.user.user  != null ) {
       disable = false;
     }
     let outputHtml = <IconButton

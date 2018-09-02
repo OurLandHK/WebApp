@@ -25,13 +25,13 @@ class FilterBar extends  Component {
     this.isUsePublicAddressBook = false;
     this.disableLocationDrawer = false;
     this.ranking = false;
-    if(this.props.ranking == true) {
+    if(this.props.ranking === true) {
       this.ranking = true;
     }
-    if(this.props.disableLocationDrawer == true) {
+    if(this.props.disableLocationDrawer === true) {
       this.disableLocationDrawer = true;
     } else {
-      if(this.props.isUsePublicAddressBook == true) {
+      if(this.props.isUsePublicAddressBook === true) {
         this.isUsePublicAddressBook = true;
       }
     }

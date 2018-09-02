@@ -28,7 +28,7 @@ class UserList extends Component {
   constructor(props) {
     super(props);
     let geolocation = this.props.geolocation;
-    if (geolocation == null) {
+    if (geolocation === null) {
       geolocation = constant.invalidLocation;
     }
     this.state = {
@@ -56,7 +56,7 @@ class UserList extends Component {
   }
 
   setUser(val) {
-    if(val == null) {
+    if(val === null) {
       return;
     }
     this.state.data.push(val);
@@ -89,7 +89,7 @@ class UserList extends Component {
   renderUser(user) {
     const { classes } = this.props;
     let dateTimeString = '';
-    if(user.lastLogin != null) {
+    if(user.lastLogin  != null ) {
       let date = user.lastLogin.toDate();
       if(date.getFullYear() > 1970) {
         dateTimeString = date.toLocaleDateString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });
@@ -117,7 +117,7 @@ class UserList extends Component {
     let lon = 0;
     let lat = 0;
 
-    if(this.state.geolocation != null && this.state.geolocation != constant.invalidLocation) {
+    if(this.state.geolocation  != null  && this.state.geolocation !== constant.invalidLocation) {
       lon = this.state.geolocation.longitude;
       lat = this.state.geolocation.latitude;
     }
