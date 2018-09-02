@@ -103,11 +103,14 @@ function upgradeAllMessage() {
                             val.tagfilter = tagsToTagfilter(tags);
                             change = true;    
                         }
-                    }                 
+                    }
+                             
                     if(change) {
                         return updateMessage(val.key, val, false);
                     } else {
-                        return;
+                        if(val.imageUrl != null) {
+                            return addMessageGalleryEntry(val.key, val.imageUrl, val.publicImageURL, val.thumbnailImageURL, val.thumbnailPublicImageURL, val.text);
+                        }
                     }
                 }                
             });            
@@ -217,6 +220,15 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         }
     }
     let tagfilter = tagsToTagfilter(tags);
+    let gallery = [];
+    if(imageUrl != null) {
+        let galleryEntry = {imageURL: imageUrl, 
+            publicImageURL: publicImageURL, 
+            thumbnailImageURL: thumbnailImageURL, 
+            thumbnailPublicImageURL: thumbnailPublicImageURL,
+            caption: message};
+        gallery.push(galleryEntry);
+    }
     var messageRecord = {
         hide: false,
         name: displayName,
@@ -238,9 +250,11 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         weekdaysOpennings: weekdaysOpennings,
         endDate: endDate, 
         link: link,
-        imageUrl, publicImageURL, 
-        thumbnailImageURL, 
-        thumbnailPublicImageURL,
+        imageUrl: imageUrl, 
+        publicImageURL: publicImageURL, 
+        thumbnailImageURL: thumbnailImageURL, 
+        thumbnailPublicImageURL: thumbnailPublicImageURL,
+        gallery: gallery,
         status: status,
         viewCount: 0,
         isReportedUrgentEvent: isReportedUrgentEvent,
@@ -426,6 +440,37 @@ function updateMessageImageURL(messageKey, imageURL, publicImageURL, thumbnailIm
     });
 }
 
+// add image to gallery to show in message detail. This will take effect after approved photocomment.
+function addMessageGalleryEntry(messageKey, imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, caption) {
+    if(imageURL != null) {
+        let galleryEntry = {imageURL: imageURL, 
+            publicImageURL: publicImageURL, 
+            thumbnailImageURL: thumbnailImageURL, 
+            thumbnailPublicImageURL: thumbnailPublicImageURL,
+            caption: caption} 
+        return getMessage(messageKey).then((messageRecord) => {
+            let add = true;
+            if(messageRecord.gallery != null) {
+                messageRecord.gallery.forEach((entry, index) => {
+                    if(imageURL == entry.imageURL) {
+                        add = false;
+                    }
+                });
+            } else {
+                messageRecord.gallery = [];
+            }
+            if(add) {
+                messageRecord.gallery.push(galleryEntry);
+                return updateMessage(messageKey, messageRecord, false);
+            } else {
+                return messageKey;
+            }    
+        });
+    } else {
+        return messageKey;
+    }
+}
+
 function updateMessageConcernUser(messageUuid, user, isConcern) {
     // Use firestore
     return getMessage(messageUuid).then((messageRecord) => {
@@ -509,7 +554,7 @@ function setHappyAndSad(messageUuid, happyCount, sadCount, happAndSad, user) {
 }
 
 /// All about comment
-function addComment(messageUUID, currentUser, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent) {
+function addComment(messageUUID, currentUser, userProfile, photo, commentText, galleryEntry, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent) {
     var now = Date.now();
     var fireBaseGeo = null;
 
@@ -533,6 +578,9 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
     }; 
     if(commentText != null) {
         commentRecord.text = commentText;
+        if(galleryEntry != null) {
+            commentRecord.galleryEntry = galleryEntry;
+        }
 
         if(isApprovedUrgentEvent != null) {
             commentRecord.isApprovedUrgentEvent = isApprovedUrgentEvent;
@@ -637,4 +685,4 @@ function fetchMessagesBasedOnInterestedTags(interestedTags, geolocation, dis, la
     });
 }
 
-export {getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags};
+export {addMessageGalleryEntry, getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags};

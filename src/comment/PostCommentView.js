@@ -1,6 +1,7 @@
 /*global FB*/
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import uuid from 'js-uuid';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
@@ -19,6 +20,7 @@ import LocationButton from '../LocationButton';
 import SelectedMenu from '../SelectedMenu';
 import {constant, RoleEnum} from '../config/default';
 import {addComment} from '../MessageDB';
+import UploadImageButton from '../UploadImageButton';
 import IntegrationReactSelect from '../IntegrationReactSelect';
 import {
   checkAuthState,
@@ -70,15 +72,22 @@ function Transition(props) {
 class PostCommentView extends Component {
   constructor(props) {
     super(props);
-    var tags = '';
+    let tags = '';
     if(this.props.message.tag) {
       tags = this.props.message.tag.join();
     }
-
+    
+    let imagePath = this.props.messageUUID + '/' + uuid.v4();
+    let galleryEntry = {imageURL: null, 
+      publicImageURL: null, 
+      thumbnailImageURL: null, 
+      thumbnailPublicImageURL: null};
     this.state = {popoverOpen: false, buttonShow: false,
       // comment
       commentSelection: constant.commentOptions[0],
       text: "",
+      galleryEntry: galleryEntry,
+      imagePath: imagePath, 
       geolocation: null,
       streetAddress: null,
       changeStatus: null,
@@ -89,6 +98,7 @@ class PostCommentView extends Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleAddition = this.handleAddition.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
+    this.uploadFinish = this.uploadFinish.bind(this);
   }
 
   componentDidMount() {
@@ -117,11 +127,18 @@ class PostCommentView extends Component {
       tags = this.props.message.tag.join();
       console.log(this.props.message.tag + " ->   " + tags);
     }
+    let imagePath = this.props.messageUUID + '/' + uuid.v4();
     //console.log("Request for open " + this.state.popoverOpen);
+    let galleryEntry = {imageURL: null, 
+      publicImageURL: null, 
+      thumbnailImageURL: null, 
+      thumbnailPublicImageURL: null};
     this.setState({
      // Comment
         commentSelection: constant.commentOptions[0],
         text: "",
+        galleryEntry: galleryEntry,
+        imagePath: imagePath, 
         geolocation: null,
         streetAddress: null,
         changeStatus: null,
@@ -155,6 +172,16 @@ class PostCommentView extends Component {
     });
   };
 
+  uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {
+    this.setState({galleryEntry: {
+      imageURL: imageURL,
+      publicImageURL: publicImageURL,
+      thumbnailImageURL: thumbnailImageURL,
+      thumbnailPublicImageURL: thumbnailPublicImageURL}
+    });
+//    console.log("uploadFinish: " + this.state.imageURL + " " + this.state.publicImageURL+ " " + this.state.thumbnailImageURL+ " " + this.state.thumbnailPublicImageURL)
+  }
+
 
   onSubmit() {
     if (this.props.user != null) {
@@ -162,6 +189,7 @@ class PostCommentView extends Component {
       if (user) {
         let isPost = true;
         let isApprovedUrgentEvent = null;
+        let galleryEntry = null;
         var photo = null;
         var commentText = null;
         var tags = null;
@@ -172,6 +200,9 @@ class PostCommentView extends Component {
         switch(this.state.commentSelection) {
             case constant.commentOptions[0]: //"發表回應":
               commentText = this.state.text;
+              if(this.state.galleryEntry.imageURL != null) {
+                galleryEntry = this.state.galleryEntry;
+              }
               if(commentText == "") {
                 isPost = false;
               }
@@ -211,7 +242,7 @@ class PostCommentView extends Component {
         }
         this.setState({popoverOpen: false});
         if(isPost) {
-          return addComment(this.props.messageUUID, user, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent).then(function(commentId){return commentId;});
+          return addComment(this.props.messageUUID, user, userProfile, photo, commentText, galleryEntry, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent).then(function(commentId){return commentId;});
         } else {
           return
         }
@@ -273,7 +304,10 @@ class PostCommentView extends Component {
     const { tags } = this.state;
 
     if(this.state.buttonShow) {
-        let inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="更新事件進度及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
+        let inputHtml = <div>
+          <TextField autoFocus required id="message" fullWidth margin="normal" helperText="更新事件進度及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>
+          <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.imagePath} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
+          </div>;
         let commentOptions = constant.commentOptions;
         if(user.userProfile != null && (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
           // admin should able to enable any message as urgent.

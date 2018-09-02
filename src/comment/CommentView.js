@@ -159,8 +159,9 @@ class CommentView extends Component {
   render() {
     const { classes, theme, user, commentRef } = this.props;
     const comment = commentRef.data();
-    const {approvedStatus, geolocation, streetAddress, changeStatus, link, tags, createdAt, photoUrl, isApprovedUrgentEvent} = comment;
+    const {galleryEntry, approvedStatus, geolocation, streetAddress, changeStatus, link, tags, createdAt, photoUrl, isApprovedUrgentEvent} = comment;
     let text = comment.text;
+    let galleryImage = null;
     if(text == null) {
         if(geolocation != null) {
             var locationString = null;
@@ -188,8 +189,13 @@ class CommentView extends Component {
                 } 
             }          
         }
+    } 
+    if(galleryEntry != null) {
+        galleryImage =         <CardMedia
+        component="img"
+        image={galleryEntry.publicImageURL}
+      />
     }
-
     if(isApprovedUrgentEvent != null) {
         this.commentOption = isApprovedUrgentEvent? constant.commentWithUrgentEventOptions[0]: constant.commentWithUrgentEventOptions[1];
     }
@@ -220,16 +226,21 @@ class CommentView extends Component {
     let subtitle = '張貼於：' + timeOffsetString + '前 ' + approvedLog;
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     return (<Card container className={classes.card}>
-                {fbProfileImage}               
-                <div className={classes.details}>
-                    <CardContent className={classes.content} zeroMinWidth>
-                        <Typography variant="subheading">{text}</Typography>
-                        <Typography variant="caption" color="textSecondary">
-                        {subtitle}
-                        </Typography>
-                    </CardContent>
+                <CardActionArea>
+                    {galleryImage}
+                    <div>
+                        {fbProfileImage}               
+                        <div className={classes.details}>
+                            <CardContent className={classes.content} zeroMinWidth>
+                                <Typography variant="subheading">{text}</Typography>
+                                <Typography variant="caption" color="textSecondary">
+                                {subtitle}
+                                </Typography>
+                            </CardContent>
+                        </div>
+                    {approvedButton}
                 </div>
-                {approvedButton}
+                </CardActionArea>
             </Card>);
   }
 }

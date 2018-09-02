@@ -49,8 +49,8 @@ function validateFile(file) {
   return true;
 };
 
-function uploadImage(messageKey, filename, blob) {
-  var filePath = config.photoDB + '/' + messageKey + '/' + filename;
+function uploadImage(path, filename, blob) {
+  var filePath = config.photoDB + '/' + path+ '/' + filename;
   var storage = firebase.storage();
   return storage.ref(filePath).put(blob);
 };
