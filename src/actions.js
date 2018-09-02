@@ -15,7 +15,7 @@ import {
   FETCH_PUBLIC_ADDRESS_BOOK,
   FETCH_FOCUS_MESSAGE,
   UPDATE_PUBLIC_PROFILE_DIALOG,
-  TOGGLE_PUBLIC_PROFILE_DIALOG,  
+  TOGGLE_PUBLIC_PROFILE_DIALOG,
   TOGGLE_ADDRESS_DIALOG,
   FETCH_GLOBAL_FOCUS_MESSAGE,
   TOGGLE_NEARBYEVENT_DIALOG,
@@ -28,7 +28,6 @@ import {
   UPDATE_FILTER_SORTING
 } from './actions/types';
 import * as firebase from 'firebase';
-import * as firestore from 'firebase/firestore';
 import config, {constant} from './config/default';
 import {getUserProfile, updateUserProfile, fetchBookmarkList} from './UserProfile';
 import {fetchFocusMessagesBaseOnGeo, getTagStat} from './GlobalDB';
@@ -144,7 +143,7 @@ function dispatchSelectedSorting(selectedSorting){
 
 export function init3rdPartyLibraries() {
   const db = firebase.firestore();
-  const settings = {/* your settings... */ timestampsInSnapshots: true};  
+  const settings = {/* your settings... */ timestampsInSnapshots: true};
   db.settings(settings);
 }
 
@@ -155,7 +154,7 @@ export function fetchLocation(callback=receiveLocation) {
         enableHighAccuracy: true,
         timeout: 5000,
         maximumAge: 0
-      }; 
+      };
       navigator.geolocation.getCurrentPosition((geoLocation) => {
         console.log(geoLocation);
         callback(geoLocation);
@@ -196,7 +195,7 @@ export function checkAuthState() {
             console.log("Last Login: " + lastLogin);
             return fetchBookmarkList(user).then((bookmarkList)=>{
               return dispatch(fetchUserProfile(userProfile, lastLogin, bookmarkList));
-            });        
+            });
           });
         });
       }
@@ -209,7 +208,7 @@ export function refreshUserProfile(user) {
   return dispatch => {
     getUserProfile(user).then((userProfile)=>{
       dispatch(fetchUserProfile(userProfile, null))});
-  }  
+  }
 }
 
 export function signIn() {
@@ -235,7 +234,7 @@ export function signIn() {
 export function signOut() {
   return dispatch => {
     firebase.auth().signOut();
-    dispatch(fetchUser(null)); 
+    dispatch(fetchUser(null));
   }
 }
 
@@ -310,14 +309,14 @@ export function updateFilterWithCurrentLocation() {
   return dispatch => {
     dispatch(fetchLocation(geolocation => {
       dispatch(receiveLocation(geolocation));
-      dispatch(updateFilterLocation(geolocation.coords));     
-    }));  
+      dispatch(updateFilterLocation(geolocation.coords));
+    }));
   }
 }
 
 export function fetchAddressBookByUser(user) {
   return dispatch => {
-    const db = firebase.firestore(); 
+    const db = firebase.firestore();
     var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
     collectionRef.onSnapshot(function() {});
     collectionRef.get().then(function(querySnapshot) {
@@ -335,7 +334,7 @@ export function fetchAddressBookFromOurLand() {
     var db = firebase.firestore();
     /// Use the UID for Ourland HK's account
     var collectionRef = db.collection(config.userDB).doc(config.MasterUID).collection(config.addressBook);
-    collectionRef.onSnapshot(function() {})         
+    collectionRef.onSnapshot(function() {})
     collectionRef.get().then(function(querySnapshot) {
        const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
        dispatch(fetchPublicAddressBook(addresses));
@@ -343,7 +342,7 @@ export function fetchAddressBookFromOurLand() {
     .catch(function(error) {
         console.log("Error getting documents: ", error);
     });
-  };  
+  };
 }
 
 export function fetchGlobalSetting() {
@@ -356,7 +355,7 @@ export function fetchGlobalSetting() {
       let tagList = Object.values(tagListObject);
       tagList.sort((i, j) => (j.count) - (i.count));
       let tagLabel = tagList.map((tag) => {return(tag.tag)});
-      dispatch(updateRegionButtoneList(tagLabel));  
+      dispatch(updateRegionButtoneList(tagLabel));
       dispatch(fetchTagStat(tagList));
     });
   };
@@ -374,8 +373,8 @@ export function fetchConcernMessagesFromOurLand() {
         console.log(globalFocusMessage);
         return dispatch(fetchGlobalFocusMessage(globalFocusMessage));
       });
-    });    
-  };  
+    });
+  };
 }
 
 export function updateRegionButtoneList(tagList) {
@@ -409,12 +408,12 @@ export function upsertAddress(user, key, type, text, geolocation, streetAddress,
         geolocation: geoPoint,
         streetAddress: streetAddress,
         distance: interestedRadius
-    }; 
+    };
     console.log(addressRecord);
     // Use firestore
     const db = firebase.firestore();
-    
-    
+
+
     var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
 
     if(key != null) {
@@ -428,15 +427,15 @@ export function upsertAddress(user, key, type, text, geolocation, streetAddress,
           console.log("comment written with ID: ", docRef.id);
           dispatch(fetchAddressBookByUser(user))
         });
-    }  
+    }
   }
 }
 
 export function deleteAddress(user, key) {
   return dispatch => {
     const db = firebase.firestore();
-    
-    
+
+
     const collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
     collectionRef.doc(key).delete().then(() => {
       dispatch(fetchAddressBookByUser(user))
@@ -479,10 +478,10 @@ export function fetchTopTwenty() {
   return dispatch => {
     console.log('fetchTopTwenty');
     const db = firebase.firestore();
-    
-    
+
+
     var collectionRef = db.collection(config.userDB).orderBy('publishMessagesCount', 'desc').limit(20);
-    collectionRef.onSnapshot(function() {})         
+    collectionRef.onSnapshot(function() {})
     collectionRef.get().then(function(querySnapshot) {
        const users = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
        console.log(users);

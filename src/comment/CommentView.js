@@ -1,21 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import timeOffsetStringInChinese from '../TimeString';
 import { withStyles } from '@material-ui/core/styles';
-import red from '@material-ui/core/colors/red';
 import Avatar from '@material-ui/core/Avatar';
 import geoString from '../GeoLocationString';
-import config, {constant, RoleEnum} from '../config/default';
+import {constant, RoleEnum} from '../config/default';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import {
     checkAuthState,
-    updateRecentMessage,
     updatePublicProfileDialog,
   } from '../actions';
 
@@ -63,7 +59,7 @@ class CommentView extends Component {
             console.log('Option: ' + constant.commentOptions[0]);
             messageRecord = null; // for update time
             break;
-        case constant.commentOptions[2]: //"要求更改現況": 
+        case constant.commentOptions[2]: //"要求更改現況":
             console.log('Option: ' + constant.commentOptions[2]);
             switch(changeStatus) {
               case constant.statusOptions[0]: //'開放'
@@ -80,7 +76,7 @@ class CommentView extends Component {
                 break;
             }
             break;
-        case constant.commentOptions[1]: //"要求更改地點": 
+        case constant.commentOptions[1]: //"要求更改地點":
             console.log('Option: ' + constant.commentOptions[1]);
             messageRecord.geolocation = geolocation;
             messageRecord.streetAddress = streetAddress;
@@ -167,8 +163,8 @@ class CommentView extends Component {
             if(streetAddress != null) {
                 locationString =  streetAddress + " (" + geoString(geolocation.latitude, geolocation.longitude) + ")";
               } else {
-                locationString = "近" + geoString(geolocation.latitude, geolocation.longitude);      
-              } 
+                locationString = "近" + geoString(geolocation.latitude, geolocation.longitude);
+              }
             text = constant.commentOptions[1] + locationString;
             this.commentOption = constant.commentOptions[1];
         } else {
@@ -185,8 +181,8 @@ class CommentView extends Component {
                         text = constant.commentOptions[4] + ': ' + tagText;
                         this.commentOption = constant.commentOptions[4];
                     }
-                } 
-            }          
+                }
+            }
         }
     }
 
@@ -195,7 +191,7 @@ class CommentView extends Component {
     }
 
     let approvedButton = null;
-    let approvedLog = "";    
+    let approvedLog = "";
     if(approvedStatus == null) {
       if(user != null && user.userProfile != null && user.userProfile.role === RoleEnum.admin) {
         approvedButton = <div>
@@ -206,12 +202,12 @@ class CommentView extends Component {
                             <Button variant="raised" color="primary" className={classes.uploadButton} raised={true} onClick={() => this.reject()}>
                                 <ThumbDownIcon />
                                     {constant.approveOptions[1]}
-                            </Button>                            
+                            </Button>
                         </div>
       }
     } else {
         let approvedTimeOffset = Date.now() - approvedStatus.createdAt.toDate();
-        let approvedTimeOffsetString = timeOffsetStringInChinese(approvedTimeOffset); 
+        let approvedTimeOffsetString = timeOffsetStringInChinese(approvedTimeOffset);
         approvedLog ='由' + approvedStatus.name + '於 ' + approvedTimeOffsetString + ' 前 ' + approvedStatus.isConfirm;
     }
 
@@ -220,7 +216,7 @@ class CommentView extends Component {
     let subtitle = '張貼於：' + timeOffsetString + '前 ' + approvedLog;
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     return (<Card container className={classes.card}>
-                {fbProfileImage}               
+                {fbProfileImage}
                 <div className={classes.details}>
                     <CardContent className={classes.content} zeroMinWidth>
                         <Typography variant="subheading">{text}</Typography>
@@ -244,18 +240,18 @@ CommentView.propTypes = {
       user          :   state.user,
     };
   }
-  
+
   const mapDispatchToProps = (dispatch) => {
     return {
         updatePublicProfileDialog:
             (userId, fbuid, open) =>
                 dispatch(updatePublicProfileDialog(userId, fbuid, open)),
         checkAuthState:
-            () => 
-                dispatch(checkAuthState()),   
+            () =>
+                dispatch(checkAuthState()),
     }
   };
-  
+
 
   export default connect(
     mapStateToProps,

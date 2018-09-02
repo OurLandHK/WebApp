@@ -1,10 +1,7 @@
 /*global FB*/
-import React, { Component } from 'react';
-import * as firebase from 'firebase';
-import config, {constant} from '../config/default';
-import Button from '@material-ui/core/Button';
+import React from 'react';
+import {constant} from '../config/default';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -13,10 +10,6 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText  from '@material-ui/core/ListItemText';
 import AddressList from './AddressList';
 import AddressView from './AddressView';
 import {connect} from "react-redux";
@@ -43,13 +36,13 @@ class AddressDialog extends React.Component {
   constructor(props) {
     super(props);
     this.props.openDialog(this.openDialog);
-  }    
+  }
 
   handleRequestClose = () => {
     this.props.toggleAddressDialog(false);
   };
 
-  
+
   render() {
     const { classes, open } = this.props;
     return (
@@ -59,7 +52,7 @@ class AddressDialog extends React.Component {
                     <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                         <CloseIcon />
                     </IconButton>
-                    <Typography variant="title" color="inherit" className={classes.flex}>{constant.addressBookLabel}</Typography>           
+                    <Typography variant="title" color="inherit" className={classes.flex}>{constant.addressBookLabel}</Typography>
                 </Toolbar>
             </AppBar>
             <div className={classes.container}>
@@ -82,7 +75,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    toggleAddressDialog: flag => 
+    toggleAddressDialog: flag =>
       dispatch(toggleAddressDialog(flag)),
   }
 };

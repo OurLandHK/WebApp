@@ -1,17 +1,9 @@
 import React, { Component } from 'react';
 import { compose, withProps, withState, withHandlers } from "recompose";
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 
 // Using Map https://github.com/fullstackreact/google-maps-react
-
-const style = {
-  height: '100%',
-  width: '100%'
-}
 
 export class EventMap extends Component {
   constructor(props) {

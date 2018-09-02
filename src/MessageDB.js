@@ -1,10 +1,7 @@
 import * as firebase from 'firebase';
-import uuid from 'js-uuid';
-import config, {constant} from './config/default';
+import config from './config/default';
 import distance from './Distance';
 import {updateTagStat} from './GlobalDB';
-import { light } from '@material-ui/core/styles/createPalette';
-import { getStreetAddressFromGeoLocation} from './Location';
 
 function tagsToTagfilter(tags) {
         let rv = {};
@@ -59,12 +56,12 @@ function wrapLongitude(longitude) {
 function upgradeAllMessage() {
     const db = firebase.firestore();
     let collectionRef = db.collection(config.messageDB);
-    collectionRef.onSnapshot(function() {})  
+    collectionRef.onSnapshot(function() {})
     let tagStat = {};
     return collectionRef.get().then(function(querySnapshot) {
         if(querySnapshot.empty) {
             return
-        } else {             
+        } else {
             querySnapshot.forEach(function(messageRef) {
                 var val = messageRef.data();
                 if(val) {
@@ -101,28 +98,28 @@ function upgradeAllMessage() {
                                 var index = tags.indexOf("兒童遊樂場");
                                 if (index !== -1) tags.splice(index, 1);                            }
                             val.tagfilter = tagsToTagfilter(tags);
-                            change = true;    
+                            change = true;
                         }
-                    }                 
+                    }
                     if(change) {
                         return updateMessage(val.key, val, false);
                     } else {
                         return;
                     }
-                }                
-            });            
+                }
+            });
         }
         return updateTagStat(tagStat);
-    })         
+    })
 }
 
 function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, tag, callback) {
 
     const db = firebase.firestore();
-    
-    
+
+
     let collectionRef = db.collection(config.messageDB);
-    collectionRef.onSnapshot(function() {})         
+    collectionRef.onSnapshot(function() {})
     if(geocode != null && geocode != NaN && geocode.latitude != undefined) {
 //        console.log("Get message base on Location: (" + geocode.latitude + " ," + geocode.longitude + ") with Radius: " + radius);
 //        boundingBoxCoordinates(center, radius) {
@@ -151,12 +148,12 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
                 query = query.where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc");
             } else {
                     query = query.where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc");
-            }      
+            }
         }
         query.limit(numberOfMessage).get().then(function(querySnapshot) {
             if(querySnapshot.empty) {
                 callback(null);
-            } else { 
+            } else {
                 querySnapshot.forEach(function(messageRef) {
                     var val = messageRef.data();
                     if(val) {
@@ -169,12 +166,12 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
                             val.tag = tags;
                             val.tagfilter = null;
                             //console.log('message key: ' + val.key );
-                            callback(val); 
+                            callback(val);
                         } else {
                             callback(null);
                         }
                     }
-                    
+
                 });
             }
         })
@@ -194,7 +191,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         });
 /*        collectionRef.where("hide", "==", false).onSnapshot(function(querySnapshot) {
             querySnapshot.forEach(callback);
-        })  */     
+        })  */
     }
  }
 
@@ -227,7 +224,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         tagfilter: tagfilter,
         createdAt: new Date(now),
         lastUpdate: new Date(now),
-        key: key,   
+        key: key,
         uid: currentUser.uid,
         fbuid: currentUser.providerData[0].uid,
         start: new Date(startDate),
@@ -236,10 +233,10 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         interval: interval,
         everydayOpenning: everydayOpenning,
         weekdaysOpennings: weekdaysOpennings,
-        endDate: endDate, 
+        endDate: endDate,
         link: link,
-        imageUrl, publicImageURL, 
-        thumbnailImageURL, 
+        imageUrl, publicImageURL,
+        thumbnailImageURL,
         thumbnailPublicImageURL,
         status: status,
         viewCount: 0,
@@ -249,8 +246,8 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
       };
     // Use firestore
     const db = firebase.firestore();
-    
-    
+
+
     const messageRef = db.collection(config.messageDB).doc(key);
     const userRef = db.collection(config.userDB).doc(currentUser.uid);
     return db.runTransaction(transaction => {
@@ -289,8 +286,8 @@ function dropMessage(key) {
                 storage.refFromURL(message.thumbnailImageURL).delete();
             }
             const db = firebase.firestore();
-            
-            
+
+
             var messageRef = db.collection(config.messageDB).doc(key);
             var userRef = db.collection(config.userDB).doc(uid);
             var commentRef = messageRef.collection(config.commentDB);
@@ -316,15 +313,15 @@ function dropMessage(key) {
                             console.log("Document written with ID: ", key);
                             return true;
                         });
-                    });    
+                    });
                 });
-            });            
+            });
         } else {
             return false;
         }
     });
 }
-  
+
 function getMessageRef(uuid) {
     // firestore
     // Use firestore
@@ -337,7 +334,7 @@ function getMessageRef(uuid) {
         } else {
             return null;
         }
-    });     
+    });
 }
 
 function getMessage(uuid) {
@@ -359,8 +356,8 @@ function getMessage(uuid) {
 
 function updateMessage(messageKey, messageRecord, updateTime) {
     var db = firebase.firestore();
-    
-    
+
+
     var now = Date.now();
     var collectionRef = db.collection(config.messageDB);
     if(messageRecord == null) {
@@ -370,7 +367,7 @@ function updateMessage(messageKey, messageRecord, updateTime) {
             }).then(function(messageRecordRef) {
                 console.log("Document written with ID: ", messageKey);
                 return(messageRecordRef);
-            }) 
+            })
         }
     } else {
         // we can use this to update the scheme if needed.
@@ -385,7 +382,7 @@ function updateMessage(messageKey, messageRecord, updateTime) {
         return collectionRef.doc(messageKey).set(messageRecord).then(function(messageRecordRef) {
             console.log("Document written with ID: ", messageKey);
             return(messageRecordRef);
-        })      
+        })
     }
 }
 
@@ -415,13 +412,13 @@ function updateMessageImageURL(messageKey, imageURL, publicImageURL, thumbnailIm
         }
         if(publicImageURL != messageRecord.publicImageURL) {
             messageRecord.publicImageURL = publicImageURL;
-        } 
+        }
         if(thumbnailImageURL != messageRecord.thumbnailImageURL) {
             messageRecord.thumbnailImageURL = thumbnailImageURL;
         }
         if(thumbnailPublicImageURL != messageRecord.thumbnailPublicImageURL) {
             messageRecord.thumbnailPublicImageURL = thumbnailPublicImageURL;
-        }       
+        }
         return updateMessage(messageKey, messageRecord, true);
     });
 }
@@ -450,13 +447,13 @@ function updateMessageConcernUser(messageUuid, user, isConcern) {
                 {
                     console.log("message Uuid " + messageUuid + " User Id " + user.uid)
                     messageRecord.concernRecord = [user.uid];
-                    return updateMessage(messageUuid, messageRecord, false); 
+                    return updateMessage(messageUuid, messageRecord, false);
                 }
             }
         } else {
             return null;
         }
-    });        
+    });
 }
 
 function getHappyAndSad(messageUuid, user) {
@@ -478,7 +475,7 @@ function getHappyAndSad(messageUuid, user) {
     } else {
         return 0
         ;
-    } 
+    }
 }
 
 function setHappyAndSad(messageUuid, happyCount, sadCount, happAndSad, user) {
@@ -494,11 +491,11 @@ function setHappyAndSad(messageUuid, happyCount, sadCount, happAndSad, user) {
         if(actionDoc.exists) {
             transaction.update(userActionRef, {
                 happAndSad: happAndSad
-            });            
+            });
         } else {
             transaction.set(userActionRef, {
                 happAndSad: happAndSad
-            });            
+            });
         }
         transaction.update(messageRef, {
             happyCount: happyCount,
@@ -511,7 +508,6 @@ function setHappyAndSad(messageUuid, happyCount, sadCount, happAndSad, user) {
 /// All about comment
 function addComment(messageUUID, currentUser, userProfile, photo, commentText, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent) {
     var now = Date.now();
-    var fireBaseGeo = null;
 
     var photoUrl = currentUser.providerData[0].photoURL || '/images/profile_placeholder.png';
     if(userProfile.photoURL != null) {
@@ -530,7 +526,7 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
         createdAt: new Date(now),
         lastUpdate: null,
         isApprovedUrgentEvent: null
-    }; 
+    };
     if(commentText != null) {
         commentRecord.text = commentText;
 
@@ -559,21 +555,21 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, t
     }
     // Use firestore
     const db = firebase.firestore();
-    
-    
-    var collectionRef = db.collection(config.messageDB);  
+
+
+    var collectionRef = db.collection(config.messageDB);
     return collectionRef.doc(messageUUID).collection(config.commentDB).add(commentRecord).then(function(docRef) {
         return getMessage(messageUUID).then((messageRecord) => {
             return updateMessage(messageUUID, messageRecord, true);
         });
-    });  
+    });
 }
 
 function updateCommentApproveStatus(messageUUID, commentid, approvedStatus){
     const db = firebase.firestore();
-    
-    
-    let collectionRef = db.collection(config.messageDB);  
+
+
+    let collectionRef = db.collection(config.messageDB);
     let field = {approvedStatus: approvedStatus};
     return collectionRef.doc(messageUUID).collection(config.commentDB).doc(commentid).update(field).then(function(commentRecordRef) {
         console.log("Document written with ID: ", commentid);
@@ -583,10 +579,10 @@ function updateCommentApproveStatus(messageUUID, commentid, approvedStatus){
 
 function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
     const db = firebase.firestore();
-    
-    
+
+
     var collectionRef = db.collection(config.messageDB).doc(messageUUID).collection(config.commentDB);
-    collectionRef.onSnapshot(function() {})         
+    collectionRef.onSnapshot(function() {})
     // Use firestore
     collectionRef.where("hide", "==", false).get().then(function(querySnapshot) {
         querySnapshot.forEach(callback);
@@ -598,12 +594,12 @@ function fetchCommentsBaseonMessageID(user, messageUUID, callback) {
 
 function fetchReportedUrgentMessages(callback) {
     const db = firebase.firestore();
-    
+
     let collectionRef = db.collection(config.messageDB);
-    collectionRef.onSnapshot(function() {});         
+    collectionRef.onSnapshot(function() {});
     return collectionRef.where("hide", "==", false).where("isReportedUrgentEvent", "==", true).where("isUrgentEvent", "==", null).orderBy("createdAt", "desc").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(messageRef){
-            let val = messageRef.data(); 
+            let val = messageRef.data();
             callback(val);
         });
     })
@@ -614,13 +610,12 @@ function fetchReportedUrgentMessages(callback) {
 
 function fetchMessagesBasedOnInterestedTags(interestedTags, geolocation, dis, lastUpdate, callback) {
     const db = firebase.firestore();
-    var msgs = [];
     var collectionRef = db.collection(config.messageDB);
 
-    collectionRef.onSnapshot(function() {});         
+    collectionRef.onSnapshot(function() {});
     return collectionRef.where("hide", "==", false).where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc").get().then(function(querySnapshot) {
         querySnapshot.forEach(function(messageRef){
-            let val = messageRef.data(); 
+            let val = messageRef.data();
             var disDiff = distance(val.geolocation.longitude,val.geolocation.latitude, geolocation.longitude, geolocation.latitude);
             if(dis > disDiff) {
                 let tags = tagfilterToTags(val.tagfilter);

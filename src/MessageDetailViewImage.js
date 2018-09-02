@@ -1,16 +1,9 @@
 import ProgressiveCardImg from './ProgressiveCardImg';
-import Grid from '@material-ui/core/Grid';
 import {FormGroup} from 'reactstrap';
 import React, { Component } from 'react';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import UploadImageButton from './UploadImageButton';
 import Button from '@material-ui/core/Button';
 import {updateMessageImageURL} from './MessageDB';
-import uuid from 'js-uuid';
-
 
 class MessageDetailViewImage extends Component {
    constructor(props) {
@@ -19,18 +12,18 @@ class MessageDetailViewImage extends Component {
         this.state = {
             key: key,
             url: null,
-            imageURL: null, 
-            publicImageURL: null, 
-            thumbnailImageURL: null, 
+            imageURL: null,
+            publicImageURL: null,
+            thumbnailImageURL: null,
             thumbnailPublicImageURL: null
         };
-    }   
+    }
 
-  uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {  
+  uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {
     this.setState({
-      imageURL: imageURL, 
-      publicImageURL: publicImageURL, 
-      thumbnailImageURL: thumbnailImageURL, 
+      imageURL: imageURL,
+      publicImageURL: publicImageURL,
+      thumbnailImageURL: thumbnailImageURL,
       thumbnailPublicImageURL: thumbnailPublicImageURL
     });
    }
@@ -53,11 +46,11 @@ class MessageDetailViewImage extends Component {
           <br/>
           <h1>沒有圖片</h1>
           <br/>
-          <FormGroup>  
+          <FormGroup>
           <br/>
           <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.key} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
           </FormGroup>
-          <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>提交</Button> 
+          <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>提交</Button>
         </center>
       </div>
     );

@@ -6,8 +6,7 @@ import BookmarkView from './bookmark/BookmarkView';
 import {getMessage} from './MessageDB';
 import {getBookmark} from './UserProfile';
 import React, { Component } from 'react';
-import MessageList from './MessageList';
-import config, {constant} from './config/default';
+import {constant} from './config/default';
 import FocusMessage from './FocusMessage';
 import {trackEvent} from  './track';
 
@@ -32,7 +31,6 @@ class Main extends Component {
     super(props);
     let geolocation = this.props.geolocation;
     this.init = true;
-    const { updateRecentMessage, updatePublicProfileDialog, updateRecentBookmark } = this.props;
     if(geolocation == null) {
       geolocation = constant.invalidLocation;
     }
@@ -52,7 +50,7 @@ class Main extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.init || this.props.recentMessage != prevProps.recentMessage) {
+    if (this.init || this.props.recentMessage !== prevProps.recentMessage) {
       this.init = false;
       this.refreshQueryMessage();
     }
@@ -88,10 +86,10 @@ class Main extends Component {
         }
       }
       let tagStatText = `「我地Ourland」有${tagStat[0].count}個${tagStat[0].tag}，${tagStat[1].count}個${tagStat[1].tag}，${actTag.count}個社區活動將會舉行，就等你同「我地」一齊更新我地的社區啦！`;
-      return <p>{tagStatText}</p>
+      return <marquee style={{color: '#3f51b5', fontWeight: 'bold', textAlign: 'center', padding: '10px'}}>{tagStatText}</marquee>
     } else {
       return null;
-    } 
+    }
   }
 
   renderMessageFrontPage() {
@@ -101,13 +99,13 @@ class Main extends Component {
     const { classes } = this.props;
     let tagStatHtml = this.renderTagStat();
 
-    if(queryMessage != null) {
+    if (queryMessage != null) {
       let message = queryMessage;
       recentMessage = <div className="recent-event-wrapper">
                         <h4>{constant.recentEventLabel}</h4>
                         <MessageView message={message} key={message.key} openDialogDefault={openRecent} />
                       </div>;
-    } else if(bookmark != null) {
+    } else if (bookmark != null) {
       recentMessage = <div className="recent-event-wrapper">
                         <h4>{constant.recentEventLabel}</h4>
                         <BookmarkView bookmark={bookmark} open={openRecent} />
@@ -133,8 +131,8 @@ class Main extends Component {
       <div className={classes.container}>
         {tagStatHtml}
         {recentMessage}
-        <FocusMessage/> 
-        {messageList1}     
+        <FocusMessage/>
+        {messageList1}
         {messageList}
       </div>
     );

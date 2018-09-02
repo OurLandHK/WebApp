@@ -1,9 +1,4 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
 
@@ -18,7 +13,7 @@ const styles = theme => ({
   textAlign: 'center',
   media: {
     width: '100vw',
-  },  
+  },
 });
 
 class ProgressiveCardImg extends Component {
@@ -28,9 +23,8 @@ class ProgressiveCardImg extends Component {
   }
 
   render() {
-    const classes = this.props.classes;
-    let width = window.innerWidth;
-    return (<img width={width} src={this.src}/>);       
+    let width = '100%';
+    return (<img width={width} src={this.src} alt="image"/>);
   }
 }
 

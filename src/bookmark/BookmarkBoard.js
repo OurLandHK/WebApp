@@ -6,7 +6,7 @@ import Tab  from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Slide from '@material-ui/core/Slide';
 import {connect} from "react-redux";
-import config, {constant} from '../config/default';
+import {constant} from '../config/default';
 import BookmarkList from './BookmarkList';
 import BookmarkView from './BookmarkView';
 import {
@@ -16,7 +16,6 @@ import {
 function Transition(props) {
   return <Slide direction="left" {...props} />;
 }
-
 
 const styles = {
     appBar: {
@@ -84,7 +83,7 @@ class BookmarkBoard extends React.Component {
             <BookmarkView/>
           </Tabs>
         </div>
-        {tabValue == constant.myBookmarkLabel && this.renderMessages()}  
+        {tabValue == constant.myBookmarkLabel && this.renderMessages()}
       </div>);
   }
 }
@@ -102,7 +101,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     checkAuthState:
-      () => dispatch(checkAuthState()),    
+      () => dispatch(checkAuthState()),
   }
 };
 

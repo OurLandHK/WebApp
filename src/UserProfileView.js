@@ -1,7 +1,6 @@
 /*global FB*/
-import React, { Component } from 'react';
+import React from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
-import config from './config/default';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import TextField from '@material-ui/core/TextField';
@@ -16,12 +15,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
-import {fileExists, checkImageExists} from './util/http';
-import {getUserProfile, updateUserLocation, getUserRecords, updateUserProfile} from './UserProfile';
+import {checkImageExists} from './util/http';
+import {updateUserProfile} from './UserProfile';
 import UploadImageButton from './UploadImageButton';
 import IntegrationReactSelect from './IntegrationReactSelect';
 import uuid from 'js-uuid';
-import thunk from 'redux-thunk';  
 import {connect} from "react-redux";
 import {
   checkAuthState
@@ -57,10 +55,10 @@ class UserProfileView extends React.Component {
         var id = uuid.v4();
         this.state = {
             open: false,
-            user: null, 
-            imageURL: null, 
-            publicImageURL: null, 
-            thumbnailImageURL: null, 
+            user: null,
+            imageURL: null,
+            publicImageURL: null,
+            thumbnailImageURL: null,
             thumbnailPublicImageURL: null,
             displayName: '',
             displayRole: '權限: ',
@@ -74,12 +72,12 @@ class UserProfileView extends React.Component {
         this.openDialog = this.openDialog.bind(this);
         this.handleTagChange = this.handleTagChange.bind(this);
         this.props.openDialog(this.openDialog);
-    }    
+    }
 
   openDialog = () => {
     this.lastOnPopState = window.onpopstate;
     window.onpopstate = this.onBackButtonEvent;
-    console.log('UserProfile Open'); 
+    console.log('UserProfile Open');
     this.setState({ open: true });
   };
 
@@ -87,7 +85,7 @@ class UserProfileView extends React.Component {
     e.preventDefault();
     this.handleRequestClose();
   }
-    
+
 
   handleRequestClose = () => {
     window.onpopstate = this.lastOnPopState;
@@ -121,7 +119,7 @@ class UserProfileView extends React.Component {
           multiLabel = this.interestedTagsToMultiLabel(interestedTags)
           console.log("multiLabel=" + multiLabel)
           this.setState({
-            user: user.user, 
+            user: user.user,
             userProfile: user.userProfile,
             displayName: user.userProfile.displayName,
             displayRole: '權限: ' + user.userProfile.role,
@@ -132,7 +130,7 @@ class UserProfileView extends React.Component {
 
 
         } else {
-          this.setState({user: user.user});         
+          this.setState({user: user.user});
         }
       } else {
         this.setState({user: null, userProfile: null});
@@ -180,12 +178,12 @@ class UserProfileView extends React.Component {
       User's Email Address
     */
     const regExp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-    if(this.state.emailAddress != '' && !regExp.test(this.state.emailAddress)) {
+    if(this.state.emailAddress !== '' && !regExp.test(this.state.emailAddress)) {
       error = 1;
     }else {
       userProfile.emailAddress = this.state.emailAddress;
     }
-  
+
     if(!error) {
       var rv = updateUserProfile(this.state.user, userProfile);
 
@@ -197,22 +195,21 @@ class UserProfileView extends React.Component {
     } else {
       alert("Incorrect Email Address Format");
     }
-  } 
+  }
 
-  uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {  
+  uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {
     this.setState({
-      imageURL: imageURL, 
-      publicImageURL: publicImageURL, 
-      thumbnailImageURL: thumbnailImageURL, 
+      imageURL: imageURL,
+      publicImageURL: publicImageURL,
+      thumbnailImageURL: thumbnailImageURL,
       thumbnailPublicImageURL: thumbnailPublicImageURL
     });
     }
 
   handleTagChange(value) {
     let interestedTags = [];
-    if(value != null && value != '') {
+    if(value != null && value !== '') {
       var partsOfStr = value.split(',');
-      let i = 0;
       partsOfStr.forEach(function(element) {
         interestedTags.push({
           id: interestedTags.length + 1,
@@ -220,7 +217,7 @@ class UserProfileView extends React.Component {
         });
       });
     }
-    
+
     this.setState({interestedTags});
   }
   render() {
@@ -231,7 +228,7 @@ class UserProfileView extends React.Component {
     var complete = 0;
     let concernMessage = null;
     let publishMessage = null;
-    let completeMessage = null; 
+    let completeMessage = null;
     let emailHtml = null;
     let dialogHtml = null;
     if (this.state.user != null && this.state.userProfile != null) {
@@ -265,7 +262,7 @@ class UserProfileView extends React.Component {
             </IconButton>
             <Typography variant="title" color="inherit" className={classes.flex}>
               <img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{"使用者設定"}
-            </Typography>           
+            </Typography>
             <Button color="contrast" onClick={() => this.onSubmit()}>
               更新
             </Button>
@@ -273,7 +270,7 @@ class UserProfileView extends React.Component {
         </AppBar>
 
          <div className={classes.container}>
-          <FormGroup>  
+          <FormGroup>
           <TextField
             autoFocus
             required
@@ -306,11 +303,11 @@ class UserProfileView extends React.Component {
             <br/>
             <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} thumbnailFilename={this.thumbnailFilename} isThumbnailOnly={true} path={this.path} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
           </FormGroup>
-         
+
           <List>
             <ListItem >
               <ListItemText primary={this.state.displayRole} />
-            </ListItem>                                         
+            </ListItem>
           </List>
         </div>
         </Dialog>
@@ -338,4 +335,3 @@ const mapDispatchToProps = (dispatch) => {
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(UserProfileView));
-

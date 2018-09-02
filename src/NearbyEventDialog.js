@@ -1,24 +1,21 @@
 /*global FB*/
 import React, { Component } from 'react';
-import config, {constant} from './config/default';
+import {constant} from './config/default';
 import Dialog from '@material-ui/core/Dialog';
-import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import MessageList from './MessageList';
 import {connect} from "react-redux";
-import { fetchLocation, updateFilter, updateFilterTagList, toggleNearbyEventDialog } from './actions';
+import { fetchLocation, toggleNearbyEventDialog } from './actions';
 import FilterBar from './FilterBar';
 import {trackEvent} from './track';
 
@@ -40,10 +37,19 @@ const styles = theme =>  ({
     },
     button: {
       flex: 1,
-      padding: theme.spacing.unit,
       textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },    
+      color: 'white',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      padding: '8px 4px',
+      borderRadius: 0,
+      border: 'none',
+      margin: '1px',
+      boxShadow: 'none',
+
+      '&:hover': {
+        backgroundColor: '#3f51b5'
+      }
+    },
     container: {
        overflowY: 'auto'
     },
@@ -57,6 +63,10 @@ const styles = theme =>  ({
       bottom:'0',
       right:'0',
       fontSize:'0.5rem',
+    },
+    card: {
+      textAlign: 'center',
+      boxShadow: 'none'
     },
     chip: {
       margin: theme.spacing.unit / 2,
@@ -132,7 +142,7 @@ class NearbyEventDialog extends React.Component {
     let buttonList2 = [];
     let firstLine = TotalButton/2 + TotalButton%2;
     for(let i = 0; i < TotalButton; i++) {
-      let buttonHtml = <Button  className={classes.button} variant="contained" size="small" aria-label={buttons[i].label}
+      let buttonHtml = <Button className={classes.button} variant="contained" size="small" aria-label={buttons[i].label}
           onClick={(evt) => this.handleRequestOpen(evt, buttons[i].label, buttons[i].value)}>
           {buttons[i].label}
           </Button>
@@ -141,7 +151,7 @@ class NearbyEventDialog extends React.Component {
       } else {
         buttonList2.push(buttonHtml);
       }
-    } 
+    }
       //      return <Button  variant="outlined" color="primary" onClick={(evt) => this.handleRequestOpen(evt, buttonDetail.value)}>{buttonDetail.label}</Button>;
     const cardImage = (
       <CardMedia
@@ -149,7 +159,6 @@ class NearbyEventDialog extends React.Component {
         image="/images/fromPeak.jpg"
         title={constant.regionEventLabel}
       >
-        <br/>
         <Grid container >
           <Grid container className={classes.buttonGird}>
             {buttonList1}
@@ -174,7 +183,7 @@ class NearbyEventDialog extends React.Component {
     }
     return (
         <span>
-            <Card>
+            <Card className={classes.card}>
                 <Typography variant="headline" component="h2" className={classes.title}>
                   {constant.nearbyEventLabel} - {this.state.titleLabel}
                 </Typography>
