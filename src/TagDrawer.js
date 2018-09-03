@@ -86,7 +86,7 @@ class TagDrawer extends React.Component {
   componentDidMount() {
     let {isRenderTagList} = this.props;
 
-    if(isRenderTagList != null) {
+    if(isRenderTagList  != null ) {
       this.setState({
         isRenderTagList
       });
@@ -94,7 +94,7 @@ class TagDrawer extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.filter.tagList != this.props.filter.tagList) {
+    if (prevProps.filter.tagList !== this.props.filter.tagList) {
       this.setTag(null);
     }
   }
@@ -104,7 +104,7 @@ class TagDrawer extends React.Component {
   };
 
   setTag(tag) {
-    if(tag == null) {
+    if(tag === null) {
       this.setState({
         selectedTag: null,
         isSelectedAll: true

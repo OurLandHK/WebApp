@@ -88,7 +88,7 @@ class DrawerMenu extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.user != this.props.user &&  this.props.user && this.props.user.userProfile) {
+    if (prevProps.user !== this.props.user &&  this.props.user && this.props.user.userProfile) {
       this.setState({concernMessages: this.props.user.userProfile.concernMessages});
     }
   }
@@ -127,7 +127,7 @@ class DrawerMenu extends Component {
                               </ListItemIcon>
                               <ListItemText primary={constant.addressBookLabel} onClick={() => this.addressDialogClick()}/>
                             </ListItem></span>);
-        if(user.userProfile != null & user.userProfile.role == RoleEnum.admin) {
+        if(user.userProfile  != null  & user.userProfile.role === RoleEnum.admin) {
           adminButton = <ListItem button>
             <ListItemIcon>
               <ChatBubbleIcon />

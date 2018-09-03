@@ -1,7 +1,7 @@
 export function fileExists(fileUrl){
     fetch(fileUrl)
     .then(function(response) {
-        return (response.status == 200 || response.status == 400);
+        return (response.status === 200 || response.status === 400);
     }).catch(function(err) {
         //console.log("Opps, Something went wrong!", err);
         return useFirestore(fileUrl);

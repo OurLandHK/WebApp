@@ -50,16 +50,16 @@ class AddressView extends Component {
         var streetAddress = null;
         var type = addressEnum.other;
         var distance = 1;
-        if(this.props.address != null) {
+        if(this.props.address  != null ) {
             var c = this.props.address;
             text = c.text;
-            if(c.geolocation != null) {
+            if(c.geolocation  != null ) {
                 geolocation = {latitude :c.geolocation.latitude,
                 longitude: c.geolocation.longitude};
             }
             streetAddress = c.streetAddress;
             type = c.type;
-            if(c.distance != null) {
+            if(c.distance  != null ) {
                 distance = c.distance;
             }
         }
@@ -87,16 +87,16 @@ class AddressView extends Component {
         var type = addressEnum.other;
         var distance = constant.distance;
 
-        if(this.props.address != null) {
+        if(this.props.address  != null ) {
             var c = this.props.address;
             text = c.text;
-            if(c.geolocation != null) {
+            if(c.geolocation  != null ) {
                 geolocation = {latitude :c.geolocation.latitude,
                                 longitude: c.geolocation.longitude};
             }
             streetAddress = c.streetAddress;
             type = c.type;
-            if(c.distance != null) {
+            if(c.distance  != null ) {
                 distance = c.distance;
             }
         }
@@ -128,7 +128,7 @@ class AddressView extends Component {
         const { user } = this.props;
         if (user.user) {
           var key = null;
-          if (this.props.address != null) {
+          if (this.props.address  != null ) {
               key = this.props.address.id;
           }
           console.log("addressbook submit" + this.state.streetAddress);
@@ -143,10 +143,10 @@ class AddressView extends Component {
       const { user } = this.props;
       if (user.user) {
         var key = null;
-        if (this.props.address != null) {
+        if (this.props.address  != null ) {
             key = this.props.address.id;
         }
-        if (key == null)
+        if (key === null)
           return;
         this.props.deleteAddress(user.user, key);
       }
@@ -164,7 +164,7 @@ class AddressView extends Component {
         let type = addressEnum.other;
         let icons = <PlaceIcon />;
         let disableValue = false;
-        if(this.props.address != null) {
+        if(this.props.address  != null ) {
             var c = this.props.address;
             var text = c.text;
             streetAddress = c.streetAddress;
@@ -180,10 +180,10 @@ class AddressView extends Component {
                     disableValue = true;
                     break;
             }
-            if(c.geolocation != null) {
+            if(c.geolocation  != null ) {
                 geolocation = {latitude :c.geolocation.latitude,
                     longitude: c.geolocation.longitude};
-                if(c.streetAddress != null) {
+                if(c.streetAddress  != null ) {
                     locationString =  c.streetAddress + " (" + geoString(c.geolocation.latitude, c.geolocation.longitude) + ")";
                 } else {
                     locationString = "近" + geoString(c.geolocation.latitude, c.geolocation.longitude);

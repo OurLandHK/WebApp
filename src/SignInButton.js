@@ -17,7 +17,7 @@ class SignInButton extends  Component {
   }
 
   componentDidMount() {
-    if(this.props.label != null) {
+    if(this.props.label  != null ) {
       this.setState({
         loginLabel: this.props.label
       })

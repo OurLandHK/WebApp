@@ -77,12 +77,12 @@ class PublicProfile extends React.Component {
 
   componentDidMount() {
     //this.loadFbLoginApi();
-    if (this.props.id != "") {
+    if (this.props.id !== "") {
       //console.log("componentDidMount id  " + this.props.id);
       let user = {uid: this.props.id};
       this.fetchUserProfile(user);
     }
-    if (this.props.userid != null) {
+    if (this.props.userid  != null ) {
       //console.log("componentDidMount id  " + this.props.id);
       let user = {uid: this.props.userid};
       this.fetchUserProfile(user);
@@ -121,7 +121,7 @@ class PublicProfile extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.id != this.props.id && this.props.id != "") {
+    if (prevProps.id !== this.props.id && this.props.id !== "") {
       var user = {uid: this.props.id};
       this.fetchUserProfile(user);
     }
@@ -131,7 +131,7 @@ class PublicProfile extends React.Component {
   handleRequestClose = () => {
 //    window.history.pushState("", "", `/`)
     window.onpopstate = this.lastOnPopState;
-    if(this.props.closeDialog != null) {
+    if(this.props.closeDialog  != null ) {
       this.props.closeDialog();
     } else {
       this.props.togglePublicProfileDialog(false);
@@ -147,7 +147,7 @@ class PublicProfile extends React.Component {
     let completeMessage = null;
     let desc = null;
     let facebookhtml = null;
-    if(this.state.userProfile != null) {
+    if(this.state.userProfile  != null ) {
       var imgURL = '/images/profile_placeholder.png';
       if(checkImageExists(this.state.userProfile.photoURL)) {
         imgURL = this.state.userProfile.photoURL;
@@ -155,7 +155,7 @@ class PublicProfile extends React.Component {
       displayName = this.state.userProfile.displayName;
       var displayNameLabel = "名字:" + displayName;
       imageHtml =  <img src={imgURL}/>;
-      if(this.state.userProfile.desc != null && this.state.userProfile.desc != "") {
+      if(this.state.userProfile.desc  != null  && this.state.userProfile.desc !== "") {
         desc = <ListItem >
           <ListItemText primary={"簡介: " + this.state.userProfile.desc}/>
         </ListItem>
@@ -180,12 +180,12 @@ class PublicProfile extends React.Component {
     const { classes, open, id } = this.props;
     let dialogOpen = open;
     let userid = id;
-    if(this.props.userid != null) {
+    if(this.props.userid  != null ) {
       dialogOpen = true;
       userid = this.props.userid;
     }
     if(dialogOpen) {
-      if(window.onpopstate != this.onBackButtonEvent) {
+      if(window.onpopstate !== this.onBackButtonEvent) {
         window.history.pushState("", "", `/user/${userid}`)
         this.lastOnPopState = window.onpopstate;
         window.onpopstate = this.onBackButtonEvent;

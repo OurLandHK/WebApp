@@ -47,7 +47,7 @@ class FocusToggleButton extends Component {
     const { message, ourland } = this.props;
     return ourland.globalFocusMessages.map(focusMessage => {
       let icons = null;
-      if(focusMessage.messages.indexOf(message.key) != -1) {
+      if(focusMessage.messages.indexOf(message.key) !== -1) {
           icons = <ListItemIcon><CheckIcon/></ListItemIcon>;
       }
       return (
@@ -61,7 +61,7 @@ class FocusToggleButton extends Component {
 
   toggleFocusMessage(focusMessage, messageKey) {
     const index = focusMessage.messages.indexOf(messageKey);
-    if(index == -1) {
+    if(index === -1) {
         focusMessage.messages.push(messageKey);
     } else {
         focusMessage.messages.splice(index, 1);
@@ -75,7 +75,7 @@ class FocusToggleButton extends Component {
     const baseClass = classes.base;
     const iconHtml = <StarsIcon/>;
     let disable = true;
-    if(this.props.user != null && this.props.user.user != null) {
+    if(this.props.user  != null  && this.props.user.user  != null ) {
       disable = false;
     }
     let outputHtml = <IconButton

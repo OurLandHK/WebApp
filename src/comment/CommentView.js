@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
+//import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import timeOffsetStringInChinese from '../TimeString';
 import { withStyles } from '@material-ui/core/styles';
@@ -15,7 +17,7 @@ import {
     updatePublicProfileDialog,
   } from '../actions';
 
-import {updateCommentApproveStatus, getMessage, updateMessage} from '../MessageDB';
+import {updateCommentApproveStatus, getMessage, updateMessage, addMessageGalleryEntry} from '../MessageDB';
 import {addCompleteMessage} from '../UserProfile';
 import {connect} from 'react-redux';
 import Button from '@material-ui/core/Button';
@@ -33,10 +35,10 @@ const styles = theme => ({
     content: {
         flex: '1 0 auto',
     },
-    cover: {
-        width: 64,
-        height: 64,
-    },
+    tileMedia: {
+        width: 151,
+        height: 151,
+    },    
 });
 
 class CommentView extends Component {
@@ -50,7 +52,7 @@ class CommentView extends Component {
 
   approve() {
     const {messageUUID, commentRef, user} = this.props;
-    const {geolocation, streetAddress, changeStatus, link, tags} = commentRef.data();
+    const {geolocation, streetAddress, changeStatus, link, tags, galleryEntry, text} = commentRef.data();
     let isCommplete = false;
     return getMessage(messageUUID).then((messageRecord) => {
         let messageuid=messageRecord.uid;
@@ -113,7 +115,7 @@ class CommentView extends Component {
                 let commentUser = {uid: commentRef.data().uid};
                 return addCompleteMessage(commentUser, messageUUID).then(() => {
                     return updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus).then((ref) => {
-                        if(messageuid != commentUser.uid) {
+                        if(messageuid !== commentUser.uid) {
                             let messageUser = {uid: messageuid};
                             return addCompleteMessage(messageUser, messageUUID).then(() => {
                                 return ref;
@@ -124,7 +126,13 @@ class CommentView extends Component {
                     });
                 })
             } else {
-                return updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus);
+                return updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus).then(() => {
+                    if(galleryEntry  != null  && galleryEntry !== undefined) {
+                        return addMessageGalleryEntry(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL, text);
+                    } else {
+                        return;
+                    }    
+                });
             }
         })
     })
@@ -155,12 +163,13 @@ class CommentView extends Component {
   render() {
     const { classes, theme, user, commentRef } = this.props;
     const comment = commentRef.data();
-    const {approvedStatus, geolocation, streetAddress, changeStatus, link, tags, createdAt, photoUrl, isApprovedUrgentEvent} = comment;
+    const {galleryEntry, approvedStatus, geolocation, streetAddress, changeStatus, link, tags, createdAt, photoUrl, isApprovedUrgentEvent} = comment;
     let text = comment.text;
-    if(text == null) {
-        if(geolocation != null) {
+    let galleryImage = null;
+    if(text === null) {
+        if(geolocation  != null ) {
             var locationString = null;
-            if(streetAddress != null) {
+            if(streetAddress  != null ) {
                 locationString =  streetAddress + " (" + geoString(geolocation.latitude, geolocation.longitude) + ")";
               } else {
                 locationString = "近" + geoString(geolocation.latitude, geolocation.longitude);
@@ -168,15 +177,15 @@ class CommentView extends Component {
             text = constant.commentOptions[1] + locationString;
             this.commentOption = constant.commentOptions[1];
         } else {
-            if(changeStatus != null) {
+            if(changeStatus  != null ) {
                 text = constant.commentOptions[2] + changeStatus;
                 this.commentOption = constant.commentOptions[2];
             } else {
-                if(link != null) {
+                if(link  != null ) {
                     text = constant.commentOptions[3] + link;
                     this.commentOption = constant.commentOptions[3];
                 } else {
-                    if(tags != null) {
+                    if(tags  != null ) {
                         var tagText = tags.map((text) => {return ('#'+text+' ')});
                         text = constant.commentOptions[4] + ': ' + tagText;
                         this.commentOption = constant.commentOptions[4];
@@ -184,16 +193,18 @@ class CommentView extends Component {
                 }
             }
         }
+    } 
+    if(galleryEntry  != null ) {
+        galleryImage =  <CardMedia className={classes.tileMedia} image={galleryEntry.publicImageURL}/>
     }
-
-    if(isApprovedUrgentEvent != null) {
+    if(isApprovedUrgentEvent  != null ) {
         this.commentOption = isApprovedUrgentEvent? constant.commentWithUrgentEventOptions[0]: constant.commentWithUrgentEventOptions[1];
     }
 
     let approvedButton = null;
     let approvedLog = "";
-    if(approvedStatus == null) {
-      if(user != null && user.userProfile != null && user.userProfile.role === RoleEnum.admin) {
+    if(approvedStatus === null || approvedStatus === undefined) {
+      if(user  != null  && user.userProfile  != null  && user.userProfile.role === RoleEnum.admin) {
         approvedButton = <div>
                             <Button variant="raised" color="primary" className={classes.uploadButton} raised={true} onClick={() => this.approve()}>
                                 <ThumbUpIcon />
@@ -215,8 +226,8 @@ class CommentView extends Component {
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     let subtitle = '張貼於：' + timeOffsetString + '前 ' + approvedLog;
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
-    return (<Card container className={classes.card}>
-                {fbProfileImage}
+    return (<Card container className={classes.card}>    
+                {fbProfileImage}               
                 <div className={classes.details}>
                     <CardContent className={classes.content} zeroMinWidth>
                         <Typography variant="subheading">{text}</Typography>
@@ -226,6 +237,7 @@ class CommentView extends Component {
                     </CardContent>
                 </div>
                 {approvedButton}
+                {galleryImage} 
             </Card>);
   }
 }

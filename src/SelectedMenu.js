@@ -38,7 +38,7 @@ class SelectedMenu extends Component {
   handleMenuItemClick = (event, index) => {
     this.setState({ selectedIndex: index, open: false });
     this.selectedValue = this.props.options[index];
-    if(this.props.changeSelection != null) {
+    if(this.props.changeSelection  != null ) {
       this.props.changeSelection(this.selectedValue);
     }
   };
@@ -49,7 +49,7 @@ class SelectedMenu extends Component {
 
   render() {
     let listItemHtml = null;
-    if(this.props.label == null || this.props.label == "") {
+    if(this.props.label === null || this.props.label === "") {
 //      listItemHtml = <ListItemText primary={this.props.options[this.state.selectedIndex]}/>
         listItemHtml =<Button variant="outlined" color="primary"> {this.props.options[this.state.selectedIndex]} </Button>
     } else {

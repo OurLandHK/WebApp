@@ -82,13 +82,13 @@ class SortingDrawer extends React.Component {
   };
 
   setSorting(sorting){
-  	 if(sorting == 'sortByLastUpdate'){
+  	 if(sorting === 'sortByLastUpdate'){
       this.setState({
         selectedSorting: sorting,
         isSortByLastUpdate: true,
         isSortByDistance: false
       });
-    } else if(sorting == 'sortByDistance'){
+    } else if(sorting === 'sortByDistance'){
       this.setState({
         selectedSorting: sorting,
         isSortByDistance: true,

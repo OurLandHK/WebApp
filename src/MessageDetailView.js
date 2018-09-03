@@ -61,7 +61,7 @@ const styles = theme => ({
     backgroundColor: red[500],
   },
   container: {
-    overflowY: 'auto',
+  //  overflowY: 'auto',
     marginBottom: '40px'
   },
   actionContainer: {
@@ -123,8 +123,8 @@ class MessageDetailView extends Component {
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     let urgentEventTag = null;
 
-    if(user != null && user.userProfile != null && (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
-      if(message.isReportedUrgentEvent && message.isUrgentEvent == null){
+    if(user  != null  && user.userProfile  != null  && (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor)) {
+      if(message.isReportedUrgentEvent && message.isUrgentEvent === null){
         urgentEventTag = <Chip
           label={constant.reportedUrgent}
           className={classes.urgentEventTag}
@@ -132,7 +132,7 @@ class MessageDetailView extends Component {
       }
     }
 
-    if(message.isUrgentEvent != null && message.isUrgentEvent) {
+    if(message.isUrgentEvent  != null  && message.isUrgentEvent) {
        urgentEventTag = <Chip
         label={constant.urgent}
         className={classes.urgentEventTag}
@@ -180,7 +180,7 @@ class MessageDetailView extends Component {
       locationString = `地點: 近(${geoString(message.geolocation.latitude, message.geolocation.longitude)})`;
     }
     let geolink =`geo:${message.geolocation.latitude},${message.geolocation.longitude}`;
-    if(message.viewCount != null) {
+    if(message.viewCount  != null ) {
       viewCountString += message.viewCount;
     } else {
       viewCountString += 0;
@@ -229,13 +229,13 @@ class MessageDetailView extends Component {
     let rv = null;
     let m = this.props.message;
     let dateTimeString = '';
-    if(m.start != null)
+    if(m.start  != null )
     {
       let date = m.start.toDate();
       if(date.getFullYear() > 1970) {
         dateTimeString = date.toLocaleDateString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });
         console.log(dateTimeString);
-        if(m.startTime != null) {
+        if(m.startTime  != null ) {
           dateTimeString += ` ${m.startTime}`;
         }
       } else {
@@ -248,16 +248,16 @@ class MessageDetailView extends Component {
     let interval = m.interval;
     let duration = m.duration;
     let endDate = m.endDate;
-    if(dateTimeString != '') {
+    if(dateTimeString !== '') {
       let intervalHtml = null;
       let durationHtml = null;
       let openningHtml = null;
       let timeTypeHtml = <Typography variant="subheading"> {constant.timeOptions[1]} </Typography> ;
-      if(duration != null) {
+      if(duration  != null ) {
         durationHtml = <Typography variant="subheading"> 為期: {duration} </Typography>
         timeTypeHtml = <Typography variant="subheading"> {constant.timeOptions[0]} </Typography> ;
       }
-      if(interval && interval != '' && interval != constant.intervalOptions[0]) {
+      if(interval && interval !== '' && interval !== constant.intervalOptions[0]) {
         intervalHtml =<Typography variant="subheading"> 週期: {interval} </Typography>
       }
       if(everydayOpenning) {
@@ -290,7 +290,7 @@ class MessageDetailView extends Component {
   }
 
   validateExternalLink(link){
-    if(link == null || link == ""){
+    if(link === null || link === ""){
       return false;
     }
 
@@ -315,13 +315,13 @@ class MessageDetailView extends Component {
     var geolocation = {lat: m.geolocation.latitude, lng: m.geolocation.longitude};
     let linkHtml = null;
     let imageHtml = null;
-    if(m.publicImageURL != null) {
-      imageHtml = <MessageDetailViewImage url={m.publicImageURL} messageUUID={m.key}/>
+    if(m.publicImageURL  != null ) {
+      imageHtml = <MessageDetailViewImage gallery={m.gallery} url={m.publicImageURL} messageUUID={m.key}/>
     }
     if (this.validateExternalLink(link)) {
       linkHtml = <Typography variant="subheading"> 外部連結： <a href={link} target="_blank">前往</a> </Typography>
     } else {
-      if(link != null && link != "")
+      if(link  != null  && link !== "")
       linkHtml = <Typography variant="subheading"> {link} </Typography>;
 
     }
@@ -333,7 +333,6 @@ class MessageDetailView extends Component {
     let imageTabLabel = <Tab label="相關照片" value="相關照片"/>
     imageTabLabel = null;
     return(<div className={classes.container}>
-            <Paper className={classes.paper}>
             {baseHtml}
             {imageHtml}
              <CardContent>
@@ -341,7 +340,6 @@ class MessageDetailView extends Component {
               <ChipArray chipData={chips} />
              {linkHtml}
              </CardContent>
-             </Paper>
              {dateHtml}
              <MessageAction message={m} happyAndSad={this.props.happyAndSad}/>
              <div>
@@ -353,9 +351,9 @@ class MessageDetailView extends Component {
                  </Tabs>
                </AppBar>
              </div>
-             {tab == "參與紀錄" && <div className="wrapper"><CommentList messageUUID={m.key}/><div className="nav-wrapper"><PostCommentView messageUUID={m.key} message={m}/></div></div>}
-             {tab == "相關照片" && <MessageDetailViewImage url={m.publicImageURL} messageUUID={m.key}/>}
-             {tab == "準確地點" && <EventMap center={geolocation} zoom={zoom}/>}
+             {tab === "參與紀錄" && <div className="wrapper"><CommentList messageUUID={m.key}/><div className="nav-wrapper"><PostCommentView messageUUID={m.key} message={m}/></div></div>}
+             {tab === "相關照片" && <MessageDetailViewImage url={m.publicImageURL} messageUUID={m.key}/>}
+             {tab === "準確地點" && <EventMap center={geolocation} zoom={zoom}/>}
          </div>);
 
     }

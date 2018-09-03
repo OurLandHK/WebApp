@@ -21,7 +21,7 @@ export class EventMap extends Component {
 
   onDragEnd(pos) {
     console.log('mapProps', pos);
-    if (this.props.onCenterChange != undefined)
+    if (this.props.onCenterChange !== undefined)
       this.props.onCenterChange(pos);
   }
 

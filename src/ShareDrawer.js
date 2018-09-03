@@ -109,7 +109,7 @@ class ShareDrawer extends React.Component {
 
   facebookHashTag(tags) {
     var tagsLength = 0
-    if(tags != null) {
+    if(tags  != null ) {
       tagsLength = tags.length;
     }
     var tagString = '';
@@ -127,14 +127,14 @@ class ShareDrawer extends React.Component {
                 "<meta property=\"og:description\"        content=\"Location"  +  "" + "\" />";
 */
     var quote = "";
-    if(message != null) {
+    if(message  != null ) {
       quote = '【' + message.status + '】' + ' 社區事件: ' + message.text;
 
-      if(message.streetAddress != undefined && message.streetAddress != null) {
+      if(message.streetAddress !== undefined && message.streetAddress  != null ) {
         quote = quote + ' - 地點: ' + message.streetAddress 
       }
 
-      if(message.start != undefined && message.start != null) {
+      if(message.start !== undefined && message.start  != null ) {
         let date = message.start.toDate();
         if(date.getFullYear() > 1970) {
           let dateTimeString = '';
@@ -219,17 +219,17 @@ class ShareDrawer extends React.Component {
     let hashtag = "";
     let shareUrl = window.location.protocol + "//" + window.location.hostname;
     console.log(`message ${this.props.message} uid ${this.props.uid} book: ${this.props.bookmark}`);
-    if(this.props.message != undefined) {
+    if(this.props.message !== undefined) {
       m = this.facebookQuote(this.props.message);
       hashtag = this.facebookHashTag(this.props.message.tag);
       shareUrl = shareUrl + "/detail/" + this.props.message.key;
     }
-    if(this.props.uid != undefined && this.props.displayName != undefined && this.props.displayName != "..." ){
+    if(this.props.uid !== undefined && this.props.displayName !== undefined && this.props.displayName !== "..." ){
       m = this.props.displayName;
       hashtag = "#我地";
       shareUrl = shareUrl + "/user/" + this.props.uid;
     }
-    if(this.props.bookmark != undefined) {
+    if(this.props.bookmark !== undefined) {
       m = this.props.bookmark.title;
       hashtag = "#我地";
       shareUrl = shareUrl + "/user/" + this.props.bookmark.uid + "/" + this.props.bookmark.key;

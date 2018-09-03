@@ -76,7 +76,7 @@ class Suggestions extends Component {
             onMouseDown={props.handleClick.bind(null, i)}
             onMouseOver={props.handleHover.bind(null, i)}
             className={
-              i == props.selectedIndex ? props.classNames.activeSuggestion : ""
+              i === props.selectedIndex ? props.classNames.activeSuggestion : ""
             }>
             <span dangerouslySetInnerHTML={this.markIt(item, props.query)} />
           </li>

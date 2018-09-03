@@ -59,13 +59,13 @@ class LocationButton extends Component {
       longitude: ""
     };
 
-    if(this.props.geolocation != null) {
+    if(this.props.geolocation  != null ) {
       this.geolocation = this.props.geolocation;
     }
-    if(this.props.streetAddress != null) {
+    if(this.props.streetAddress  != null ) {
       this.streetAddress = this.props.streetAddress;
     }
-    if(this.props.geoLocationSearch != null) {
+    if(this.props.geoLocationSearch  != null ) {
       this.geoLocationSearch = {
         latitude: this.props.geoLocationSearch.latitude,
         longitude: this.props.geoLocationSearch.longitude
@@ -190,11 +190,11 @@ class LocationButton extends Component {
   renderStreetAddressSearch() {
    const classes = this.props.classes;
 
-   if( (this.state.geoLocationSearch.latitude == "" && this.state.geoLocationSearch.longitude == "") ){
+   if( (this.state.geoLocationSearch.latitude === "" && this.state.geoLocationSearch.longitude === "") ){
     let streetAddressSearchClass = (this.state.streetAddress === null || this.state.streetAddress === "" ? "hide" : "");
 
     return (
-      <div className={this.state.geolocation != null && classes.dialogContentWrapper}>
+      <div className={this.state.geolocation  != null  && classes.dialogContentWrapper}>
               <DialogContent className="address-row">
                 <MyLocationIcon onClick={() => this.handleGetLocation()} />
                 <TextField
@@ -221,10 +221,10 @@ class LocationButton extends Component {
     const classes = this.props.classes;
     const user = this.props.user;
 
-    if(user.userProfile != null && (user.userProfile.role == RoleEnum.advancedUser || user.userProfile.role == RoleEnum.admin)) {
-      if (this.state.streetAddress === null || this.state.streetAddress === "" || (this.state.geoLocationSearch.latitude != "" || this.state.geoLocationSearch.longitude != "") ) {
+    if(user.userProfile  != null  && (user.userProfile.role === RoleEnum.advancedUser || user.userProfile.role === RoleEnum.admin)) {
+      if (this.state.streetAddress === null || this.state.streetAddress === "" || (this.state.geoLocationSearch.latitude !== "" || this.state.geoLocationSearch.longitude !== "") ) {
            let geoLocationSearchClass = "";
-          if(this.state.geoLocationSearch != null) {
+          if(this.state.geoLocationSearch  != null ) {
             if( (this.state.geoLocationSearch.latitude === undefined || this.state.geoLocationSearch.latitude === '') || (this.state.geoLocationSearch.longitude === undefined || this.state.geoLocationSearch.longitude === '') ) {
               geoLocationSearchClass = "hide ";
             } else {
@@ -233,7 +233,7 @@ class LocationButton extends Component {
           }
 
           return (
-            <div className={this.state.geolocation != null && classes.dialogContentWrapper}>
+            <div className={this.state.geolocation  != null  && classes.dialogContentWrapper}>
                 <DialogContent className={classes.geoDialogContent}>
                  <TextField
                     fullWidth
@@ -273,7 +273,7 @@ class LocationButton extends Component {
 
   handleSubmit = () => {
     this.streetAddress = this.state.streetAddress;
-    if(this.props.onSubmit != null) {
+    if(this.props.onSubmit  != null ) {
       console.log("this.props.onSubmit call");
       this.props.onSubmit(this.geolocation, this.streetAddress);
     }
@@ -288,11 +288,11 @@ class LocationButton extends Component {
     const classes = this.props.classes;
     let geolocation = null;
     let locationString = null;
-    if (pos != null) {
+    if (pos  != null ) {
       geolocation = {lat: pos.latitude, lng: pos.longitude};
-      if(this.state.streetAddress != "" || this.state.geoLocationSearch != "") {
+      if(this.state.streetAddress !== "" || this.state.geoLocationSearch !== "") {
         locationString = "位置: " + this.state.streetAddress + "\n(" + geoString(pos.latitude, pos.longitude) + ")";
-      }else if(this.state.geoLocationSearch.latitude != "" || this.state.geoLocationSearch.longitude != "") {
+      }else if(this.state.geoLocationSearch.latitude !== "" || this.state.geoLocationSearch.longitude !== "") {
         locationString = "位置: " + this.state.streetAddress + "\n(" + geoString(pos.latitude, pos.longitude) + ")";
       }else {
         locationString = "位置: 近" + geoString(pos.latitude, pos.longitude);
@@ -335,7 +335,7 @@ class LocationButton extends Component {
           {this.renderStreetAddressSearch()}
           {this.renderGeoLocationSearch()}
           <p>{locationString}</p>
-          {this.state.geolocation != null  && <EventMap center={geolocation} zoom={zoom} onCenterChange={this.onMapCenterChange}/>}
+          {this.state.geolocation  != null   && <EventMap center={geolocation} zoom={zoom} onCenterChange={this.onMapCenterChange}/>}
         </Dialog>
 
       </div>);

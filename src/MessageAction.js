@@ -121,10 +121,10 @@ class MessageAction extends Component {
         break;
     }
     let disable=true;
-    if(this.props.user != null && this.props.user.user != null) {
+    if(this.props.user  != null  && this.props.user.user  != null ) {
       disable = false;
     }
-    if (user.userProfile != null && (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
+    if (user.userProfile  != null  && (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor)) {
       focusButton =  <Grid item ><FocusToggleButton message={m}/></Grid>;
     }
     return(<Paper role="button" >

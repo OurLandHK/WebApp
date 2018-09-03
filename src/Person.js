@@ -90,10 +90,10 @@ class Person extends Component {
                             </ListItem></span>);
         publishMessage = <EventListDialog title="發表事件: " messageIds={user.userProfile.publishMessages}/>
         completeMessage = <EventListDialog title="完成事件: " messageIds={user.userProfile.completeMessages}/>
-        if (user.userProfile != null & (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
+        if (user.userProfile  != null  & (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor)) {
           focusButton = <FocusDialog/>;
         }
-        if(user.userProfile != null & user.userProfile.role == RoleEnum.admin) {
+        if(user.userProfile  != null  & user.userProfile.role === RoleEnum.admin) {
             adminButton = <ListItem button>
             <ListItemIcon>
                 <ChatBubbleIcon />

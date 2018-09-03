@@ -43,9 +43,9 @@ class FocusView extends Component {
         let desc = "";
         let key = "";
         let radius = 1;
-        if(this.props.focus != null) {
+        if(this.props.focus  != null ) {
             let c = this.props.focus;
-            if(c.geolocation != null) {
+            if(c.geolocation  != null ) {
                 geolocation = {latitude :c.geolocation.latitude,
                 longitude: c.geolocation.longitude};
                 streetAddress = c.streetAddress;
@@ -80,9 +80,9 @@ class FocusView extends Component {
         let desc = "";
         let key = "";
         let radius = 1;
-        if(this.props.focus != null) {
+        if(this.props.focus  != null ) {
             let c = this.props.focus;
-            if(c.geolocation != null) {
+            if(c.geolocation  != null ) {
                 geolocation = {latitude :c.geolocation.latitude,
                 longitude: c.geolocation.longitude};
                 streetAddress = c.streetAddress;
@@ -122,8 +122,8 @@ class FocusView extends Component {
 
     onSubmit() {
         const { user } = this.props;
-        if (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {
-          if (this.state.key != "") {
+        if (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor) {
+          if (this.state.key !== "") {
               let focusMessage = {
                 title: this.state.title,
                 geolocation: this.state.geolocation,
@@ -154,7 +154,7 @@ class FocusView extends Component {
 
     onDelete() {
       const { user } = this.props;
-      if (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor) {
+      if (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor) {
         dropFocusMessage(this.state.key)
       }
       this.setState({popoverOpen: false});
@@ -171,16 +171,16 @@ class FocusView extends Component {
         let streetAddress = null;
         let icons = <PlaceIcon />;
         let disableValue = true;
-        if(this.props.focus != null) {
+        if(this.props.focus  != null ) {
             disableValue = false;
             let c = this.props.focus;
             let text = c.title;
             let  locationString = constant.addressNotSet;
-            if(c.geolocation != null) {
+            if(c.geolocation  != null ) {
                 streetAddress = c.streetAddress;
                 geolocation = {latitude :c.geolocation.latitude,
                     longitude: c.geolocation.longitude};
-                if(c.streetAddress != null) {
+                if(c.streetAddress  != null ) {
                     locationString =  c.streetAddress + " (" + geoString(c.geolocation.latitude, c.geolocation.longitude) + ")";
                 } else {
                     locationString = "近" + geoString(c.geolocation.latitude, c.geolocation.longitude);
@@ -192,7 +192,7 @@ class FocusView extends Component {
                                     </ListItemIcon>
                                     <ListItemText primary={text} secondary={locationString} />
                                 </ListItem>
-            if(this.state.messages.length != 0) {
+            if(this.state.messages.length !== 0) {
                 messageHtml = <MessageList
                     disableLocationDrawer={true}
                     isUsePublicAddressBook={false}

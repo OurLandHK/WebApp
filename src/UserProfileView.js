@@ -94,22 +94,22 @@ class UserProfileView extends React.Component {
 
 
   componentDidUpdate(prevProps, prevState) {
-    if ((this.props.user.user != null && this.state.user == null) ||  (prevProps.user != this.props.user)) {
+    if ((this.props.user.user  != null  && this.state.user === null) ||  (prevProps.user !== this.props.user)) {
       const {user} = this.props;
       if (user.user) {
-        if(user.userProfile != null){
+        if(user.userProfile  != null ){
           var desc = '';
-          if(user.userProfile.desc != null) {
+          if(user.userProfile.desc  != null ) {
             desc = user.userProfile.desc;
           }
 
           var emailAddress = '';
-          if(user.userProfile.emailAddress != null) {
+          if(user.userProfile.emailAddress  != null ) {
             emailAddress = user.userProfile.emailAddress;
           }
 
           var interestedTags = [];
-          if(user.userProfile.interestedTags != null) {
+          if(user.userProfile.interestedTags  != null ) {
             interestedTags = user.userProfile.interestedTags;
             console.log(interestedTags)
           }
@@ -153,14 +153,14 @@ class UserProfileView extends React.Component {
       User's Profile Image
     */
     var userProfile = this.state.userProfile;
-    if(this.state.thumbnailPublicImageURL != null) {
+    if(this.state.thumbnailPublicImageURL  != null ) {
       userProfile.photoURL = this.state.thumbnailPublicImageURL;
     }
 
     /*
       User's Display Name
     */
-    if(this.state.displayName != "") {
+    if(this.state.displayName !== "") {
       userProfile.displayName = this.state.displayName;
     }
 
@@ -208,7 +208,7 @@ class UserProfileView extends React.Component {
 
   handleTagChange(value) {
     let interestedTags = [];
-    if(value != null && value !== '') {
+    if(value  != null  && value !== '') {
       var partsOfStr = value.split(',');
       partsOfStr.forEach(function(element) {
         interestedTags.push({
@@ -231,7 +231,7 @@ class UserProfileView extends React.Component {
     let completeMessage = null;
     let emailHtml = null;
     let dialogHtml = null;
-    if (this.state.user != null && this.state.userProfile != null) {
+    if (this.state.user  != null  && this.state.userProfile  != null ) {
         if(checkImageExists(this.state.userProfile.photoURL)) {
           imgURL = this.state.userProfile.photoURL;
         }
@@ -241,7 +241,7 @@ class UserProfileView extends React.Component {
           desc = this.state.userProfile.desc;
         }
     }
-    if(user != null && user.userProfile != null && (user.userProfile.role == RoleEnum.admin ||  user.userProfile.role == RoleEnum.betaUser || user.userProfile.role == RoleEnum.monitor)) {
+    if(user  != null  && user.userProfile  != null  && (user.userProfile.role === RoleEnum.admin ||  user.userProfile.role === RoleEnum.betaUser || user.userProfile.role === RoleEnum.monitor)) {
       emailHtml = <TextField
                   id="emailAddress"
                   label="電郵地址"

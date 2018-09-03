@@ -53,13 +53,14 @@ const styles = theme => ({
 //    textOverflow: 'ellipsis',
   },
   title: {
-//    textOverflow: 'ellipsis',
+//      textOverflow: 'ellipsis',
+    
   },
   pos: {
 //    marginBottom: 12,
     color: theme.palette.text.secondary,
-    fontSize: '11px'
-//    textOverflow: 'ellipsis'
+    fontSize: '11px',
+    textOverflow: 'ellipsis'
   },
   details: {
     display: 'flex',
@@ -97,7 +98,7 @@ class MessageView extends Component {
   constructor(props) {
     super(props);
     this.tile = false;
-    if(this.props.tile == true) {
+    if(this.props.tile === true) {
       this.tile = true;
     }
     this.handleClick = this.handleClick.bind(this);
@@ -105,10 +106,10 @@ class MessageView extends Component {
 
   handleClick() {
     const { updateRecentMessage } = this.props;
-    if(this.props.message.key != null && this.props.message.key != "") {
+    if(this.props.message.key  != null  && this.props.message.key !== "") {
       let incViewCount = false;
       // check the message viewed in this session or not.
-      if(this.props.recentMessage.recentids.indexOf(this.props.message.key) == -1) {
+      if(this.props.recentMessage.recentids.indexOf(this.props.message.key) === -1) {
         incViewCount = true;
       }
       updateRecentMessage(this.props.message.key, false);
@@ -135,7 +136,7 @@ class MessageView extends Component {
     return (<Card className={classes.tileCard} onClick={() => this.handleClick()}>
               <CardMedia className={classes.tileMedia} image={imageUrl} title={auther}/>
               <CardContent>
-                <Typography className={classes.title} variant="title">{urgentEventTag} {text}</Typography>
+                <Typography noWrap='true' className={classes.title} variant="title">{urgentEventTag} {text}</Typography>
                 <p className={classes.pos}>{subtitle}</p>
               </CardContent>
             </Card>);
@@ -149,8 +150,8 @@ class MessageView extends Component {
       newIcon = <FiberNewIcon className={classes.newIcon}/>
     }
 
-    if(user != null && user.userProfile != null && (user.userProfile.role == RoleEnum.admin || user.userProfile.role == RoleEnum.monitor)) {
-      if(isReportedUrgentEvent && isUrgentEvent == null){
+    if(user  != null  && user.userProfile  != null  && (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor)) {
+      if(isReportedUrgentEvent && isUrgentEvent === null){
         urgentEventTag = <Chip
           label={constant.reportedUrgent}
           className={classes.urgentEventTag}
@@ -166,7 +167,7 @@ class MessageView extends Component {
 
     let summary = <Grid className={classes.summaryGrid} item xs onClick={() => this.handleClick()}>
                       <Typography className={classes.auther}>{newIcon}{auther}</Typography>
-                      <Typography className={classes.title} variant="title">{urgentEventTag} {text}</Typography>
+                      <Typography noWrap='true' className={classes.title} variant="title">{urgentEventTag} {text}</Typography>
                       <p className={classes.pos}>{subtitle}</p>
                   </Grid>
     let thumbnail = <Grid item className={classes.thumbnailGrid}><CardMedia className={classes.cover}  image={imageUrl}/> </Grid>
@@ -187,7 +188,7 @@ class MessageView extends Component {
     var m = this.props.message;
     var uuid = this.props.message.key;
     var imageUrl = m.thumbnailPublicImageURL;
-    if(imageUrl == null) {
+    if(imageUrl === null) {
       imageUrl = m.photoUrl;
     }
     var o = false;
@@ -196,7 +197,7 @@ class MessageView extends Component {
     }
 
     var distanceSpan = "";
-    if (m.geolocation.latitude && (this.props.lon != 0 || this.props.lat != 0)) {
+    if (m.geolocation.latitude && (this.props.lon !== 0 || this.props.lat !== 0)) {
       if (this.props.lat) {
         var dis = distance(m.geolocation.longitude,m.geolocation.latitude,this.props.lon,this.props.lat);
         var dist;
@@ -217,26 +218,26 @@ class MessageView extends Component {
     };
     let isUpdate =false;
     let updateTime = m.createdAt;
-    if(m.lastUpdate != null) {
+    if(m.lastUpdate  != null ) {
       updateTime = m.lastUpdate;
     }
-    if(user.lastLogin != null) {
+    if(user.lastLogin  != null ) {
       let lastLoginTime = user.lastLogin;
       //console.log('update Time: ' + updateTime + ' ' + lastLoginTime + ' ' + (updateTime > lastLoginTime));
       isUpdate = (updateTime > lastLoginTime);
     }
     let post = '張貼';
     timeOffset = Date.now() - m.lastUpdate.toDate();
-    if(m.createdAt != m.lastUpdate) {
+    if(m.createdAt !== m.lastUpdate) {
       post = '更新'
     }
 
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
 
-    var auther = `${m.name} 於: ${timeOffsetString}前${post} ${distanceSpan} 現況：${m.status}`;
-    var tag = '';
-    if(m.tag != null && m.tag.length > 0) {
-      let loop = 3;
+    var auther = `${m.name} ${timeOffsetString}前${post}`;
+    var tag = `${distanceSpan} 現況：${m.status} `;
+    if(m.tag  != null  && m.tag.length > 0) {
+      let loop = 2;
       if(m.tag.length < loop) {
         loop = m.tag.length;
       }
@@ -247,7 +248,7 @@ class MessageView extends Component {
     var subtitle =  tag;
     let card = null;
     if(this.tile) {
-      if(m.publicImageURL != null) {
+      if(m.publicImageURL  != null ) {
         imageUrl = m.publicImageURL;
       }
       card = this.tileRender(m.text, auther, imageUrl, subtitle, m.isReportedUrgentEvent, m.isUrgentEvent);

@@ -20,7 +20,7 @@ class BookmarkList extends Component {
   render() {
     let elements = null;
     const { bookmarkList } = this.props;
-    if(bookmarkList != undefined) {
+    if(bookmarkList !== undefined) {
         elements = bookmarkList.map((bookmark) => {
             return (<BookmarkView bookmark={bookmark} OnChange={() => {this.componentWillMount()}}/>);
         });      

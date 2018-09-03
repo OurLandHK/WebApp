@@ -74,11 +74,11 @@ class MessageDialog extends React.Component {
         console.log("Message: " + message);
         this.message = message;
 
-        if(this.props.user != null && this.props.user.user) {
+        if(this.props.user  != null  && this.props.user.user) {
           // get sad and happy inital value
           return getHappyAndSad(uuid, this.props.user.user).then((data) => {
             console.log("Data: " + data);
-            if(data != null) {
+            if(data  != null ) {
               this.happyAndSad = data.happyAndSad;
             }
             this.setState({open: true });
@@ -98,10 +98,10 @@ class MessageDialog extends React.Component {
     return getMessage(uuid).then((message) => {
       this.message = message;
       window.history.pushState("", "", `/detail/${this.props.uuid}`);
-      if(this.props.user != null && this.props.user.user) {
+      if(this.props.user  != null  && this.props.user.user) {
         // get sad and happy inital value
         return getHappyAndSad(uuid, this.props.user.user).then((data) => {
-          if(data != null) {
+          if(data  != null ) {
             this.happyAndSad = data;
           }
           this.setState({open: true });
@@ -145,7 +145,7 @@ class MessageDialog extends React.Component {
           </Typography>;
       var now = Date.now();
       var nowDateTime = new Date(now);
-      if(this.props.user != null && this.props.user.user != null) {
+      if(this.props.user  != null  && this.props.user.user  != null ) {
         user = this.props.user.user;
         // 10 minutes
         let eventCreateTimeDiff = 0;
@@ -155,7 +155,7 @@ class MessageDialog extends React.Component {
           eventCreateTimeDiff = nowDateTime - m.createdAt;
         };
         //console.log("User id: " + user.uid + " " + m.uid + " " + eventCreateTimeDiff  )
-        if(user.uid == m.uid && ( eventCreateTimeDiff < (10 * 60 * 1000))) {
+        if(user.uid === m.uid && ( eventCreateTimeDiff < (10 * 60 * 1000))) {
           deleteButton = <IconButton color="contrast" onClick={this.handleRequestDelete} aria-label="Close">
                             <DeleteIcon />
                           </IconButton>

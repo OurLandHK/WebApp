@@ -85,6 +85,10 @@ class PostMessageView extends Component {
       expanded: false,
       isReportedUrgentEvent: false,
       isApprovedUrgentEvent: false,
+      imageURL: null,
+      publicImageURL: null,
+      thumbnailImageURL: null,
+      thumbnailPublicImageURL: null,
       opennings: this.props.opennings,
       timeSelection: constant.timeOptions[0],
       intervalSelection: this.props.intervalOptions[0],
@@ -120,14 +124,14 @@ class PostMessageView extends Component {
     }
 
   componentDidMount() {
-    if (this.props.user != null && this.props.user.user != null) {
+    if (this.props.user  != null  && this.props.user.user  != null ) {
 //      console.log("DidMount Enable Post");
       this.setState({buttonShow: true});
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.user != this.props.user && this.props.user != null) {
+    if (prevProps.user !== this.props.user && this.props.user  != null ) {
 //      console.log("DidUpdate Enable Post");
       const {user} = this.props.user;
       if (user) {
@@ -194,7 +198,7 @@ class PostMessageView extends Component {
           interval = this.state.intervalSelection;
           duration = this.state.durationSelection;
           startTime = this.state.startTime;
-          if(this.state.intervalSelection != this.props.intervalOptions[0]) {
+          if(this.state.intervalSelection !== this.props.intervalOptions[0]) {
             endDate = this.state.end;
           }
           break;
@@ -209,9 +213,9 @@ class PostMessageView extends Component {
           }
       }
     }
-    if (this.state.summary == null || this.state.summary.length == 0) {
+    if (this.state.summary === null || this.state.summary.length === 0) {
       this.summaryTextField.select();
-    } else if (this.state.geolocation == null) {
+    } else if (this.state.geolocation === null) {
       //this.locationButton.handleClickOpen();
       this.setState({locationTipOpen: true});
     } else {
@@ -220,16 +224,16 @@ class PostMessageView extends Component {
       var thumbnailImageURL = null;
       var thumbnailPublicImageURL = null;
 
-      if(this.state.imageURL != null) {
+      if(this.state.imageURL  != null ) {
         imageURL = this.state.imageURL;
       }
-      if(this.state.publicImageURL != null) {
+      if(this.state.publicImageURL  != null ) {
         publicImageURL = this.state.publicImageURL;
       }
-      if(this.state.thumbnailImageURL != null) {
+      if(this.state.thumbnailImageURL  != null ) {
         thumbnailImageURL = this.state.thumbnailImageURL;
       }
-      if(this.state.thumbnailPublicImageURL != null) {
+      if(this.state.thumbnailPublicImageURL  != null ) {
         thumbnailPublicImageURL = this.state.thumbnailPublicImageURL;
       }
 
@@ -239,7 +243,7 @@ class PostMessageView extends Component {
         imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
         this.state.status, this.state.isReportedUrgentEvent, this.state.isApprovedUrgentEvent, isUrgentEvent).then((messageKey) => {
           const { updateRecentMessage, checkAuthState} = this.props;
-          if(messageKey != null && messageKey != "") {
+          if(messageKey  != null  && messageKey !== "") {
             updateRecentMessage(messageKey, false);
             checkAuthState();
           }
@@ -289,7 +293,7 @@ class PostMessageView extends Component {
 
   handleTagChange(value) {
     let tags = [];
-    if(value != null && value != '') {
+    if(value  != null  && value !== '') {
       var partsOfStr = value.split(',');
       let i = 0;
       partsOfStr.forEach(function(element) {
@@ -452,7 +456,7 @@ class PostMessageView extends Component {
     let startTime = this.startTime();
     let endDateHtml = null;
     const classes = this.props.classes;
-    if(this.state.intervalSelection != this.props.intervalOptions[0]) {
+    if(this.state.intervalSelection !== this.props.intervalOptions[0]) {
     endDateHtml = <TextField
             id="end"
             label="完結日期"
@@ -512,7 +516,7 @@ class PostMessageView extends Component {
     let startTime = new Date().toLocaleTimeString();
     let timeHtml = null;
     let urgentHtml = null;
-    if(userProfile != null && (userProfile.role == RoleEnum.admin ||  userProfile.role == RoleEnum.betaUser || userProfile.role == RoleEnum.monitor)) {
+    if(userProfile  != null  && (userProfile.role === RoleEnum.admin ||  userProfile.role === RoleEnum.betaUser || userProfile.role === RoleEnum.monitor)) {
       urgentHtml = <FormGroup>
                     <FormControlLabel
                     label="緊急事項"
@@ -530,9 +534,6 @@ class PostMessageView extends Component {
                           </Button>;
     const classes = this.props.classes;
     const { tags } = this.state;
-    if(this.locationButton != null && this.locationButton.geolocation != null) {
-      console.log("Geolocation:" + this.locationButton.geolocation);
-    }
     if(this.state.buttonShow) {
       if(this.state.expanded) {
         switch(this.state.timeSelection) {

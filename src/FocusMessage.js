@@ -2,10 +2,15 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 import MessageList from './MessageList';
+import Typography from '@material-ui/core/Typography';
 import { default as dist } from './Distance';
 
 const styles = () => ({
-  
+  title: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    margin: '40px auto 10px'
+  }  
 });
 
 class FocusMessage extends Component {
@@ -18,7 +23,7 @@ class FocusMessage extends Component {
 
   renderRandomFocusMessages() {
     const {globalFocusMessages: focusMessages} = this.props.ourland;
-    if(focusMessages != null  && focusMessages.length > 0) {
+    if(focusMessages  != null   && focusMessages.length > 0) {
       let focusMsgIdx = this.generateFocusMessagesIndex(focusMessages.length);
       return <div className="focus-message-wrapper">
           <h4>{focusMessages[focusMsgIdx].title}</h4>
@@ -42,7 +47,7 @@ class FocusMessage extends Component {
 
     if(!length) return 0;
     let focusMsgIdx = null;
-    if(this.state.focusMsgIdx == null) {
+    if(this.state.focusMsgIdx === null) {
       focusMsgIdx = Math.floor((Math.random() * length));
       this.setState({focusMsgIdx})
       return focusMsgIdx;
@@ -58,7 +63,7 @@ class FocusMessage extends Component {
   	const { addressBook, classes } = this.props;
 
   	 // showing focus messages based on users' home address / office address within interested radius
-    if(focusMessages != null  && focusMessages.length > 0 && addressBook != null && addressBook.addresses.length > 0) {
+    if(focusMessages !== undefined && focusMessages  != null   && focusMessages.length > 0 && addressBook  != null  && addressBook.addresses.length > 0) {
       // home
       var homeAddress = addressBook.addresses[0];
       var homeAddressInterestRadiusOrig = homeAddress.distance || 1;
@@ -80,7 +85,7 @@ class FocusMessage extends Component {
           officeAddressInterestRadius = focusMessage.radius;
         }
   
-        if(homeAddress.geolocation != null) {
+        if(homeAddress.geolocation  != null ) {
           homeAddressDistDiff = dist(focusMessage.geolocation.longitude, focusMessage.geolocation.latitude, homeAddress.geolocation.longitude, homeAddress.geolocation.latitude);
         }
 
@@ -88,10 +93,10 @@ class FocusMessage extends Component {
           officeAddressDistDiff = dist(focusMessage.geolocation.longitude, focusMessage.geolocation.latitude, officeAddress.geolocation.longitude, officeAddress.geolocation.latitude);
         }
 
-        if((homeAddressDistDiff != null && homeAddressDistDiff < homeAddressInterestRadius) || (officeAddressDistDiff != null && officeAddressDistDiff < homeAddressInterestRadius) ) {
+        if((homeAddressDistDiff  != null  && homeAddressDistDiff < homeAddressInterestRadius) || (officeAddressDistDiff  != null  && officeAddressDistDiff < homeAddressInterestRadius) ) {
           return (
             <div key={focusMsgIdx}>
-              <h4>{focusMessages[focusMsgIdx].title}</h4>
+              <Typography variant="headline" component="h2" className={classes.title}>{focusMessages[focusMsgIdx].title}</Typography>
               <p>{focusMessages[focusMsgIdx].summary}</p>
               <MessageList
                 ref={(messageList) => {this.messageList = messageList;}}

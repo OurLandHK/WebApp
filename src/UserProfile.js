@@ -74,7 +74,7 @@ function getUserProfile(user) {
 
 function upsertAddress(user, key, type, text, geolocation, streetAddress) {
     var geoPoint = null;
-    if(geolocation != null) {
+    if(geolocation  != null ) {
     geoPoint = new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude);
     }
     var now = Date.now();
@@ -91,7 +91,7 @@ function upsertAddress(user, key, type, text, geolocation, streetAddress) {
 
 
     let collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
-    if(key != null) {
+    if(key  != null ) {
         return collectionRef.doc(key).set(addressRecord).then(function() {
             return;
         });
@@ -160,11 +160,11 @@ function getUserCompleteMessages(user) {
 function addCompleteMessage(user, messageUUID) {
     return getUserProfile(user).then((userRecord) => {
         var rv = true;
-        if(userRecord.completeMessages != null)
+        if(userRecord.completeMessages  != null )
         {
 //            console.log("concernMessages:" + userRecord.concernMessages);
             var index = userRecord.completeMessages.indexOf(messageUUID);
-            if(index == -1)
+            if(index === -1)
             {
                 userRecord.completeMessages.push(messageUUID);
             }
@@ -189,11 +189,11 @@ function addCompleteMessage(user, messageUUID) {
 function toggleConcernMessage(user, messageUUID) {
     return getUserProfile(user).then((userRecord) => {
         var rv = true;
-        if(userRecord.concernMessages != null)
+        if(userRecord.concernMessages  != null )
         {
 //            console.log("concernMessages:" + userRecord.concernMessages);
             var index = userRecord.concernMessages.indexOf(messageUUID);
-            if(index == -1)
+            if(index === -1)
             {
                 userRecord.concernMessages.push(messageUUID);
             }
@@ -219,10 +219,10 @@ function toggleConcernMessage(user, messageUUID) {
 function isConcernMessage(user, messageUUID) {
     return getUserProfile(user).then((userRecord) => {
         var rv = false;
-        if(userRecord.concernMessages != null)
+        if(userRecord.concernMessages  != null )
         {
             var index = userRecord.concernMessages.indexOf(messageUUID);
-            if(index != -1)
+            if(index !== -1)
             {
                 rv = true;
             }
@@ -237,7 +237,7 @@ function updateUserRecords(userid, userRecord) {
     let lastLogin = new Date(now);
     const db = firebase.firestore();
     let collectionRef = db.collection(config.userDB);
-    if(userRecord != null) {
+    if(userRecord  != null ) {
       /* remoe temporary for test new icon */
         userRecord.lastLogin = lastLogin;
         return collectionRef.doc(userid).set(userRecord).then(function(userRecordRef) {
@@ -248,7 +248,7 @@ function updateUserRecords(userid, userRecord) {
 
 function addPublishMessagesKeyToUserProfile(user, messageUUID) {
     return getUserProfile(user).then((userRecord) => {
-        if(userRecord.publishMessages != null)
+        if(userRecord.publishMessages  != null )
         {
             userRecord.publishMessages.push(messageUUID);
         }
@@ -332,7 +332,7 @@ function fetchBookmarkList(user) {
 function dropBookmark(user, key) {
     let uid = user.uid;
     return getBookmarkRef(user, key).then(function(bookmark) {
-        if(bookmark != null) {
+        if(bookmark  != null ) {
             const db = firebase.firestore();
             db.collection(config.userDB).doc(uid).collection(config.bookDB).doc(key).delete().then(function() {
                 console.log("Document successfully deleted!");
@@ -365,7 +365,7 @@ function getBookmarkRef(user, key) {
 
 function getBookmark(user, key) {
     return getBookmarkRef(user, key).then(function (bookmarkRef) {
-        if(bookmarkRef != null) {
+        if(bookmarkRef  != null ) {
             let rv = bookmarkRef.data();
             return rv
         } else {
@@ -376,9 +376,9 @@ function getBookmark(user, key) {
 
 function incBookmarkViewCount(user, key) {
     return getBookmarkRef(user, key).then(function (bookmarkRef) {
-        if(bookmarkRef != null) {
+        if(bookmarkRef  != null ) {
             let viewCount = 1;
-            if(bookmarkRef.data().viewCount != null) {
+            if(bookmarkRef.data().viewCount  != null ) {
                 viewCount = bookmarkRef.data().viewCount + 1;
             }
             const db = firebase.firestore();
@@ -397,7 +397,7 @@ function updateBookmark(user, key, bookmarkRecord, isUpdateTime) {
     var db = firebase.firestore();
     var now = Date.now();
     var collectionRef = db.collection(config.userDB).doc(uid).collection(config.bookDB);
-    if(bookmarkRecord == null) {
+    if(bookmarkRecord === null) {
         if(isUpdateTime) {
             return collectionRef.doc(key).update({
                 lastUpdate: new Date(now)
@@ -429,8 +429,8 @@ function upgradeAllUser() {
             return querySnapshot.forEach(function(userRef) {
                 var val = userRef.data();
                 if(val) {
-                    if(val.createdAt == null) {
-                        if(val.lastLogin == null) {
+                    if(val.createdAt === null) {
+                        if(val.lastLogin === null) {
                             let now = Date.now();
                             val.lastLogin = new Date(now);
                         }

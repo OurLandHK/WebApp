@@ -31,7 +31,7 @@ class Main extends Component {
     super(props);
     let geolocation = this.props.geolocation;
     this.init = true;
-    if(geolocation == null) {
+    if(geolocation === null) {
       geolocation = constant.invalidLocation;
     }
     this.state = {
@@ -63,11 +63,11 @@ class Main extends Component {
   refreshQueryMessage() {
     const {id, bookmark} = this.props.recentMessage;
     console.log("eventID: " + id + "  bookmark" + bookmark);
-    if(id != "") {
+    if(id !== "") {
       console.log("eventID: " + id);
       getMessage(id).then((message) => {this.setState({queryMessage: message, bookmark: null})});
     } else {
-      if(bookmark.bookmark != "") {
+      if(bookmark.bookmark !== "") {
         console.log("bookmark: " + bookmark.bookmark);
         let user = {uid: bookmark.uid};
         getBookmark(user, bookmark.bookmark).then((bookmarkMessage) => {this.setState({queryMessage: null, bookmark: bookmarkMessage})});
@@ -81,7 +81,7 @@ class Main extends Component {
     if(tagStat.length > 3) {
       let actTag = null;
       for(let i = 0; i < tagStat.length; i++) {
-        if(tagStat[i].tag == '活動') {
+        if(tagStat[i].tag === '活動') {
           actTag = tagStat[i];
         }
       }
@@ -99,13 +99,13 @@ class Main extends Component {
     const { classes } = this.props;
     let tagStatHtml = this.renderTagStat();
 
-    if (queryMessage != null) {
+    if (queryMessage !== undefined) {
       let message = queryMessage;
       recentMessage = <div className="recent-event-wrapper">
                         <h4>{constant.recentEventLabel}</h4>
                         <MessageView message={message} key={message.key} openDialogDefault={openRecent} />
                       </div>;
-    } else if (bookmark != null) {
+    } else if (bookmark  != null ) {
       recentMessage = <div className="recent-event-wrapper">
                         <h4>{constant.recentEventLabel}</h4>
                         <BookmarkView bookmark={bookmark} open={openRecent} />
