@@ -36,8 +36,8 @@ const styles = theme => ({
         flex: '1 0 auto',
     },
     tileMedia: {
-        height: 256,
-        //paddingTop: '56.25%', // 16:9
+        width: 151,
+        height: 151,
     },    
 });
 
@@ -126,10 +126,13 @@ class CommentView extends Component {
                     });
                 })
             } else {
-                if(galleryEntry  != null  && galleryEntry !== undefined) {
-                    return addMessageGalleryEntry(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL, text);
-                }
-                return updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus);
+                return updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus).then(() => {
+                    if(galleryEntry  != null  && galleryEntry !== undefined) {
+                        return addMessageGalleryEntry(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL, text);
+                    } else {
+                        return;
+                    }    
+                });
             }
         })
     })
@@ -223,8 +226,7 @@ class CommentView extends Component {
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     let subtitle = '張貼於：' + timeOffsetString + '前 ' + approvedLog;
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
-    return (<Card container className={classes.card}>
-                {galleryImage}     
+    return (<Card container className={classes.card}>    
                 {fbProfileImage}               
                 <div className={classes.details}>
                     <CardContent className={classes.content} zeroMinWidth>
@@ -235,6 +237,7 @@ class CommentView extends Component {
                     </CardContent>
                 </div>
                 {approvedButton}
+                {galleryImage} 
             </Card>);
   }
 }

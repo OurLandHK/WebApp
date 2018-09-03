@@ -184,13 +184,8 @@ class NearbyEventDialog extends React.Component {
     return (
         <span>
             <Card className={classes.card}>
-                <Typography variant="headline" component="h2" className={classes.title}>
-                  {constant.nearbyEventLabel} - {this.state.titleLabel}
-                </Typography>
+                {constant.nearbyEventLabel}:查詢自己社區附近及全港社區的人和事
                 {cardImage}
-                <CardContent>
-                查詢自己社區附近及全港社區的人和事
-                </CardContent>
             </Card>
             {filterBar}
             {messageHtml}

@@ -75,14 +75,7 @@ function upgradeAllMessage() {
                         }
                     });
                     // Update for data scheme
-                    let changeCreatedAt = false;
                     let change = false;
-                    let before =  val.createdAt;
-                    try {
-                        let createdAt = val.createdAt.toDate();
-                    } catch(error) {
-                        changeCreatedAt = true;
-                    };
                     if(val.text.includes("遊戲室")) {
                         if(val.tag  != null ) {
                             change = true;
@@ -95,8 +88,8 @@ function upgradeAllMessage() {
                         if(val.tagfilter  != null ) {
                             if(!tags.includes("兒童遊戲室")) {
                                 tags.push("兒童遊戲室");
-                                var index = tags.indexOf("兒童遊樂場");
-                                if (index !== -1) tags.splice(index, 1);                            }
+                                var index1 = tags.indexOf("兒童遊樂場");
+                                if (index1 !== -1) tags.splice(index1, 1);                            }
                             val.tagfilter = tagsToTagfilter(tags);
                             change = true;
                         }

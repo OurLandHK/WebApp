@@ -2,10 +2,15 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 import MessageList from './MessageList';
+import Typography from '@material-ui/core/Typography';
 import { default as dist } from './Distance';
 
 const styles = () => ({
-  
+  title: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    margin: '40px auto 10px'
+  }  
 });
 
 class FocusMessage extends Component {
@@ -91,7 +96,7 @@ class FocusMessage extends Component {
         if((homeAddressDistDiff  != null  && homeAddressDistDiff < homeAddressInterestRadius) || (officeAddressDistDiff  != null  && officeAddressDistDiff < homeAddressInterestRadius) ) {
           return (
             <div key={focusMsgIdx}>
-              <h4>{focusMessages[focusMsgIdx].title}</h4>
+              <Typography variant="headline" component="h2" className={classes.title}>{focusMessages[focusMsgIdx].title}</Typography>
               <p>{focusMessages[focusMsgIdx].summary}</p>
               <MessageList
                 ref={(messageList) => {this.messageList = messageList;}}

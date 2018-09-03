@@ -53,13 +53,14 @@ const styles = theme => ({
 //    textOverflow: 'ellipsis',
   },
   title: {
-//    textOverflow: 'ellipsis',
+//      textOverflow: 'ellipsis',
+    
   },
   pos: {
 //    marginBottom: 12,
     color: theme.palette.text.secondary,
-    fontSize: '11px'
-//    textOverflow: 'ellipsis'
+    fontSize: '11px',
+    textOverflow: 'ellipsis'
   },
   details: {
     display: 'flex',
@@ -135,7 +136,7 @@ class MessageView extends Component {
     return (<Card className={classes.tileCard} onClick={() => this.handleClick()}>
               <CardMedia className={classes.tileMedia} image={imageUrl} title={auther}/>
               <CardContent>
-                <Typography className={classes.title} variant="title">{urgentEventTag} {text}</Typography>
+                <Typography noWrap='true' className={classes.title} variant="title">{urgentEventTag} {text}</Typography>
                 <p className={classes.pos}>{subtitle}</p>
               </CardContent>
             </Card>);
@@ -166,7 +167,7 @@ class MessageView extends Component {
 
     let summary = <Grid className={classes.summaryGrid} item xs onClick={() => this.handleClick()}>
                       <Typography className={classes.auther}>{newIcon}{auther}</Typography>
-                      <Typography className={classes.title} variant="title">{urgentEventTag} {text}</Typography>
+                      <Typography noWrap='true' className={classes.title} variant="title">{urgentEventTag} {text}</Typography>
                       <p className={classes.pos}>{subtitle}</p>
                   </Grid>
     let thumbnail = <Grid item className={classes.thumbnailGrid}><CardMedia className={classes.cover}  image={imageUrl}/> </Grid>
@@ -233,10 +234,10 @@ class MessageView extends Component {
 
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
 
-    var auther = `${m.name} 於: ${timeOffsetString}前${post} ${distanceSpan} 現況：${m.status}`;
-    var tag = '';
+    var auther = `${m.name} ${timeOffsetString}前${post}`;
+    var tag = `${distanceSpan} 現況：${m.status} `;
     if(m.tag  != null  && m.tag.length > 0) {
-      let loop = 3;
+      let loop = 2;
       if(m.tag.length < loop) {
         loop = m.tag.length;
       }

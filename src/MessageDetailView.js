@@ -61,7 +61,7 @@ const styles = theme => ({
     backgroundColor: red[500],
   },
   container: {
-    overflowY: 'auto',
+  //  overflowY: 'auto',
     marginBottom: '40px'
   },
   actionContainer: {
@@ -316,7 +316,7 @@ class MessageDetailView extends Component {
     let linkHtml = null;
     let imageHtml = null;
     if(m.publicImageURL  != null ) {
-      imageHtml = <MessageDetailViewImage url={m.publicImageURL} messageUUID={m.key}/>
+      imageHtml = <MessageDetailViewImage gallery={m.gallery} url={m.publicImageURL} messageUUID={m.key}/>
     }
     if (this.validateExternalLink(link)) {
       linkHtml = <Typography variant="subheading"> 外部連結： <a href={link} target="_blank">前往</a> </Typography>
@@ -333,7 +333,6 @@ class MessageDetailView extends Component {
     let imageTabLabel = <Tab label="相關照片" value="相關照片"/>
     imageTabLabel = null;
     return(<div className={classes.container}>
-            <Paper className={classes.paper}>
             {baseHtml}
             {imageHtml}
              <CardContent>
@@ -341,7 +340,6 @@ class MessageDetailView extends Component {
               <ChipArray chipData={chips} />
              {linkHtml}
              </CardContent>
-             </Paper>
              {dateHtml}
              <MessageAction message={m} happyAndSad={this.props.happyAndSad}/>
              <div>
