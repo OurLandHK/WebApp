@@ -26,6 +26,7 @@ import {
   checkAuthState,
 } from '../actions';
 import SignInButton from '../SignInButton'
+import MessageDetailViewImage from '../MessageDetailViewImage';
 
 
 
@@ -297,7 +298,21 @@ class PostCommentView extends Component {
     this.setState({ tags: tags });
   }
 
+  renderUpdateMessageThumbnailHtml() {
+    const { message } = this.props;
+      let imageHtml = null;
+      if(message.publicImageURL  != null ) {
+        imageHtml = <MessageDetailViewImage gallery={message.gallery} url={message.publicImageURL} messageUUID={message.key} enableImageSelection={true}/>
+      } else {
+        imageHtml = <MessageDetailViewImage/>
+      }
 
+    return (
+      <div>
+        {imageHtml}
+      </div>
+    )
+  }
 
   render() {
     const { classes, message, user } = this.props;
@@ -315,6 +330,12 @@ class PostCommentView extends Component {
             commentOptions = [...constant.commentOptions, ...constant.commentWithUrgentEventOptions];
           //}
         }
+
+        // update the thumbnail by owner
+        if(user.userProfile  != null && user.userProfile.publishMessages != null && user.userProfile.publishMessages.length > 0 && user.userProfile.publishMessages.includes(message.key)) {
+          commentOptions = [...commentOptions, ...constant.commentWithOwnerOptions];
+        }
+
 
         if(this.state.commentSelection !== constant.commentOptions[0]) { //"發表回應"
             switch(this.state.commentSelection) {
@@ -348,6 +369,9 @@ class PostCommentView extends Component {
                 break;
               case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
                 inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="非緊急事件" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
+                break;
+               case constant.commentWithOwnerOptions[0]: //"更新事項縮圖"
+                inputHtml = this.renderUpdateMessageThumbnailHtml();
                 break;
               }
         }
