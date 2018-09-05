@@ -28,7 +28,7 @@ class MessageDetailViewImage extends Component {
       let enableImageSelection = this.props.enableImageSelection || false;
       if((this.props.gallery !== undefined && this.props.gallery !== null) && this.props.gallery.length > 1) {
         const images = this.props.gallery.map((entry) => {
-          return {src:entry.publicImageURL, thumbnail: entry.thumbnailPublicImageURL, caption: entry.caption, isSelected: false};
+          return {src:entry.publicImageURL, imageURL: entry.imageURL, thumbnail: entry.thumbnailPublicImageURL, thumbnailImageURL: entry.thumbnailImageURL, caption: entry.caption, isSelected: false};
         });
          this.setState({images});
        }
@@ -45,6 +45,7 @@ class MessageDetailViewImage extends Component {
         } else {
           img.isSelected = !img.isSelected;
           this.setState({isOnlyOneImageSelected: img.isSelected});
+          this.props.handleThumbnailSelect(image);
         }
     }
 
