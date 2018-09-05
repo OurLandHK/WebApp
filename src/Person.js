@@ -65,7 +65,7 @@ class Person extends Component {
     let publishMessage = null;
     let completeMessage = null;
     let focusButton = null;
-    let userProfileView = userProfileView = <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>;
+    let userProfileView = <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>;
     const { user } = this.props;
 
     if (user && user.user && user.userProfile) {
@@ -73,7 +73,7 @@ class Person extends Component {
         if(!checkImageExists(imgURL)) {
           imgURL = '/images/profile_placeholder.png';
         }
-        userSection = (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{user.userProfile.displayName}&nbsp;&nbsp;</div>);
+        userSection = (<div style={{alignItems: "center", display: "flex"}}>&nbsp;&nbsp;&nbsp;<img src={imgURL} alt='' style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{user.userProfile.displayName}&nbsp;&nbsp;</div>);
         signOutSection = (<ListItem><SignOutButton/></ListItem>);
         userLoginDisplay = (<span>
                             <ListItem button>

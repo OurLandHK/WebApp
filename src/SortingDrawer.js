@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import classnames from 'classnames';
-import Chip from '@material-ui/core/Chip';
+//import classnames from 'classnames';
+//import Chip from '@material-ui/core/Chip';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText  from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-import config,  {constant, addressEnum} from './config/default';
-import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
-import geoString from './GeoLocationString';
+import {constant} from './config/default';
+//import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
+//import geoString from './GeoLocationString';
 
 import {
   selectedSorting
@@ -44,7 +44,6 @@ const styles = theme => ({
         padding: 0,
         border: 0,
         borderBottom: '1px solid',
-        padding: 0,
         borderRadius: 0,
         minHeight: 'auto'
     //    backgroundColor: green[500],
@@ -180,8 +179,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
-(withStyles(styles)(SortingDrawer));
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(SortingDrawer));

@@ -241,7 +241,7 @@ class UserProfileView extends React.Component {
           desc = this.state.userProfile.desc;
         }
     }
-    if(user  != null  && user.userProfile  != null  && (user.userProfile.role === RoleEnum.admin ||  user.userProfile.role === RoleEnum.betaUser || user.userProfile.role === RoleEnum.monitor)) {
+    //if(user  != null  && user.userProfile  != null  && (user.userProfile.role === RoleEnum.admin ||  user.userProfile.role === RoleEnum.betaUser || user.userProfile.role === RoleEnum.monitor)) {
       emailHtml = <TextField
                   id="emailAddress"
                   label="電郵地址"
@@ -252,7 +252,7 @@ class UserProfileView extends React.Component {
                   onChange={event => this.setState({ emailAddress: event.target.value })}
                   inputRef={(tf) => {this.emailAddressTextField = tf;}}
                 />;
-    }
+    //}
     return (
       <Dialog fullScreen  open={this.state.open} onRequestClose={this.handleRequestClose} transition={Transition}>
         <AppBar className={classes.appBar}>
