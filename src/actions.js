@@ -57,11 +57,11 @@ function dispatchToggleLeaderBoard(flag) {
 function receiveLocation(pos, label=currentLocationLabel){
   return {type: FETCH_LOCATION, geoLocation: pos, label: label};
 }
-
+/*
 function disableLocation() {
   return {type: DISABLE_LOCATION};
 }
-
+*/
 function fetchAddressBook(address) {
   return {type: FETCH_ADDRESS_BOOK, addresses: address};
 }
@@ -219,14 +219,15 @@ export function signIn() {
     //provider.addScope('user_managed_groups');
     //provider.addScope('user_birthday');
     firebase.auth().signInWithPopup(provider).then(function(result) {
-      var token = result.credential.accessToken;
-      var user = result.user;
+      // var token = result.credential.accessToken;
+      // var user = result.user;
       console.log(result.additionalUserInfo.profile);
     }).catch(function(error) {
       var errorCode = error.code;
       var errorMessage = error.message;
       var email = error.email;
       var credential = error.credential;
+      console.log(`${errorCode} ${errorMessage} ${email} ${credential}`);
     });
   };
 }
@@ -319,7 +320,7 @@ export function fetchAddressBookByUser(user) {
     const db = firebase.firestore();
     var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
     collectionRef.onSnapshot(function() {});
-    collectionRef.get().then(function(querySnapshot) {
+    collectionRef.get().then(function(querySnapshot){
        const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
        dispatch(fetchAddressBook(addresses));
     })
@@ -335,7 +336,7 @@ export function fetchAddressBookFromOurLand() {
     /// Use the UID for Ourland HK's account
     var collectionRef = db.collection(config.userDB).doc(config.MasterUID).collection(config.addressBook);
     collectionRef.onSnapshot(function() {})
-    collectionRef.get().then(function(querySnapshot) {
+    collectionRef.get().then(function(querySnapshot){
        const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
        dispatch(fetchPublicAddressBook(addresses));
     })
@@ -363,7 +364,7 @@ export function fetchGlobalSetting() {
 
 export function fetchConcernMessagesFromOurLand() {
   return dispatch => {
-    var db = firebase.firestore();
+    //var db = firebase.firestore();
     /// Use the UID for Ourland HK's account
     let user={uid:config.MasterUID}
     return getUserProfile(user).then((userProfile)=>{
@@ -482,7 +483,7 @@ export function fetchTopTwenty() {
 
     var collectionRef = db.collection(config.userDB).orderBy('publishMessagesCount', 'desc').limit(20);
     collectionRef.onSnapshot(function() {})
-    collectionRef.get().then(function(querySnapshot) {
+    collectionRef.get().then(function(querySnapshot){
        const users = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
        console.log(users);
        dispatch({type: FETCH_TOP_TWENTY, users: users}) ;

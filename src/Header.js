@@ -23,11 +23,11 @@ class Header extends Component {
   }
 
   errorCallBack(error) {
-    console.warn('ERROR(${err.code}): ${err.message}');
+    console.warn(`ERROR(${error.code}): ${error.message}`);
   }
 
   render() {
-    const classes = this.props.classes;
+    //const classes = this.props.classes;
     return (<AppBar className="header">
               <Toolbar>
                 <div className="header-title">

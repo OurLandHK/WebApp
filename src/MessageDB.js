@@ -7,7 +7,7 @@ function tagsToTagfilter(tags) {
         let rv = {};
         if(tags  != null  && tags.length > 0) {
             tags.map((tag) => {
-                rv[tag] = 1;
+                return rv[tag] = 1;
             });
         }
         return rv;
@@ -73,6 +73,7 @@ function upgradeAllMessage() {
                         } else {
                             tagStat[tag]++;
                         }
+                        return tagStat[tag];
                     });
                     // Update for data scheme
                     let change = false;
@@ -116,7 +117,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
 
     let collectionRef = db.collection(config.messageDB);
     collectionRef.onSnapshot(function() {})
-    if(geocode  != null  && geocode !== NaN && geocode.latitude !== undefined) {
+    if(geocode  != null  && !isNaN(geocode) && geocode.latitude !== undefined) {
 //        console.log("Get message base on Location: (" + geocode.latitude + " ," + geocode.longitude + ") with Radius: " + radius);
 //        boundingBoxCoordinates(center, radius) {
             const KM_PER_DEGREE_LATITUDE = 110.574;

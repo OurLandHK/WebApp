@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
-import classnames from 'classnames';
+//import IconButton from '@material-ui/core/IconButton';
+//import classnames from 'classnames';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -17,8 +17,8 @@ import AddIcon from '@material-ui/icons/Add';
 import WorkIcon from '@material-ui/icons/Work';
 import HomeIcon from '@material-ui/icons/Home';
 import {connect} from 'react-redux';
-import config,  {constant, addressEnum} from './config/default';
-import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
+import {constant, addressEnum} from './config/default';
+//import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
 import geoString from './GeoLocationString';
 import {
   fetchLocation,
@@ -56,7 +56,6 @@ const styles = theme => ({
     padding: 0,
     border: 0,
     borderBottom: '1px solid',
-    padding: 0,
     borderRadius: 0,
     minHeight: 'auto'
 //    backgroundColor: green[500],
@@ -169,7 +168,7 @@ class LocationDrawer extends React.Component {
   }
 
   renderAddressBook() {
-    const { classes, addressBook, geolocation, user } = this.props;
+    const { addressBook, user } = this.props;
     let addressList=addressBook.addresses;
     if(this.isUsePublicAddressBook) {
       if(user.userProfile === null) {
@@ -196,7 +195,7 @@ class LocationDrawer extends React.Component {
     addressList = this.buildGrouppedAddressList(addressList || [], this.state.locationPrefix);
     return addressList.map(address => {
       let type = address.type;
-      let icons = <PlaceIcon />;
+      let icons = null;
       let text = address.text;
       let locationString = constant.addressNotSet;
       let distance = this.props.filter.defaultDistance;
@@ -220,6 +219,8 @@ class LocationDrawer extends React.Component {
         case addressEnum.office:
           icons = <WorkIcon />;
           break;
+        default:
+          icons = <PlaceIcon />;
       }
       if (address.isGroup) {
         //console.log(text);
@@ -349,8 +350,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
-(withStyles(styles)(LocationDrawer));
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(LocationDrawer));

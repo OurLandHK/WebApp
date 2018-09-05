@@ -94,7 +94,7 @@ class Main extends Component {
 
   renderMessageFrontPage() {
     let recentMessage = null;
-    const { eventNumber, distance, geolocation, eventId, queryMessage, bookmark} = this.state;
+    const { eventNumber, distance, geolocation, queryMessage, bookmark} = this.state;
     const {open: openRecent} = this.props.recentMessage;
     const { classes } = this.props;
     let tagStatHtml = this.renderTagStat();
@@ -171,8 +171,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
-(withStyles(styles)(Main));
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(Main));
