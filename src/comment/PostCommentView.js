@@ -100,6 +100,7 @@ class PostCommentView extends Component {
     this.handleAddition = this.handleAddition.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
     this.uploadFinish = this.uploadFinish.bind(this);
+    this.handleThumbnailSelect = this.handleThumbnailSelect.bind(this);
   }
 
   componentDidMount() {
@@ -240,6 +241,11 @@ class PostCommentView extends Component {
                 isApprovedUrgentEvent = false;
               }
               break;
+            case constant.commentWithOwnerOptions[0]: //"更新事項縮圖"
+              if(this.state.galleryEntry.imageURL  != null ) {
+                galleryEntry = this.state.galleryEntry;
+              }
+              break;
         }
         this.setState({popoverOpen: false});
         if(isPost) {
@@ -298,11 +304,22 @@ class PostCommentView extends Component {
     this.setState({ tags: tags });
   }
 
+  handleThumbnailSelect(image) {
+    if(image != null && image.isSelected) {
+      this.setState({galleryEntry: {
+        imageURL: image.src,
+        publicImageURL: image.publicImageURL,
+        thumbnailImageURL: image.thumbnailImageURL,
+        thumbnailPublicImageURL: image.thumbnail}
+      });
+    }
+  }
+
   renderUpdateMessageThumbnailHtml() {
     const { message } = this.props;
       let imageHtml = null;
       if(message.publicImageURL  != null ) {
-        imageHtml = <MessageDetailViewImage gallery={message.gallery} url={message.publicImageURL} messageUUID={message.key} enableImageSelection={true}/>
+        imageHtml = <MessageDetailViewImage gallery={message.gallery} url={message.publicImageURL} messageUUID={message.key} enableImageSelection={true} handleThumbnailSelect={this.handleThumbnailSelect}/>
       } else {
         imageHtml = <MessageDetailViewImage/>
       }
