@@ -343,25 +343,23 @@ class MessageDetailView extends Component {
     return(<div className={classes.container}>
             {baseHtml}
             {imageHtml}
-             <CardContent>
-             {title}
+            <CardContent>
+              {title}
               <ChipArray chipData={chips} />
-             {linkHtml}
-             </CardContent>
-             {dateHtml}
-             <MessageAction message={m} happyAndSad={this.props.happyAndSad}/>
-             <div>
-               <AppBar position="static" className={classes.appBar}>
-                 <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
-                   <Tab label="參與紀錄" value="參與紀錄"/>
-                   {imageTabLabel}
-                   <Tab label="準確地點" value="準確地點"/>
-                 </Tabs>
-               </AppBar>
-             </div>
-             {tab === "參與紀錄" && <div className="wrapper"><CommentList messageUUID={m.key}/><div className="nav-wrapper"><PostCommentView messageUUID={m.key} message={m}/></div></div>}
-             {tab === "相關照片" && <MessageDetailViewImage url={m.publicImageURL} messageUUID={m.key}/>}
-             {tab === "準確地點" && <EventMap center={geolocation} zoom={zoom}/>}
+              {linkHtml}
+            </CardContent>
+            {dateHtml}
+            <MessageAction message={m} happyAndSad={this.props.happyAndSad}/>
+            <AppBar position="static" className={classes.appBar}>
+              <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
+                <Tab label="參與紀錄" value="參與紀錄"/>
+                {imageTabLabel}
+                <Tab label="準確地點" value="準確地點"/>
+              </Tabs>
+            </AppBar>
+            {tab === "參與紀錄" && <div className="wrapper"><CommentList messageUUID={m.key}/><div className="nav-wrapper"><PostCommentView messageUUID={m.key} message={m}/></div></div>}
+            {tab === "相關照片" && <MessageDetailViewImage url={m.publicImageURL} messageUUID={m.key}/>}
+            {tab === "準確地點" && <EventMap center={geolocation} zoom={zoom}/>}
          </div>);
 
     }

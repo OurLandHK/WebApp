@@ -192,7 +192,7 @@ class PublicProfile extends React.Component {
       }
     }
     return (
-      <div>
+      <React.Fragment>
         <br/>
         <Dialog fullScreen  open={dialogOpen} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
           <AppBar className={classes.appBar}>
@@ -221,7 +221,7 @@ class PublicProfile extends React.Component {
             <BookmarkList bookmarkList={this.state.bookmarkList} />
           </div>
         </Dialog>
-      </div>);
+      </React.Fragment>);
   }
 }
 

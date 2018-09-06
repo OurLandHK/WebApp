@@ -14,10 +14,8 @@ class PublicProfileSSR extends Component {
   render() {
     const { userid } = this.props;
     let homeUrl = window.location.protocol + "//" + window.location.hostname;
-    return (
-      <div>
+    return (    
         <PublicProfile userid={userid} closeDialog={() => {window.location.href = homeUrl;}}/>
-      </div>
     );
   }
 };

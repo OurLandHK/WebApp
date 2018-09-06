@@ -3,8 +3,6 @@ import { compose, withProps, withState, withHandlers } from "recompose";
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import CardMedia from '@material-ui/core/CardMedia';
 
-// Using Map https://github.com/fullstackreact/google-maps-react
-
 export class EventMap extends Component {
   constructor(props) {
     super(props);

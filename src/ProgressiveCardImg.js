@@ -19,7 +19,7 @@ const styles = theme => ({
 class ProgressiveCardImg extends Component {
   constructor(props) {
     super(props);
-    this.src = props.gs_src;
+    this.src = props.src;
   }
 
   render() {

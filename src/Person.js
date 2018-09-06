@@ -105,7 +105,7 @@ class Person extends Component {
 
 
     return (
-      <div>
+      <React.Fragment>
         {userProfileView}
         <AddressDialog ref={(addressDialog) => {this.addressDialog = addressDialog;}} openDialog={openDialog => this.openAddressDialog = openDialog}/>
         <AboutDialog openDialog={f => this.openAboutDialog = f}/>
@@ -130,7 +130,7 @@ class Person extends Component {
             {focusButton}
             {adminButton}
         </List>
-      </div>
+      </React.Fragment>
     );
   }
 }

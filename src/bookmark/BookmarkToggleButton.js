@@ -102,10 +102,10 @@ class BookmarkToggleButton extends Component {
     </div>
 </Drawer>
 
-    return (<div>
+    return (<React.Fragment>
         {outputHtml}
         {drawer}
-        </div>);
+        </React.Fragment>);
   }
 }
 

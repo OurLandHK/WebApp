@@ -303,7 +303,7 @@ class LocationButton extends Component {
 
 
     return (
-      <div>
+      <React.Fragment>
         <Button
           variant="raised"
           color="secondary"
@@ -338,7 +338,7 @@ class LocationButton extends Component {
           {this.state.geolocation  != null   && <EventMap center={geolocation} zoom={zoom} onCenterChange={this.onMapCenterChange}/>}
         </Dialog>
 
-      </div>);
+      </React.Fragment>);
   }
 }
 

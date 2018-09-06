@@ -172,11 +172,11 @@ class MessageList extends Component {
 
     if(this.state.data.length === 0) {
       let statusMessage = this.state.statusMessage;
-      return(<div><h4>{statusMessage}</h4></div>);
+      return(<h4>{statusMessage}</h4>);
     } else {
       let messageList = null;
       let elements = this.state.data.map((message) => {
-        if(this.state.selectedTag  != null  && !message.tag.includes(this.state.selectedTag)) {
+        if(this.state.selectedTag  != null  && (message.tag === null || message.tag === undefined|| !message.tag.includes(this.state.selectedTag))) {
           // filter by selected tag.
           return null;
         } else {

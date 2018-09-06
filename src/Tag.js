@@ -92,14 +92,11 @@ class Tag extends Component {
       CustomRemoveComponent,
     } = props;
     const tagComponent = (
-       <div>
        <Chip
           label={label}
           onRequestDelete={props.onDelete}
           style={styles.chip}
-        >
-        </Chip>
-        </div>
+        />
     );
     return connectDragSource(connectDropTarget(tagComponent));
   };

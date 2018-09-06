@@ -73,21 +73,19 @@ class LeaderBoard extends React.Component {
       imgURL = user.photoURL;
     } 
     return (
-      <div>
-        <Card className={classes.card}>
-          <CardHeader
-            avatar={
-              <Avatar
-                className={classes.avatar}
-                src={imgURL}
-              />
-            }
-            title={`第${rank}名`}
-            subheader={user.displayName}
-            onClick={() => this.openPublicProfileDialog(user.id, user.fbuid)}
-          />
-        </Card>
-      </div>
+      <Card className={classes.card}>
+        <CardHeader
+          avatar={
+            <Avatar
+              className={classes.avatar}
+              src={imgURL}
+            />
+          }
+          title={`第${rank}名`}
+          subheader={user.displayName}
+          onClick={() => this.openPublicProfileDialog(user.id, user.fbuid)}
+        />
+      </Card>
     );
   }
 
@@ -103,7 +101,7 @@ class LeaderBoard extends React.Component {
   renderNearby() {
     const { classes } = this.props;
     return (
-        <div>
+        <React.Fragment>
           <FilterBar ranking={true} />
           <div className={classes.container}>
             <Ranking
@@ -112,7 +110,7 @@ class LeaderBoard extends React.Component {
               geolocation={constant.invalidLocation}
             />
           </div>
-        </div>
+        </React.Fragment>
     );
   }
 

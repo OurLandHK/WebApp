@@ -13,7 +13,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText  from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-import LabelIcon from '@material-ui/icons/LabelOutline';
+import LabelIcon from '@material-ui/icons/LabelOutlined';
 import AllIcon from '@material-ui/icons/AllInclusive';
 import ArrowIcon from '@material-ui/icons/ArrowDropDownCircle';
 import green from '@material-ui/core/colors/green';
