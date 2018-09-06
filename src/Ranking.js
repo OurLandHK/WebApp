@@ -149,7 +149,7 @@ class Ranking extends Component {
     }
     if(this.state.data.length === 0) {
       let statusMessage = this.state.statusMessage;
-      return(<div><h4>{statusMessage}</h4></div>);
+      return(<h4>{statusMessage}</h4>);
     } else {
       let userList = {};
       for (let i in this.state.data) {
@@ -168,9 +168,9 @@ class Ranking extends Component {
       
       ranking.sort((i, j) => (j.count) - (i.count));
       return (
-        <div>
+        <React.Fragment>
             {ranking.map((t, i) => {return this.renderUser(t, i + 1);})}
-        </div>);        
+        </React.Fragment>);        
     }
   }
 };

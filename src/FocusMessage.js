@@ -140,9 +140,9 @@ class FocusMessage extends Component {
 
   render() {
   	return (
-  		<div>
-	  		{this.renderFocusMessages()}
-	  	</div>
+      <React.Fragment>
+        {this.renderFocusMessages()}
+      </React.Fragment>	
   	);
   }
 

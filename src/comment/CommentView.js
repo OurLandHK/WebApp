@@ -205,7 +205,7 @@ class CommentView extends Component {
     let approvedLog = "";
     if(approvedStatus === null || approvedStatus === undefined) {
       if(user  != null  && user.userProfile  != null  && user.userProfile.role === RoleEnum.admin) {
-        approvedButton = <div>
+        approvedButton = <React.Fragment>
                             <Button variant="raised" color="primary" className={classes.uploadButton} raised={true} onClick={() => this.approve()}>
                                 <ThumbUpIcon />
                                     {constant.approveOptions[0]}
@@ -214,7 +214,7 @@ class CommentView extends Component {
                                 <ThumbDownIcon />
                                     {constant.approveOptions[1]}
                             </Button>
-                        </div>
+                        </React.Fragment>
       }
     } else {
         let approvedTimeOffset = Date.now() - approvedStatus.createdAt.toDate();
