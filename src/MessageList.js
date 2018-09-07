@@ -156,7 +156,7 @@ class MessageList extends Component {
     let lon = 0;
     let lat = 0;
 
-    if(this.state.geolocation !== undefined && this.state.geolocation !== constant.invalidLocation) {
+    if(this.state.geolocation !== undefined && this.state.geolocation !== null && this.state.geolocation !== constant.invalidLocation) {
       lon = this.state.geolocation.longitude;
       lat = this.state.geolocation.latitude;
     }
