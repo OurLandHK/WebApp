@@ -117,7 +117,8 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
 
     let collectionRef = db.collection(config.messageDB);
     collectionRef.onSnapshot(function() {})
-    if(geocode  != null  && !isNaN(geocode) && geocode.latitude !== undefined) {
+    console.log(geocode);
+    if(geocode  !== null  && geocode !== undefined && geocode.latitude !== undefined && !isNaN(geocode.latitude)) {
 //        console.log("Get message base on Location: (" + geocode.latitude + " ," + geocode.longitude + ") with Radius: " + radius);
 //        boundingBoxCoordinates(center, radius) {
             const KM_PER_DEGREE_LATITUDE = 110.574;
@@ -141,10 +142,10 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         } else {
             query = collectionRef.where("hide", "==", false);
             if(lastUpdate  != null ) {
-                console.log("Last Update: " + lastUpdate.toDate());
+ //               console.log("Last Update: " + lastUpdate.toDate());
                 query = query.where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc");
             } else {
-                    query = query.where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc");
+                query = query.where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc");
             }
         }
         query.limit(numberOfMessage).get().then(function(querySnapshot) {
@@ -159,7 +160,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
                         var dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
                         if(dis < radius && val.hide === false) {
                             let tags = tagfilterToTags(val.tagfilter);
-                            //console.log(`${tags} ${val.tagfilter}`)
+ //                           console.log(`${val.text} ${dis} ${tags} ${val.tagfilter}`)
                             val.tag = tags;
                             val.tagfilter = null;
                             //console.log('message key: ' + val.key );
@@ -175,9 +176,6 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         .catch(function(error) {
             console.log("Error getting documents: ", error);
         });
-/*        collectionRef.where("hide", "==", false).where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).onSnapshot(function(querySnapshot) {
-            querySnapshot.forEach(callback);
-        })       */
     } else {
         // Use firestore
         collectionRef.where("hide", "==", false).orderBy("createdAt", "desc").limit(numberOfMessage).get().then(function(querySnapshot) {
@@ -186,9 +184,6 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         .catch(function(error) {
             console.log("Error getting documents: ", error);
         });
-/*        collectionRef.where("hide", "==", false).onSnapshot(function(querySnapshot) {
-            querySnapshot.forEach(callback);
-        })  */
     }
  }
 
