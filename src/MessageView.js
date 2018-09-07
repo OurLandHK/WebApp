@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
 import MessageDialog from './MessageDialog';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid'
@@ -91,7 +93,14 @@ const styles = theme => ({
     backgroundColor: '#AB003C',
     color: '#E3F2FD',
     height: '22px'
-  }
+  },
+  tileTitle: {
+    color: theme.palette.primary.light,
+  },
+  titleBar: {
+    background:
+      'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+  },  
 });
 
 class MessageView extends Component {
@@ -131,8 +140,21 @@ class MessageView extends Component {
         className={classes.urgentEventTag}
       />
     }
-
-
+    /*
+    return(<GridListTile key={imageUrl} onClick={() => this.handleClick()}>
+      <img height={128} src={imageUrl} alt={text} />
+      <GridListTileBar
+        title={text}
+        subtitle={subtitle}
+        classes={{
+          root: classes.titleBar,
+          title: classes.tileTitle,
+        }}
+      >
+        {urgentEventTag}
+      </GridListTileBar>
+    </GridListTile>);
+*/
     return (<Card className={classes.tileCard} onClick={() => this.handleClick()}>
               <CardMedia className={classes.tileMedia} image={imageUrl} title={auther}/>
               <CardContent>
@@ -140,6 +162,7 @@ class MessageView extends Component {
                 <p className={classes.pos}>{subtitle}</p>
               </CardContent>
             </Card>);
+            
   };
 
   sliceRender(user, text, auther, imageUrl, subtitle, isUpdate, isReportedUrgentEvent, isUrgentEvent) {

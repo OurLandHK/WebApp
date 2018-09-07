@@ -79,7 +79,8 @@ class TagDrawer extends React.Component {
         open: false,
         selectedTag: null,
         isSelectedAll: true,
-        isRenderTagList: true
+        isRenderTagList: true,
+        tagList: []
       };
   }
 
@@ -96,6 +97,7 @@ class TagDrawer extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.filter.tagList !== this.props.filter.tagList) {
       this.setTag(null);
+      this.setState({tagList: this.props.filter.tagList})
     }
   }
 
@@ -121,9 +123,7 @@ class TagDrawer extends React.Component {
   }
 
   renderTagList() {
-    const { filter } = this.props;
-    var tagList=filter.tagList;
-
+    let tagList=this.state.tagList;
     return tagList.map(tag => {
       let icons = <LabelIcon />;
       return (
