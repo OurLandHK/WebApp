@@ -95,7 +95,8 @@ let constant = {
   kilometre: '公里',
   nearby: "附近",
   emptyComment: '按+參與討論或更新內容',
-  interestedRadius: '有效半徑'
+  interestedRadius: '有效半徑',
+  updateThumbnailMessage: '用戶更新社區事件縮圖'
 }
 
 const happyAndSadEnum = {
