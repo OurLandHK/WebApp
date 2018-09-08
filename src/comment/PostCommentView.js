@@ -192,13 +192,13 @@ class PostCommentView extends Component {
         let isPost = true;
         let isApprovedUrgentEvent = null;
         let galleryEntry = null;
-        var photo = null;
         var commentText = null;
         var tags = null;
         var geolocation = null;
         var streetAddress = null;
         var link = null;
         var status = null;
+        
         switch(this.state.commentSelection) {
             case constant.commentOptions[0]: //"發表回應":
               commentText = this.state.text;
@@ -242,14 +242,14 @@ class PostCommentView extends Component {
               }
               break;
             case constant.commentWithOwnerOptions[0]: //"更新事項縮圖"
-              if(this.state.galleryEntry.imageURL  != null ) {
+              if(this.state.galleryEntry.imageURL != null ) {
                 galleryEntry = this.state.galleryEntry;
               }
               break;
         }
         this.setState({popoverOpen: false});
         if(isPost) {
-          return addComment(this.props.messageUUID, user, userProfile, photo, commentText, galleryEntry, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent).then(function(commentId){return commentId;});
+          return addComment(this.props.messageUUID, user, userProfile, commentText, galleryEntry, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent).then(function(commentId){return commentId;});
         } else {
           return
         }
@@ -307,10 +307,12 @@ class PostCommentView extends Component {
   handleThumbnailSelect(image) {
     if(image != null && image.isSelected) {
       this.setState({galleryEntry: {
-        imageURL: image.src,
-        publicImageURL: image.publicImageURL,
+        imageURL: image.imageURL,
+        publicImageURL: image.src,
         thumbnailImageURL: image.thumbnailImageURL,
-        thumbnailPublicImageURL: image.thumbnail}
+        thumbnailPublicImageURL: image.thumbnail,
+        thumbnailUpdate: true
+      }
       });
     }
   }
@@ -355,6 +357,7 @@ class PostCommentView extends Component {
 
 
         if(this.state.commentSelection !== constant.commentOptions[0]) { //"發表回應"
+          console.log("this.state.commentSelection=" + this.state.commentSelection);
             switch(this.state.commentSelection) {
               case constant.commentOptions[1]: //"要求更改地點"
                 inputHtml = <LocationButton autoFocus ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>;
