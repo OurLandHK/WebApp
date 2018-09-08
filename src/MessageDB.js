@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import config from './config/default';
+import config, {constant} from './config/default';
 import distance from './Distance';
 import {updateTagStat} from './GlobalDB';
 
@@ -540,7 +540,7 @@ function setHappyAndSad(messageUuid, happyCount, sadCount, happAndSad, user) {
 }
 
 /// All about comment
-function addComment(messageUUID, currentUser, userProfile, photo, commentText, galleryEntry, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent) {
+function addComment(messageUUID, currentUser, userProfile, commentText, galleryEntry, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent) {
     var now = Date.now();
 
     var photoUrl = currentUser.providerData[0].photoURL || '/images/profile_placeholder.png';
@@ -584,7 +584,12 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, g
                     commentRecord.link = link;
                 } else {
                     if(tags  != null ) {
-                        commentRecord.tags = tags;
+                        commentRecord.tags = tags;     
+                    } else {
+                        if(galleryEntry  != null ) {
+                            commentRecord.text = constant.updateThumbnailMessage;
+                            commentRecord.galleryEntry = galleryEntry;
+                        }
                     }
                 }
             }
@@ -592,7 +597,6 @@ function addComment(messageUUID, currentUser, userProfile, photo, commentText, g
     }
     // Use firestore
     const db = firebase.firestore();
-
 
     var collectionRef = db.collection(config.messageDB);
     return collectionRef.doc(messageUUID).collection(config.commentDB).add(commentRecord).then(function(docRef) {
@@ -669,4 +673,17 @@ function fetchMessagesBasedOnInterestedTags(interestedTags, geolocation, dis, la
     });
 }
 
-export {addMessageGalleryEntry, getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags};
+function updateMessageThumbnail(messageUUID, imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL){
+    const db = firebase.firestore();
+
+    var collectionRef = db.collection(config.messageDB);
+    return getMessage(messageUUID).then((messageRecord) => {
+        messageRecord.imageUrl = imageURL;
+        messageRecord.publicImageURL = publicImageURL;
+        messageRecord.thumbnailImageURL = thumbnailImageURL; 
+        messageRecord.thumbnailPublicImageURL = thumbnailPublicImageURL;
+        return updateMessage(messageUUID, messageRecord, true);
+    });
+}
+
+export {addMessageGalleryEntry, getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags, updateMessageThumbnail};
