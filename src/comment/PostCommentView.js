@@ -323,7 +323,7 @@ class PostCommentView extends Component {
       if(message.publicImageURL  != null ) {
         imageHtml = <MessageDetailViewImage gallery={message.gallery} url={message.publicImageURL} messageUUID={message.key} enableImageSelection={true} handleThumbnailSelect={this.handleThumbnailSelect}/>
       } else {
-        imageHtml = <MessageDetailViewImage/>
+        imageHtml = <MessageDetailViewImage gallery={message.gallery} messageUUID={message.key} enableImageSelection={true} handleThumbnailSelect={this.handleThumbnailSelect}/>
       }
 
     return (
@@ -350,8 +350,8 @@ class PostCommentView extends Component {
           //}
         }
 
-        // update the thumbnail by owner
-        if(user.userProfile  != null && user.userProfile.publishMessages != null && user.userProfile.publishMessages.length > 0 && user.userProfile.publishMessages.includes(message.key)) {
+        // update the thumbnail by owner or Admin.
+        if(user.userProfile  != null && user.userProfile.publishMessages != null && ((user.userProfile.publishMessages.length > 0 && user.userProfile.publishMessages.includes(message.key)))||(user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor)) {
           commentOptions = [...commentOptions, ...constant.commentWithOwnerOptions];
         }
 
