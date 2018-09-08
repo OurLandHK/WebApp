@@ -213,9 +213,9 @@ class PostMessageView extends Component {
           }
       }
     }
-    if (this.state.summary === null || this.state.summary.length === 0) {
+    if (this.state.summary === null || this.state.summary === undefined || this.state.summary.length === 0) {
       this.summaryTextField.select();
-    } else if (this.state.geolocation === null) {
+    } else if (this.state.geolocation === null || this.state.geolocation === undefined) {
       //this.locationButton.handleClickOpen();
       this.setState({locationTipOpen: true});
     } else {
