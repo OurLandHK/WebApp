@@ -63,6 +63,7 @@ let constant = {
   timeOptions : ['活動時間', '設施開放時間'],
   commentOptions : ['參與討論', '要求更新地點', '要求更新現況', '要求更新外部連結', '要求更新分類'],
   commentWithUrgentEventOptions : ['確定為緊急事項', '確定為非緊急事項'],
+  commentWithOwnerOptions: ['更新事項縮圖'],
   statusOptions : ['開放', '完結', '政府跟進中', '虛假訊息', '不恰當訊息'],
   approveOptions : ['接納', '駁回'],
   messageDialogLabel: '社區事件',
@@ -94,7 +95,8 @@ let constant = {
   kilometre: '公里',
   nearby: "附近",
   emptyComment: '按+參與討論或更新內容',
-  interestedRadius: '有效半徑'
+  interestedRadius: '有效半徑',
+  updateThumbnailMessage: '用戶更新社區事件縮圖'
 }
 
 const happyAndSadEnum = {

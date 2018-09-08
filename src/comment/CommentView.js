@@ -17,7 +17,7 @@ import {
     updatePublicProfileDialog,
   } from '../actions';
 
-import {updateCommentApproveStatus, getMessage, updateMessage, addMessageGalleryEntry} from '../MessageDB';
+import {updateCommentApproveStatus, getMessage, updateMessage, addMessageGalleryEntry, updateMessageThumbnail} from '../MessageDB';
 import {addCompleteMessage} from '../UserProfile';
 import {connect} from 'react-redux';
 import Button from '@material-ui/core/Button';
@@ -53,6 +53,7 @@ class CommentView extends Component {
   approve() {
     const {messageUUID, commentRef, user} = this.props;
     const {geolocation, streetAddress, changeStatus, link, tags, galleryEntry, text} = commentRef.data();
+    console.log(galleryEntry)
     let isCommplete = false;
     return getMessage(messageUUID).then((messageRecord) => {
         let messageuid=messageRecord.uid;
@@ -101,6 +102,10 @@ class CommentView extends Component {
             messageRecord.isUrgentEvent = false;
             messageRecord.isApprovedUrgentEvent = false;
             break;
+         case constant.commentWithOwnerOptions[0]: //"更新事項縮圖"
+           console.log('Option: ' + constant.commentWithOwnerOptions[0]);
+           messageRecord = null;
+            break;
         }
 
         return updateMessage(messageUUID, messageRecord, true).then(() => {
@@ -128,10 +133,13 @@ class CommentView extends Component {
             } else {
                 return updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus).then(() => {
                     if(galleryEntry  != null  && galleryEntry !== undefined) {
-                        return addMessageGalleryEntry(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL, text);
-                    } else {
-                        return;
-                    }    
+                        addMessageGalleryEntry(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL, text);
+
+                        if(galleryEntry.thumbnailUpdate != null &&  galleryEntry.thumbnailUpdate != undefined && galleryEntry.thumbnailUpdate) {
+                            updateMessageThumbnail(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL);
+                        } 
+                    } 
+                    return;  
                 });
             }
         })

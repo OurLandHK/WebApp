@@ -26,6 +26,7 @@ import {
   checkAuthState,
 } from '../actions';
 import SignInButton from '../SignInButton'
+import MessageDetailViewImage from '../MessageDetailViewImage';
 
 
 
@@ -99,6 +100,7 @@ class PostCommentView extends Component {
     this.handleAddition = this.handleAddition.bind(this);
     this.handleDrag = this.handleDrag.bind(this);
     this.uploadFinish = this.uploadFinish.bind(this);
+    this.handleThumbnailSelect = this.handleThumbnailSelect.bind(this);
   }
 
   componentDidMount() {
@@ -190,13 +192,13 @@ class PostCommentView extends Component {
         let isPost = true;
         let isApprovedUrgentEvent = null;
         let galleryEntry = null;
-        var photo = null;
         var commentText = null;
         var tags = null;
         var geolocation = null;
         var streetAddress = null;
         var link = null;
         var status = null;
+        
         switch(this.state.commentSelection) {
             case constant.commentOptions[0]: //"發表回應":
               commentText = this.state.text;
@@ -239,10 +241,15 @@ class PostCommentView extends Component {
                 isApprovedUrgentEvent = false;
               }
               break;
+            case constant.commentWithOwnerOptions[0]: //"更新事項縮圖"
+              if(this.state.galleryEntry.imageURL != null ) {
+                galleryEntry = this.state.galleryEntry;
+              }
+              break;
         }
         this.setState({popoverOpen: false});
         if(isPost) {
-          return addComment(this.props.messageUUID, user, userProfile, photo, commentText, galleryEntry, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent).then(function(commentId){return commentId;});
+          return addComment(this.props.messageUUID, user, userProfile, commentText, galleryEntry, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent).then(function(commentId){return commentId;});
         } else {
           return
         }
@@ -297,7 +304,34 @@ class PostCommentView extends Component {
     this.setState({ tags: tags });
   }
 
+  handleThumbnailSelect(image) {
+    if(image != null && image.isSelected) {
+      this.setState({galleryEntry: {
+        imageURL: image.imageURL,
+        publicImageURL: image.src,
+        thumbnailImageURL: image.thumbnailImageURL,
+        thumbnailPublicImageURL: image.thumbnail,
+        thumbnailUpdate: true
+      }
+      });
+    }
+  }
 
+  renderUpdateMessageThumbnailHtml() {
+    const { message } = this.props;
+      let imageHtml = null;
+      if(message.publicImageURL  != null ) {
+        imageHtml = <MessageDetailViewImage gallery={message.gallery} url={message.publicImageURL} messageUUID={message.key} enableImageSelection={true} handleThumbnailSelect={this.handleThumbnailSelect}/>
+      } else {
+        imageHtml = <MessageDetailViewImage/>
+      }
+
+    return (
+      <div>
+        {imageHtml}
+      </div>
+    )
+  }
 
   render() {
     const { classes, message, user } = this.props;
@@ -316,7 +350,14 @@ class PostCommentView extends Component {
           //}
         }
 
+        // update the thumbnail by owner
+        if(user.userProfile  != null && user.userProfile.publishMessages != null && user.userProfile.publishMessages.length > 0 && user.userProfile.publishMessages.includes(message.key)) {
+          commentOptions = [...commentOptions, ...constant.commentWithOwnerOptions];
+        }
+
+
         if(this.state.commentSelection !== constant.commentOptions[0]) { //"發表回應"
+          console.log("this.state.commentSelection=" + this.state.commentSelection);
             switch(this.state.commentSelection) {
               case constant.commentOptions[1]: //"要求更改地點"
                 inputHtml = <LocationButton autoFocus ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>;
@@ -348,6 +389,9 @@ class PostCommentView extends Component {
                 break;
               case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
                 inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="非緊急事件" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
+                break;
+               case constant.commentWithOwnerOptions[0]: //"更新事項縮圖"
+                inputHtml = this.renderUpdateMessageThumbnailHtml();
                 break;
               }
         }

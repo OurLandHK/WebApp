@@ -16,8 +16,37 @@ class MessageDetailViewImage extends Component {
             imageURL: null,
             publicImageURL: null,
             thumbnailImageURL: null,
-            thumbnailPublicImageURL: null
+            thumbnailPublicImageURL: null,
+            images: null,
+            isOnlyOneImageSelected: false,
+            enableImageSelection: false
         };
+        this.onSelectImage = this.onSelectImage.bind(this);
+    }
+
+    componentDidMount() {
+      let enableImageSelection = this.props.enableImageSelection || false;
+      if((this.props.gallery !== undefined && this.props.gallery !== null) && this.props.gallery.length > 1) {
+        const images = this.props.gallery.map((entry) => {
+          return {src:entry.publicImageURL, imageURL: entry.imageURL, thumbnail: entry.thumbnailPublicImageURL, thumbnailImageURL: entry.thumbnailImageURL, caption: entry.caption, isSelected: false};
+        });
+         this.setState({images});
+       }
+
+       this.setState({enableImageSelection: enableImageSelection})
+    }
+
+    onSelectImage(index, image) {
+        var images = this.state.images.slice();
+        var img = images[index];
+
+        if(this.state.isOnlyOneImageSelected && !img.isSelected) {
+          alert("Only one thumbnail can be selected at a time");
+        } else {
+          img.isSelected = !img.isSelected;
+          this.setState({isOnlyOneImageSelected: img.isSelected});
+          this.props.handleThumbnailSelect(image);
+        }
     }
 
   uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) {
@@ -37,10 +66,7 @@ class MessageDetailViewImage extends Component {
    }
 
   render() {
-    if((this.props.gallery !== undefined && this.props.gallery !== null) && this.props.gallery.length > 1) {
-      const images = this.props.gallery.map((entry) => {
-        return {src:entry.publicImageURL, thumbnail: entry.thumbnailPublicImageURL, caption: entry.caption};
-      });
+    if(this.state.images != null) {
       return (
         <div style={{
           display: "block",
@@ -52,10 +78,11 @@ class MessageDetailViewImage extends Component {
           background: "white"
       }}>
         <Gallery
-            images={images}
+            images={this.state.images}
             rowHeight={128}
             maxRows={2}
-            enableImageSelection={false}/>
+            onSelectImage={this.onSelectImage}
+            enableImageSelection={this.state.enableImageSelection}/>
         </div>
       );
     } else {
