@@ -3,9 +3,9 @@ import Paper from '@material-ui/core/Paper';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import classnames from 'classnames';
+//import classnames from 'classnames';
 import red from '@material-ui/core/colors/red';
 import EventMap from './REventMap';
 import ChipArray from './ChipArray';
@@ -20,7 +20,7 @@ import PostCommentView from './comment/PostCommentView';
 import timeOffsetStringInChinese from './TimeString';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
-import {fileExists, checkImageExists} from './util/http';
+import {checkImageExists} from './util/http';
 import {
   updateRecentMessage,
   updatePublicProfileDialog,
@@ -115,12 +115,12 @@ class MessageDetailView extends Component {
     let post = '張貼';
     let timeOffset = Date.now() - message.createdAt.toDate();
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
-    let subheader = `於:${timeOffsetString}前${post}`;
+//    let subheader = `於:${timeOffsetString}前${post}`;
     let photoUrl = message.photoUrl;
     if(!checkImageExists(photoUrl)) {
       photoUrl = '/images/profile_placeholder.png';
     }
-    let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
+//    let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     let urgentEventTag = null;
 
     if(user  != null  && user.userProfile  != null  && (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor)) {
@@ -180,6 +180,14 @@ class MessageDetailView extends Component {
       locationString = `地點: 近(${geoString(message.geolocation.latitude, message.geolocation.longitude)})`;
     }
     let geolink =`geo:${message.geolocation.latitude},${message.geolocation.longitude}`;
+    if /* if we're on iOS, open in Apple Maps */
+    ((navigator.platform.indexOf("iPhone") !== -1) || 
+     (navigator.platform.indexOf("iPad") !== -1) || 
+     (navigator.platform.indexOf("iPod") !== -1)) {
+      geolink = `maps://maps.google.com/maps?daddr=${message.geolocation.latitude},${message.geolocation.longitude}&amp;ll=`;
+    } else {/* else use Google */
+      geolink = `https://maps.google.com/maps?daddr=${message.geolocation.latitude},${message.geolocation.longitude}&amp;ll=`;
+    }
     if(message.viewCount  != null ) {
       viewCountString += message.viewCount;
     } else {
@@ -193,8 +201,8 @@ class MessageDetailView extends Component {
           <Typography color='primary' noWrap='true' >{subheader}</Typography>
         </Grid>
         <Grid item xs direction='column' className={classes.summaryGrid} >
-          <a href={geolink}>
-            <Typography variant="subheading">
+          <a href={geolink} target="_blank">
+            <Typography variant="subheading" >
             {locationString}
             </Typography>
           </a>
@@ -247,7 +255,7 @@ class MessageDetailView extends Component {
     let weekdaysOpennings = m.weekdaysOpennings;
     let interval = m.interval;
     let duration = m.duration;
-    let endDate = m.endDate;
+  //  let endDate = m.endDate;
     if(dateTimeString !== '') {
       let intervalHtml = null;
       let durationHtml = null;
@@ -294,7 +302,7 @@ class MessageDetailView extends Component {
       return false;
     }
 
-    var rv = link.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    var rv = link.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g);
     return (rv==null? false: true);
   }
 
@@ -335,25 +343,23 @@ class MessageDetailView extends Component {
     return(<div className={classes.container}>
             {baseHtml}
             {imageHtml}
-             <CardContent>
-             {title}
+            <CardContent>
+              {title}
               <ChipArray chipData={chips} />
-             {linkHtml}
-             </CardContent>
-             {dateHtml}
-             <MessageAction message={m} happyAndSad={this.props.happyAndSad}/>
-             <div>
-               <AppBar position="static" className={classes.appBar}>
-                 <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
-                   <Tab label="參與紀錄" value="參與紀錄"/>
-                   {imageTabLabel}
-                   <Tab label="準確地點" value="準確地點"/>
-                 </Tabs>
-               </AppBar>
-             </div>
-             {tab === "參與紀錄" && <div className="wrapper"><CommentList messageUUID={m.key}/><div className="nav-wrapper"><PostCommentView messageUUID={m.key} message={m}/></div></div>}
-             {tab === "相關照片" && <MessageDetailViewImage url={m.publicImageURL} messageUUID={m.key}/>}
-             {tab === "準確地點" && <EventMap center={geolocation} zoom={zoom}/>}
+              {linkHtml}
+            </CardContent>
+            {dateHtml}
+            <MessageAction message={m} happyAndSad={this.props.happyAndSad}/>
+            <AppBar position="static" className={classes.appBar}>
+              <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
+                <Tab label="參與紀錄" value="參與紀錄"/>
+                {imageTabLabel}
+                <Tab label="準確地點" value="準確地點"/>
+              </Tabs>
+            </AppBar>
+            {tab === "參與紀錄" && <div className="wrapper"><CommentList messageUUID={m.key}/><div className="nav-wrapper"><PostCommentView messageUUID={m.key} message={m}/></div></div>}
+            {tab === "相關照片" && <MessageDetailViewImage url={m.publicImageURL} messageUUID={m.key}/>}
+            {tab === "準確地點" && <EventMap center={geolocation} zoom={zoom}/>}
          </div>);
 
     }
@@ -378,8 +384,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
-(withStyles(styles)((MessageDetailView)));
+export default connect( mapStateToProps,mapDispatchToProps)(withStyles(styles)((MessageDetailView)));

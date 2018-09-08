@@ -21,9 +21,7 @@ class PublicProfileSSR extends Component {
     }
     
     return (
-      <div>
-          {outHtml}
-      </div>
+      {outHtml}
     );
   }
 };

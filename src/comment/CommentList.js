@@ -50,12 +50,10 @@ class CommentList extends Component {
       return (<div width="100%">{elements}</div>);
     }
     return (
-      <div>
         <center>
           <br/>
           <h4>{constant.emptyComment}</h4>
         </center>
-      </div>
     );
   }
 };

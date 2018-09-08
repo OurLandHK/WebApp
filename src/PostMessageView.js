@@ -340,7 +340,7 @@ class PostMessageView extends Component {
     const classes = this.props.classes;
     let openningHours = constant.closeWholeDay;
     if(this.state.opennings[index].enable) {
-      openningHours = <div>
+      openningHours = <React.Fragment>
                   <TextField
                     id={`open${index}`}
                     type="time"
@@ -366,7 +366,7 @@ class PostMessageView extends Component {
                     step: 300, // 5 min
                   }}
                 />
-        </div>;
+        </React.Fragment>;
     }
     return(
       <Toolbar>
@@ -430,7 +430,7 @@ class PostMessageView extends Component {
         });
         break;
     }
-    return (<div>
+    return (<React.Fragment>
       <Toolbar>
         <TextField
           id="start"
@@ -447,7 +447,7 @@ class PostMessageView extends Component {
         <SelectedMenu label="" options={this.props.openningOptions} changeSelection={(selectedValue) => this.openningOptionSelection(selectedValue)} />
       </Toolbar>
       {openningHtml}
-    </div>);
+    </React.Fragment>);
   }
 
   renderActivitiesHtml() {
@@ -471,7 +471,7 @@ class PostMessageView extends Component {
           />
     }
 
-    return (<div>
+    return (<React.Fragment>
       <Toolbar>
         <TextField
           id="start"
@@ -507,7 +507,7 @@ class PostMessageView extends Component {
         <SelectedMenu label="" options={this.props.intervalOptions} changeSelection={(selectedValue) => this.intervalOptionSelection(selectedValue)}ref={(intervalSelection) => {this.intervalSelection = intervalSelection;}}/>
         {endDateHtml}
       </Toolbar>
-    </div>);
+    </React.Fragment>);
   }
 
   render() {
@@ -546,7 +546,7 @@ class PostMessageView extends Component {
         }
       }
       return (
-        <div>
+        <React.Fragment>
           {postButtonHtml}
           <Dialog
             fullScreen
@@ -627,7 +627,7 @@ class PostMessageView extends Component {
               </Form>
               </div>
         </Dialog>
-        </div>
+        </React.Fragment>
       )
     } else {
       return (

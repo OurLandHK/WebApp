@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
-import MessageList from './MessageList';
+import SingleLineMessageList from './SingleLineMessageList';
 import Typography from '@material-ui/core/Typography';
 import { default as dist } from './Distance';
 
@@ -28,12 +28,9 @@ class FocusMessage extends Component {
       return <div className="focus-message-wrapper">
           <h4>{focusMessages[focusMsgIdx].title}</h4>
           <p>{focusMessages[focusMsgIdx].summary}</p>
-          <MessageList
+          <SingleLineMessageList
             ref={(messageList) => {this.messageList = messageList;}}
-            eventNumber={100}
-            distance={10}
             messageIds={focusMessages[focusMsgIdx].messages}
-            hori={true}
           />
         </div>
     }else {
@@ -98,13 +95,7 @@ class FocusMessage extends Component {
             <div key={focusMsgIdx}>
               <Typography variant="headline" component="h2" className={classes.title}>{focusMessages[focusMsgIdx].title}</Typography>
               <p>{focusMessages[focusMsgIdx].summary}</p>
-              <MessageList
-                ref={(messageList) => {this.messageList = messageList;}}
-                eventNumber={100}
-                distance={10}
-                messageIds={focusMessages[focusMsgIdx].messages}
-                hori={true}
-              />
+              <SingleLineMessageList ref={(messageList) => {this.messageList = messageList;}} messageIds={focusMessages[focusMsgIdx].messages}/>
             </div>
           ) 
         } else {
@@ -140,9 +131,9 @@ class FocusMessage extends Component {
 
   render() {
   	return (
-  		<div>
-	  		{this.renderFocusMessages()}
-	  	</div>
+      <React.Fragment>
+        {this.renderFocusMessages()}
+      </React.Fragment>	
   	);
   }
 

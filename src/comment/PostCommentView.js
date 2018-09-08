@@ -336,10 +336,10 @@ class PostCommentView extends Component {
     const { tags } = this.state;
 
     if(this.state.buttonShow) {
-        let inputHtml = <div>
+        let inputHtml = <React.Fragment>
           <TextField autoFocus required id="message" fullWidth margin="normal" helperText="更新事件進度及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>
           <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.imagePath} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
-          </div>;
+          </React.Fragment>;
         let commentOptions = constant.commentOptions;
         if(user.userProfile  != null  && (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor)) {
           // admin should able to enable any message as urgent.

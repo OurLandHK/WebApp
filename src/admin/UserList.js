@@ -122,9 +122,9 @@ class UserList extends Component {
       lat = this.state.geolocation.latitude;
     }
     return (
-        <div>
+        <React.Fragment>
             {this.state.data.map((t, i) => {return this.renderUser(t, i + 1);})}
-        </div>);
+        </React.Fragment>);
   }
 };
 

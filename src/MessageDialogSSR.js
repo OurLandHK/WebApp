@@ -19,7 +19,7 @@ class MessageDialogSSR extends Component {
     const { user, uuid } = this.props;
     let homeUrl = window.location.protocol + "//" + window.location.hostname;
     return (
-      <div>
+      <React.Fragment>
         {user &&
          <MessageDialog
            uuid={uuid}
@@ -29,7 +29,7 @@ class MessageDialogSSR extends Component {
            closeDialog={() => {window.location.href = homeUrl;}} 
          />
         }
-      </div>
+      </React.Fragment>
     );
   }
 };

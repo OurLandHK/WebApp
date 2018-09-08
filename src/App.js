@@ -108,7 +108,7 @@ class App extends Component {
     */
     //injectTapEventPlugin();
     let mainScreen = null;
-    let linebreak = <div><br/><br/></div>;
+    let linebreak = <React.Fragment><br/><br/></React.Fragment>;
     const { tab } = this.state;
     const { classes, user } = this.props;
     switch(tab) {

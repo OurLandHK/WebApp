@@ -88,22 +88,23 @@ class MessageDetailViewImage extends Component {
     } else {
       let url = (this.state.url || this.props.url);
       if(url  != null ) {
-        return (<ProgressiveCardImg gs_src={url}/>);
+        return (<ProgressiveCardImg src={url}/>);
+      } else {
+        return (
+          <React.Fragment>
+            <center>
+              <br/>
+              <h1>沒有圖片</h1>
+              <br/>
+              <FormGroup>
+              <br/>
+              <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.key} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
+              </FormGroup>
+              <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>提交</Button>
+            </center>
+          </React.Fragment>
+        );
       }
-      return (
-        <div>
-          <center>
-            <br/>
-            <h1>沒有圖片</h1>
-            <br/>
-            <FormGroup>
-            <br/>
-            <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.key} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
-            </FormGroup>
-            <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>提交</Button>
-          </center>
-        </div>
-      );
     }
   }
 }

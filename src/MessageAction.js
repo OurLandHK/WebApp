@@ -4,9 +4,9 @@ import Grid from '@material-ui/core/Grid';
 import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
 import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
 import IconButton from '@material-ui/core/IconButton';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import classnames from 'classnames';
+//import classnames from 'classnames';
 import BookmarkToggleButton from './bookmark/BookmarkToggleButton';
 import {setHappyAndSad} from './MessageDB';
 import FocusToggleButton from './admin/FocusToggleButton';
@@ -72,13 +72,6 @@ class MessageAction extends Component {
     let sadCount = this.state.sadCount;
     let happyAndSadValue = happySadValue;
     switch(this.state.happyAndSad) {
-      case happyAndSadEnum.nothing:
-        if(happySadValue > happyAndSadEnum.nothing) {
-          happyCount++;
-        } else {
-          sadCount++;
-        }
-        break;
       case happyAndSadEnum.happy:
         happyCount--;
         if(happySadValue < happyAndSadEnum.nothing) {
@@ -95,6 +88,14 @@ class MessageAction extends Component {
           happyAndSadValue = happyAndSadEnum.nothing;
         }
         break;
+      case happyAndSadEnum.nothing:
+      default:
+        if(happySadValue > happyAndSadEnum.nothing) {
+          happyCount++;
+        } else {
+          sadCount++;
+        }
+        break;        
     }
     setHappyAndSad(this.props.message.key, happyCount, sadCount, happyAndSadValue, this.props.user.user)
     this.setState({
@@ -117,6 +118,7 @@ class MessageAction extends Component {
         happyColor = "secondary";
         break;
       case happyAndSadEnum.sad:
+      default:
         sadColor = "primary";
         break;
     }
@@ -175,8 +177,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
-(withStyles(styles)((MessageAction)));
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)((MessageAction)));

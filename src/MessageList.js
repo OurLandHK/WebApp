@@ -34,10 +34,6 @@ class MessageList extends Component {
       messageIds = this.props.messageIds;
       statusMessage = constant.messageListLoadingStatus;
     }
-    this.hori = false;
-    if(this.props.hori === true) {
-      this.hori = true;
-    }
     this.state = {
 //      eventId: this.props.eventId,
       eventNumber: this.props.eventNumber,
@@ -57,10 +53,8 @@ class MessageList extends Component {
   componentDidMount() {
     //console.log('componentDidMount');
     if(this.state.messageIds.length !== 0) {
-      if(!this.hori) {
        this.updateGlobalFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
-      }
-      this.refreshMessageList();
+       this.refreshMessageList();
     }
   }
 
@@ -69,15 +63,12 @@ class MessageList extends Component {
       this.props.filter.distance !== prevProps.filter.distance ||
       this.props.filter.selectedSorting !== prevProps.filter.selectedSorting ||
       this.props.tagFilter !== prevProps.tagFilter)) {
-      if(!this.hori) {
-        this.refreshMessageList();
-      }
+      this.refreshMessageList();
     } else {
       if(this.props.filter.selectedTag !== undefined &&
             this.props.filter.selectedTag !== prevProps.filter.selectedTag) {
         this.setState({selectedTag: this.props.filter.selectedTag});
       }
-
       if(this.props.filter.sorting !== undefined &&  this.props.filter.sorting !== prevProps.filter.sorting){
         this.setState({selectedSorting: this.props.filter.selectedSorting});
       }
@@ -103,9 +94,9 @@ class MessageList extends Component {
       this.setState({statusMessage: constant.messageListNoMessage});
       return;
     }
-    if(val.tag  != null  && val.tag.length > 0) {
+    if(val.tag  !== undefined && val.tag  !== null  && val.tag.length > 0) {
       this.props.updateFilterTagList(val.tag);
-    }
+    } 
     this.state.data.push(val);
     this.setState({data:this.state.data});
   };
@@ -156,7 +147,7 @@ class MessageList extends Component {
     let lon = 0;
     let lat = 0;
 
-    if(this.state.geolocation !== undefined && this.state.geolocation !== constant.invalidLocation) {
+    if(this.state.geolocation !== undefined && this.state.geolocation !== null && this.state.geolocation !== constant.invalidLocation) {
       lon = this.state.geolocation.longitude;
       lat = this.state.geolocation.latitude;
     }
@@ -172,26 +163,18 @@ class MessageList extends Component {
 
     if(this.state.data.length === 0) {
       let statusMessage = this.state.statusMessage;
-      return(<div><h4>{statusMessage}</h4></div>);
+      return(<h4>{statusMessage}</h4>);
     } else {
       let messageList = null;
       let elements = this.state.data.map((message) => {
-        if(this.state.selectedTag  != null  && !message.tag.includes(this.state.selectedTag)) {
+        if(this.state.selectedTag  != null  && (message.tag === null || message.tag === undefined|| !message.tag.includes(this.state.selectedTag))) {
           // filter by selected tag.
           return null;
         } else {
-          if(this.hori) {
-            return (<div className={classes.scrollingItem} key={message.key}><MessageView message={message} key={message.key} tile={this.hori} lon={lon} lat={lat}/></div>);
-          } else {
-            return (<MessageView message={message} key={message.key} tile={this.hori} lon={lon} lat={lat}/>);
-          }
+          return (<MessageView message={message} key={message.key} tile={false} lon={lon} lat={lat}/>);
         }
       });
-      if(this.hori) {
-          messageList = <div className={classes.scrollingWrapper}>{elements}</div>;
-      } else {
-        messageList = elements;
-      }
+      messageList = elements;
       return (<div className="message-list-wrapper">{messageList}</div>);
     }
   }

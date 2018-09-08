@@ -57,7 +57,7 @@ class SelectedMenu extends Component {
 //       listItemHtml =<Button variant="outlined" color="primary"> `{this.props.label}: {this.props.options[this.state.selectedIndex]}` </Button>
     }
     return (
-      <div>
+      <React.Fragment>
         <List borderColor='green[200]' backgroundColor='green[500]'>
           <ListItem
             borderColor='green[200]'
@@ -90,7 +90,7 @@ class SelectedMenu extends Component {
             </MenuItem>,
           )}
         </Menu>
-      </div>
+      </React.Fragment>
     );
   }
 }

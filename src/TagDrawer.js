@@ -13,7 +13,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText  from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-import LabelIcon from '@material-ui/icons/LabelOutline';
+import LabelIcon from '@material-ui/icons/LabelOutlined';
 import AllIcon from '@material-ui/icons/AllInclusive';
 import ArrowIcon from '@material-ui/icons/ArrowDropDownCircle';
 import green from '@material-ui/core/colors/green';
@@ -79,7 +79,8 @@ class TagDrawer extends React.Component {
         open: false,
         selectedTag: null,
         isSelectedAll: true,
-        isRenderTagList: true
+        isRenderTagList: true,
+        tagList: []
       };
   }
 
@@ -96,6 +97,7 @@ class TagDrawer extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.filter.tagList !== this.props.filter.tagList) {
       this.setTag(null);
+      this.setState({tagList: this.props.filter.tagList})
     }
   }
 
@@ -121,9 +123,7 @@ class TagDrawer extends React.Component {
   }
 
   renderTagList() {
-    const { filter } = this.props;
-    var tagList=filter.tagList;
-
+    let tagList=this.state.tagList;
     return tagList.map(tag => {
       let icons = <LabelIcon />;
       return (
