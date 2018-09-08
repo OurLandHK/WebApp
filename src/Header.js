@@ -31,7 +31,7 @@ class Header extends Component {
     return (<AppBar className="header">
               <Toolbar>
                 <div className="header-title">
-                  我地
+                  我地.市正
                 </div>
                 <SignInButton/>
                 <NotificationsDialog/>

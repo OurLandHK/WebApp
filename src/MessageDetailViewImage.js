@@ -80,7 +80,6 @@ class MessageDetailViewImage extends Component {
         <Gallery
             images={this.state.images}
             rowHeight={128}
-            maxRows={2}
             onSelectImage={this.onSelectImage}
             enableImageSelection={this.state.enableImageSelection}/>
         </div>
