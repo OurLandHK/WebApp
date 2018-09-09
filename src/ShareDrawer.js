@@ -13,10 +13,6 @@ import purple from '@material-ui/core/colors/purple';
 
 
 import {
-  isConcernMessage, 
-  toggleConcernMessage
-} from './UserProfile';
-import {
   ShareButtons,
   ShareCounts,
   generateShareIcon
@@ -28,17 +24,6 @@ const someNetwork = {
   marginRight: "1em",
   textAlign: "center",
 };
-
-const buttonStyle = {
-  width: '3.3em',
-  height: '3.3em',
-};
-
-const forumButtonStyle = {
-  ...buttonStyle,
-  backgroundColor: yellow[500],
-};
-
 
 
 const styles = theme => ({
@@ -83,10 +68,6 @@ const {
   EmailShareButton,
 } = ShareButtons;
 
-const {
-  FacebookShareCount,
-} = ShareCounts;
-
 const FacebookIcon = generateShareIcon('facebook');
 const TelegramIcon = generateShareIcon('telegram');
 const WhatsappIcon = generateShareIcon('whatsapp');
@@ -128,10 +109,10 @@ class ShareDrawer extends React.Component {
 */
     var quote = "";
     if(message  != null ) {
-      quote = '【' + message.status + '】' + ' 社區事件: ' + message.text;
+      quote = `【 ${message.status} 】 社區事件: ${message.text}`;
 
       if(message.streetAddress !== undefined && message.streetAddress  != null ) {
-        quote = quote + ' - 地點: ' + message.streetAddress 
+        quote += ` - 地點: ${message.streetAddress}`; 
       }
 
       if(message.start !== undefined && message.start  != null ) {
@@ -140,7 +121,7 @@ class ShareDrawer extends React.Component {
           let dateTimeString = '';
           dateTimeString = date.toLocaleDateString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });
 
-          quote = quote + ' - 開始日期: ' + dateTimeString
+          quote += ` - 開始日期: ${dateTimeString}`;
         }
         
       }

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import { connect } from "react-redux";
 import { SocialIcon } from 'react-social-icons';
-import { withStyles } from '@material-ui/core/styles';
-import ExitToApp from '@material-ui/icons/ExitToApp';
+//import { withStyles } from '@material-ui/core/styles';
+//import ExitToApp from '@material-ui/icons/ExitToApp';
 import { signOut, signIn } from "./actions";
 
 class SignInButton extends  Component {
@@ -25,7 +25,7 @@ class SignInButton extends  Component {
   }
 
   render() {
-    const { classes, user, signOut, signIn } = this.props;
+    const { user, signIn } = this.props;
 
     if (user.loading) {
       return (<div></div>);

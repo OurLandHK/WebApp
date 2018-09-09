@@ -1,6 +1,5 @@
 
 import React from 'react';
-import config, {constant} from './config/default';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
 import PlayListPlayIcon from '@material-ui/icons/PlaylistPlay';

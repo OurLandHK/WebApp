@@ -10,12 +10,12 @@ import CheckIcon from '@material-ui/icons/Check';
 import BookmarkView from './BookmarkView';
 import PlayListPlayIcon from '@material-ui/icons/PlaylistPlay';
 import { withStyles } from '@material-ui/core/styles';
-import { dropBookmark, addBookmark, updateBookmark} from '../UserProfile';
+import {updateBookmark} from '../UserProfile';
 import {connect} from "react-redux";
 import {
   checkAuthState,
 } from '../actions';
-import { constant } from '../config/default';
+//import { constant } from '../config/default';
 
 
 const styles = () => ({

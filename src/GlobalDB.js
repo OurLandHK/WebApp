@@ -7,7 +7,6 @@ This is the abstraction layer to get all Global Setting for the Appl
 import * as firebase from 'firebase';
 import config from './config/default';
 import distance from './Distance';
-import { getStreetAddressFromGeoLocation} from './Location';
 
 
 function degreesToRadians(degrees) {return (degrees * Math.PI)/180;}
@@ -82,6 +81,7 @@ function fetchFocusMessagesBaseOnGeo(geocode, radius) {
                             return(null);
                         }
                     }
+                    return(null);
                 });
                 return(focusMessages);
             }
@@ -120,7 +120,7 @@ function fetchFocusMessagesBaseOnGeo(geocode, radius) {
       };
     // Use firestore
     const db = firebase.firestore();
-    const focusMessageRef = db.collection(config.focusMessageDB).doc(key).set(focusMessageRecord).then(function(recordRef) {
+    db.collection(config.focusMessageDB).doc(key).set(focusMessageRecord).then(function(recordRef) {
         return(key);
     })
 };

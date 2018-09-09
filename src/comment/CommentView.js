@@ -58,54 +58,56 @@ class CommentView extends Component {
     return getMessage(messageUUID).then((messageRecord) => {
         let messageuid=messageRecord.uid;
         switch(this.commentOption) {
-        case  constant.commentOptions[0]: //"發表回應":
-            console.log('Option: ' + constant.commentOptions[0]);
-            messageRecord = null; // for update time
-            break;
-        case constant.commentOptions[2]: //"要求更改現況":
-            console.log('Option: ' + constant.commentOptions[2]);
-            switch(changeStatus) {
-              case constant.statusOptions[0]: //'開放'
-              case constant.statusOptions[2]: //'政府跟進中'
-                messageRecord.status=changeStatus;
+            case constant.commentOptions[2]: //"要求更改現況":
+                console.log('Option: ' + constant.commentOptions[2]);
+                switch(changeStatus) {
+                    case constant.statusOptions[1]: //'完結'
+                        messageRecord.status=changeStatus;
+                        isCommplete = true;
+                        break;
+                    case constant.statusOptions[3]: //'虛假訊息'
+                    case constant.statusOptions[4]: //'不恰當訊息',
+                        messageRecord.hide = true;
+                        break;
+                    case constant.statusOptions[0]: //'開放'
+                    case constant.statusOptions[2]: //'政府跟進中'
+                    default:
+                        messageRecord.status=changeStatus;
+                        break;
+                    }
                 break;
-              case constant.statusOptions[1]: //'完結'
-                messageRecord.status=changeStatus;
-                isCommplete = true;
+            case constant.commentOptions[1]: //"要求更改地點":
+                console.log('Option: ' + constant.commentOptions[1]);
+                messageRecord.geolocation = geolocation;
+                messageRecord.streetAddress = streetAddress;
                 break;
-              case constant.statusOptions[3]: //'虛假訊息'
-              case constant.statusOptions[4]: //'不恰當訊息',
-                messageRecord.hide = true;
+            case constant.commentOptions[3]: //"要求更改外部連結":
+                console.log('Option: ' + constant.commentOptions[3]);
+                messageRecord.link = link;
                 break;
-            }
-            break;
-        case constant.commentOptions[1]: //"要求更改地點":
-            console.log('Option: ' + constant.commentOptions[1]);
-            messageRecord.geolocation = geolocation;
-            messageRecord.streetAddress = streetAddress;
-            break;
-        case constant.commentOptions[3]: //"要求更改外部連結":
-            console.log('Option: ' + constant.commentOptions[3]);
-            messageRecord.link = link;
-            break;
-        case constant.commentOptions[4]: //"要求更改分類"
-            console.log('Option: ' + constant.commentOptions[4]);
-            messageRecord.tag = tags;
-            break;
-        case constant.commentWithUrgentEventOptions[0]: //"確定為緊急事項"
-            console.log('Option: ' + constant.commentWithUrgentEventOptions[0]);
-            messageRecord.isUrgentEvent = true;
-            messageRecord.isApprovedUrgentEvent = true;
-            break;
-        case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
-            console.log('Option: ' + constant.commentWithUrgentEventOptions[1]);
-            messageRecord.isUrgentEvent = false;
-            messageRecord.isApprovedUrgentEvent = false;
-            break;
-         case constant.commentWithOwnerOptions[0]: //"更新事項縮圖"
-           console.log('Option: ' + constant.commentWithOwnerOptions[0]);
-           messageRecord = null;
-            break;
+            case constant.commentOptions[4]: //"要求更改分類"
+                console.log('Option: ' + constant.commentOptions[4]);
+                messageRecord.tag = tags;
+                break;
+            case constant.commentWithUrgentEventOptions[0]: //"確定為緊急事項"
+                console.log('Option: ' + constant.commentWithUrgentEventOptions[0]);
+                messageRecord.isUrgentEvent = true;
+                messageRecord.isApprovedUrgentEvent = true;
+                break;
+            case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
+                console.log('Option: ' + constant.commentWithUrgentEventOptions[1]);
+                messageRecord.isUrgentEvent = false;
+                messageRecord.isApprovedUrgentEvent = false;
+                break;
+            case constant.commentWithOwnerOptions[0]: //"更新事項縮圖"
+                console.log('Option: ' + constant.commentWithOwnerOptions[0]);
+                messageRecord = null;
+                break;
+            case  constant.commentOptions[0]: //"發表回應":
+            default:
+                console.log('Option: ' + constant.commentOptions[0]);
+                messageRecord = null; // for update time
+                break;                
         }
 
         return updateMessage(messageUUID, messageRecord, true).then(() => {
@@ -132,7 +134,7 @@ class CommentView extends Component {
                 })
             } else {
                 return updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus).then(() => {
-                    if(galleryEntry  != null  && galleryEntry !== undefined) {
+                    if(galleryEntry  !== null  && galleryEntry !== undefined) {
                         addMessageGalleryEntry(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL, text);
 
                         if(galleryEntry.thumbnailUpdate != null &&  galleryEntry.thumbnailUpdate != undefined && galleryEntry.thumbnailUpdate) {
@@ -169,7 +171,7 @@ class CommentView extends Component {
   };
 
   render() {
-    const { classes, theme, user, commentRef } = this.props;
+    const { classes, user, commentRef } = this.props;
     const comment = commentRef.data();
     const {galleryEntry, approvedStatus, geolocation, streetAddress, changeStatus, link, tags, createdAt, photoUrl, isApprovedUrgentEvent} = comment;
     let text = comment.text;
@@ -273,8 +275,4 @@ CommentView.propTypes = {
   };
 
 
-  export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-    )
-    (withStyles(styles, { withTheme: true })(CommentView));
+  export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles, { withTheme: true })(CommentView));

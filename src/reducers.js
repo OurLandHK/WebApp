@@ -71,6 +71,7 @@ function addressBookReducer(state={addresses:[], publicAddresses:[]}, action) {
 }
 
 function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, eventNumber: constant.defaultEventNumber, geolocation: null, distance: 1, defaultDistance: 1, selectedTag: null, tagList: []}, action) {
+  let distance = action.distance;
   switch (action.type) {
     case UPDATE_FILTER_DEFAULT:
       return {
@@ -84,7 +85,6 @@ function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, e
         defaultDistance: action.distance,
       };    
     case UPDATE_FILTER:
-      var distance = action.distance;
       if(state.defaultDistance > distance) {
         distance = state.defaultDistance;
       }
@@ -101,7 +101,6 @@ function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, e
         distance: distance
       };
     case UPDATE_FILTER_LOCATION:
-      var distance = action.distance;
       if(state.defaultDistance > distance || distance === undefined) {
         distance = state.defaultDistance;
       }    
@@ -120,6 +119,7 @@ function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, e
           if(!tagList.includes(tag)) {
             tagList.push(tag);
           }
+          return;
         });
       }
       //console.log("update Tag List" + tagList.join());

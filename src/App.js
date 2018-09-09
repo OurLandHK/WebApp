@@ -1,9 +1,4 @@
 import React, { Component } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-} from 'react-router-dom';
 import Main from './Main';
 import PublicProfile from './PublicProfile';
 import Header from './Header';
@@ -31,13 +26,12 @@ import {
   updatePublicProfileDialog,
   updateRecentBookmark,
   fetchGlobalSetting,
-  init3rdPartyLibraries
 } from './actions';
 import {constant} from './config/default';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
-const store = createStoreWithMiddleware(rootReducer);
+//const store = createStoreWithMiddleware(rootReducer);
 
 class App extends Component {
   constructor(props) {
@@ -110,17 +104,8 @@ class App extends Component {
     let mainScreen = null;
     let linebreak = <React.Fragment><br/><br/></React.Fragment>;
     const { tab } = this.state;
-    const { classes, user } = this.props;
+    const { user } = this.props;
     switch(tab) {
-      case 'main':
-        mainScreen = <Main
-              eventId={this.state.eventId}
-              userId={this.state.userId}
-              eventNumber={this.state.eventNumber}
-              distance={this.state.distance}
-              bookmark={this.state.bookmark}
-            />
-        break;
       case 'concern':
         mainScreen = <BookmarkBoard/>
         break;
@@ -130,10 +115,16 @@ class App extends Component {
       case 'person':
         mainScreen = <Person/>
         break;
-    }
-    let userLoginDisable = true;
-    if(user && user.userProfile) {
-      userLoginDisable = false;
+      case 'main':
+      default:
+        mainScreen = <Main
+              eventId={this.state.eventId}
+              userId={this.state.userId}
+              eventNumber={this.state.eventNumber}
+              distance={this.state.distance}
+              bookmark={this.state.bookmark}
+            />
+        break;        
     }
 
     return (

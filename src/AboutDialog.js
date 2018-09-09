@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { withStyles } from '@material-ui/core/styles';
 import Slide from '@material-ui/core/Slide';
 import AppBar from '@material-ui/core/AppBar';
@@ -56,7 +55,7 @@ class AboutDialog extends Component {
           </Toolbar>
         </AppBar>
         <div className={classes.container}>
-        <p><b><a href="https://www.facebook.com/pg/HKOurLand">我地(ourland)</a></b> 係一個Neighbour Media (街坊媒體) 。用家可以查詢現在身處位置或地址簿內位置 1 公里範圍的社區事:</p>
+        <p><b><a href="https://www.facebook.com/pg/HKOurLand">我地.市正(ourland searching)</a></b> 係一個Neighbour Media (街坊媒體) 。用家可以查詢現在身處位置或地址簿內位置 1 公里範圍的社區事:</p>
         <ol>
         <li>公共設施</li>
         <li>社區活動</li>

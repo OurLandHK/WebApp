@@ -11,6 +11,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import imageResizer from './ImageResizer';
+import Snackbar from '@material-ui/core/Snackbar';
 
 const styles = theme => ({
     hidden: {
@@ -22,27 +23,16 @@ const styles = theme => ({
     previewThumbnail: {
       width: '128px',
       height: '128px'
-    }
+    },
+    snackbar: {
+      position: 'absolute',
+    },
+    snackbarContent: {
+      width: 360,
+    },    
   });
 
-function validateFile(file) {
-  if (! file) {
-    console.log("file not exist: " + file);
-    return false;
-  }
 
-  if(!file.type.match('image.*')) {
-    console.log("File is not image:" + file);
-    var data = {
-      message: 'You can only share images',
-      timeout: 2000
-    };
-    //TODO: call snackbar
-    //this.signInSnackbar.MaterialSnackbar.showSnackbar(data);
-    return false;
-  }
-  return true;
-};
 
 function uploadImage(path, filename, blob) {
   var filePath = config.photoDB + '/' + path+ '/' + filename;
@@ -85,7 +75,7 @@ class UploadImageButton extends Component {
   }
 
   postImage() {
-    if (validateFile(this.file.files[0])) {
+    if (this.validateFile(this.file.files[0])) {
       this.thumbnailFile = this.file.files[0];
         // Upload Event Full Image
         if(this.isThumbnailOnly){
@@ -101,6 +91,21 @@ class UploadImageButton extends Component {
         this.publicThumbnailImagURL = null;
     }
   };
+
+  validateFile(file) {
+    if (! file) {
+      console.log("file not exist: " + file);
+      this.setState({snackMessage: "file not exist: ", snackOpen: true});
+      return false;
+    }
+  
+    if(!file.type.match('image.*')) {
+      console.log("File is not image:" + file);
+      this.setState({snackMessage: 'You can only share images', snackOpen: true});
+      return false;
+    }
+    return true;
+  };  
 
 pushOriginal(blob) {
     var file = (this.props.originalFilename==null? this.defaultOriginal: this.props.originalFilename);
@@ -174,6 +179,10 @@ pushOriginal(blob) {
     }
   };
 
+  handleSnackClose = () => {
+    this.setState({ snackOpen: false });
+  };
+
   inputOnchange() {
       if(this.file  != null  && this.file.files[0]  != null  && this.file.files[0] !== "") {
         this.setState({ disableSumbit: false , disableDelete: false});
@@ -184,10 +193,10 @@ pushOriginal(blob) {
 
 
   render() {
-    const { classes, theme } = this.props;
+    const { classes} = this.props;
     let thumbnail = "沒有相片";
     if(this.state.publicThumbnailImagURL  != null ) {
-      thumbnail = <img src={this.state.publicThumbnailImagURL} className={classes.previewThumbnail}/>
+      thumbnail = <img src={this.state.publicThumbnailImagURL} className={classes.previewThumbnail} alt="preview"/>
     }
     return (
       <div className="photo-upload-wrapper">
@@ -227,6 +236,16 @@ pushOriginal(blob) {
                 <Button disabled={this.state.disableSumbit} color="primary" onClick={() => this.onSubmit()}>提交</Button>
             </DialogActions>
         </Dialog>
+        <Snackbar
+              open={this.state.snackOpen}
+              autoHideDuration={2000}
+              onClose={this.handleSnackClose}
+              ContentProps={{
+                'aria-describedby': 'snackbar-fab-message-id',
+                className: classes.snackbarContent,
+              }}
+              message={<span id="snackbar-fab-message-id">{this.state.snackMessage}</span>}
+              className={classes.snackbar}/>
       </div>);
   }
 }

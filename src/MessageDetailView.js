@@ -112,9 +112,9 @@ class MessageDetailView extends Component {
 
   renderTitle() {
     const { user, message, classes} = this.props;
-    let post = '張貼';
+//    let post = '張貼';
     let timeOffset = Date.now() - message.createdAt.toDate();
-    let timeOffsetString = timeOffsetStringInChinese(timeOffset);
+//    let timeOffsetString = timeOffsetStringInChinese(timeOffset);
 //    let subheader = `於:${timeOffsetString}前${post}`;
     let photoUrl = message.photoUrl;
     if(!checkImageExists(photoUrl)) {

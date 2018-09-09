@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
-import config from '../config/default';
 import FocusView from './FocusView';
 import {
     fetchConcernMessagesFromOurLand,
@@ -39,8 +37,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
-(FocusList);
+export default connect( mapStateToProps,mapDispatchToProps)(FocusList);
