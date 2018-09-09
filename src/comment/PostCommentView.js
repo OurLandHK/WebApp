@@ -351,7 +351,8 @@ class PostCommentView extends Component {
         }
 
         // update the thumbnail by owner or Admin.
-        if(user.userProfile  != null && user.userProfile.publishMessages != null && ((user.userProfile.publishMessages.length > 0 && user.userProfile.publishMessages.includes(message.key)))||(user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor)) {
+        if(user.userProfile  != null && ((user.userProfile.publishMessages != null && user.userProfile.publishMessages.length > 0 && user.userProfile.publishMessages.includes(message.key))
+          ||(user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor))) {
           commentOptions = [...commentOptions, ...constant.commentWithOwnerOptions];
         }
 
