@@ -66,6 +66,7 @@ class SingleLineMessageList extends Component {
     }
     this.state.data.push(val);
     this.setState({data:this.state.data});
+    return
   };
 
   clear() {
@@ -78,7 +79,7 @@ class SingleLineMessageList extends Component {
     if(this.state.messageIds.length !== 0) {
       this.state.messageIds.map((Ids) => {
         //console.log("Ids:" + Ids);
-        getMessage(Ids).then((message) => {this.setMessage(message)});
+        return getMessage(Ids).then((message) => {return this.setMessage(message)});
       });
     } else {
       this.setMessage(null);

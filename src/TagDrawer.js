@@ -1,12 +1,10 @@
 import React from 'react';
-import * as firebase from 'firebase';
+//import * as firebase from 'firebase';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
+//import classnames from 'classnames';
 import {connect} from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import IconButton from '@material-ui/core/IconButton';
-import Chip from '@material-ui/core/Chip';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -15,11 +13,7 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import LabelIcon from '@material-ui/icons/LabelOutlined';
 import AllIcon from '@material-ui/icons/AllInclusive';
-import ArrowIcon from '@material-ui/icons/ArrowDropDownCircle';
-import green from '@material-ui/core/colors/green';
-import config,  {constant, addressEnum} from './config/default';
-import {getCurrentLocation, getGeoLocationFromStreetAddress} from './Location';
-import geoString from './GeoLocationString';
+import  {constant, addressEnum} from './config/default';
 import {
   selectedTag
 } from './actions';
@@ -50,7 +44,6 @@ const styles = theme => ({
         padding: 0,
         border: 0,
         borderBottom: '1px solid',
-        padding: 0,
         borderRadius: 0,
         minHeight: 'auto'
     //    backgroundColor: green[500],
@@ -201,8 +194,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
-(withStyles(styles)(TagDrawer));
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(TagDrawer));

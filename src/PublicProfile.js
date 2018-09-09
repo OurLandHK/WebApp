@@ -154,7 +154,7 @@ class PublicProfile extends React.Component {
       }
       displayName = this.state.userProfile.displayName;
       var displayNameLabel = "名字:" + displayName;
-      imageHtml =  <img src={imgURL}/>;
+      imageHtml =  <img src={imgURL} alt="Profile"/>;
       if(this.state.userProfile.desc  != null  && this.state.userProfile.desc !== "") {
         desc = <ListItem >
           <ListItemText primary={"簡介: " + this.state.userProfile.desc}/>

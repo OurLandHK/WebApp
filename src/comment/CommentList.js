@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
-import config, {constant} from '../config/default';
+import {constant} from '../config/default';
 import CommentView from './CommentView';
 import {fetchCommentsBaseonMessageID} from '../MessageDB';
-import {connect} from "react-redux";
-
 
 class CommentList extends Component {
   constructor(props) {
@@ -46,7 +44,7 @@ class CommentList extends Component {
     elements = this.state.data.reverse().map((commentRef) => {
         return (<CommentView messageUUID={messageUUID} commentRef={commentRef}/>);
       });      
-    if(this.state.data.length !=0) {
+    if(this.state.data.length !==0) {
       return (<div width="100%">{elements}</div>);
     }
     return (

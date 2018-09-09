@@ -163,7 +163,7 @@ class FocusView extends Component {
 
 
     render() {
-        const { classes, theme } = this.props;
+        const { classes} = this.props;
         let addressButtonHtml = null;
         let titleText = constant.updateFocusMessagesLabel;
         let messageHtml = null;

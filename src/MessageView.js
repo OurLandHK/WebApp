@@ -206,7 +206,7 @@ class MessageView extends Component {
 
 
   render() {
-    const classes = this.props.classes;
+    //const classes = this.props.classes;
     const user = this.props.user;
     var m = this.props.message;
     var uuid = this.props.message.key;
@@ -233,12 +233,6 @@ class MessageView extends Component {
     }
 
     let timeOffset = 0;
-    let createdAt = 0;
-    try {
-      createdAt = m.createdAt.toDate();
-    } catch(error) {
-      createdAt = m.createdAt;
-    };
     let isUpdate =false;
     let updateTime = m.createdAt;
     if(m.lastUpdate  != null ) {

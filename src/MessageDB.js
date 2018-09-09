@@ -68,7 +68,7 @@ function upgradeAllMessage() {
                     // udpate tagStat
                     let tags = tagfilterToTags(val.tagfilter);
                     tags.map((tag) => {
-                        if(tagStat[tag] === null) {
+                        if(tagStat[tag] === null || tagStat[tag] === undefined) {
                             tagStat[tag] = 1;
                         } else {
                             tagStat[tag]++;

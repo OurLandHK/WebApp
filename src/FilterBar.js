@@ -42,7 +42,7 @@ class FilterBar extends  Component {
   }
 
   errorCallBack(error) {
-    console.warn('ERROR(${err.code}): ${err.message}');
+    console.warn(`ERROR(${error.code}): ${error.message}`);
   }
 
   render() {

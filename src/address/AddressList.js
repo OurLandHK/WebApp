@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
-import config from '../config/default';
 import AddressView from './AddressView';
 import { fetchAddressBookByUser, fetchAddressBookFromOurLand } from '../actions';
 import {connect} from "react-redux";
@@ -41,8 +39,4 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)
-(AddressList);
+export default connect(mapStateToProps,mapDispatchToProps)(AddressList);

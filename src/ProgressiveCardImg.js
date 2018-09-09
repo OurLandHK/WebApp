@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import classnames from 'classnames';
 
 
 const styles = theme => ({
@@ -24,7 +23,7 @@ class ProgressiveCardImg extends Component {
 
   render() {
     let width = '100%';
-    return (<img width={width} src={this.src} alt="image"/>);
+    return (<img width={width} src={this.src} alt="Event"/>);
   }
 }
 

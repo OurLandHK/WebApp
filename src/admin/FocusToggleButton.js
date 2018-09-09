@@ -9,13 +9,13 @@ import ListItemText from '@material-ui/core/ListItemText';
 import CheckIcon from '@material-ui/icons/Check';
 import StarsIcon from '@material-ui/icons/Stars';
 import { withStyles } from '@material-ui/core/styles';
-import { updateFocusMessage, addFocusMessage, dropFocusMessage} from '../GlobalDB';
+import { updateFocusMessage} from '../GlobalDB';
 import {connect} from "react-redux";
 import {
   checkAuthState,
   fetchConcernMessagesFromOurLand
 } from '../actions';
-import { constant } from '../config/default';
+//import { constant } from '../config/default';
 
 
 const styles = () => ({
