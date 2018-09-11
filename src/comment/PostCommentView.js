@@ -91,7 +91,7 @@ class PostCommentView extends Component {
       imagePath: imagePath, 
       geolocation: null,
       streetAddress: null,
-      changeStatus: null,
+      changeStatus: constant.statusOptions[0],
       createdAt: null,
       link: null,
       tags: tags};
@@ -143,7 +143,7 @@ class PostCommentView extends Component {
         imagePath: imagePath, 
         geolocation: null,
         streetAddress: null,
-        changeStatus: null,
+        changeStatus: constant.statusOptions[0],
         createdAt: null,
         hide: false,
         link: null,
@@ -215,12 +215,15 @@ class PostCommentView extends Component {
             case constant.commentOptions[1]: //"要求更改地點":
               geolocation = this.state.geolocation;
               streetAddress = this.state.streetAddress;
-              if(geolocation === undefined) {
+              if(geolocation === undefined || geolocation === null) {
                 isPost = false;
               }
               break;
             case constant.commentOptions[3]: //"要求更改外部連結":
               link = this.state.link;
+              if(link === undefined || link === null || link === "") {
+                isPost = false;
+              }
               break;
             case constant.commentOptions[4]: //"要求更改分類"
               tags = this.state.tags.map((tag) => tag.text);
@@ -358,7 +361,7 @@ class PostCommentView extends Component {
 
 
         if(this.state.commentSelection !== constant.commentOptions[0]) { //"發表回應"
-          console.log("this.state.commentSelection=" + this.state.commentSelection);
+          //console.log("this.state.commentSelection=" + this.state.commentSelection);
             switch(this.state.commentSelection) {
               case constant.commentOptions[1]: //"要求更改地點"
                 inputHtml = <LocationButton autoFocus ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>;
