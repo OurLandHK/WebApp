@@ -176,7 +176,7 @@ class CommentView extends Component {
     const {galleryEntry, approvedStatus, geolocation, streetAddress, changeStatus, link, tags, createdAt, photoUrl, isApprovedUrgentEvent} = comment;
     let text = comment.text;
     let galleryImage = null;
-    if(text === null) {
+    if(text === null || text === undefined) {
         if(geolocation  != null ) {
             var locationString = null;
             if(streetAddress  != null ) {
