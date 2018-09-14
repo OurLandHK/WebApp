@@ -16,7 +16,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 
 
-import {openSnackbar, closeSnackbar} from "./actions";
+import {closeSnackbar} from "./actions";
 
 const variantIcon = {
   success: CheckCircleIcon,
