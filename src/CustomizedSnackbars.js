@@ -145,7 +145,6 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    openSnackbar: (message, variant) => dispatch(openSnackbar(message, variant)),
     closeSnackbar: () => dispatch(closeSnackbar())
   }
 };
