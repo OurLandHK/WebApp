@@ -143,8 +143,8 @@ function dispatchSelectedSorting(selectedSorting){
   return {type: UPDATE_FILTER_SORTING, selectedSorting: selectedSorting}
 }
 
-function dispatchOpenSnackbar(open, message, variant) {
-  return {type: OPEN_SNACKBAR, variant: variant, message: message, open: open}
+function dispatchOpenSnackbar(message, variant) {
+  return {type: OPEN_SNACKBAR, open: true, message: message, variant: variant}
 }
 
 function dispatchCloseSnackbar() {
@@ -505,9 +505,9 @@ export function fetchTopTwenty() {
   }
 }
 
-export function openSnackbar(open, message, variant) {
+export function openSnackbar(message, variant) {
   return dispatch => {
-    dispatch(dispatchOpenSnackbar(open, message, variant))
+    dispatch(dispatchOpenSnackbar(message, variant))
   }
 }
 
