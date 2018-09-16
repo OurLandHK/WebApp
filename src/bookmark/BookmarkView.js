@@ -29,6 +29,7 @@ import TagDrawer from '../TagDrawer';
 import {fileExists, checkImageExists} from '../util/http';
 import { dropBookmark, addBookmark, updateBookmark, incBookmarkViewCount, getUserProfile} from '../UserProfile';
 import {
+    openSnackbar,
     checkAuthState,
     updateRecentBookmark,
     updatePublicProfileDialog,
@@ -191,6 +192,7 @@ class BookmarkView extends Component {
         const { user } = this.props;
         if (this.state.title === null || this.state.title.length === 0) {
             this.titleTextField.select();
+            this.props.openSnackbar(constant.pleaseInputSummary, 'warning');
         } else {
             if (this.state.key !== "" && user.user.uid === this.state.uid) {
                 let bookmark = this.props.bookmark;
@@ -363,6 +365,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        openSnackbar: 
+        (message, variant) => 
+          dispatch(openSnackbar(message, variant)),           
         checkAuthState:
         () => dispatch(checkAuthState()),    
         updateRecentBookmark:

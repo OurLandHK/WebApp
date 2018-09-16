@@ -31,6 +31,7 @@ import UploadImageButton from './UploadImageButton';
 import IntegrationReactSelect from './IntegrationReactSelect';
 import SignInButton from './SignInButton';
 import {
+  openSnackbar,
   checkAuthState,
   updateRecentMessage,
 } from './actions';
@@ -215,9 +216,11 @@ class PostMessageView extends Component {
     }
     if (this.state.summary === null || this.state.summary === undefined || this.state.summary.length === 0) {
       this.summaryTextField.select();
+      this.props.openSnackbar(constant.pleaseInputSummary, 'warning');
     } else if (this.state.geolocation === null || this.state.geolocation === undefined) {
       //this.locationButton.handleClickOpen();
-      this.setState({locationTipOpen: true});
+      this.props.openSnackbar(constant.pleaseInputLocation, 'warning');
+      //this.setState({locationTipOpen: true});
     } else {
       var imageURL = null;
       var publicImageURL = null;
@@ -650,6 +653,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    openSnackbar: 
+      (message, variant) => 
+        dispatch(openSnackbar(message, variant)),    
     updateRecentMessage:
       (recentMessageID, open) =>
         dispatch(updateRecentMessage(recentMessageID, open)),
