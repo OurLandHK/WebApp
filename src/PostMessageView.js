@@ -102,6 +102,7 @@ class PostMessageView extends Component {
     this.renderOpenningHtml = this.renderOpenningHtml.bind(this);
     this.renderActivitiesHtml = this.renderActivitiesHtml.bind(this);
     this.setOpenning = this.setOpenning.bind(this);
+    this.handleToolTip = this.handleToolTip.bind(this);
     this.summaryTextField = null;
   }
 
@@ -268,6 +269,10 @@ class PostMessageView extends Component {
 
   handleTouchTap(evt) {
     alert(evt);
+  }
+
+  handleToolTip(){
+    this.setState({locationTipOpen: false})
   }
 
   setOpenning(index, type,  value) {
@@ -596,7 +601,7 @@ class PostMessageView extends Component {
                       placement="top-start"
                       title="請輸入事件位置"
                     >
-                    <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>
+                    <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit} handleToolTip={this.handleToolTip}/>
                   </Tooltip>
                 </FormGroup>
                 <FormGroup>
