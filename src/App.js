@@ -16,6 +16,8 @@ import {connect} from "react-redux";
 import rootReducer from './reducers';
 import Person from './Person';
 import LeaderBoard from './LeaderBoard';
+import CustomizedSnackbars from './CustomizedSnackbars';
+
 import {
   fetchAddressBookByUser,
   fetchAddressBookFromOurLand,
@@ -146,6 +148,7 @@ class App extends Component {
               <BottomNavigationAction value='person' label={constant.userLabel} icon={<PersonIcon />} />
             </BottomNavigation>
           </div>
+          <CustomizedSnackbars />
         </div>
     );
   }

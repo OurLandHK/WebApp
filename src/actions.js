@@ -25,7 +25,9 @@ import {
   FETCH_TOP_TWENTY,
   UPDATE_REGIONEVENT_BUTTONLIST,
   FETCH_GLOBAL_TAG_STAT,
-  UPDATE_FILTER_SORTING
+  UPDATE_FILTER_SORTING,
+  OPEN_SNACKBAR,
+  CLOSE_SNACKBAR
 } from './actions/types';
 import * as firebase from 'firebase';
 import config, {constant} from './config/default';
@@ -139,6 +141,14 @@ function dispatchSelectedTag(selectedTag) {
 
 function dispatchSelectedSorting(selectedSorting){
   return {type: UPDATE_FILTER_SORTING, selectedSorting: selectedSorting}
+}
+
+function dispatchOpenSnackbar(message, variant) {
+  return {type: OPEN_SNACKBAR, open: true, message: message, variant: variant}
+}
+
+function dispatchCloseSnackbar() {
+  return {type: CLOSE_SNACKBAR, open: false}
 }
 
 export function init3rdPartyLibraries() {
@@ -494,3 +504,16 @@ export function fetchTopTwenty() {
 
   }
 }
+
+export function openSnackbar(message, variant) {
+  return dispatch => {
+    dispatch(dispatchOpenSnackbar(message, variant))
+  }
+}
+
+export function closeSnackbar() {
+  return dispatch => {
+    dispatch(dispatchCloseSnackbar())
+  }
+}
+

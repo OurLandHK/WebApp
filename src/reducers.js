@@ -28,6 +28,8 @@ import {
   UPDATE_FILTER_SORTING,
   UPDATE_REGIONEVENT_BUTTONLIST,
   FETCH_GLOBAL_TAG_STAT,
+  OPEN_SNACKBAR,
+  CLOSE_SNACKBAR
 } from './actions/types';
 
 
@@ -300,6 +302,17 @@ function eventListDialogReducer(state={open: false}, action) {
   }
 }
 
+function snackbarReducer(state={open: false, message: '', variant: 'success', }, action) {
+  switch (action.type) {
+    case OPEN_SNACKBAR:
+      return {...state, open: action.open, message: action.message, variant: action.variant};
+    case CLOSE_SNACKBAR:
+      return {...state, open: action.open};
+    default:
+      return state;
+  }
+} 
+
 const rootReducer = combineReducers({  
   geoLocation: geoLocationReducer,
   user: userReducer,
@@ -314,6 +327,7 @@ const rootReducer = combineReducers({
   recentMessage: recentMessageReducer,
   publicProfileDialog: publicProfileDialogReducer,
   suggestions: suggestionReducer,
+  snackbar: snackbarReducer
 });
 
 
