@@ -23,6 +23,7 @@ import {addComment} from '../MessageDB';
 import UploadImageButton from '../UploadImageButton';
 import IntegrationReactSelect from '../IntegrationReactSelect';
 import {
+  openSnackbar,
   checkAuthState,
 } from '../actions';
 import SignInButton from '../SignInButton'
@@ -189,7 +190,7 @@ class PostCommentView extends Component {
     if (this.props.user  != null ) {
       const {user, userProfile} = this.props.user;
       if (user) {
-        let isPost = true;
+        let isPost = "";
         let isApprovedUrgentEvent = null;
         let galleryEntry = null;
         var commentText = null;
@@ -206,7 +207,7 @@ class PostCommentView extends Component {
                 galleryEntry = this.state.galleryEntry;
               }
               if(commentText === "") {
-                isPost = false;
+                isPost = constant.pleaseInputSummary;
               }
               break;
             case constant.commentOptions[2]: //"要求更改現況":
@@ -216,13 +217,13 @@ class PostCommentView extends Component {
               geolocation = this.state.geolocation;
               streetAddress = this.state.streetAddress;
               if(geolocation === undefined || geolocation === null) {
-                isPost = false;
+                isPost = constant.pleaseInputLocation;
               }
               break;
             case constant.commentOptions[3]: //"要求更改外部連結":
               link = this.state.link;
               if(link === undefined || link === null || link === "") {
-                isPost = false;
+                isPost = constant.pleaseInputLink;
               }
               break;
             case constant.commentOptions[4]: //"要求更改分類"
@@ -230,7 +231,7 @@ class PostCommentView extends Component {
               break;
             case constant.commentWithUrgentEventOptions[0]: //"確定為緊急事項"
               if(this.state.text === "") {
-                isPost = false;
+                isPost = constant.pleaseInputSummary;
               } else {
                 commentText = `${constant.commentWithUrgentEventOptions[0]}: ${this.state.text}`;
                 isApprovedUrgentEvent = true;
@@ -238,7 +239,7 @@ class PostCommentView extends Component {
               break;
             case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
               if(this.state.text === "") {
-                isPost = false;
+                isPost = constant.pleaseInputSummary;
               } else {
                 commentText = `${constant.commentWithUrgentEventOptions[1]}: ${this.state.text}`
                 isApprovedUrgentEvent = false;
@@ -247,13 +248,16 @@ class PostCommentView extends Component {
             case constant.commentWithOwnerOptions[0]: //"更新事項縮圖"
               if(this.state.galleryEntry.imageURL != null ) {
                 galleryEntry = this.state.galleryEntry;
+              } else {
+                isPost = constant.pleaseSelectImage;
               }
               break;
         }
-        this.setState({popoverOpen: false});
-        if(isPost) {
+        if(isPost === "") {
+          this.setState({popoverOpen: false});
           return addComment(this.props.messageUUID, user, userProfile, commentText, galleryEntry, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent).then(function(commentId){return commentId;});
         } else {
+          this.props.openSnackbar(isPost, 'warning');
           return
         }
       }
@@ -448,6 +452,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    openSnackbar: 
+      (message, variant) => 
+        dispatch(openSnackbar(message, variant)),        
       checkAuthState:
           () =>
               dispatch(checkAuthState()),

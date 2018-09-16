@@ -18,6 +18,9 @@ import { withStyles } from '@material-ui/core/styles';
 import geoString from '../GeoLocationString';
 import  {constant, RoleEnum} from '../config/default';
 import  MessageList from '../MessageList';
+import {
+    openSnackbar,
+  } from '../actions';
 import { updateFocusMessage, addFocusMessage, dropFocusMessage} from '../GlobalDB';
 
 
@@ -246,7 +249,11 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return { }
+    return {
+        openSnackbar: 
+        (message, variant) => 
+          dispatch(openSnackbar(message, variant)),           
+    }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(FocusView));

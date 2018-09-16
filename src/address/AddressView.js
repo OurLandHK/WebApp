@@ -26,7 +26,7 @@ import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
 import timeOffsetStringInChinese from '../TimeString';
 import geoString from '../GeoLocationString';
-import { deleteAddress, upsertAddress } from '../actions';
+import { openSnackbar, deleteAddress, upsertAddress } from '../actions';
 import  {constant, addressEnum} from '../config/default';
 
 
@@ -131,10 +131,20 @@ class AddressView extends Component {
           if (this.props.address  != null ) {
               key = this.props.address.id;
           }
-          console.log("addressbook submit" + this.state.streetAddress);
-          this.props.upsertAddress(user.user, key, this.state.type, this.state.text, this.state.geolocation, this.state.streetAddress, this.state.distance);
-          this.setState({popoverOpen: false});
-
+          let isPost = "";
+          if(this.state.text === "") {
+            isPost = constant.pleaseInputSummary;
+          }
+          if(this.state.geolocation === null) {
+            isPost = constant.pleaseInputLocation;
+          }
+          if(isPost === "") {
+            console.log("addressbook submit" + this.state.streetAddress);
+            this.props.upsertAddress(user.user, key, this.state.type, this.state.text, this.state.geolocation, this.state.streetAddress, this.state.distance);
+            this.setState({popoverOpen: false});
+          } else {
+            this.props.openSnackbar(isPost, 'warning');
+          }
         }
     }
 
@@ -250,6 +260,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    openSnackbar: 
+    (message, variant) => 
+        dispatch(openSnackbar(message, variant)),                 
     deleteAddress:
       (user, key) =>
         dispatch(deleteAddress(user, key)),

@@ -95,7 +95,11 @@ let constant = {
   nearby: "附近",
   emptyComment: '按+參與討論或更新內容',
   interestedRadius: '有效半徑',
-  updateThumbnailMessage: '用戶更新社區事件縮圖'
+  updateThumbnailMessage: '用戶更新社區事件縮圖',
+  pleaseInputLocation: '請輸入地點',
+  pleaseInputSummary: '請輸入簡介',
+  pleaseInputLink: '請輸入外部連結',
+  pleaseSelectImage: '請選擇縮圖',
 }
 
 const happyAndSadEnum = {
