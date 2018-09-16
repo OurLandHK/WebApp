@@ -34,9 +34,9 @@ function Transition(props) {
 const styles = theme => ({
   flex: {
     flex: 1,
-  },  
+  },
   dialogTitle: {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'  
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
   },
   showMapBtn: {
     width: '100%'
@@ -72,10 +72,10 @@ class LocationButton extends Component {
       };
     }
     this.state = {
-      open: false, 
-      streetAddress: this.streetAddress, 
+      open: false,
+      streetAddress: this.streetAddress,
       geoLocationSearch: this.geoLocationSearch,
-      geolocation: this.geolocation, 
+      geolocation: this.geolocation,
       disableSumbit: true
     };
     this.disabled = false;
@@ -205,7 +205,7 @@ class LocationButton extends Component {
                   helperText="中/英文均可"
                   type="text"
                   value={this.state.streetAddress} onChange={event => this.setState({ streetAddress: event.target.value, disableSumbit: true,  geolocation: null})}
-                />     
+                />
               </DialogContent>
               <Button className={ streetAddressSearchClass + " " +  classes.showMapBtn} variant="outlined" color="primary" onClick={() => this.handleGetLocationFromStreetAddress()}>查看地圖</Button>
         </div>
@@ -242,7 +242,7 @@ class LocationButton extends Component {
                     helperText="緯度"
                     type="text"
                     value={this.state.geoLocationSearch.latitude} onChange={event => this.setState({ geoLocationSearch: {latitude: event.target.value, longitude: this.state.geoLocationSearch.longitude}, disableSumbit: true,  geolocation: null})}
-                  /> 
+                  />
                   <TextField
                     fullWidth
                     id="geoLocationSearchLongitude"
@@ -250,7 +250,7 @@ class LocationButton extends Component {
                     helperText="經度"
                     type="text"
                     value={this.state.geoLocationSearch.longitude} onChange={event => this.setState({ geoLocationSearch: {latitude: this.state.geoLocationSearch.latitude, longitude: event.target.value}, disableSumbit: true,  geolocation: null})}
-                  /> 
+                  />
                </DialogContent>
                <Button className={geoLocationSearchClass + " " +  classes.showMapBtn} variant="outlined" color="primary" onClick={() => this.handleGetLocationFromGeoAddress()}>查看Geo地圖</Button>
             </div>)
@@ -265,6 +265,7 @@ class LocationButton extends Component {
   handleClickOpen = () => {
     this.geolocation = null;
     this.setState({ open: true, disableSumbit: true, geolocation: null});
+    this.props.handleToolTip();
   };
 
   handleClose = () => {
