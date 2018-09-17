@@ -100,6 +100,8 @@ let constant = {
   pleaseInputSummary: '請輸入簡介',
   pleaseInputLink: '請輸入外部連結',
   pleaseSelectImage: '請選擇縮圖',
+  createMessageSuccess: "新增社區事件成功",
+  createMessageFailure: "新增社區事件失敗",
 }
 
 const happyAndSadEnum = {

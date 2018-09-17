@@ -248,11 +248,14 @@ class PostMessageView extends Component {
           if(messageKey  != null  && messageKey !== "") {
             updateRecentMessage(messageKey, false);
             checkAuthState();
+            this.props.openSnackbar(constant.createMessageSuccess, 'success');
+            this.setState({
+              popoverOpen: false
+            });
+          } else {
+            this.props.openSnackbar(constant.createMessageFailure, 'failure');
           }
         });
-      this.setState({
-        popoverOpen: false
-      });
     }
   }
 
