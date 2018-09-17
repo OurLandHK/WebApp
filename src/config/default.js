@@ -102,6 +102,9 @@ let constant = {
   pleaseSelectImage: '請選擇縮圖',
   createMessageSuccess: "新增社區事件成功",
   createMessageFailure: "新增社區事件失敗",
+  EmailAddressWarning: "請輸入正確電郵地址",
+  updateProfileSuccess: "更新用戶簡介成功",
+  updateProfileFailure: "更新用戶簡介失敗"
 }
 
 const happyAndSadEnum = {
