@@ -253,7 +253,7 @@ class PostMessageView extends Component {
               popoverOpen: false
             });
           } else {
-            this.props.openSnackbar(constant.createMessageFailure, 'failure');
+            this.props.openSnackbar(constant.createMessageFailure, 'error');
           }
         });
     }
