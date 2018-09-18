@@ -104,7 +104,9 @@ let constant = {
   createMessageFailure: "新增社區事件失敗",
   EmailAddressWarning: "請輸入正確電郵地址",
   updateProfileSuccess: "更新用戶簡介成功",
-  updateProfileFailure: "更新用戶簡介失敗"
+  updateProfileFailure: "更新用戶簡介失敗",
+  updateProfileAddressSuccess: "更新用戶地址成功",
+  deleteProfileAddressSuccess: "刪除用戶地址成功"
 }
 
 const happyAndSadEnum = {
