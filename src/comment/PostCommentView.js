@@ -255,7 +255,16 @@ class PostCommentView extends Component {
         }
         if(isPost === "") {
           this.setState({popoverOpen: false});
-          return addComment(this.props.messageUUID, user, userProfile, commentText, galleryEntry, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent).then(function(commentId){return commentId;});
+          let me = this.props;
+          return addComment(this.props.messageUUID, user, userProfile, commentText, galleryEntry, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent).then(function(commentId){
+            if(commentId != 'undefined' || commentId != null) {
+              me.openSnackbar(constant.addCommentSuccess, 'success');
+              return commentId;
+            } else {
+              return me.openSnackbar(constant.addCommentFailure, 'error');
+            }
+            
+          });
         } else {
           this.props.openSnackbar(isPost, 'warning');
           return
