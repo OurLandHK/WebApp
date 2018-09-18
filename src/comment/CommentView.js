@@ -13,6 +13,7 @@ import {constant, RoleEnum} from '../config/default';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import {
+    openSnackbar,
     checkAuthState,
     updatePublicProfileDialog,
   } from '../actions';
@@ -118,27 +119,52 @@ class CommentView extends Component {
                 fbuid: user.userProfile.fbuid,
                 isConfirm: constant.approveOptions[0],
             }
+            let me = this.props;
+
             if(isCommplete) {
                 let commentUser = {uid: commentRef.data().uid};
-                return addCompleteMessage(commentUser, messageUUID).then(() => {
+                return addCompleteMessage(commentUser, messageUUID).then((rv) => {
                     return updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus).then((ref) => {
                         if(messageuid !== commentUser.uid) {
                             let messageUser = {uid: messageuid};
-                            return addCompleteMessage(messageUser, messageUUID).then(() => {
-                                return ref;
+                            return addCompleteMessage(messageUser, messageUUID).then((rv) => {
+                                if(rv) {
+                                   me.openSnackbar(constant.addCompleteMessageSuccess, 'success');
+                                    return ref;
+                                }else {
+                                    return me.openSnackbar(constant.addCompleteMessageFailure, 'error');
+                                }
+                                
                             })
                         } else {
-                            return ref;
+                            if(ref !== 'undefined' && ref !== null) {
+                                me.openSnackbar(constant.addCompleteMessageSuccess, 'success');
+                                return ref;
+                            }else {
+                                return me.openSnackbar(constant.addCompleteMessageFailure, 'error');
+                            }
                         }
                     });
                 })
             } else {
                 return updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus).then(() => {
                     if(galleryEntry  !== null  && galleryEntry !== undefined) {
-                        addMessageGalleryEntry(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL, text);
+                        addMessageGalleryEntry(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL, text).then((messageKey) => {
+                            if(messageKey !== 'undefined' && messageKey !== null) {
+                                return me.openSnackbar(constant.addMessageGallerySuccess, 'success');
+                            }else {
+                                return me.openSnackbar(constant.addMessageGalleryFailure, 'error');
+                            }
+                        });
 
                         if(galleryEntry.thumbnailUpdate != null &&  galleryEntry.thumbnailUpdate != undefined && galleryEntry.thumbnailUpdate) {
-                            updateMessageThumbnail(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL);
+                            updateMessageThumbnail(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL).then((ref) => {
+                            if(ref !== 'undefined' && ref !== null) {
+                                return me.openSnackbar(constant.updateMessageThumbnailSuccess, 'success');
+                            }else {
+                                return me.openSnackbar(constant.updateMessageThumbnailFailure, 'error');
+                            }
+                        });
                         } 
                     } 
                     return;  
@@ -157,7 +183,14 @@ class CommentView extends Component {
         fbuid: user.userProfile.fbuid,
         isConfirm: constant.approveOptions[1],
     }
-    updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus);
+    let me = this.props;
+    updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus).then((ref)=>{
+        if(ref !== 'undefined' && ref !== null) {
+            return me.openSnackbar(constant.updateCommentApproveStatusSuccess, 'success');
+        }else {
+            return me.openSnackbar(constant.updateCommentApproveStatusFailure, 'error');
+        }
+    });
   }
 
   handleAuthorClick() {
@@ -271,6 +304,9 @@ CommentView.propTypes = {
         checkAuthState:
             () =>
                 dispatch(checkAuthState()),
+         openSnackbar: 
+         (message, variant) => 
+            dispatch(openSnackbar(message, variant)),        
     }
   };
 

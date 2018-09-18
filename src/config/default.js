@@ -109,6 +109,14 @@ let constant = {
   deleteProfileAddressSuccess: "刪除用戶地址成功",
   addCommentSuccess: "參與討論成功",
   addCommentFailure: "參與討論失敗",
+  addCompleteMessageSuccess: "新增完成事件成功",
+  addCompleteMessageFailure: "新增完成事件失敗",
+  addMessageGallerySuccess: "新增圖片庫成功",
+  addMessageGalleryFailure: "新增圖片庫失敗",
+  updateMessageThumbnailSuccess: "更新用戶縮圖成功",
+  updateMessageThumbnailFailure: "更新用戶縮圖失敗",
+  updateCommentApproveStatusSuccess: "駁回成功",
+  updateCommentApproveStatusFailure: "駁回失敗"
 }
 
 const happyAndSadEnum = {
