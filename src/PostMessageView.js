@@ -103,7 +103,6 @@ class PostMessageView extends Component {
     this.renderOpenningHtml = this.renderOpenningHtml.bind(this);
     this.renderActivitiesHtml = this.renderActivitiesHtml.bind(this);
     this.setOpenning = this.setOpenning.bind(this);
-    this.handleToolTip = this.handleToolTip.bind(this);
     this.summaryTextField = null;
   }
 
@@ -170,8 +169,7 @@ class PostMessageView extends Component {
       opennings: this.props.opennings,
       intervalSelection: this.props.intervalOptions[0],
       durationSelection: this.props.durationOptions[0],
-      openningSelection: this.props.openningOptions[0],
-      locationTipOpen: false,
+      openningSelection: this.props.openningOptions[0]
     });
   }
 
@@ -250,11 +248,14 @@ class PostMessageView extends Component {
           if(messageKey  != null  && messageKey !== "") {
             updateRecentMessage(messageKey, false);
             checkAuthState();
+            this.props.openSnackbar(constant.createMessageSuccess, 'success');
+            this.setState({
+              popoverOpen: false
+            });
+          } else {
+            this.props.openSnackbar(constant.createMessageFailure, 'error');
           }
         });
-      this.setState({
-        popoverOpen: false
-      });
     }
   }
 
@@ -272,10 +273,6 @@ class PostMessageView extends Component {
 
   handleTouchTap(evt) {
     alert(evt);
-  }
-
-  handleToolTip(){
-    this.setState({locationTipOpen: false})
   }
 
   setOpenning(index, type,  value) {
@@ -598,14 +595,7 @@ class PostMessageView extends Component {
                     <TextField id="status" label="現況" className={classes.textField} disabled value={this.state.status} />
                   </div>
                   <br/>
-                  <Tooltip
-                      id="tooltip-controlled"
-                      open={this.state.locationTipOpen}
-                      placement="top-start"
-                      title="請輸入事件位置"
-                    >
-                    <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit} handleToolTip={this.handleToolTip}/>
-                  </Tooltip>
+                    <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>
                 </FormGroup>
                 <FormGroup>
                 <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.key} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>

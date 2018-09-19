@@ -22,7 +22,8 @@ import IntegrationReactSelect from './IntegrationReactSelect';
 import uuid from 'js-uuid';
 import {connect} from "react-redux";
 import {
-  checkAuthState
+  checkAuthState,
+  openSnackbar
 } from './actions';
 import  {constant , RoleEnum} from './config/default';
 
@@ -188,12 +189,14 @@ class UserProfileView extends React.Component {
       var rv = updateUserProfile(this.state.user, userProfile);
 
       if(rv){
+        this.props.openSnackbar(constant.updateProfileSuccess, 'success');
         this.setState({userProfile: userProfile});
+        this.setState({ open: false });
+      } else {
+        this.props.openSnackbar(constant.updateProfileFailure, 'error');
       }
-
-      this.setState({ open: false });
     } else {
-      alert("Incorrect Email Address Format");
+      this.props.openSnackbar(constant.EmailAddressWarning, 'warning');
     }
   }
 
@@ -330,6 +333,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     checkAuthState:
       () => dispatch(checkAuthState()),
+    openSnackbar: 
+     (message, variant) => 
+       dispatch(openSnackbar(message, variant)),    
   }
 };
 

@@ -141,6 +141,7 @@ class AddressView extends Component {
           if(isPost === "") {
             console.log("addressbook submit" + this.state.streetAddress);
             this.props.upsertAddress(user.user, key, this.state.type, this.state.text, this.state.geolocation, this.state.streetAddress, this.state.distance);
+            this.props.openSnackbar(constant.updateProfileAddressSuccess, 'success');
             this.setState({popoverOpen: false});
           } else {
             this.props.openSnackbar(isPost, 'warning');
@@ -159,6 +160,7 @@ class AddressView extends Component {
         if (key === null)
           return;
         this.props.deleteAddress(user.user, key);
+        this.props.openSnackbar(constant.deleteProfileAddressSuccess, 'success');
       }
       this.setState({popoverOpen: false});
     }
