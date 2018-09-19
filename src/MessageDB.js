@@ -58,6 +58,8 @@ function upgradeAllMessage() {
     let collectionRef = db.collection(config.messageDB);
     collectionRef.onSnapshot(function() {})
     let tagStat = {};
+    let now = new Date(Date.now());;
+
     return collectionRef.get().then(function(querySnapshot) {
         if(querySnapshot.empty) {
             return
@@ -66,6 +68,7 @@ function upgradeAllMessage() {
                 var val = messageRef.data();
                 if(val) {
                     // udpate tagStat
+                    let changeLastUpdate = false;
                     let tags = tagfilterToTags(val.tagfilter);
                     tags.map((tag) => {
                         if(tagStat[tag] === null || tagStat[tag] === undefined) {
@@ -95,9 +98,45 @@ function upgradeAllMessage() {
                             change = true;
                         }
                     }
-                             
+                    // renew for activities
+                    if(val.start) {
+                        // handle for auto change latest update
+                        if(val.endDate) {
+                            let endDate = null;
+                            try {
+                                endDate = val.endDate.toDate();
+                            }
+                            catch(error) {
+                                endDate = null;
+                                // expected output: SyntaxError: unterminated string literal
+                                // Note - error messages will vary depending on browser
+                            }
+                            if(endDate === null) {
+                                val.endDate = new Date(val.endDate);
+                                endDate = val.endDate;
+                            }
+                            if(val.status === constant.statusOptions[0]) {
+                                console.log(`End ${val.endDate} > ${now}`)
+                                if(endDate > now ) {
+                                    changeLastUpdate = true;
+                                } else {
+                                    val.status = constant.statusOptions[1];
+                                }
+                                change = true;
+                            }
+                        } else {
+                            // single day event
+                            if(val.interval === constant.intervalOptions[0] && (val.everydayOpenning === undefined || val.everydayOpenning === null) && (val.weekdaysOpennings === undefined || val.weekdaysOpennings === null)) {
+                                console.log(`Snd ${val.key} ${val.start.toDate()} > ${now}`)
+                                if(val.start.toDate() < now && val.status === constant.statusOptions[0] ) {
+                                     val.status = constant.statusOptions[1];
+                                     change = true;
+                                }
+                            }
+                        }
+                    }         
                     if(change) {
-                        return updateMessage(val.key, val, false);
+                        return updateMessage(val.key, val, changeLastUpdate);
                     } else {
                         if(val.imageUrl  != null ) {
                             return addMessageGalleryEntry(val.key, val.imageUrl, val.publicImageURL, val.thumbnailImageURL, val.thumbnailPublicImageURL, val.text);
@@ -234,7 +273,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         interval: interval,
         everydayOpenning: everydayOpenning,
         weekdaysOpennings: weekdaysOpennings,
-        endDate: endDate,
+        endDate: new Date(endDate),
         link: link,
         imageUrl: imageUrl, 
         publicImageURL: publicImageURL, 

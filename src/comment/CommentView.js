@@ -5,6 +5,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 import timeOffsetStringInChinese from '../TimeString';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
@@ -273,7 +274,10 @@ class CommentView extends Component {
                 {fbProfileImage}               
                 <div className={classes.details}>
                     <CardContent className={classes.content} zeroMinWidth>
-                        <Typography variant="subheading">{text}</Typography>
+                        <TextField disabled={true} required id="text" fullWidth  
+                                multiline
+                                rowsMax="20" 
+                                margin="normal" value={text} />
                         <Typography variant="caption" color="textSecondary">
                         {subtitle}
                         </Typography>

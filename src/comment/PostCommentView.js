@@ -355,7 +355,8 @@ class PostCommentView extends Component {
 
     if(this.state.buttonShow) {
         let inputHtml = <React.Fragment>
-          <TextField autoFocus required id="message" fullWidth margin="normal" helperText="更新事件進度及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>
+          <TextField autoFocus required id="message"  fullWidth  multiline rowsMax="20" margin="normal" 
+                                helperText="更新事件進度及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>
           <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.imagePath} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
           </React.Fragment>;
         let commentOptions = constant.commentOptions;

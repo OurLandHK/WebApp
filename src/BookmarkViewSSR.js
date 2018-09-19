@@ -2,21 +2,26 @@ import React, { Component } from 'react';
 import {getBookmark} from './UserProfile';
 import BookmarkView from './bookmark/BookmarkView';
 
-class PublicProfileSSR extends Component {
+class BookmarkViewSSR extends Component {
   constructor(props) {
     super(props);
     this.state = {open: false};
   }
   componentWillMount() {
     let user = {uid: this.props.userid};
-    getBookmark(user, this.props.bookmarkid).then((bookmarkMessage) => {this.setState({bookmark: bookmarkMessage})});
+    console.log(`${this.props.userid} ${this.props.bookmarkid}`);
+    getBookmark(user, this.props.bookmarkid).then((bookmarkMessage) => {
+      console.log(`Get bookmarkMessage`);
+      this.setState({bookmark: bookmarkMessage}
+    )});
 
   }
 
   render() {
-    let outHtml = null;
+    let outHtml = <BookmarkView closeDialog={() => {window.location.href = homeUrl;}} />;
     let homeUrl = window.location.protocol + "//" + window.location.hostname;
     if(this.state.bookmark  != null ) {
+      console.log(`render Bookmark`);
         outHtml = <BookmarkView bookmark={this.state.bookmark} open={true} closeDialog={() => {window.location.href = homeUrl;}} />  
     }
     
@@ -26,4 +31,4 @@ class PublicProfileSSR extends Component {
   }
 };
 
-export default PublicProfileSSR;
+export default BookmarkViewSSR;
