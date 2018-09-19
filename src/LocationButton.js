@@ -265,7 +265,6 @@ class LocationButton extends Component {
   handleClickOpen = () => {
     this.geolocation = null;
     this.setState({ open: true, disableSumbit: true, geolocation: null});
-    this.props.handleToolTip();
   };
 
   handleClose = () => {
