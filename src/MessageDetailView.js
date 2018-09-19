@@ -237,7 +237,8 @@ class MessageDetailView extends Component {
     let rv = null;
     let m = this.props.message;
     let dateTimeString = '';
-    if(m.start  != null )
+    let endDateTimeString = '';
+    if(m.start  !== null && m.start !== undefined)
     {
       let date = m.start.toDate();
       if(date.getFullYear() > 1970) {
@@ -250,6 +251,27 @@ class MessageDetailView extends Component {
         date = null;
       }
     }
+    if(m.endDate  !== null && m.endDate  !== undefined)
+    {
+      let endDate
+      try {
+        endDate = m.endDate.toDate();
+      }
+      catch(error) {
+          endDate = null;
+          // expected output: SyntaxError: unterminated string literal
+          // Note - error messages will vary depending on browser
+      }
+      if(endDate === null) {
+          endDate = new Date(m.endDate);
+      }
+      if(endDate.getFullYear() > 1970) {
+        endDateTimeString = endDate.toLocaleDateString('zh-Hans-HK', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        console.log(endDateTimeString);
+      } else {
+        endDate = null;
+      }
+    }    
 
     let everydayOpenning = m.everydayOpenning;
     let weekdaysOpennings = m.weekdaysOpennings;
@@ -260,6 +282,10 @@ class MessageDetailView extends Component {
       let intervalHtml = null;
       let durationHtml = null;
       let openningHtml = null;
+      let endDateHtml = null;
+      if(endDateTimeString !== '') {
+        endDateHtml = <Typography variant="subheading"> 完結: {endDateTimeString}</Typography>        
+      }
       let timeTypeHtml = <Typography variant="subheading"> {constant.timeOptions[1]} </Typography> ;
       if(duration  != null ) {
         durationHtml = <Typography variant="subheading"> 為期: {duration} </Typography>
@@ -290,6 +316,7 @@ class MessageDetailView extends Component {
                     <Typography variant="subheading"> 開始: {dateTimeString}</Typography>
                     {durationHtml}
                     {intervalHtml}
+                    {endDateHtml}
                     {openningHtml}
                     </CardContent>
                   </Paper>

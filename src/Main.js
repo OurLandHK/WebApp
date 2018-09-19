@@ -99,7 +99,7 @@ class Main extends Component {
     const { classes } = this.props;
     let tagStatHtml = this.renderTagStat();
 
-    if (queryMessage !== undefined) {
+    if (queryMessage) {
       let message = queryMessage;
       recentMessage = <div className="recent-event-wrapper">
                         <h4>{constant.recentEventLabel}</h4>
