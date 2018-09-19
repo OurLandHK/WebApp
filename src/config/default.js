@@ -116,7 +116,13 @@ let constant = {
   updateMessageThumbnailSuccess: "更新用戶縮圖成功",
   updateMessageThumbnailFailure: "更新用戶縮圖失敗",
   updateCommentApproveStatusSuccess: "駁回成功",
-  updateCommentApproveStatusFailure: "駁回失敗"
+  updateCommentApproveStatusFailure: "駁回失敗",
+  addFocusMessageSuccess: "新增焦點社區事件成功",
+  addFocusMessageFailure: "新增焦點社區事件失敗",
+  updateFocusMessageSuccess: "更新焦點社區事件成功",
+  updateFocusMessageFailure: "更新焦點社區事件失敗",
+  dropFocusMessageSuccess: "刪除焦點社區事件成功",
+  dropFocusMessageFailure: "刪除焦點社區事件失敗",
 }
 
 const happyAndSadEnum = {

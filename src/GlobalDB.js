@@ -120,7 +120,7 @@ function fetchFocusMessagesBaseOnGeo(geocode, radius) {
       };
     // Use firestore
     const db = firebase.firestore();
-    db.collection(config.focusMessageDB).doc(key).set(focusMessageRecord).then(function(recordRef) {
+    return db.collection(config.focusMessageDB).doc(key).set(focusMessageRecord).then(function(recordRef) {
         return(key);
     })
 };
@@ -129,7 +129,7 @@ function dropFocusMessage(key) {
     return getFocusMessage(key).then(function(message) {
         if(message  != null ) {
             const db = firebase.firestore();
-            db.collection(config.focusMessageDB).doc(key).delete().then(function() {
+            return db.collection(config.focusMessageDB).doc(key).delete().then(function() {
                 console.log("Document successfully deleted!");
                 return true;
             }).catch(function(error) {
@@ -191,6 +191,8 @@ function updateFocusMessage(messageKey, messageRecord, updateTime) {
             return(messageRecordRef);
         })
     }
+
+    return;
 }
 
 function updateTagStat(tagStat) {

@@ -137,7 +137,13 @@ class FocusView extends Component {
                 radius: this.state.radius,
                 key: this.state.key
               }
-              updateFocusMessage(this.state.key, focusMessage);
+              updateFocusMessage(this.state.key, focusMessage).then((ref) => {
+                if(ref !== 'undefined' && ref !== null) {
+                    return this.props.openSnackbar(constant.updateFocusMessageSuccess, 'success');
+                }else {
+                    return this.props.openSnackbar(constant.updateFocusMessageFailure, 'error');
+                }
+              });
           } else {
               addFocusMessage(uuid.v4(),
                 this.state.title,
@@ -147,7 +153,13 @@ class FocusView extends Component {
                 this.state.summary,
                 this.state.desc,
                 this.state.messages
-            )
+            ).then((key) => {
+                if(key !== 'undefined' && key !== null) {
+                    return this.props.openSnackbar(constant.addFocusMessageSuccess, 'success');
+                }else {
+                    return this.props.openSnackbar(constant.addFocusMessageFailure, 'error');
+                }
+            })
           }
         }
 
@@ -158,7 +170,14 @@ class FocusView extends Component {
     onDelete() {
       const { user } = this.props;
       if (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor) {
-        dropFocusMessage(this.state.key)
+        dropFocusMessage(this.state.key).then((rv)=>{
+            console.log(rv)
+                if(rv) {
+                    return this.props.openSnackbar(constant.dropFocusMessageSuccess, 'success');
+                }else {
+                    return this.props.openSnackbar(constant.dropFocusMessageFailure, 'error');
+                }
+        });
       }
       this.setState({popoverOpen: false});
     }
