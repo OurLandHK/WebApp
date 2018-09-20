@@ -27,6 +27,8 @@ import  {constant, RoleEnum} from '../config/default';
 import  MessageList from '../MessageList';
 import TagDrawer from '../TagDrawer';
 import {fileExists, checkImageExists} from '../util/http';
+import ReactHtmlParser from 'react-html-parser';
+import {linkify} from '../util/stringHandling';
 import { dropBookmark, addBookmark, updateBookmark, incBookmarkViewCount, getUserProfile} from '../UserProfile';
 import {
     openSnackbar,
@@ -306,9 +308,12 @@ class BookmarkView extends Component {
         }
         let titleTextHtml = "";
         let titleEditHtml =null;
+        let descHtml=null;
         if(this.state.readonly) {
             readonlyHtml = this.renderReadonly();
             titleTextHtml = constant.bookmarkTitleLabel;
+            let descText = '<div>'+linkify(this.state.desc)+'</div>';
+            descHtml  = ReactHtmlParser(descText);
             if(user.user && user.user.uid === this.props.bookmark.uid) {
                 deleteButtonHtml = <IconButton color="contrast" onClick={() => this.setState({readonly: false})} aria-label="Close">
                                     <EditIcon />
@@ -318,6 +323,10 @@ class BookmarkView extends Component {
         } else {
             actionButtonHtml = <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>{titleText}</Button>;
             titleEditHtml = <TextField disabled={this.state.readonly} autoFocus required inputRef={(tf) => {this.titleTextField = tf;}} id="title" fullWidth margin="normal" helperText={constant.bookmarkTitleLabel} value={this.state.title} onChange={event => this.setState({ title: event.target.value })}/>
+            descHtml = <TextField disabled={this.state.readonly} required id="desc" fullWidth  
+                    multiline
+                    rowsMax="20" 
+                    margin="normal" helperText={constant.descLabel} value={this.state.desc} onChange={event => this.setState({ desc: event.target.value })}/>
         }
         return(<span>
                     {addressButtonHtml}
@@ -339,11 +348,8 @@ class BookmarkView extends Component {
                         <DialogContent>
                             {readonlyHtml}
                             {titleEditHtml}
-                            <TextField disabled={this.state.readonly} required id="desc" fullWidth  
-                                multiline
-                                rowsMax="20" 
-                                margin="normal" helperText={constant.descLabel} value={this.state.desc} onChange={event => this.setState({ desc: event.target.value })}/>
-                                <TagDrawer isRenderTagList={isRenderTagList}/>
+                            {descHtml}
+                            <TagDrawer isRenderTagList={isRenderTagList}/>
                             {messageHtml}
                         </DialogContent>  
                     </Dialog>

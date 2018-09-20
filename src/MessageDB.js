@@ -226,7 +226,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
     }
  }
 
- function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status, isReportedUrgentEvent, isApprovedUrgentEvent, isUrgentEvent) {
+ function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, desc, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status, isReportedUrgentEvent, isApprovedUrgentEvent, isUrgentEvent) {
     let now = Date.now();
     if(startDate === null)
     {
@@ -262,6 +262,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
         streetAddress: streetAddress,
         tagfilter: tagfilter,
+        desc: desc,
         createdAt: new Date(now),
         lastUpdate: new Date(now),
         key: key,

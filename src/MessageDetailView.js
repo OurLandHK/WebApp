@@ -21,6 +21,8 @@ import timeOffsetStringInChinese from './TimeString';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
 import {checkImageExists} from './util/http';
+import ReactHtmlParser from 'react-html-parser';
+import {linkify} from './util/stringHandling';
 import {
   updateRecentMessage,
   updatePublicProfileDialog,
@@ -144,19 +146,6 @@ class MessageDetailView extends Component {
           <Typography variant="headline">{urgentEventTag} {message.text}</Typography>
         </Grid>
       </Grid>    );
-/*
-    return (
-      <Grid container spacing={16}>
-        <Grid item className={classes.authorGrid}>
-          {fbProfileImage}
-          <Typography color='primary' noWrap='true' > {message.name}</Typography>
-          <Typography color='primary' noWrap='true' >{subheader}</Typography>
-        </Grid>
-        <Grid item xs className={classes.summaryGrid}>
-          <Typography variant="headline">{urgentEventTag} {message.text}</Typography>
-        </Grid>
-      </Grid>    );
- */
   }
 
 
@@ -212,24 +201,6 @@ class MessageDetailView extends Component {
         </Grid>
       </Grid>
     );
-
-/*
-    return (
-      <Grid container direction='row' spacing={16}>
-        <Grid item xs direction='column' className={classes.summaryGrid} >
-          <a href={geolink}>
-            <Typography variant="subheading">
-            {locationString}
-            </Typography>
-          </a>
-          <Typography variant="subheading">
-          {`現況: ${message.status} ${viewCountString}`}
-          </Typography>
-        </Grid>
-      </Grid>
-    );
-*/
-
   }
 
   renderTimeHtml() {
@@ -363,6 +334,11 @@ class MessageDetailView extends Component {
     const title = this.renderTitle();
     let baseHtml = <Grid container spacing={0}> {this.renderBase()}</Grid>;
     let dateHtml = this.renderTimeHtml();
+    let descHtml = null;
+    if(m.desc) {
+      let text = '<div>'+linkify(m.desc)+'</div>';
+      descHtml = ReactHtmlParser(text);
+    }
 
     const tab = this.state.tab;
     let imageTabLabel = <Tab label="相關照片" value="相關照片"/>
@@ -374,6 +350,7 @@ class MessageDetailView extends Component {
               {title}
               <ChipArray chipData={chips} />
               {linkHtml}
+              {descHtml}
             </CardContent>
             {dateHtml}
             <MessageAction message={m} happyAndSad={this.props.happyAndSad}/>
