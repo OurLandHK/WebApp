@@ -126,6 +126,14 @@ class FocusView extends Component {
     onSubmit() {
         const { user } = this.props;
         if (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor) {
+          if(this.state.title == "") return this.props.openSnackbar(constant.pleaseInputTitle, 'warning');
+          if(this.state.geolocation == null) return this.props.openSnackbar(constant.pleaseInputLocation, 'warning');
+          if(this.state.streetAddress == "") return this.props.openSnackbar(constant.pleaseInputLocation, 'warning');
+          if(this.state.summary == "") return this.props.openSnackbar(constant.pleaseInputSummary, 'warning');
+          if(this.state.desc == "") return this.props.openSnackbar(constant.pleaseInputDesc, 'warning');
+          if(this.state.radius == "") return this.props.openSnackbar(constant.pleaseInputRadius, 'warning');
+
+
           if (this.state.key !== "") {
               let focusMessage = {
                 title: this.state.title,
