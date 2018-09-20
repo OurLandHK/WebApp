@@ -20,6 +20,7 @@
     "react-google-maps": "^9.4.5",
     "react-grid-gallery": "^0.5.1",
     "react-helmet": "^5.2.0",
+    "react-html-parser": "^2.0.2",
     "react-redux": "^5.0.7",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",

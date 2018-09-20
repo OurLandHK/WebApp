@@ -83,7 +83,9 @@ class PostMessageView extends Component {
       startTime: this.startTime(),
       end: this.today(),
       status: "開放",
-      expanded: false,
+      timeExpanded: false,
+      descExpanded: false,
+      desc: "",
       isReportedUrgentEvent: false,
       isApprovedUrgentEvent: false,
       imageURL: null,
@@ -152,10 +154,13 @@ class PostMessageView extends Component {
       key: key,
       summary: "",
       link: "",
+      desc: "",
       start: this.today(),
       startTime: this.startTime(),
       end: this.today(),
-      expanded: false, rotate: 'rotate(0deg)',
+      timeExpanded: false, 
+      descExpanded: false,
+      rotate: 'rotate(0deg)',
       isReportedUrgentEvent: false,
       tags: [],
       popoverOpen: true,
@@ -181,7 +186,7 @@ class PostMessageView extends Component {
   };
 
   onSubmit() {
-    console.log(" expand:  " + this.state.expanded + " " + this.state.intervalSelection + " " + this.state.durationSelection + " " + this.state.start)
+    //console.log(" expand:  " + this.state.timeExpanded + " " + this.state.intervalSelection + " " + this.state.durationSelection + " " + this.state.start)
     let interval = null;
     let duration = null;
     let startDate = null;
@@ -190,7 +195,11 @@ class PostMessageView extends Component {
     let weekdaysOpennings = null;
     let endDate = null;
     let isUrgentEvent = null;
-    if(this.state.expanded) { // detail for time
+    let desc = null;
+    if(this.state.descExpanded) {
+      desc = this.state.desc;
+    }
+    if(this.state.timeExpanded) { // detail for time
       startDate = this.state.start;
       // console.log('Now Time ' + startTimeInMs+ ' ' + this.state.start);
       switch(this.state.timeSelection) {
@@ -240,7 +249,7 @@ class PostMessageView extends Component {
       }
 
       var tags = this.state.tags.map((tag) => tag.text);
-      postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress,
+      postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress, desc,
         startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link,
         imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
         this.state.status, this.state.isReportedUrgentEvent, this.state.isApprovedUrgentEvent, isUrgentEvent).then((messageKey) => {
@@ -262,9 +271,11 @@ class PostMessageView extends Component {
   handleChange = name => event => {
     this.setState({ [name]: event.target.checked });
   };
-
-  handleExpandClick() {
-    this.setState({ expanded: !this.state.expanded });
+  handleTimeExpandClick() {
+    this.setState({ timeExpanded: !this.state.timeExpanded });
+  };
+  handleDescExpandClick() {
+    this.setState({ descExpanded: !this.state.descExpanded });
   };
 
   handleRequestDelete(evt) {
@@ -540,7 +551,7 @@ class PostMessageView extends Component {
     const classes = this.props.classes;
     const { tags } = this.state;
     if(this.state.buttonShow) {
-      if(this.state.expanded) {
+      if(this.state.timeExpanded) {
         switch(this.state.timeSelection) {
           case constant.timeOptions[0]:
             timeHtml = this.renderActivitiesHtml();
@@ -578,7 +589,7 @@ class PostMessageView extends Component {
                     autoFocus
                     required
                     id="message"
-                    placeholder="事件內容及期望街坊如何參與"
+                    placeholder="事件簡介及期望街坊如何參與"
                     fullWidth
                     margin="normal"
                     value={this.state.summary}
@@ -605,16 +616,35 @@ class PostMessageView extends Component {
                 </FormGroup>
                 <FormGroup>
                   <FormControlLabel
-                  label="詳細時間"
+                  label="事件詳情"
                   control={
                     <Checkbox
-                      checked={this.state.expanded}
-                      onChange={() => this.handleExpandClick()}
+                      checked={this.state.descExpanded}
+                      onChange={() => this.handleDescExpandClick()}
                       value="checkedA" />
                     }
                   />
                 </FormGroup>
-                <Collapse in={this.state.expanded} transitionDuration="auto" unmountOnExit>
+                <Collapse in={this.state.descExpanded} transitionDuration="auto" unmountOnExit>
+                  <FormGroup>
+                    <TextField autoFocus required id="desc"  fullWidth  multiline rowsMax="20" margin="normal" 
+                                helperText="事件詳情及期望街坊如何參與 時間等資料請用詳細時間" value={this.state.desc} onChange={event => this.setState({ desc: event.target.value })}/>
+
+                  </FormGroup>
+                  <br/>
+                </Collapse>                
+                <FormGroup>
+                  <FormControlLabel
+                  label="詳細時間"
+                  control={
+                    <Checkbox
+                      checked={this.state.timeExpanded}
+                      onChange={() => this.handleTimeExpandClick()}
+                      value="checkedA" />
+                    }
+                  />
+                </FormGroup>
+                <Collapse in={this.state.timeExpanded} transitionDuration="auto" unmountOnExit>
                   <FormGroup>
                     <SelectedMenu label="" options={constant.timeOptions} changeSelection={(selectedValue) => this.timeOptionSelection(selectedValue)} ref={(timeSelection) => {this.timeSelection = timeSelection}}/>
                     {timeHtml}

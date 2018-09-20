@@ -13,6 +13,8 @@ import geoString from '../GeoLocationString';
 import {constant, RoleEnum} from '../config/default';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+import ReactHtmlParser from 'react-html-parser';
+import {linkify} from '../util/stringHandling';
 import {
     openSnackbar,
     checkAuthState,
@@ -238,6 +240,8 @@ class CommentView extends Component {
             }
         }
     } 
+    text = '<div>'+linkify(text)+'</div>';
+    let textHtml = ReactHtmlParser(text);
     if(galleryEntry  != null ) {
         galleryImage =  <CardMedia className={classes.tileMedia} image={galleryEntry.publicImageURL}/>
     }
@@ -274,10 +278,7 @@ class CommentView extends Component {
                 {fbProfileImage}               
                 <div className={classes.details}>
                     <CardContent className={classes.content} zeroMinWidth>
-                        <TextField disabled={true} required id="text" fullWidth  
-                                multiline
-                                rowsMax="20" 
-                                margin="normal" value={text} />
+                        {textHtml}
                         <Typography variant="caption" color="textSecondary">
                         {subtitle}
                         </Typography>
