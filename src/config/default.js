@@ -99,6 +99,9 @@ let constant = {
   pleaseInputLocation: '請輸入地點',
   pleaseInputSummary: '請輸入簡介',
   pleaseInputLink: '請輸入外部連結',
+  pleaseInputRadius: '請輸入半徑',
+  pleaseInputDesc: '請輸入內文',
+  pleaseInputTitle: '請輸入事件名稱',
   pleaseSelectImage: '請選擇縮圖',
   createMessageSuccess: "新增社區事件成功",
   createMessageFailure: "新增社區事件失敗",
@@ -123,6 +126,7 @@ let constant = {
   updateFocusMessageFailure: "更新焦點社區事件失敗",
   dropFocusMessageSuccess: "刪除焦點社區事件成功",
   dropFocusMessageFailure: "刪除焦點社區事件失敗",
+  FocusViewTitleWarning: ""
 }
 
 const happyAndSadEnum = {
