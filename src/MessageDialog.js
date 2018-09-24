@@ -11,10 +11,11 @@ import { constant, happyAndSadEnum } from './config/default';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Slide from '@material-ui/core/Slide';
 import MessageDetailView from './MessageDetailView';
-import {getMessage, dropMessage, getHappyAndSad} from './MessageDB';
+import {getMessage, dropMessage, getHappyAndSad, incMessageViewCount} from './MessageDB';
 import ShareDrawer from './ShareDrawer';
 import {
   checkAuthState,
+  updateRecentMessage,
 } from './actions';
 import {connect} from 'react-redux';
 
@@ -70,34 +71,23 @@ class MessageDialog extends React.Component {
     if(this.props.open) {
       var uuid = this.props.uuid;
       console.log("openDialog uuid: " + uuid);
-      return getMessage(uuid).then((message) => {
-        console.log("Message: " + message);
-        this.message = message;
-
-        if(this.props.user  != null  && this.props.user.user) {
-          // get sad and happy inital value
-          return getHappyAndSad(uuid, this.props.user.user).then((data) => {
-            console.log("Data: " + data);
-            if(data  != null ) {
-              this.happyAndSad = data.happyAndSad;
-            }
-            this.setState({open: true });
-          });
-        } else {
-          this.setState({open: true });
-        }
-      });
+      this._openDialog(false);
     }
   }
 
-
   openDialog(){
-    var uuid = this.props.uuid;
-    this.lastOnPopState = window.onpopstate;
-    window.onpopstate = this.onBackButtonEvent;
+    this._openDialog(true);
+  }
+
+  _openDialog(updateURL){
+    let uuid = this.props.uuid;
     return getMessage(uuid).then((message) => {
       this.message = message;
-      window.history.pushState("", "", `/detail/${this.props.uuid}`);
+      if(updateURL) {
+        this.lastOnPopState = window.onpopstate;
+        window.onpopstate = this.onBackButtonEvent;
+        window.history.pushState("", "", `/detail/${this.props.uuid}`);
+      }
       if(this.props.user  != null  && this.props.user.user) {
         // get sad and happy inital value
         return getHappyAndSad(uuid, this.props.user.user).then((data) => {
@@ -109,6 +99,12 @@ class MessageDialog extends React.Component {
       } else {
         this.setState({open: true });
       }
+      let incViewCount = false;
+      // check the message viewed in this session or not.
+      if(this.props.recentMessage.recentids.indexOf(uuid) === -1) {
+        incMessageViewCount(uuid.key);
+      }
+      updateRecentMessage(uuid, false);    
     });
   };
 
@@ -203,6 +199,9 @@ const mapDispatchToProps = (dispatch) => {
       checkAuthState:
           () =>
               dispatch(checkAuthState()),
+    updateRecentMessage:
+      (recentMessageID, open) =>
+        dispatch(updateRecentMessage(recentMessageID, open)),             
   }
 };
 

@@ -72,6 +72,20 @@ function getUserProfile(user) {
     });
 }
 
+function getAddressBook(user) {
+    const db = firebase.firestore();
+    let collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
+    collectionRef.onSnapshot(function() {});
+    return collectionRef.get().then(function(querySnapshot){
+        const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
+        return addresses;
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
+    return [];
+  }
+
 function upsertAddress(user, key, type, text, geolocation, streetAddress) {
     var geoPoint = null;
     if(geolocation  != null ) {
@@ -446,5 +460,5 @@ function upgradeAllUser() {
     })
 }
 
-export {fetchAllUser, addCompleteMessage, upsertAddress, upgradeAllUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
+export {getAddressBook, fetchAllUser, addCompleteMessage, upsertAddress, upgradeAllUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
     dropBookmark, fetchBookmarkList, addBookmark, getBookmark, updateBookmark, incBookmarkViewCount};

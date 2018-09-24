@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
 import MessageDialog from './MessageDialog';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid'
@@ -14,7 +12,6 @@ import FiberNewIcon from '@material-ui/icons/FiberNew';
 import Paper from '@material-ui/core/Paper';
 import red from '@material-ui/core/colors/red';
 import Typography from '@material-ui/core/Typography';
-import {incMessageViewCount} from './MessageDB';
 import {
   updateRecentMessage,
 } from './actions';
@@ -116,17 +113,7 @@ class MessageView extends Component {
   handleClick() {
     const { updateRecentMessage } = this.props;
     if(this.props.message.key  != null  && this.props.message.key !== "") {
-      let incViewCount = false;
-      // check the message viewed in this session or not.
-      if(this.props.recentMessage.recentids.indexOf(this.props.message.key) === -1) {
-        incViewCount = true;
-      }
-      updateRecentMessage(this.props.message.key, false);
       this.openDialog();
-
-      if(incViewCount) {
-        incMessageViewCount(this.props.message.key);
-      }
     }
   };
 

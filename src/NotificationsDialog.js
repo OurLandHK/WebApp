@@ -15,7 +15,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import MessageList from './MessageList';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import Divider from '@material-ui/core/Divider';
+import MissionView from './mission/MissionView';
 import FilterBar from './FilterBar';
 import {fetchMessagesBaseOnGeo, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags} from './MessageDB';
 import {
@@ -129,7 +129,8 @@ class NotificationsDialog extends React.Component {
 
   handleRequestOpen(evt) {
     evt.preventDefault();
-    if(this.state.messageIds.length > 0) {
+    const { classes, user} = this.props;
+    if(this.state.messageIds.length > 0 || user.userProfile) {
         this.setState({open: true});
     }
   }
@@ -142,6 +143,7 @@ class NotificationsDialog extends React.Component {
     const { classes } = this.props; 
     return (
       <div className={classes.container}>
+        <FilterBar disableLocationDrawer={true}/>    
         <MessageList
           ref={(messageList) => {this.state.messageList = messageList;}}
           eventNumber={100}
@@ -152,17 +154,38 @@ class NotificationsDialog extends React.Component {
     );
   }
 
+  renderMission() {
+    const { classes, user, addressBook } = this.props; 
+    if(user.userProfile) {
+      return (
+        <MissionView user={user.user} userProfile={user.userProfile} addressBook={addressBook} bookmarkList={user.bookmarkList}/>
+      ); 
+    } else {
+      return null;
+    }
+  }
+
   
   render() {
-    const { classes} = this.props;let messageHtml = null;
-    if(this.state.open)  {
-        messageHtml = this.renderMessages();
+    const { classes, user} = this.props;
+    let messageHtml = null;
+    let missionHtml = null;
+    let userCount = 0;
+    if(user.userProfile) {
+      userCount = 1;
     }
     let output = null;
-    if(this.state.messageIds.length > 0) {
+    let badgeCount = this.state.messageIds.length + userCount;
+    if(this.state.open)  {
+      missionHtml = this.renderMission();
+      if(this.state.messageIds.length) {
+        messageHtml = this.renderMessages();
+      }
+  }
+    if(badgeCount > 0) {
       output = <span>
             <IconButton className={classes.margin} onClick={(evt) => this.handleRequestOpen(evt)}>
-              <Badge badgeContent={this.state.messageIds.length} color="primary">
+              <Badge badgeContent={badgeCount} color="primary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -175,7 +198,7 @@ class NotificationsDialog extends React.Component {
                         <Typography variant="title" color="inherit" className={classes.flex}>{constant.notificationLabel}</Typography> 
                     </Toolbar>
                 </AppBar>
-                <FilterBar disableLocationDrawer={true}/>                           
+                {missionHtml}
                 {messageHtml}
             </Dialog>
         </span>;
