@@ -152,7 +152,7 @@ class CommentView extends Component {
             } else {
                 return updateCommentApproveStatus(messageUUID, commentRef.id, approvedStatus).then(() => {
                     if(galleryEntry  !== null  && galleryEntry !== undefined) {
-                        addMessageGalleryEntry(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL, text).then((messageKey) => {
+                        return addMessageGalleryEntry(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL, text).then((messageKey) => {
                             if(messageKey !== 'undefined' && messageKey !== null) {
                                 return me.openSnackbar(constant.addMessageGallerySuccess, 'success');
                             }else {
@@ -161,7 +161,7 @@ class CommentView extends Component {
                         });
 
                         if(galleryEntry.thumbnailUpdate != null &&  galleryEntry.thumbnailUpdate != undefined && galleryEntry.thumbnailUpdate) {
-                            updateMessageThumbnail(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL).then((ref) => {
+                            return updateMessageThumbnail(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL).then((ref) => {
                             if(ref !== 'undefined' && ref !== null) {
                                 return me.openSnackbar(constant.updateMessageThumbnailSuccess, 'success');
                             }else {
@@ -170,7 +170,7 @@ class CommentView extends Component {
                         });
                         } 
                     } 
-                    return;  
+                    return me.openSnackbar(constant.approveMessageSuccess, 'success');;  
                 });
             }
         })
