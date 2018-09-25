@@ -31,7 +31,7 @@ import {
 } from './actions/types';
 import * as firebase from 'firebase';
 import config, {constant} from './config/default';
-import {getUserProfile, updateUserProfile, fetchBookmarkList} from './UserProfile';
+import {getUserProfile, updateUserProfile, fetchBookmarkList, getAddressBook} from './UserProfile';
 import {fetchFocusMessagesBaseOnGeo, getTagStat} from './GlobalDB';
 
 const currentLocationLabel = "現在位置";
@@ -327,31 +327,18 @@ export function updateFilterWithCurrentLocation() {
 
 export function fetchAddressBookByUser(user) {
   return dispatch => {
-    const db = firebase.firestore();
-    var collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
-    collectionRef.onSnapshot(function() {});
-    collectionRef.get().then(function(querySnapshot){
-       const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
-       dispatch(fetchAddressBook(addresses));
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
+    getAddressBook(user).then((addresses) => {
+      dispatch(fetchAddressBook(addresses));
     });
+    
   };
 }
 
 export function fetchAddressBookFromOurLand() {
   return dispatch => {
-    var db = firebase.firestore();
-    /// Use the UID for Ourland HK's account
-    var collectionRef = db.collection(config.userDB).doc(config.MasterUID).collection(config.addressBook);
-    collectionRef.onSnapshot(function() {})
-    collectionRef.get().then(function(querySnapshot){
-       const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
-       dispatch(fetchPublicAddressBook(addresses));
-    })
-    .catch(function(error) {
-        console.log("Error getting documents: ", error);
+    let user = {uid: config.MasterUID};
+    getAddressBook(user).then((addresses) => {
+      dispatch(fetchPublicAddressBook(addresses));
     });
   };
 }
