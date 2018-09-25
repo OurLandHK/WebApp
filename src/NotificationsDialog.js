@@ -142,6 +142,8 @@ class NotificationsDialog extends React.Component {
   renderMessages() {
     const { classes } = this.props; 
     return (
+      <React.Fragment>
+      <p>{constant.recentUpdate}</p>
       <div className={classes.container}>
         <FilterBar disableLocationDrawer={true}/>    
         <MessageList
@@ -151,6 +153,7 @@ class NotificationsDialog extends React.Component {
           messageIds={this.state.messageIds}
         />
       </div>
+      </React.Fragment>
     );
   }
 
@@ -158,7 +161,10 @@ class NotificationsDialog extends React.Component {
     const { classes, user, addressBook } = this.props; 
     if(user.userProfile) {
       return (
-        <MissionView user={user.user} userProfile={user.userProfile} addressBook={addressBook} bookmarkList={user.bookmarkList}/>
+        <React.Fragment>
+          <p>{constant.recentMission}</p>
+          <MissionView user={user.user} userProfile={user.userProfile} addressList={addressBook.addresses} bookmarkList={user.bookmarkList}/>
+        </React.Fragment>
       ); 
     } else {
       return null;

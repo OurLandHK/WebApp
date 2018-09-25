@@ -22,7 +22,7 @@ import {connect} from "react-redux";
 import {fetchBookmarkList, getUserProfile, getAddressBook} from '../UserProfile';
 import ShareDrawer from '../ShareDrawer';
 import {checkImageExists} from '../util/http';
-import {constant} from '../config/default';
+import {constant, addressEnum} from '../config/default';
 import {trackEvent} from '../track';
 
 const styles = theme => ({
@@ -45,6 +45,10 @@ const styles = theme => ({
       title: {
     //      textOverflow: 'ellipsis',
         
+      },
+      cover: {
+        width: 64,
+        height: 64,
       },
       summaryGrid: {
         display: 'inline-grid',
@@ -74,35 +78,49 @@ function Transition(props) {
   
   const taskCriterias = [
                           {
-                              taskname: "SingleInput",
-                              desc: "Publish for 1 Post",
+                              taskname: "第一次",
+                              desc: "報料一次",
                               checkObjectinUserPorilfe: "publishMessages",
                               checkField: "length",
                               passCritera: "greater",
                               threshold: 1,
-                              badgeName: "FirstTime",
+                              hideBeforeDone: false,
+                              badgeName: "第一次",
                               badgeImage: "/images/squareLogo.jpg",
                           },
                           {
-                              taskname: "FiveInput",
-                              desc: "Publish for 5 Post",
-                              checkObjectinUserPorilfe: "publishMessages",
-                              checkField: "length",
-                              passCritera: "greater",
-                              threshold: 5,
-                              badgeName: "FiveTime",
-                              badgeImage: "/images/squareLogo.jpg",
+                            taskname: "六合彩",
+                            desc: "報料五次",
+                            checkObjectinUserPorilfe: "publishMessages",
+                            checkField: "length",
+                            passCritera: "greater",
+                            threshold: 6,
+                            hideBeforeDone: false,
+                            badgeName: "六合彩",
+                            badgeImage: "/images/squareLogo.jpg",
                           },
                           {
-                              taskname: "TenInput",
-                              desc: "Publish for 10 Post",
-                              checkObjectinUserPorilfe: "publishMessages",
-                              checkField: "length",
-                              passCritera: "greater",
-                              threshold: 10,
-                              badgeName: "TenTime",
-                              badgeImage: "/images/squareLogo.jpg",
-                          }                        
+                            taskname: "一打",
+                            desc: "報料十二次",
+                            checkObjectinUserPorilfe: "publishMessages",
+                            checkField: "length",
+                            passCritera: "greater",
+                            threshold: 12,
+                            hideBeforeDone: false,
+                            badgeName: "一打",
+                            badgeImage: "/images/squareLogo.jpg",
+                          }, 
+                          {
+                            taskname: "八元位",
+                            desc: "報料256次",
+                            checkObjectinUserPorilfe: "publishMessages",
+                            checkField: "length",
+                            passCritera: "greater",
+                            threshold: 256,
+                            hideBeforeDone: false,
+                            badgeName: "8-Bit",
+                            badgeImage: "/images/squareLogo.jpg",
+                          }                                                 
                       ];
   
   function addressInputed(userProfile, bookmarkList, addressLis) {
@@ -171,8 +189,10 @@ class MissionView extends React.Component {
     let rv = null;
     if(this.state.userProfile) {
         taskList.map((task) => {
-            if(task.status != "done") {
-                rv = this.renderTaskCard(task);
+            if(task.status != constant.missionDone) {
+                if(!rv) {
+                    rv = this.renderTaskCard(task);
+                }
             }
         })
     } 
@@ -198,27 +218,61 @@ class MissionView extends React.Component {
 
   taskChecking() {
       let rv = [];
-      let userProfileTasks = taskCriterias.map((taskCriteria) => {
-            let task = {
-                taskname: taskCriteria.taskname,
-                desc: taskCriteria.desc,
-                badgeName: taskCriteria.badgeName,
-                badgeImage: taskCriteria.badgeImage,
+      // check for addressBook
+      let addressStatus = '未輸入';
+      this.state.addressList.map((address) => {
+          console.log(address);
+        if(address.type === addressEnum.home || address.type === addressEnum.office) {
+            if(address.geolocation) {
+                addressStatus = constant.missionDone;
             }
+        }
+      });
+      let addressTask = {
+        taskname: "設定地址",
+        desc: "設定住宅或工作的地址",
+        badgeName: "有腳既雀仔",
+        badgeImage: "/images/squareLogo.jpg",
+        status: addressStatus,
+    }
+      rv.push(addressTask);
+      // check for userProfileTasks
+      let userProfileTasks = taskCriterias.map((taskCriteria) => {
             let validateObject = this.state.userProfile[taskCriteria.checkObjectinUserPorilfe];
-            let currentStatus = validateObject[taskCriteria.checkField];
-            
-            switch(taskCriteria.passCritera) {
-                case 'greater':
-                    if(currentStatus >= taskCriteria.threshold) {
-                        task.status = "Done";
-                    } else {
-                        task.status = `${currentStatus}/${taskCriteria.threshold}`;
-                    }
-                    break;
-                default:
-                    task.status = `${currentStatus}/${taskCriteria.threshold}`;                
-            }    
+            let status = `0/${taskCriteria.threshold}`;
+            if(validateObject) {
+                let currentStatus = validateObject[taskCriteria.checkField];            
+                switch(taskCriteria.passCritera) {
+                    case 'greater':
+                        if(currentStatus >= taskCriteria.threshold) {
+                            status = constant.missionDone;
+                        } else {
+                            status = `${currentStatus}/${taskCriteria.threshold}`;
+                        }
+                        break;
+                    default:
+                        status = `${currentStatus}/${taskCriteria.threshold}`;                
+                }
+            }
+            let taskname = taskCriteria.taskname;
+            let desc = taskCriteria.desc;
+            let badgeName = taskCriteria.badgeName;
+            let badgeImage = taskCriteria.badgeImage;
+            if(status != constant.missionDone) {
+                badgeImage = "/images/secret.png"
+                badgeName = constant.secretMission;
+                if(taskCriteria.hideBeforeDone) {
+                    let taskname = constant.secretMission;
+                    let desc = constant.secretMission;
+                }
+            }
+            let task = {
+                taskname: taskname,
+                desc: desc,
+                badgeName: badgeName,
+                badgeImage: badgeImage,
+                status: status,
+            }
             return task;
       });
       rv = rv.concat(userProfileTasks);
@@ -244,24 +298,19 @@ class MissionView extends React.Component {
         taskHtml = taskList.map((task) => {
             return(this.renderTaskCard(task));
         })
-/*        
-      if(window.onpopstate !== this.onBackButtonEvent) {
-        window.history.pushState("", "", `/user/${userid}`)
-        this.lastOnPopState = window.onpopstate;
-        window.onpopstate = this.onBackButtonEvent;
-      }
-*/      
     }
     return (
       <React.Fragment>
-        {card}
+        <div onClick={() => this.setState({open: true})}>
+            {card}
+        </div>
         <Dialog fullScreen  open={dialogOpen} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
           <AppBar className={classes.appBar}>
             <Toolbar>
               <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                   <CloseIcon />
               </IconButton>
-              <Typography variant="title" color="inherit" className={classes.flex}>{constant.publicProfileLabel}</Typography>
+              <Typography variant="title" color="inherit" className={classes.flex}>{constant.mission}</Typography>
             </Toolbar>
           </AppBar>
           <div className={classes.container}>
