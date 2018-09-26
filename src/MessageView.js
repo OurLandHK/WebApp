@@ -127,21 +127,7 @@ class MessageView extends Component {
         className={classes.urgentEventTag}
       />
     }
-    /*
-    return(<GridListTile key={imageUrl} onClick={() => this.handleClick()}>
-      <img height={128} src={imageUrl} alt={text} />
-      <GridListTileBar
-        title={text}
-        subtitle={subtitle}
-        classes={{
-          root: classes.titleBar,
-          title: classes.tileTitle,
-        }}
-      >
-        {urgentEventTag}
-      </GridListTileBar>
-    </GridListTile>);
-*/
+
     return (<Card className={classes.tileCard} onClick={() => this.handleClick()}>
               <CardMedia className={classes.tileMedia} image={imageUrl} title={auther}/>
               <CardContent>

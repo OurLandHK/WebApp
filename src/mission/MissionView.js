@@ -8,9 +8,9 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
+import ListItem from '@material-ui/core/ListItem';
 import CardMedia from '@material-ui/core/CardMedia';
-import CardHeader from '@material-ui/core/CardHeader';
+import ListItemText from '@material-ui/core/ListItemText';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid'
@@ -74,8 +74,6 @@ function Transition(props) {
       return fn.apply(window, userProfile, bookmarkList, addressLis);
   }
   
-  const taskCheckingFunction = ['singleInput', 'fiveInput', 'tenInput']; //, 'fiveInput', 'tenInput'];
-  
   const taskCriterias = [
                           {
                               taskname: "第一次",
@@ -111,6 +109,17 @@ function Transition(props) {
                             badgeImage: "/images/squareLogo.jpg",
                           }, 
                           {
+                            taskname: "一路發",
+                            desc: "報料168次",
+                            checkObjectinUserPorilfe: "publishMessages",
+                            checkField: "length",
+                            passCritera: "greater",
+                            threshold: 168,
+                            hideBeforeDone: true,
+                            badgeName: "一路發",
+                            badgeImage: "/images/squareLogo.jpg",
+                          },
+                          {
                             taskname: "八元位",
                             desc: "報料256次",
                             checkObjectinUserPorilfe: "publishMessages",
@@ -120,7 +129,7 @@ function Transition(props) {
                             hideBeforeDone: false,
                             badgeName: "8-Bit",
                             badgeImage: "/images/squareLogo.jpg",
-                          }                                                 
+                          },
                       ];
   
   function addressInputed(userProfile, bookmarkList, addressLis) {
@@ -133,6 +142,11 @@ class MissionView extends React.Component {
     let userProfile = null;
     let bookmarkList = [];
     let addressList = [];
+    if(this.props.publicProfileView) {
+        this.publicProfileView = true;
+    } else {
+        this.publicProfileView = false;
+    }
     if(this.props.userProfile) {
         userProfile = this.props.userProfile;
     }
@@ -176,6 +190,12 @@ class MissionView extends React.Component {
     }
   }
 
+  handleRequestOpen = () => {
+    if(this.state.userProfile) {
+        trackEvent('Mission', this.state.userProfile.displayName);
+    }
+    this.setState({open: true});
+  }
 
   handleRequestClose = () => {
 //    window.history.pushState("", "", `/`)
@@ -187,15 +207,23 @@ class MissionView extends React.Component {
   renderHighlightMission(taskList) {
     const { classes } = this.props;
     let rv = null;
+    let done = 0;
     if(this.state.userProfile) {
         taskList.map((task) => {
             if(task.status != constant.missionDone) {
                 if(!rv) {
                     rv = this.renderTaskCard(task);
                 }
+            } else {
+                done++;
             }
         })
     } 
+    if(this.publicProfileView) {
+        rv = <ListItem >
+                <ListItemText primary={`${constant.missionComplete}: ${done}`} />
+            </ListItem>
+    }
     return rv;
   }
 
@@ -262,8 +290,8 @@ class MissionView extends React.Component {
                 badgeImage = "/images/secret.png"
                 badgeName = constant.secretMission;
                 if(taskCriteria.hideBeforeDone) {
-                    let taskname = constant.secretMission;
-                    let desc = constant.secretMission;
+                    taskname = constant.secretMission;
+                    desc = constant.secretMission;
                 }
             }
             let task = {
@@ -301,7 +329,7 @@ class MissionView extends React.Component {
     }
     return (
       <React.Fragment>
-        <div onClick={() => this.setState({open: true})}>
+        <div onClick={this.handleRequestOpen}>
             {card}
         </div>
         <Dialog fullScreen  open={dialogOpen} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
