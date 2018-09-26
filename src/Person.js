@@ -68,7 +68,7 @@ class Person extends Component {
     let missionHtml = null;
     let focusButton = null;
     let userProfileView = <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>;
-    const { user } = this.props;
+    const { user, addressBook } = this.props;
 
     if (user && user.user && user.userProfile) {
         let imgURL = user.userProfile.photoURL;
