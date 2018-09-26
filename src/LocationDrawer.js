@@ -183,7 +183,7 @@ class LocationDrawer extends React.Component {
         for(address of addressBook.publicAddresses) {
           if(address.type !== addressEnum.home && address.type !== addressEnum.office) {
               let newAddress = Object.create(address);
-              newAddress.text = `十八社區/${address.text}`;
+              newAddress.text = `${constant.regionEventLabel}/${address.text}`;
               newAddress.geolocation = address.geolocation;
               //console.log(newAddress.text);
               addressList.push(newAddress)

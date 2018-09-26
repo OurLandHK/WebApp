@@ -13,6 +13,7 @@ import AddressDialog from './address/AddressDialog';
 import FocusDialog from './admin/FocusDialog';
 import {connect} from "react-redux";
 import {checkImageExists} from './util/http';
+import MissionView from './mission/MissionView';
 import Divider from '@material-ui/core/Divider';
 import {
   toggleAddressDialog,
@@ -64,6 +65,7 @@ class Person extends Component {
     let adminButton = null;
     let publishMessage = null;
     let completeMessage = null;
+    let missionHtml = null;
     let focusButton = null;
     let userProfileView = <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>;
     const { user } = this.props;
@@ -90,6 +92,7 @@ class Person extends Component {
                             </ListItem></span>);
         publishMessage = <EventListDialog title="發表事件: " messageIds={user.userProfile.publishMessages}/>
         completeMessage = <EventListDialog title="完成事件: " messageIds={user.userProfile.completeMessages}/>
+        missionHtml = <MissionView user={user.user} userProfile={user.userProfile} addressList={addressBook.addresses} bookmarkList={user.bookmarkList} publicProfileView={true}/>
         if (user.userProfile  != null  & (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor)) {
           focusButton = <FocusDialog/>;
         }
@@ -118,6 +121,7 @@ class Person extends Component {
         <Divider/>
         <List disablePadding>
             {userLoginDisplay}
+            {missionHtml}
             {publishMessage}
             {completeMessage}
             <ListItem button>
@@ -137,7 +141,8 @@ class Person extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    user: state.user
+    user: state.user,
+    addressBook: state.addressBook,
   };
 }
 

@@ -224,7 +224,7 @@ class UserProfileView extends React.Component {
     this.setState({interestedTags});
   }
   render() {
-    const { classes, user } = this.props;
+    const { classes, user, addressBook } = this.props;
     var imgURL = '/images/profile_placeholder.png';
     var publish = 0;
     var concern = 0;
@@ -325,7 +325,8 @@ UserProfileView.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   return {
     user: state.user,
-    suggestions: state.suggestions
+    suggestions: state.suggestions,
+    addressBook: state.addressBook,
   };
 }
 
