@@ -16,6 +16,8 @@ import Slide from '@material-ui/core/Slide';
 import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper';
 
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import DoneAll from '@material-ui/icons/DoneAll';
 import {connect} from "react-redux";
 
 // Ourland
@@ -220,9 +222,13 @@ class MissionView extends React.Component {
         })
     } 
     if(this.publicProfileView) {
-        rv = <ListItem >
-                <ListItemText primary={`${constant.missionComplete}: ${done}`} />
-            </ListItem>
+        rv = 
+          <ListItem button>
+            <ListItemIcon>
+                <DoneAll />
+                </ListItemIcon>
+              <ListItemText primary={`${constant.missionComplete}:: ${done}`} />
+          </ListItem>
     }
     return rv;
   }
