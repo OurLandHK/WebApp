@@ -36,6 +36,21 @@ const styles = {
   },
   container: {
    overflowY: 'auto'
+  },
+  userInfo: {
+    marginTop: '10px',
+    marginBottom: '10px',
+    textAlign: 'center'
+  },
+  displayName: {
+    marginTop: '20px',
+    marginBottom: '20px',
+    fontSize: '24px'
+  },
+  subheader: {
+    padding: '15px',
+    background: '#3f51b5',
+    color: '#fff'
   }
 };
 
@@ -140,8 +155,13 @@ class PublicProfile extends React.Component {
 
 
   render() {
+    const { classes, open, id } = this.props;
+    let dialogOpen = open;
+    let userid = id;
+
     var displayName = "...";
     let imageHtml = "等一下";
+    let bookmarkHtml = "";
 //    let concernMessage = null;
     let publishMessage = null;
     let completeMessage = null;
@@ -153,21 +173,23 @@ class PublicProfile extends React.Component {
         imgURL = this.state.userProfile.photoURL;
       }
       displayName = this.state.userProfile.displayName;
-      var displayNameLabel = "名字:" + displayName;
+      var displayNameHtml = <div className={classes.displayName}>{displayName}</div>;
       imageHtml =  <img src={imgURL} alt="Profile"/>;
       if(this.state.userProfile.desc  != null  && this.state.userProfile.desc !== "") {
-        desc = <ListItem >
-          <ListItemText primary={"簡介: " + this.state.userProfile.desc}/>
-        </ListItem>
+        desc = <div>{this.state.userProfile.desc}</div>
       }
       publishMessage = <EventListDialog title="發表事件: " displayName={displayName} messageIds={this.publishMessages}/>
       completeMessage = <EventListDialog title="完成事件: " displayName={displayName} messageIds={this.completeMessages}/>
       if(this.state.userProfile.fbuid) {
         this.fbId=this.state.userProfile.fbuid;
       }
+      bookmarkHtml = (
+        <span>
+          <div className={classes.subheader}>{constant.bookmarkTitleLabel}</div>
+          <BookmarkList bookmarkList={this.state.bookmarkList} />
+        </span>
+      )
     }
-
-
 
     if(this.state.link){
      facebookhtml =
@@ -176,10 +198,6 @@ class PublicProfile extends React.Component {
     </ListItem>;
     }
 
-
-    const { classes, open, id } = this.props;
-    let dialogOpen = open;
-    let userid = id;
     if(this.props.userid  != null ) {
       dialogOpen = true;
       userid = this.props.userid;
@@ -205,20 +223,16 @@ class PublicProfile extends React.Component {
             </Toolbar>
           </AppBar>
           <div className={classes.container}>
-            <br/>
-            <br/>
-            <List>
-              <ListItem >
-                <ListItemText primary={displayNameLabel}/> <br/> {imageHtml}
-              </ListItem>
-              {desc}
-              {facebookhtml}
-              <Divider/>
-              {publishMessage}
-              {completeMessage}
-            </List>
-            {constant.bookmarkTitleLabel}
-            <BookmarkList bookmarkList={this.state.bookmarkList} />
+            <div className={classes.userInfo}>
+                {imageHtml}
+                {displayNameHtml}
+                {desc}
+                {facebookhtml}
+            </div>
+            <Divider/>
+            {publishMessage}
+            {completeMessage}
+            {bookmarkHtml}
           </div>
         </Dialog>
       </React.Fragment>);
