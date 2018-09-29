@@ -61,7 +61,7 @@ let constant = {
   missionDone: "大成功",
   secretMission: "秘密任務",
   mission: "任務",
-  missionComplete: "完成任務", 
+  missionComplete: "完成任務",
   recentUpdate: "最近更新",
   homeLabel: "主頁",
   userLabel: "我的",
@@ -133,7 +133,14 @@ let constant = {
   updateFocusMessageFailure: "更新焦點社區事件失敗",
   dropFocusMessageSuccess: "刪除焦點社區事件成功",
   dropFocusMessageFailure: "刪除焦點社區事件失敗",
-  FocusViewTitleWarning: ""
+  FocusViewTitleWarning: "",
+  addPollingLabel: "新增投票",
+  addPollingOption: "新增投票選項",
+  pollingOptionLabel: "投票選項",
+  pollingTitleLabel: "投票標題",
+  numOfMaxPollngLabel: "用戶最多可投票次數",
+  excessNumOfPollingIndex: "已超過投票選項上限",
+  pollingRangeLabel: "離住宅可投票範圍"
 }
 
 const happyAndSadEnum = {
@@ -153,7 +160,7 @@ const RoleEnum = {
   betaUser: "測試用戶",
   advancedUser: "進階用戶",
   monitor: "監察員",
-  admin: "我地管理員", 
+  admin: "我地管理員",
 }
 
 

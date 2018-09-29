@@ -85,6 +85,7 @@ class PostMessageView extends Component {
       status: "開放",
       timeExpanded: false,
       descExpanded: false,
+      pollingExpanded: false,
       desc: "",
       isReportedUrgentEvent: false,
       isApprovedUrgentEvent: false,
@@ -97,7 +98,16 @@ class PostMessageView extends Component {
       intervalSelection: this.props.intervalOptions[0],
       durationSelection: this.props.durationOptions[0],
       openningSelection: this.props.openningOptions[0],
-      tags: []};
+      tags: [],
+      pollingOptions: [],
+      pollingOptionValues: [],
+      pollingOptionIndex: 0,
+      maxOfPollingOptionIndex: 6,
+      pollingTitle: "",
+      minPollingOptions: 2,
+      numOfMaxPollng: 1,
+      pollingRange: 1
+    };
     this.handleRequestDelete = this.handleRequestDelete.bind(this);
     this.handleTouchTap = this.handleTouchTap.bind(this);
     this.handleTagChange = this.handleTagChange.bind(this);
@@ -105,7 +115,9 @@ class PostMessageView extends Component {
     this.renderOpenningHtml = this.renderOpenningHtml.bind(this);
     this.renderActivitiesHtml = this.renderActivitiesHtml.bind(this);
     this.setOpenning = this.setOpenning.bind(this);
+    this.addPollingOptions = this.addPollingOptions.bind(this);
     this.summaryTextField = null;
+
   }
 
   static defaultProps = {
@@ -158,7 +170,7 @@ class PostMessageView extends Component {
       start: this.today(),
       startTime: this.startTime(),
       end: this.today(),
-      timeExpanded: false, 
+      timeExpanded: false,
       descExpanded: false,
       rotate: 'rotate(0deg)',
       isReportedUrgentEvent: false,
@@ -276,6 +288,10 @@ class PostMessageView extends Component {
   };
   handleDescExpandClick() {
     this.setState({ descExpanded: !this.state.descExpanded });
+  };
+
+  handlePollingClick() {
+    this.setState({ pollingExpanded: !this.state.pollingExpanded });
   };
 
   handleRequestDelete(evt) {
@@ -526,12 +542,36 @@ class PostMessageView extends Component {
     </React.Fragment>);
   }
 
+  addPollingOptions(evt) {
+    const {classes} = this.props;
+
+    if(evt) evt.preventDefault();
+    var array = this.state.pollingOptions;
+    let pollingOptionIndex = this.state.pollingOptionIndex;
+
+    if(pollingOptionIndex >= this.state.maxOfPollingOptionIndex) {
+      return this.props.openSnackbar(constant.excessNumOfPollingIndex, 'warning');
+    }
+
+    pollingOptionIndex += 1;
+
+     array.push(
+       <TextField key={this.state.pollingOptionIndex} id="link" label={constant.pollingOptionLabel} className={classes.textField} value={this.state.pollingOptionValues[pollingOptionIndex]} onChange={event => {this.state.pollingOptionValues[pollingOptionIndex] = event.target.value; this.forceUpdate()}}/>
+     );
+
+     this.setState({
+         pollingOptions: array,
+         pollingOptionIndex: pollingOptionIndex
+     });
+ }
+
   render() {
     const { user } = this.props;
     let userProfile = user.userProfile;
     let startTime = new Date().toLocaleTimeString();
     let timeHtml = null;
     let urgentHtml = null;
+    let pollingHtml = null;
     if(userProfile  != null  && (userProfile.role === RoleEnum.admin ||  userProfile.role === RoleEnum.betaUser || userProfile.role === RoleEnum.monitor)) {
       urgentHtml = <FormGroup>
                     <FormControlLabel
@@ -548,6 +588,8 @@ class PostMessageView extends Component {
     let postButtonHtml =  <Button size="small" variant="extendedFab" color="primary" onClick={(evt) => this.handleRequestOpen(evt)}>
                             +報料
                           </Button>;
+
+
     const classes = this.props.classes;
     const { tags } = this.state;
     if(this.state.buttonShow) {
@@ -560,6 +602,10 @@ class PostMessageView extends Component {
             timeHtml = this.renderOpenningHtml();
             break;
         }
+      }
+
+      if(this.state.pollingOptions.length < this.state.minPollingOptions) {
+        this.addPollingOptions(null);
       }
       return (
         <React.Fragment>
@@ -627,12 +673,12 @@ class PostMessageView extends Component {
                 </FormGroup>
                 <Collapse in={this.state.descExpanded} transitionDuration="auto" unmountOnExit>
                   <FormGroup>
-                    <TextField autoFocus required id="desc"  fullWidth  multiline rowsMax="20" margin="normal" 
+                    <TextField autoFocus required id="desc"  fullWidth  multiline rowsMax="20" margin="normal"
                                 helperText="事件詳情及期望街坊如何參與 時間等資料請用詳細時間" value={this.state.desc} onChange={event => this.setState({ desc: event.target.value })}/>
 
                   </FormGroup>
                   <br/>
-                </Collapse>                
+                </Collapse>
                 <FormGroup>
                   <FormControlLabel
                   label="詳細時間"
@@ -648,6 +694,32 @@ class PostMessageView extends Component {
                   <FormGroup>
                     <SelectedMenu label="" options={constant.timeOptions} changeSelection={(selectedValue) => this.timeOptionSelection(selectedValue)} ref={(timeSelection) => {this.timeSelection = timeSelection}}/>
                     {timeHtml}
+                  </FormGroup>
+                  <br/>
+                </Collapse>
+                <FormGroup>
+                  <FormControlLabel
+                  label={constant.addPollingLabel}
+                  control={
+                    <Checkbox
+                      checked={this.state.pollingExpanded}
+                      onChange={() => this.handlePollingClick()}
+                      value="checkedA" />
+                    }
+                  />
+                </FormGroup>
+                <Collapse in={this.state.pollingExpanded} transitionDuration="auto" unmountOnExit>
+                  <FormGroup>
+                  <TextField id="pollingTitle" label={constant.pollingTitleLabel} className={classes.textField} value={this.state.pollingTitle} onChange={event => this.setState({pollingTitle: event.target.value})}/>
+                  <br/>
+                  <TextField id="numOfMaxPollng" type="number" InputProps={{ inputProps: { min: 1, max: 5 } }} helperText={constant.numOfMaxPollngLabel} className={classes.textField} value={this.state.numOfMaxPollng} onChange={event => this.setState({numOfMaxPollng: event.target.value})}/>
+                  <br/>
+                  <TextField id="pollingRange" type="number" InputProps={{ inputProps: { min: 1, max: 5 } }} helperText={constant.pollingRangeLabel} className={classes.textField} value={this.state.pollingRange} onChange={event => this.setState({pollingRange: event.target.value})}/>
+                  {
+                    this.state.pollingOptions.map((value) => { return value })
+                  }
+                  <br/>
+                  <Button variant="raised" color="primary" onClick={(evt) => this.addPollingOptions(evt)}>{constant.addPollingOption}</Button>
                   </FormGroup>
                   <br/>
                 </Collapse>
@@ -678,9 +750,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    openSnackbar: 
-      (message, variant) => 
-        dispatch(openSnackbar(message, variant)),    
+    openSnackbar:
+      (message, variant) =>
+        dispatch(openSnackbar(message, variant)),
     updateRecentMessage:
       (recentMessageID, open) =>
         dispatch(updateRecentMessage(recentMessageID, open)),
