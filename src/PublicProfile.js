@@ -15,12 +15,13 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText  from '@material-ui/core/ListItemText';
 import {connect} from "react-redux";
 import { togglePublicProfileDialog } from './actions';
-import {fetchBookmarkList, getUserProfile} from './UserProfile';
+import {fetchBookmarkList, getUserProfile, getAddressBook} from './UserProfile';
 import ShareDrawer from './ShareDrawer';
 import BookmarkList from './bookmark/BookmarkList';
 import {checkImageExists} from './util/http';
 import {constant} from './config/default';
 import {trackEvent} from './track';
+import MissionView from './mission/MissionView';
 
 function Transition(props) {
   return <Slide direction="left" {...props} />;
@@ -110,10 +111,12 @@ class PublicProfile extends React.Component {
     this.completeMessages = null;
     getUserProfile(user).then((userProfile)=>{
       fetchBookmarkList(user).then((bookmarkList)=>{
-      this.completeMessages = userProfile.completeMessages;
-      this.publishMessages = userProfile.publishMessages;
-      trackEvent('PublicProfile', userProfile.displayName);
-      this.setState({user: user, userProfile: userProfile, bookmarkList: bookmarkList});
+        getAddressBook(user).then((addressBook)=>{
+          this.completeMessages = userProfile.completeMessages;
+          this.publishMessages = userProfile.publishMessages;
+          trackEvent('PublicProfile', userProfile.displayName);
+          this.setState({user: user, userProfile: userProfile, bookmarkList: bookmarkList, addressBook: addressBook});
+        });
       //this.fbUserProfile();
       });
     });
@@ -167,6 +170,7 @@ class PublicProfile extends React.Component {
     let completeMessage = null;
     let desc = null;
     let facebookhtml = null;
+    let missionHtml = null;
     if(this.state.userProfile  != null ) {
       var imgURL = '/images/profile_placeholder.png';
       if(checkImageExists(this.state.userProfile.photoURL)) {
@@ -180,6 +184,7 @@ class PublicProfile extends React.Component {
       }
       publishMessage = <EventListDialog title="發表事件: " displayName={displayName} messageIds={this.publishMessages}/>
       completeMessage = <EventListDialog title="完成事件: " displayName={displayName} messageIds={this.completeMessages}/>
+      missionHtml = <MissionView user={this.state.user} userProfile={this.state.userProfile} addressList={this.state.addressBook.addresses} bookmarkList={this.state.bookmarkList} publicProfileView={true}/>
       if(this.state.userProfile.fbuid) {
         this.fbId=this.state.userProfile.fbuid;
       }
@@ -230,6 +235,7 @@ class PublicProfile extends React.Component {
                 {facebookhtml}
             </div>
             <Divider/>
+            {missionHtml}
             {publishMessage}
             {completeMessage}
             {bookmarkHtml}
