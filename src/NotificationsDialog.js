@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import config, {constant, addressEnum, RoleEnum} from './config/default';
-import Button from '@material-ui/core/Button';
+import MessageView from './MessageView';
+import BookmarkView from './bookmark/BookmarkView';
 import Dialog from '@material-ui/core/Dialog';
 import Badge from '@material-ui/core/Badge';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,7 +18,8 @@ import MessageList from './MessageList';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MissionView from './mission/MissionView';
 import FilterBar from './FilterBar';
-import {fetchMessagesBaseOnGeo, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags} from './MessageDB';
+import {fetchMessagesBaseOnGeo, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags, getMessage} from './MessageDB';
+import {getBookmark} from './UserProfile';
 import {
   toggleAddressDialog,
 } from "./actions";
@@ -61,6 +63,7 @@ class NotificationsDialog extends React.Component {
     };
     this.setMessage = this.setMessage.bind(this);
     this.clear = this.clear.bind(this);    
+    this.init =true;
   }    
 
   componentDidMount() {
@@ -69,11 +72,33 @@ class NotificationsDialog extends React.Component {
     }
   }
  
+
+
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.user !== this.props.user &&  this.props.user && this.props.user.lastLogin && this.state.messageIds.length === 0) {
       this.refreshMessageList();
     } 
-  }    
+    if (this.init || this.props.recentMessage !== prevProps.recentMessage) {
+      this.init = false;
+      this.refreshQueryMessage();
+    }    
+  }   
+  
+  refreshQueryMessage() {
+    const {id, bookmark} = this.props.recentMessage;
+    console.log("eventID: " + id + "  bookmark" + bookmark);
+    if(id !== "") {
+      console.log("eventID: " + id);
+      getMessage(id).then((message) => {this.setState({queryMessage: message, bookmark: null})});
+    } else {
+      if(bookmark.bookmark !== "") {
+        console.log("bookmark: " + bookmark.bookmark);
+        let user = {uid: bookmark.uid};
+        getBookmark(user, bookmark.bookmark).then((bookmarkMessage) => {this.setState({queryMessage: null, bookmark: bookmarkMessage})});
+      }
+      this.queryMessage = null;
+    }
+  }  
 
   refreshMessageList() {
     this.fetchMessages(); 
@@ -172,22 +197,44 @@ class NotificationsDialog extends React.Component {
   }
 
   
+  
   render() {
     const { classes, user} = this.props;
+    const {queryMessage, bookmark} = this.state;
     let messageHtml = null;
     let missionHtml = null;
+    let recentMessage = null;
     let userCount = 0;
     if(user.userProfile) {
       userCount = 1;
     }
     let output = null;
     let badgeCount = this.state.messageIds.length + userCount;
+    if(queryMessage || bookmark) {
+      badgeCount++;
+    }
     if(this.state.open)  {
       missionHtml = this.renderMission();
       if(this.state.messageIds.length) {
         messageHtml = this.renderMessages();
       }
-  }
+
+  
+      if (queryMessage) {
+        let message = queryMessage;
+        recentMessage = <React.Fragment>
+                          <p>{constant.recentEventLabel}</p>
+                          <MessageView message={message} key={message.key}  />
+                        </React.Fragment>;
+        badgeCount++;
+      } else if (bookmark) {
+        recentMessage = <React.Fragment>
+                          <p>{constant.recentEventLabel}</p>
+                          <BookmarkView bookmark={bookmark}  />
+                        </React.Fragment>;
+        badgeCount++;
+      }
+    }
     if(badgeCount > 0) {
       output = <span>
             <IconButton className={classes.margin} onClick={(evt) => this.handleRequestOpen(evt)}>
@@ -204,6 +251,7 @@ class NotificationsDialog extends React.Component {
                         <Typography variant="title" color="inherit" className={classes.flex}>{constant.notificationLabel}</Typography> 
                     </Toolbar>
                 </AppBar>
+                {recentMessage}
                 {missionHtml}
                 {messageHtml}
             </Dialog>
@@ -217,6 +265,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     user: state.user,
     addressBook: state.addressBook,
+    recentMessage : state.recentMessage,
   };
 }
 
