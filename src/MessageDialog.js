@@ -88,7 +88,14 @@ class MessageDialog extends React.Component {
         window.onpopstate = this.onBackButtonEvent;
         window.history.pushState("", "", `/detail/${this.props.uuid}`);
       }
-      if(this.props.user  != null  && this.props.user.user) {
+      console.log(this.props.user);
+      // check the message viewed in this session or not.
+      if(this.props.recentMessage.recentids.indexOf(uuid) === -1) {
+        incMessageViewCount(uuid);
+      }
+      console.log(uuid);
+      this.props.updateRecentMessage(uuid, false);    
+      if(this.props.user  && this.props.user.user) {
         // get sad and happy inital value
         return getHappyAndSad(uuid, this.props.user.user).then((data) => {
           if(data  != null ) {
@@ -99,12 +106,6 @@ class MessageDialog extends React.Component {
       } else {
         this.setState({open: true });
       }
-      let incViewCount = false;
-      // check the message viewed in this session or not.
-      if(this.props.recentMessage.recentids.indexOf(uuid) === -1) {
-        incMessageViewCount(uuid.key);
-      }
-      updateRecentMessage(uuid, false);    
     });
   };
 
@@ -191,6 +192,7 @@ const mapStateToProps = (state, ownProps) => {
   return {
     user          :   state.user,
     publicProfileDialogOpen: state.publicProfileDialog.open,
+    recentMessage : state.recentMessage,
   };
 }
 

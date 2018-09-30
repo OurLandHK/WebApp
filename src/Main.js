@@ -99,13 +99,13 @@ class Main extends Component {
     const { classes } = this.props;
     let tagStatHtml = this.renderTagStat();
 
-    if (queryMessage) {
+    if (queryMessage && openRecent) {
       let message = queryMessage;
       recentMessage = <div className="recent-event-wrapper">
                         <h4>{constant.recentEventLabel}</h4>
                         <MessageView message={message} key={message.key} openDialogDefault={openRecent} />
                       </div>;
-    } else if (bookmark  != null ) {
+    } else if (bookmark && openRecent) {
       recentMessage = <div className="recent-event-wrapper">
                         <h4>{constant.recentEventLabel}</h4>
                         <BookmarkView bookmark={bookmark} open={openRecent} />
