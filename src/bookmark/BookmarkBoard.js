@@ -6,6 +6,17 @@ import Tab  from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Slide from '@material-ui/core/Slide';
 import {connect} from "react-redux";
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import CloseIcon from '@material-ui/icons/Close';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import Dialog from '@material-ui/core/Dialog';
+import IconButton from '@material-ui/core/IconButton';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+
 import {constant} from '../config/default';
 import BookmarkList from './BookmarkList';
 import BookmarkView from './BookmarkView';
@@ -40,25 +51,36 @@ const styles = {
     }
   };
 
+function Transition(props) {
+  return <Slide direction="left" {...props} />;
+}
+
 class BookmarkBoard extends React.Component {
   constructor(props) {
 //    console.log("createEventListDialog");
     super(props);
     this.state = {
       tabValue: constant.myBookmarkLabel,
+      open: false,
     };
   }
-
-  componentWillMount() {
-    this.props.checkAuthState();
-  }
-
   handleChange = (event, value) => {
     this.setState({ tabValue: value });
-  };
+  }
+
+  handleRequestOpen = () => {
+    this.setState({open: true});
+  }
+
+  handleRequestClose = () => {
+    this.setState({open: false});
+  }
+
 
   renderMessages() {
     const { classes, user } = this.props;
+    console.log(user)
+
     return (
       <div className={classes.container}>
         <BookmarkList bookmarkList={user.bookmarkList}/>
@@ -66,8 +88,8 @@ class BookmarkBoard extends React.Component {
     );
   }
 
+  renderBookmarkBoard() {
 
-  render() {
     const { classes, user} = this.props;
     const { tabValue } = this.state;
     return (
@@ -84,24 +106,56 @@ class BookmarkBoard extends React.Component {
           </Tabs>
         </div>
         {tabValue === constant.myBookmarkLabel && this.renderMessages()}
-      </div>);
+      </div>
+    );
+  }
+
+
+  render() {
+    const { classes, user} = this.props;
+    console.log("this.state.open=" + this.state.open)
+    return (
+      <React.Fragment>
+        <div onClick={this.handleRequestOpen}>
+          <ListItem button>
+            <ListItemIcon>
+            <FavoriteIcon />
+            </ListItemIcon>
+            <ListItemText primary={constant.myBookmarkLabel} onClick={() => this.handleRequestOpen()}/>
+          </ListItem>
+        </div>
+        <Dialog fullScreen open={this.state.open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
+          <AppBar className={classes.appBar}>
+            <Toolbar>
+              <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
+                  <CloseIcon />
+              </IconButton>
+              <Typography variant="title" color="inherit" className={classes.flex}>{constant.myBookmarkLabel}</Typography>
+            </Toolbar>
+          </AppBar>
+          <div className={classes.container}>
+            {this.renderBookmarkBoard()}
+          </div>
+        </Dialog>
+      </React.Fragment>
+    );
   }
 }
 
 BookmarkBoard.propTypes = {
   classes: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    user          :   state.user,
+    
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    checkAuthState:
-      () => dispatch(checkAuthState()),
+   
   }
 };
 

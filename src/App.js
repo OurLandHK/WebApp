@@ -4,7 +4,6 @@ import PublicProfile from './PublicProfile';
 import Header from './Header';
 import PostMessageView from './PostMessageView';
 import { createStore, applyMiddleware } from 'redux';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from '@material-ui/icons/Person';
 import RateReviewIcon from '@material-ui/icons/RateReview';
@@ -109,9 +108,6 @@ class App extends Component {
     const { tab } = this.state;
     const { user } = this.props;
     switch(tab) {
-      case 'concern':
-        mainScreen = <BookmarkBoard/>
-        break;
       case 'leader':
         mainScreen = <LeaderBoard/>;
         break;
@@ -143,7 +139,6 @@ class App extends Component {
               value={tab}
               onChange={this.handleChange}>
               <BottomNavigationAction value='main' label={constant.homeLabel} icon={<HomeIcon />} />
-              <BottomNavigationAction value='concern' label={constant.concernLabel} icon={<FavoriteIcon />} />
               <PostMessageView />
               <BottomNavigationAction value='leader' label={constant.leaderBoardLabel} icon={<RateReviewIcon />} />
               <BottomNavigationAction value='person' label={constant.userLabel} icon={<PersonIcon />} />
