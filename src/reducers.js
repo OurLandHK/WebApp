@@ -29,7 +29,9 @@ import {
   UPDATE_REGIONEVENT_BUTTONLIST,
   FETCH_GLOBAL_TAG_STAT,
   OPEN_SNACKBAR,
-  CLOSE_SNACKBAR
+  CLOSE_SNACKBAR,
+  UPDATE_SEARCHEVENT_LOCATION,
+  TOGGLE_SEARCHEVENT_DIALOG,
 } from './actions/types';
 
 
@@ -198,6 +200,16 @@ function regionEventDialogReducer(state={open: false, buttons: buttonList}, acti
   }
 }
 
+function searchEventDialogReducer(state={open: false, geolocation: constant.invalidLocation, eventNumber: constant.defaultEventNumber, distance: 1}, action) {
+  switch (action.type) {
+    case TOGGLE_SEARCHEVENT_DIALOG:
+      return {...state, open: action.open};
+    case UPDATE_SEARCHEVENT_LOCATION:
+      return {...state, geolocation: action.geolocation};      
+    default:
+      return state;
+  }
+}
 
 function leaderBoardReducer(state={open: false, topTwenty:[]}, action) {
   //console.log(action);
@@ -322,6 +334,7 @@ const rootReducer = combineReducers({
   addressDialog: addressDialogReducer,
   nearbyEventDialog: nearbyEventDialogReducer,
   regionEventDialog: regionEventDialogReducer,
+  searchEventDialog: searchEventDialogReducer,
   eventListDialog: eventListDialogReducer,
   leaderBoard: leaderBoardReducer,
   recentMessage: recentMessageReducer,

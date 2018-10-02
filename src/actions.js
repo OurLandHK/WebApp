@@ -27,7 +27,9 @@ import {
   FETCH_GLOBAL_TAG_STAT,
   UPDATE_FILTER_SORTING,
   OPEN_SNACKBAR,
-  CLOSE_SNACKBAR
+  CLOSE_SNACKBAR,
+  UPDATE_SEARCHEVENT_LOCATION,
+  TOGGLE_SEARCHEVENT_DIALOG,
 } from './actions/types';
 import * as firebase from 'firebase';
 import config, {constant} from './config/default';
@@ -42,6 +44,14 @@ function dispatchToggleNearbyEventDialog(flag) {
 
 function dispatchToggleRegionEventDialog(flag) {
   return {type: TOGGLE_REGIONEVENT_DIALOG, open: flag};
+}
+
+function dispatchToggleSearchEventDialog(flag) {
+  return {type: TOGGLE_SEARCHEVENT_DIALOG, open: flag};
+}
+
+function dispatchSearchEventLocation(geolocation) {
+  return {type: UPDATE_SEARCHEVENT_LOCATION, geolocation: geolocation};
 }
 
 function dispatchToggleEventListDialog(flag) {
@@ -504,3 +514,15 @@ export function closeSnackbar() {
   }
 }
 
+export function toggleSearchEventDialog(flag) {
+  console.log(flag);
+  return dispatch => {
+    dispatch(dispatchToggleSearchEventDialog(flag));
+  };
+}
+
+export function updateSearchEventLocation(geolocation) {
+  return dispatch => {
+    dispatch(dispatchSearchEventLocation(geolocation));
+  };
+}

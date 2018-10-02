@@ -15,6 +15,7 @@ import {connect} from "react-redux";
 import rootReducer from './reducers';
 import Person from './Person';
 import LeaderBoard from './LeaderBoard';
+import SearchEventDialog from './SearchEventDialog';
 import CustomizedSnackbars from './CustomizedSnackbars';
 
 import {
@@ -143,6 +144,7 @@ class App extends Component {
               <BottomNavigationAction value='person' label={constant.userLabel} icon={<PersonIcon />} />
             </BottomNavigation>
           </div>
+          <SearchEventDialog/>
           <CustomizedSnackbars />
         </div>
     );

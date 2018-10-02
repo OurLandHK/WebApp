@@ -169,27 +169,23 @@ class LocationDrawer extends React.Component {
 
   renderAddressBook() {
     const { addressBook, user } = this.props;
-    let addressList=addressBook.addresses;
+    let addressList=[];
     if(this.isUsePublicAddressBook) {
-      if(user.userProfile === null) {
-        addressList=addressBook.publicAddresses;
-      } else {
-        //merge 2 addressLists
-        addressList = [];
-        let address;
+      let address = null;
+      if(user.userProfile) {
         for(address of addressBook.addresses) {
           addressList.push(address);
         };
-        for(address of addressBook.publicAddresses) {
-          if(address.type !== addressEnum.home && address.type !== addressEnum.office) {
-              let newAddress = Object.create(address);
-              newAddress.text = `${constant.regionEventLabel}/${address.text}`;
-              newAddress.geolocation = address.geolocation;
-              //console.log(newAddress.text);
-              addressList.push(newAddress)
-          }
-        };
       }
+      for(address of addressBook.publicAddresses) {
+        if(address.type !== addressEnum.home && address.type !== addressEnum.office) {
+            let newAddress = Object.create(address);
+            newAddress.text = `${constant.regionEventLabel}/${address.text}`;
+            newAddress.geolocation = address.geolocation;
+            //console.log(newAddress.text);
+            addressList.push(newAddress)
+        }
+      };
     }
     //console.log(this.state.locationPrefix);
     addressList = this.buildGrouppedAddressList(addressList || [], this.state.locationPrefix);

@@ -156,9 +156,8 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
 
     let collectionRef = db.collection(config.messageDB);
     collectionRef.onSnapshot(function() {})
-    console.log(geocode);
     if(geocode  !== null  && geocode !== undefined && geocode.latitude !== undefined && !isNaN(geocode.latitude)) {
-//        console.log("Get message base on Location: (" + geocode.latitude + " ," + geocode.longitude + ") with Radius: " + radius);
+            console.log("Get message base on Location: (" + geocode.latitude + " ," + geocode.longitude + ") with Radius: " + radius);
 //        boundingBoxCoordinates(center, radius) {
             const KM_PER_DEGREE_LATITUDE = 110.574;
             const latDegrees = radius / KM_PER_DEGREE_LATITUDE;
@@ -199,7 +198,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
                         var dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
                         if(dis < radius && val.hide === false) {
                             let tags = tagfilterToTags(val.tagfilter);
- //                           console.log(`${val.text} ${dis} ${tags} ${val.tagfilter}`)
+//                            console.log(`${val.text} ${dis} ${tags} ${val.tagfilter}`)
                             val.tag = tags;
                             val.tagfilter = null;
                             //console.log('message key: ' + val.key );
