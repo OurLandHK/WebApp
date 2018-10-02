@@ -14,6 +14,7 @@ import FocusDialog from './admin/FocusDialog';
 import {connect} from "react-redux";
 import {checkImageExists} from './util/http';
 import MissionView from './mission/MissionView';
+import BookmarkBoard from './bookmark/BookmarkBoard';
 import Divider from '@material-ui/core/Divider';
 import {
   toggleAddressDialog,
@@ -66,6 +67,7 @@ class Person extends Component {
     let publishMessage = null;
     let completeMessage = null;
     let missionHtml = null;
+    let bookmarkHtml = null;
     let focusButton = null;
     let userProfileView = <UserProfileView ref={(userProfileView) => {this.userProfileView = userProfileView;}} openDialog={openDialog => this.openUserProfileDialog = openDialog}/>;
     const { user, addressBook } = this.props;
@@ -92,6 +94,7 @@ class Person extends Component {
                             </ListItem></span>);
         publishMessage = <EventListDialog title="發表事件: " messageIds={user.userProfile.publishMessages}/>
         completeMessage = <EventListDialog title="完成事件: " messageIds={user.userProfile.completeMessages}/>
+        bookmarkHtml = <BookmarkBoard user={user}/>
         missionHtml = <MissionView user={user.user} userProfile={user.userProfile} addressList={addressBook.addresses} bookmarkList={user.bookmarkList} publicProfileView={true}/>
         if (user.userProfile  != null  & (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor)) {
           focusButton = <FocusDialog/>;
@@ -121,6 +124,7 @@ class Person extends Component {
         <Divider/>
         <List disablePadding>
             {userLoginDisplay}
+            {bookmarkHtml}
             {missionHtml}
             {publishMessage}
             {completeMessage}
