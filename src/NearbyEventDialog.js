@@ -126,6 +126,7 @@ class NearbyEventDialog extends React.Component {
           distance={distance}
           geolocation={geolocation}
           tagFilter={this.state.filter}
+          id={constant.nearbyEventLabel}
         />
       </div>
     );

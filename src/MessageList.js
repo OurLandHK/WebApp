@@ -23,13 +23,13 @@ const styles = theme => ({
 class MessageList extends Component {
   constructor(props) {
     super(props);
-    let geolocation = this.props.geolocation;
-    if (geolocation === null) {
-      geolocation = constant.invalidLocation;
+    let geolocation = constant.invalidLocation;
+    if (this.props.longitude && this.props.latitude) {
+      geolocation = {longitude: this.props.longitude, latitude: this.props.latitude};
     }
     let messageIds = [];
     let statusMessage = constant.messageListReadingLocation;
-    //console.log("geolocation" + geolocation);
+//    console.log("geolocation" + this.props.id + " " + geolocation.longitude);
     if(this.props.messageIds  != null ) {
       messageIds = this.props.messageIds;
       statusMessage = constant.messageListLoadingStatus;
@@ -51,11 +51,12 @@ class MessageList extends Component {
   }
 
   componentDidMount() {
-    //console.log('componentDidMount');
+    console.log(`componentDidMount ${this.props.id} ${this.state.geolocation.longitude}`);
     if(this.state.messageIds.length !== 0) {
-       this.updateGlobalFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
        this.refreshMessageList();
-    }
+    } else  if(this.state.geolocation && this.state.geolocation != constant.invalidLocation) {
+      this.updateGlobalFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
+   }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -65,11 +66,10 @@ class MessageList extends Component {
       this.props.tagFilter !== prevProps.tagFilter)) {
       this.refreshMessageList();
     } else {
-      if(this.props.filter.selectedTag !== undefined &&
-            this.props.filter.selectedTag !== prevProps.filter.selectedTag) {
+      if(this.props.filter.selectedTag !== prevProps.filter.selectedTag) {
         this.setState({selectedTag: this.props.filter.selectedTag});
       }
-      if(this.props.filter.sorting !== undefined &&  this.props.filter.sorting !== prevProps.filter.sorting){
+      if(this.props.filter.sorting &&  this.props.filter.sorting !== prevProps.filter.sorting){
         this.setState({selectedSorting: this.props.filter.selectedSorting});
       }
     }
@@ -82,7 +82,7 @@ class MessageList extends Component {
   }
 
   refreshMessageList() {
-    //console.log("refreshMessageList");
+    console.log("refreshMessageList");
     this.setState({
       selectedTag: null,
       selectedSorting: null});
@@ -102,7 +102,7 @@ class MessageList extends Component {
   };
 
   clear() {
-    //console.log("clear  message list")
+    console.log("clear  message list")
     this.setState({data: []});
   }
 
@@ -111,10 +111,11 @@ class MessageList extends Component {
     const {
      eventNumber: numberOfMessage,
      distance,
-     geolocation
     } = filter;
+    let geolocation = filter.geolocation;
     this.setState({geolocation: geolocation, statusMessage: constant.messageListLoadingStatus});
     //console.log("Fetch MessageIDs: " + this.state.messageIds);
+    console.log("List" +geolocation);
     this.clear();
     if(this.state.messageIds.length !== 0) {
       //console.log("List" + this.state.messageIds);
@@ -133,7 +134,7 @@ class MessageList extends Component {
           this.setState({statusMessage: constant.messageListTimeOut});
           break;
         default:
-          //console.log("fetchMessagesBaseOnGeo");
+          console.log(`fetchMessagesBaseOnGeo ${this.props.id} ${geolocation}, ${distance}, ${numberOfMessage}`);
           fetchMessagesBaseOnGeo(geolocation, distance, numberOfMessage, null, this.props.tagFilter, this.setMessage);
           break;
       }
@@ -142,12 +143,10 @@ class MessageList extends Component {
 
   render() {
     const classes = this.props.classes;
-//    let queryMessage = null;
-//    let linebreak = <div><br/><br/><br/><br/></div>;
     let lon = 0;
     let lat = 0;
 
-    if(this.state.geolocation !== undefined && this.state.geolocation !== null && this.state.geolocation !== constant.invalidLocation) {
+    if(this.state.geolocation && this.state.geolocation !== constant.invalidLocation) {
       lon = this.state.geolocation.longitude;
       lat = this.state.geolocation.latitude;
     }
@@ -160,6 +159,7 @@ class MessageList extends Component {
         - (distance(j.geolocation.longitude,j.geolocation.latitude,lon,lat)));
     }
 
+//    console.log(this.state.data.length + " " + this.props.id);
 
     if(this.state.data.length === 0) {
       let statusMessage = this.state.statusMessage;
