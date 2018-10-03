@@ -41,9 +41,10 @@ class Header extends Component {
 
   render() {
     const { classes } = this.props;
+    let homeUrl = window.location.protocol + "//" + window.location.hostname;
     return (<AppBar className="header">
               <Toolbar>
-                <div className="header-title">
+                <div className="header-title" onClick={() => {window.location.href = homeUrl}}>
                   我地.市正
                 </div>
                 <SignInButton/>
