@@ -9,17 +9,21 @@ import {connect} from "react-redux";
 class BookmarkList extends Component {
   constructor(props) {
     super(props);
-    if(this.props.bookmarkList==undefined || this.props.bookmarkList==null) {
-        this.props.bookmarkList=[];
+    this.state = {
+      bookmarkList: []
     }
-  }    
-  componentWillMount() {
-    this.props.checkAuthState();
+  }  
+
+  componentDidMount() {
+    if(this.props.bookmarkList != undefined && this.props.bookmarkList != null) {
+      let bookmarkList = this.props.bookmarkList;
+      this.setState({ bookmarkList });
+    }
   }
   
   render() {
     let elements = null;
-    const { bookmarkList } = this.props;
+    const { bookmarkList } = this.state;
     if(bookmarkList !== undefined) {
         elements = bookmarkList.map((bookmark) => {
             return (<BookmarkView bookmark={bookmark} OnChange={() => {this.componentWillMount()}}/>);
@@ -32,14 +36,13 @@ class BookmarkList extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    user: state.user,
+
   };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    checkAuthState:
-      () => dispatch(checkAuthState()),    
+    
   }
 };
 

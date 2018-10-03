@@ -99,40 +99,28 @@ class Main extends Component {
     const { classes } = this.props;
     let tagStatHtml = this.renderTagStat();
 
-    if (queryMessage) {
+    if (queryMessage && openRecent) {
       let message = queryMessage;
       recentMessage = <div className="recent-event-wrapper">
                         <h4>{constant.recentEventLabel}</h4>
                         <MessageView message={message} key={message.key} openDialogDefault={openRecent} />
                       </div>;
-    } else if (bookmark  != null ) {
+    } else if (bookmark && openRecent) {
       recentMessage = <div className="recent-event-wrapper">
                         <h4>{constant.recentEventLabel}</h4>
                         <BookmarkView bookmark={bookmark} open={openRecent} />
                       </div>;
     }
-    let messageList = null;
-    let messageList1 = null;
-    if(true) {
-      messageList = <NearbyEventDialog
+    let messageList = <NearbyEventDialog
             eventNumber={eventNumber}
             distance={distance}
             geolocation={geolocation}
           />
-    } else {
-      messageList = <RegionEventDialog
-            eventNumber={eventNumber}
-            distance={distance}
-            geolocation={geolocation}
-          />
-    }
-
     return (
       <div className={classes.container}>
         {tagStatHtml}
         {recentMessage}
         <FocusMessage/>
-        {messageList1}
         {messageList}
       </div>
     );

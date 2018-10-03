@@ -235,7 +235,7 @@ class MissionView extends React.Component {
 
   renderTaskCard(task) {
     const classes = this.props.classes;
-    console.log(task);
+//    console.log(task);
     let summary = <Grid className={classes.summaryGrid} item xs>
                       <Typography noWrap='true' className={classes.title} variant="title"> {task.taskname}: {task.status}</Typography>
                       <Typography className={classes.auther}>{task.desc}</Typography>
@@ -310,7 +310,7 @@ class MissionView extends React.Component {
             return task;
       });
       rv = rv.concat(userProfileTasks);
-      console.log(rv);
+//      console.log(rv);
       return rv;
   }
 
