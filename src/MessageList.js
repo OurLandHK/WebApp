@@ -18,6 +18,10 @@ const styles = theme => ({
   scrollingItem: {
       display: 'inline-block',
   },
+
+  messageListWrapper: {
+    height: '300px'
+  }
 });
 
 class MessageList extends Component {
@@ -175,7 +179,7 @@ class MessageList extends Component {
         }
       });
       messageList = elements;
-      return (<div className="message-list-wrapper">{messageList}</div>);
+      return (<div className={classes.messageListWrapper}>{messageList}</div>);
     }
   }
 };
