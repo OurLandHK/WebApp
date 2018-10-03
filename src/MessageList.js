@@ -179,7 +179,11 @@ class MessageList extends Component {
         }
       });
       messageList = elements;
-      return (<div className={classes.messageListWrapper}>{messageList}</div>);
+      if(this.props.short) {
+        return (<div className={classes.messageListWrapper}>{messageList}</div>);
+      } else {
+        return (<div className="message-list-wrapper">{messageList}</div>);
+      }
     }
   }
 };
