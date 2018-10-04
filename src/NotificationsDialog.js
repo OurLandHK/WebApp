@@ -62,28 +62,28 @@ class NotificationsDialog extends React.Component {
       open: false,
     };
     this.setMessage = this.setMessage.bind(this);
-    this.clear = this.clear.bind(this);    
+    this.clear = this.clear.bind(this);
     this.init =true;
-  }    
+  }
 
   componentDidMount() {
     if(this.props.user && this.props.user.lastLogin) {
       this.refreshMessageList();
     }
   }
- 
+
 
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.user !== this.props.user &&  this.props.user && this.props.user.lastLogin && this.state.messageIds.length === 0) {
       this.refreshMessageList();
-    } 
+    }
     if (this.init || this.props.recentMessage !== prevProps.recentMessage) {
       this.init = false;
       this.refreshQueryMessage();
-    }    
-  }   
-  
+    }
+  }
+
   refreshQueryMessage() {
     const {id, bookmark} = this.props.recentMessage;
     console.log("eventID: " + id + "  bookmark" + bookmark);
@@ -98,10 +98,10 @@ class NotificationsDialog extends React.Component {
       }
       this.queryMessage = null;
     }
-  }  
+  }
 
   refreshMessageList() {
-    this.fetchMessages(); 
+    this.fetchMessages();
   }
 
   setMessage(val) {
@@ -121,7 +121,7 @@ class NotificationsDialog extends React.Component {
   clear() {
     //console.log("clear  message list")geocode.longitude
     this.setState({messageIds: []});
-  }  
+  }
 
 
   fetchMessages() {
@@ -147,9 +147,9 @@ class NotificationsDialog extends React.Component {
           fetchMessagesBaseOnGeo(address.geolocation, distance, constant.defaultEventNumber, lastLoginTime, null, this.setMessage);
         }
       }
-    });      
+    });
 
-   
+
   }
 
   handleRequestOpen(evt) {
@@ -165,12 +165,12 @@ class NotificationsDialog extends React.Component {
   };
 
   renderMessages() {
-    const { classes } = this.props; 
+    const { classes } = this.props;
     return (
       <React.Fragment>
       <p>{constant.recentUpdate}</p>
       <div className={classes.container}>
-        <FilterBar disableLocationDrawer={true}/>    
+        <FilterBar disableLocationDrawer={true}/>
         <MessageList
           ref={(messageList) => {this.state.messageList = messageList;}}
           eventNumber={100}
@@ -183,21 +183,21 @@ class NotificationsDialog extends React.Component {
   }
 
   renderMission() {
-    const { classes, user, addressBook } = this.props; 
+    const { classes, user, addressBook } = this.props;
     if(user.userProfile) {
       return (
         <React.Fragment>
           <p>{constant.recentMission}</p>
           <MissionView user={user.user} userProfile={user.userProfile} addressList={addressBook.addresses} bookmarkList={user.bookmarkList}/>
         </React.Fragment>
-      ); 
+      );
     } else {
       return null;
     }
   }
 
-  
-  
+
+
   render() {
     const { classes, user} = this.props;
     const {queryMessage, bookmark} = this.state;
@@ -213,49 +213,34 @@ class NotificationsDialog extends React.Component {
     if(queryMessage || bookmark) {
       badgeCount++;
     }
-    if(this.state.open)  {
-      missionHtml = this.renderMission();
-      if(this.state.messageIds.length) {
-        messageHtml = this.renderMessages();
-      }
 
-  
-      if (queryMessage) {
-        let message = queryMessage;
-        recentMessage = <React.Fragment>
-                          <p>{constant.recentEventLabel}</p>
-                          <MessageView message={message} key={message.key}  />
-                        </React.Fragment>;
-        badgeCount++;
-      } else if (bookmark) {
-        recentMessage = <React.Fragment>
-                          <p>{constant.recentEventLabel}</p>
-                          <BookmarkView bookmark={bookmark}  />
-                        </React.Fragment>;
-        badgeCount++;
-      }
+    missionHtml = this.renderMission();
+    if(this.state.messageIds.length) {
+      messageHtml = this.renderMessages();
     }
+
+
+    if (queryMessage) {
+      let message = queryMessage;
+      recentMessage = <React.Fragment>
+                        <p>{constant.recentEventLabel}</p>
+                        <MessageView message={message} key={message.key}  />
+                      </React.Fragment>;
+      badgeCount++;
+    } else if (bookmark) {
+      recentMessage = <React.Fragment>
+                        <p>{constant.recentEventLabel}</p>
+                        <BookmarkView bookmark={bookmark}  />
+                      </React.Fragment>;
+      badgeCount++;
+    }
+
     if(badgeCount > 0) {
-      output = <span>
-            <IconButton className={classes.margin} onClick={(evt) => this.handleRequestOpen(evt)}>
-              <Badge badgeContent={badgeCount} color="primary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <Dialog fullScreen  open={this.state.open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
-                <AppBar className={classes.appBar} >
-                    <Toolbar>
-                        <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
-                            <CloseIcon />
-                        </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>{constant.notificationLabel}</Typography> 
-                    </Toolbar>
-                </AppBar>
-                {recentMessage}
-                {missionHtml}
-                {messageHtml}
-            </Dialog>
-        </span>;
+      output = <React.Fragment>
+            {recentMessage}
+            {missionHtml}
+            {messageHtml}
+        </React.Fragment>;
     }
     return(output);
   }
