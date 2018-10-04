@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import CardMedia from '@material-ui/core/CardMedia';
+import SearchIcon from '@material-ui/icons/Search';
 import MessageList from './MessageList';
 import {connect} from "react-redux";
 import { toggleSearchEventDialog, updateSearchEventLocation, updateFilterLocation } from './actions';
@@ -79,7 +80,7 @@ const styles = theme =>  ({
       borderRadius: 4,
       backgroundColor: theme.palette.common.white,
       border: '1px solid #ced4da',
-    },    
+    }, 
   });
 
 class SearchEventDialog extends React.Component {
@@ -174,25 +175,25 @@ class SearchEventDialog extends React.Component {
    const classes = this.props.classes;
 
    if( (this.state.geoLocationSearch.latitude === "" && this.state.geoLocationSearch.longitude === "") ){
-    let streetAddressSearchClass = (this.state.streetAddress === null || this.state.streetAddress === "" ? "hide" : "");
+    //let streetAddressSearchClass = (this.state.streetAddress === null || this.state.streetAddress === "" ? "hide" : "");
+    let disableSearch = (this.state.streetAddress === null || this.state.streetAddress === "" ? true : false);
 
     return (
       <div className={this.state.geolocation  != null  && classes.dialogContentWrapper}>
-              <DialogContent className="address-row">
-                <MyLocationIcon className={classes.searchInput} onClick={() => this.handleGetLocation()} />
+        <DialogContent className="address-row">
+          <MyLocationIcon className={classes.searchInput} onClick={() => this.handleGetLocation()} />
                 <TextField
                   autoFocus
                   fullWidth
                   className={classes.searchInput} 
                   id="stressAddress"
-                  placeholder="街道地址"
-                  helperText="中/英文均可"
+                  placeholder="街道地址(中/英文均可)"
                   type="text"
                   value={this.state.streetAddress} onChange={event => this.setState({ streetAddress: event.target.value, disableSumbit: true,  geolocation: null})}
                 />
-              </DialogContent>
-              <Button className={ streetAddressSearchClass + " " +  classes.showMapBtn} variant="outlined" color="primary" onClick={() => this.handleGetLocationFromStreetAddress()}>查看地圖</Button>
-        </div>
+          <SearchIcon disabled={disableSearch}className={classes.searchInput} onClick={() => this.handleGetLocationFromStreetAddress()} />
+        </DialogContent>
+      </div>
     );
    } else {
     return (
@@ -207,8 +208,7 @@ class SearchEventDialog extends React.Component {
     window.onpopstate = this.onBackButtonEvent;
     console.log(filter, titleLabel);
     trackEvent('Event', titleLabel);
-    this.setState({filter: filter, titleLabel: titleLabel});
-    this.props.toggleSearchEventDialog(true);
+    this.setState({filter: filter, titleLabel: titleLabel, searchByTag: true, open: true});
   }
 
   handleClose = () => { // this function is not called
@@ -218,7 +218,7 @@ class SearchEventDialog extends React.Component {
 
   handleRequestClose = () => { // this function is not called
     window.onpopstate = this.lastOnPopState;
-    this.setState({open: false});
+    this.setState({filter: null, open: false, searchByTag: false});
   };
 
   onBackButtonEvent(e) {
@@ -227,44 +227,105 @@ class SearchEventDialog extends React.Component {
     this.handleRequestClose();
   }
 
+
+
   renderMessages() {
     const { classes, distance, eventNumber } = this.props;
-    let geo = {longitude: this.state.geolocation.longitude, latitude: this.state.geolocation.latitude};
-    console.log(`${this.state.geolocation.longitude} ${this.state.geolocation.latitude}`)
-    return (
-      <div className={classes.container}>
-        <MessageList
-          isUsePublicAddressBook={true}
-          ref={(messageList) => {this.messageList = messageList;}}
-          eventNumber={eventNumber}
-          distance={distance}
-          longitude={geo.longitude}
-          latitude={geo.latitude}
-          tagFilter={this.state.filter}
-          id={constant.searchEventLabel}
-        />
-      </div>
-    );
+    if(this.state.searchByTag) {
+      return (<div className={classes.container}>
+          <FilterBar isUsePublicAddressBook={true}/>
+          <MessageList
+            isUsePublicAddressBook={true}
+            ref={(messageList) => {this.messageList = messageList;}}
+            eventNumber={eventNumber}
+            distance={distance}
+            tagFilter={this.state.filter}
+            id={constant.searchEventLabel}
+          />
+        </div>);
+    } else {
+      let geo = {longitude: this.state.geolocation.longitude, latitude: this.state.geolocation.latitude};
+      console.log(`${this.state.geolocation.longitude} ${this.state.geolocation.latitude}`)
+      return (
+        <div className={classes.container}>
+          <FilterBar disableLocationDrawer={true}/>
+          <MessageList
+            isUsePublicAddressBook={true}
+            ref={(messageList) => {this.messageList = messageList;}}
+            eventNumber={eventNumber}
+            distance={distance}
+            longitude={geo.longitude}
+            latitude={geo.latitude}
+            tagFilter={this.state.filter}
+            id={constant.searchEventLabel}
+          />
+        </div>
+      );
+    }
   }
 
+  renderHotItem() {
+    const { classes, buttons } = this.props;
+    const TotalButton = buttons.length;
+    let buttonList1 = [];
+    let buttonList2 = [];
+    let firstLine = TotalButton/2 + TotalButton%2;
+    for(let i = 0; i < TotalButton; i++) {
+      let buttonHtml = <Button className={classes.button} variant="contained" size="small" aria-label={buttons[i].label}
+          onClick={(evt) => this.handleRequestOpen(evt, buttons[i].label, buttons[i].value)}>
+          {buttons[i].label}
+          </Button>
+      if(i<firstLine) {
+        buttonList1.push(buttonHtml);
+      } else {
+        buttonList2.push(buttonHtml);
+      }
+    }
+    const cardImage = (
+      <CardMedia
+        className={classes.media}
+        image="/images/fromPeak.jpg"
+        title={constant.regionEventLabel}
+      >
+        <Grid container >
+          <Grid container className={classes.buttonGird}>
+            {buttonList1}
+          </Grid>
+          <Grid container className={classes.buttonGird}>
+            {buttonList2}
+          </Grid>
+        </Grid>
+        <div
+          className={classes.mediaCredit}
+        >
+        </div>
+      </CardMedia>
+    );
+    return cardImage;
+  }
 
   render() {
     const { classes, open} = this.props;
     let messageHtml = null;
+    let hotItemHtml = this.renderHotItem();
 
     if(this.state.open)  {
         messageHtml = this.renderMessages();
     }
+    let titleLabel = `${constant.searchEventLabel} - ${this.state.streetAddress}`;
+    if(this.state.searchByTag) {
+      titleLabel = `${constant.searchEventLabel} - ${this.state.titleLabel}`;
+    }
     return (
         <div>
             <Dialog fullScreen open={open} onClose={this.handleClose} transition={Transition}  aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title" className="dialog-title">使用所在位置 / 輸入地址</DialogTitle>
                 <Toolbar>
                 <IconButton color="contrast" onClick={this.handleClose} aria-label="Close">
                     <CloseIcon />
                 </IconButton>
                     {this.renderStreetAddressSearch()}
                 </Toolbar>
+                {hotItemHtml}
             </Dialog>
             <Dialog fullScreen onClose={this.handleRequestClose} open={this.state.open} >
                 <AppBar className={classes.appBar} >
@@ -272,10 +333,9 @@ class SearchEventDialog extends React.Component {
                         <IconButton onClick={this.handleRequestClose} aria-label="Close">
                             <CloseIcon />
                         </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>{constant.searchEventLabel} - {this.state.streetAddress}</Typography>
+                        <Typography variant="title" color="inherit" className={classes.flex}>{titleLabel}</Typography>
                     </Toolbar>
                 </AppBar>
-                <FilterBar disableLocationDrawer={true}/>
                 {messageHtml}
             </Dialog>
         </div>);
@@ -292,6 +352,7 @@ const mapStateToProps = (state, ownProps) => {
     geolocation: state.searchEventDialog.geolocation,
     eventNumber: state.searchEventDialog.eventNumber,
     distance: state.searchEventDialog.distance,
+    buttons: state.regionEventDialog.buttons,
   };
 }
 

@@ -120,6 +120,7 @@ class NearbyEventDialog extends React.Component {
     return (
       <div className={classes.container}>
         <MessageList
+          short={true}
           isUsePublicAddressBook={true}
           ref={(messageList) => {this.messageList = messageList;}}
           eventNumber={eventNumber}
@@ -153,27 +154,6 @@ class NearbyEventDialog extends React.Component {
         buttonList2.push(buttonHtml);
       }
     }
-      //      return <Button  variant="outlined" color="primary" onClick={(evt) => this.handleRequestOpen(evt, buttonDetail.value)}>{buttonDetail.label}</Button>;
-    const cardImage = (
-      <CardMedia
-        className={classes.media}
-        image="/images/fromPeak.jpg"
-        title={constant.regionEventLabel}
-      >
-        <Grid container >
-          <Grid container className={classes.buttonGird}>
-            {buttonList1}
-          </Grid>
-          <Grid container className={classes.buttonGird}>
-            {buttonList2}
-          </Grid>
-        </Grid>
-        <div
-          className={classes.mediaCredit}
-        >
-        </div>
-      </CardMedia>
-    );
 
     if(this.state.showList)  {
       messageHtml = this.renderMessages();
@@ -186,7 +166,6 @@ class NearbyEventDialog extends React.Component {
         <span>
             <Card className={classes.card}>
                 {constant.nearbyEventLabel}:查詢自己社區附近及全港社區的人和事
-                {cardImage}
             </Card>
             {filterBar}
             {messageHtml}
