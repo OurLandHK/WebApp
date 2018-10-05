@@ -8,7 +8,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import {connect} from "react-redux";
 import {constant} from "./config/default";
 import {fetchLocation, toggleSearchEventDialog} from "./actions";
-import NotificationsDialog from "./NotificationsDialog";
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
@@ -49,7 +48,6 @@ class Header extends Component {
                 </div>
                 <SignInButton/>
                 <TextField id={constant.searchLabel} className={classes.searchInput} variant="outlined"  fullWidth margin="normal" value={constant.searchLabel} endAdornment={<InputAdornment position="end"><SearchIcon/></InputAdornment>} onClick={() => this.props.toggleSearchEventDialog(true)}/>
-                <NotificationsDialog/>
               </Toolbar>
             </AppBar>);
   }
@@ -64,7 +62,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     toggleSearchEventDialog: flag =>
-      dispatch(toggleSearchEventDialog(flag)),    
+      dispatch(toggleSearchEventDialog(flag)),
     fetchLocation: () => dispatch(fetchLocation())
   }
 };

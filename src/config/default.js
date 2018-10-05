@@ -49,6 +49,7 @@ let constant = {
   regionEventLabel: "我地正區",
   recentEventLabel: "最近查看",
   leaderBoardLabel: "排名榜",
+  notificationLabel: "通知",
   noTagLabel: "所有事件",
   viewCountLabel: '觀看次數：',
   publicProfileLabel: "簡介",
@@ -62,7 +63,7 @@ let constant = {
   missionDone: "大成功",
   secretMission: "秘密任務",
   mission: "任務",
-  missionComplete: "完成任務", 
+  missionComplete: "完成任務",
   recentUpdate: "最近更新",
   homeLabel: "主頁",
   userLabel: "我的",
@@ -155,7 +156,7 @@ const RoleEnum = {
   betaUser: "測試用戶",
   advancedUser: "進階用戶",
   monitor: "監察員",
-  admin: "我地管理員", 
+  admin: "我地管理員",
 }
 
 
