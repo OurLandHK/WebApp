@@ -137,13 +137,15 @@ let constant = {
   dropFocusMessageSuccess: "刪除焦點社區事件成功",
   dropFocusMessageFailure: "刪除焦點社區事件失敗",
   FocusViewTitleWarning: "",
+  polling: "投票",
   addPollingLabel: "新增投票",
   addPollingOption: "新增投票選項",
   pollingOptionLabel: "投票選項",
   pollingTitleLabel: "投票標題",
   numOfMaxPollngLabel: "用戶最多可投票次數",
   excessNumOfPollingIndex: "已超過投票選項上限",
-  pollingRangeLabel: "離住宅可投票範圍"
+  pollingRangeLabel: "離住宅可投票範圍",
+  pollingLabel: "參與投票",
 }
 
 const happyAndSadEnum = {

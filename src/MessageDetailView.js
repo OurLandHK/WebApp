@@ -30,6 +30,7 @@ import {
 import {connect} from 'react-redux';
 import {constant, RoleEnum} from './config/default';
 import {trackEvent} from './track';
+import PollingDialog from './polling/PollingDialog';
 
 const styles = theme => ({
   button: {
@@ -170,8 +171,8 @@ class MessageDetailView extends Component {
     }
     let geolink =`geo:${message.geolocation.latitude},${message.geolocation.longitude}`;
     if /* if we're on iOS, open in Apple Maps */
-    ((navigator.platform.indexOf("iPhone") !== -1) || 
-     (navigator.platform.indexOf("iPad") !== -1) || 
+    ((navigator.platform.indexOf("iPhone") !== -1) ||
+     (navigator.platform.indexOf("iPad") !== -1) ||
      (navigator.platform.indexOf("iPod") !== -1)) {
       geolink = `maps://maps.google.com/maps?daddr=${message.geolocation.latitude},${message.geolocation.longitude}&amp;ll=`;
     } else {/* else use Google */
@@ -242,7 +243,7 @@ class MessageDetailView extends Component {
       } else {
         endDate = null;
       }
-    }    
+    }
 
     let everydayOpenning = m.everydayOpenning;
     let weekdaysOpennings = m.weekdaysOpennings;
@@ -255,7 +256,7 @@ class MessageDetailView extends Component {
       let openningHtml = null;
       let endDateHtml = null;
       if(endDateTimeString !== '') {
-        endDateHtml = <Typography variant="subheading"> 完結: {endDateTimeString}</Typography>        
+        endDateHtml = <Typography variant="subheading"> 完結: {endDateTimeString}</Typography>
       }
       let timeTypeHtml = <Typography variant="subheading"> {constant.timeOptions[1]} </Typography> ;
       if(duration  != null ) {
@@ -335,9 +336,14 @@ class MessageDetailView extends Component {
     let baseHtml = <Grid container spacing={0}> {this.renderBase()}</Grid>;
     let dateHtml = this.renderTimeHtml();
     let descHtml = null;
+    let pollingHtml = null;
     if(m.desc) {
       let text = '<div>'+linkify(m.desc)+'</div>';
       descHtml = ReactHtmlParser(text);
+    }
+
+    if(m.polling) {
+      pollingHtml = <PollingDialog polling={m.polling}/>
     }
 
     const tab = this.state.tab;
@@ -354,6 +360,7 @@ class MessageDetailView extends Component {
             </CardContent>
             {dateHtml}
             <MessageAction message={m} happyAndSad={this.props.happyAndSad}/>
+            {pollingHtml}
             <AppBar position="static" className={classes.appBar}>
               <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
                 <Tab label="參與紀錄" value="參與紀錄"/>

@@ -1,0 +1,112 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
+import Slide from '@material-ui/core/Slide';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import { constant } from '../config/default';
+import PollingView from './PollingView';
+
+const styles = theme => ({
+  appBar: {
+    position: 'relative',
+  },
+  root: {
+     paddingRight: 0
+  },
+  dialogTitle: {
+    position: 'relative',
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
+  },
+  pollingContainer: {
+    display: 'flex',
+    height: '5rem',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
+});
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+
+class PollingDialog extends React.Component {
+  constructor(props) {
+      super(props);
+      this.state = {
+        open: false
+      };
+  }
+
+  handleRequestOpen(evt) {
+    evt.preventDefault();
+    this.setState({open: true});
+  }
+
+  handleRequestClose = () => {
+    this.setState({open: false});
+  };
+
+  render() {
+    const { classes, polling } = this.props;
+    let buttonHtml = null;
+
+    return (
+      <span>
+        <Paper role="button" onClick={(evt) => this.handleRequestOpen(evt)}>
+          <Grid container className={classes.pollingContainer} spacing={16}>
+            <Grid item >
+              {constant.pollingLabel}
+            </Grid>
+          </Grid>
+        </Paper>
+        <Dialog
+          fullScreen
+          open={this.state.open}
+          onRequestClose={this.handleRequestClose}
+          transition={Transition}
+          unmountOnExit
+        >
+          <AppBar className={classes.dialogTitle}>
+            <Toolbar className={classes.root}>
+              <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
+                <CloseIcon />
+              </IconButton>
+                <Typography variant="title" color="inherit" className={classes.flex}>{constant.polling}</Typography>
+            </Toolbar>
+          </AppBar>
+          <PollingView polling={polling}/>
+        </Dialog>
+      </span>
+    );
+  }
+}
+
+PollingDialog.propTypes = {
+  classes: PropTypes.object.isRequired,
+  polling: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    user: state.user,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+
+  }
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(PollingDialog));
