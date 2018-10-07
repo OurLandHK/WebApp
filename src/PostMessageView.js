@@ -63,7 +63,19 @@ const styles = theme => ({
   },
   dialogTitle: {
     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
-  }
+  },
+  signButton: {
+    fontWeight: 'bold',
+    display: 'inline-block',
+    margin: theme.spacing.unit,
+    textAlign: 'left',
+    color: 'white',
+    backgroundColor: '#006eb9',
+    padding: '6px',
+    border: '4px solid white',
+    borderRadius: '4px',
+    boxShadow: '0 0 10px #aaa',
+  }, 
 });
 
 function Transition(props) {
@@ -527,7 +539,7 @@ class PostMessageView extends Component {
   }
 
   render() {
-    const { user } = this.props;
+    const { user, classes } = this.props;
     let userProfile = user.userProfile;
     let startTime = new Date().toLocaleTimeString();
     let timeHtml = null;
@@ -545,11 +557,10 @@ class PostMessageView extends Component {
                     />
                 </FormGroup>
     }
-    let postButtonHtml =  <Button size="small" variant="extendedFab" color="primary" onClick={(evt) => this.handleRequestOpen(evt)}>
+    let postButtonHtml =  <Button size="small" className={classes.signButton} color="primary" onClick={(evt) => this.handleRequestOpen(evt)}>
                             +報料
                           </Button>;
-    const classes = this.props.classes;
-    const { tags } = this.state;
+   const { tags } = this.state;
     if(this.state.buttonShow) {
       if(this.state.timeExpanded) {
         switch(this.state.timeSelection) {

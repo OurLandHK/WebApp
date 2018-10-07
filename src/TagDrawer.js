@@ -61,7 +61,19 @@ const styles = theme => ({
   },
   container: {
     width: '98vw'
-  }
+  },
+  signButton: {
+    fontWeight: 'bold',
+    display: 'inline-block',
+    margin: theme.spacing.unit,
+    textAlign: 'left',
+    color: 'white',
+    backgroundColor: '#006eb9',
+    padding: '6px',
+    border: '4px solid white',
+    borderRadius: '4px',
+    boxShadow: '0 0 10px #aaa',
+  }, 
 });
 
 
@@ -150,7 +162,7 @@ class TagDrawer extends React.Component {
           <Button
           variant="outlined" color="primary"
             onClick={() => {this.toggleDrawer(true)}}
-            className={classes.button}
+            className={classes.signButton}
           >
             <div className={classes.buttonContainer}>
                 {`${this.state.isSelectedAll ? constant.noTagLabel

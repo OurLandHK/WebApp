@@ -5,12 +5,18 @@ import SingleLineMessageList from './SingleLineMessageList';
 import Typography from '@material-ui/core/Typography';
 import { default as dist } from './Distance';
 
-const styles = () => ({
+const styles = theme => ({
   title: {
     fontWeight: 'bold',
     textAlign: 'center',
-    margin: '40px auto 10px'
-  }  
+    margin: '20px auto 5px'
+  },
+  pos: {
+    //    marginBottom: 12,
+        color: theme.palette.text.secondary,
+        fontSize: '11px',
+        textOverflow: 'ellipsis'
+      },  
 });
 
 class FocusMessage extends Component {
@@ -22,12 +28,13 @@ class FocusMessage extends Component {
   }
 
   renderRandomFocusMessages() {
+    const { classes } = this.props;
     const {globalFocusMessages: focusMessages} = this.props.ourland;
     if(focusMessages  != null   && focusMessages.length > 0) {
       let focusMsgIdx = this.generateFocusMessagesIndex(focusMessages.length);
       return <div className="focus-message-wrapper">
-          <h4>{focusMessages[focusMsgIdx].title}</h4>
-          <p>{focusMessages[focusMsgIdx].summary}</p>
+          <Typography variant="title" className={classes.title}>{focusMessages[focusMsgIdx].title}</Typography>
+          <p className={classes.pos}>{focusMessages[focusMsgIdx].summary}</p>      
           <SingleLineMessageList
             ref={(messageList) => {this.messageList = messageList;}}
             messageIds={focusMessages[focusMsgIdx].messages}
@@ -93,8 +100,8 @@ class FocusMessage extends Component {
         if((homeAddressDistDiff  != null  && homeAddressDistDiff < homeAddressInterestRadius) || (officeAddressDistDiff  != null  && officeAddressDistDiff < homeAddressInterestRadius) ) {
           return (
             <div key={focusMsgIdx}>
-              <Typography variant="headline" component="h2" className={classes.title}>{focusMessages[focusMsgIdx].title}</Typography>
-              <p>{focusMessages[focusMsgIdx].summary}</p>
+              <Typography variant="title" className={classes.title}>{focusMessages[focusMsgIdx].title}</Typography>
+              <p className={classes.pos}>{focusMessages[focusMsgIdx].summary}</p>
               <SingleLineMessageList ref={(messageList) => {this.messageList = messageList;}} messageIds={focusMessages[focusMsgIdx].messages}/>
             </div>
           ) 

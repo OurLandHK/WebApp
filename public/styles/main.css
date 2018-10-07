@@ -63,6 +63,7 @@ img {
 
 .header-title {
   font-size: 6vw;
+  background-color: white;
   font-weight: bold;
   margin-right: 20px; }
   @media screen and (min-width: 769px) {
@@ -107,4 +108,26 @@ img {
   box-shadow: none;
   border-radius: 0; }
 
+.sign {
+    display: inline-block;
+    color: white;
+    background-color: #006eb9;
+    padding: 6px;
+    border: 4px solid white;
+    border-radius: 4px;
+    box-shadow: 0 0 10px #aaa;
+  }
+
+  .sign-button {
+    font-weight: bold;
+    display: inline-block;
+    text-align: left;
+    color: white;
+    background-color: #006eb9;
+    padding: 6px;
+    border: 4px solid white;
+    border-radius: 4px;
+    box-shadow: 0 0 10px #aaa;
+  }
+  
 
