@@ -54,7 +54,6 @@ const styles = theme =>  ({
     media: {
       color: '#fff',
       position: 'relative',
-      height: '10rem',
     },
     mediaCredit: {
       position:'absolute',
@@ -68,6 +67,18 @@ const styles = theme =>  ({
       border: '1px solid #ced4da',
       width: '100%'
     },
+    signButton: {
+      fontWeight: 'bold',
+      display: 'inline-block',
+      margin: theme.spacing.unit,
+      textAlign: 'left',
+      color: 'white',
+      backgroundColor: '#006eb9',
+      padding: '6px',
+      border: '4px solid white',
+      borderRadius: '4px',
+      boxShadow: '0 0 10px #aaa',
+    }, 
     chip: {
       margin: theme.spacing.unit / 2,
     },
@@ -180,18 +191,19 @@ class SearchEventDialog extends React.Component {
 
     return (
       <div className={this.state.geolocation  != null  && classes.dialogContentWrapper}>
-        <DialogContent className="address-row">
-          <MyLocationIcon className={classes.searchInput} onClick={() => this.handleGetLocation()} />
-                <TextField
-                  autoFocus
-                  fullWidth
-                  className={classes.searchInput} 
-                  id="stressAddress"
-                  placeholder="街道地址(中/英文均可)"
-                  type="text"
-                  value={this.state.streetAddress} onChange={event => this.setState({ streetAddress: event.target.value, disableSumbit: true,  geolocation: null})}
-                />
-          <SearchIcon disabled={disableSearch}className={classes.searchInput} onClick={() => this.handleGetLocationFromStreetAddress()} />
+        <DialogContent className="address-row" display="flex">
+          <MyLocationIcon className={classes.searchInput} flex={1} onClick={() => this.handleGetLocation()} />
+          <TextField
+            flex={4}
+            autoFocus
+            fullWidth
+            className={classes.searchInput} 
+            id="stressAddress"
+            placeholder="街道地址(中/英文均可)"
+            type="text"
+            value={this.state.streetAddress} onChange={event => this.setState({ streetAddress: event.target.value, disableSumbit: true,  geolocation: null})}
+          />
+          <SearchIcon flex={1} disabled={disableSearch} className={classes.searchInput} onClick={() => this.handleGetLocationFromStreetAddress()} />
         </DialogContent>
       </div>
     );
@@ -267,32 +279,24 @@ class SearchEventDialog extends React.Component {
   renderHotItem() {
     const { classes, buttons } = this.props;
     const TotalButton = buttons.length;
-    let buttonList1 = [];
-    let buttonList2 = [];
-    let firstLine = TotalButton/2 + TotalButton%2;
+    let buttonList = [];
     for(let i = 0; i < TotalButton; i++) {
-      let buttonHtml = <Button className={classes.button} variant="contained" size="small" aria-label={buttons[i].label}
+      let buttonHtml = <Button className={classes.signButton} aria-label={buttons[i].label}
           onClick={(evt) => this.handleRequestOpen(evt, buttons[i].label, buttons[i].value)}>
           {buttons[i].label}
           </Button>
-      if(i<firstLine) {
-        buttonList1.push(buttonHtml);
-      } else {
-        buttonList2.push(buttonHtml);
-      }
+        buttonList.push(buttonHtml);
     }
     const cardImage = (
       <CardMedia
         className={classes.media}
-        image="/images/fromPeak.jpg"
+        image="/images/Dennis9.jpg"
         title={constant.regionEventLabel}
       >
+        {constant.hotItemLabel}
         <Grid container >
           <Grid container className={classes.buttonGird}>
-            {buttonList1}
-          </Grid>
-          <Grid container className={classes.buttonGird}>
-            {buttonList2}
+            {buttonList}
           </Grid>
         </Grid>
         <div

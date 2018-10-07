@@ -386,8 +386,8 @@ export function fetchConcernMessagesFromOurLand() {
 }
 
 export function updateRegionButtoneList(tagList) {
-  return dispatch => {let buttonList = [{label: constant.allButtonLabel, value: null}];
-    let numberOfButton = 7;
+  return dispatch => {let buttonList = [];
+    let numberOfButton = 10;
     //console.log(`updateRegionButtoneList ${tagList}`);
     if(tagList.length < numberOfButton) {
       numberOfButton = tagList.length;

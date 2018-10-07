@@ -32,9 +32,6 @@ import {trackEvent} from './track';
 
 
 const styles = theme => ({
-  flexGrow: {
-    flex: '1 1 auto',
-  },
   list: {
     width: 250,
   },
@@ -44,24 +41,34 @@ const styles = theme => ({
   white: {
     color: '#FFFFFF',
   },
-  button: {
-//    border: '2px solid' ,
-//    borderColor: green[200],
-//    width: '100%',
+  /*
+
+button: {
     fontWeight: 'bold',
     fontSize: '0.8rem',
     margin: theme.spacing.unit,
-//    color: '#FFFFFF',
     textAlign: 'left',
     padding: 0,
     border: 0,
     borderBottom: '1px solid',
     borderRadius: 0,
     minHeight: 'auto'
-//    backgroundColor: green[500],
-//    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-//    display:'flex',
   },
+*/
+
+signButton: {
+  fontWeight: 'bold',
+  display: 'inline-block',
+  margin: theme.spacing.unit,
+  textAlign: 'left',
+  color: 'white',
+  backgroundColor: '#006eb9',
+  padding: '6px',
+  border: '4px solid white',
+  borderRadius: '4px',
+  boxShadow: '0 0 10px #aaa',
+}, 
+
   buttonContainer: {
 //    flex: '1 0 auto',
   },
@@ -290,7 +297,7 @@ class LocationDrawer extends React.Component {
           <Button
             variant="outlined" color="primary"
             onClick={() => {this.toggleDrawer(true)}}
-            className={classes.button}
+            className={classes.signButton}
           >
             <div className={classes.buttonContainer}>
                 {`${this.state.isUsingCurrentLocation ? constant.currentLocation + this.state.distance + '公里'
