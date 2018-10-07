@@ -261,10 +261,18 @@ class PostMessageView extends Component {
       }
 
       var tags = this.state.tags.map((tag) => tag.text);
+
+      var polling = {
+        pollingTitle: this.state.pollingTitle,
+        numOfMaxPollng: this.state.numOfMaxPollng,
+        pollingRange: this.state.pollingRange,
+        pollingOptionValues: this.state.pollingOptionValues.slice(1),  // index 0 = empty; remove it before inserting to db
+      }
+
       postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress, desc,
         startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link,
         imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
-        this.state.status, this.state.isReportedUrgentEvent, this.state.isApprovedUrgentEvent, isUrgentEvent).then((messageKey) => {
+        this.state.status, this.state.isReportedUrgentEvent, this.state.isApprovedUrgentEvent, isUrgentEvent, polling).then((messageKey) => {
           const { updateRecentMessage, checkAuthState} = this.props;
           if(messageKey  != null  && messageKey !== "") {
             updateRecentMessage(messageKey, false);
