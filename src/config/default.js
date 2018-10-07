@@ -49,6 +49,7 @@ let constant = {
   regionEventLabel: "我地正區",
   recentEventLabel: "最近查看",
   leaderBoardLabel: "排名榜",
+  notificationLabel: "通知",
   noTagLabel: "所有事件",
   viewCountLabel: '觀看次數：',
   publicProfileLabel: "簡介",

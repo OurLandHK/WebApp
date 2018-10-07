@@ -18,6 +18,10 @@ const styles = theme => ({
   scrollingItem: {
       display: 'inline-block',
   },
+
+  messageListWrapper: {
+    maxHeight: '300px'
+  }
 });
 
 class MessageList extends Component {
@@ -96,7 +100,7 @@ class MessageList extends Component {
     }
     if(val.tag  !== undefined && val.tag  !== null  && val.tag.length > 0) {
       this.props.updateFilterTagList(val.tag);
-    } 
+    }
     this.state.data.push(val);
     this.setState({data:this.state.data});
   };
@@ -123,7 +127,7 @@ class MessageList extends Component {
         //console.log("Ids:" + Ids);
         getMessage(Ids).then((message) => {this.setMessage(message)});
       });
-      
+
     } else {
       switch (geolocation) {
         case constant.invalidLocation:
@@ -175,7 +179,11 @@ class MessageList extends Component {
         }
       });
       messageList = elements;
-      return (<div className="message-list-wrapper">{messageList}</div>);
+      if(this.props.short) {
+        return (<div className={classes.messageListWrapper}>{messageList}</div>);
+      } else {
+        return (<div className="message-list-wrapper">{messageList}</div>);
+      }
     }
   }
 };

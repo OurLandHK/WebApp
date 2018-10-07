@@ -1,22 +1,24 @@
 import React, { Component } from 'react';
-import Main from './Main';
-import PublicProfile from './PublicProfile';
-import Header from './Header';
-import PostMessageView from './PostMessageView';
 import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import {connect} from "react-redux";
 import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from '@material-ui/icons/Person';
 import RateReviewIcon from '@material-ui/icons/RateReview';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import Main from './Main';
+import PublicProfile from './PublicProfile';
+import Header from './Header';
+import PostMessageView from './PostMessageView';
 import BookmarkBoard from './bookmark/BookmarkBoard';
-import thunk from 'redux-thunk';
-import {connect} from "react-redux";
 import rootReducer from './reducers';
 import Person from './Person';
 import LeaderBoard from './LeaderBoard';
 import SearchEventDialog from './SearchEventDialog';
 import CustomizedSnackbars from './CustomizedSnackbars';
+import NotificationsDialog from './NotificationsDialog';
 
 import {
   fetchAddressBookByUser,
@@ -108,6 +110,9 @@ class App extends Component {
     const { tab } = this.state;
     const { user } = this.props;
     switch(tab) {
+      case 'notification':
+        mainScreen = <NotificationsDialog/>;
+        break;
       case 'leader':
         mainScreen = <LeaderBoard/>;
         break;
@@ -123,7 +128,7 @@ class App extends Component {
               distance={this.state.distance}
               bookmark={this.state.bookmark}
             />
-        break;        
+        break;
     }
 
     return (
@@ -139,6 +144,7 @@ class App extends Component {
               value={tab}
               onChange={this.handleChange}>
               <BottomNavigationAction value='main' label={constant.homeLabel} icon={<HomeIcon />} />
+              <BottomNavigationAction value='notification' label={constant.notificationLabel} icon={<NotificationsIcon />} />
               <PostMessageView />
               <BottomNavigationAction value='leader' label={constant.leaderBoardLabel} icon={<RateReviewIcon />} />
               <BottomNavigationAction value='person' label={constant.userLabel} icon={<PersonIcon />} />

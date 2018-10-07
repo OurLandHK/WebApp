@@ -120,8 +120,8 @@ class Main extends Component {
       <div className={classes.container}>
         {tagStatHtml}
         {recentMessage}
-        <FocusMessage/>
         {messageList}
+        <FocusMessage/>
       </div>
     );
   }
