@@ -19,6 +19,7 @@ import LeaderBoard from './LeaderBoard';
 import SearchEventDialog from './SearchEventDialog';
 import CustomizedSnackbars from './CustomizedSnackbars';
 import NotificationsDialog from './NotificationsDialog';
+import { createMuiTheme } from '@material-ui/core/styles';
 
 import {
   fetchAddressBookByUser,
@@ -36,7 +37,23 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 //const store = createStoreWithMiddleware(rootReducer);
-
+/*const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: '#307eb9',
+      main: '#006eb9',
+      dark: '#004e99',
+      contrastText: '#fff',
+    },
+    secondary: {
+      light: '#ff7961',
+      main: '#f44336',
+      dark: '#ba000d',
+      contrastText: '#000',
+    },    
+  },
+});
+*/
 class App extends Component {
   constructor(props) {
     super(props);
