@@ -60,13 +60,13 @@ signButton: {
   fontWeight: 'bold',
   display: 'inline-block',
   margin: theme.spacing.unit,
-  textAlign: 'left',
+  textAlign: 'center',
   color: 'white',
   backgroundColor: '#006eb9',
-  padding: '6px',
-  border: '4px solid white',
-  borderRadius: '4px',
-  boxShadow: '0 0 10px #aaa',
+  padding: '5px',
+  border: '2px solid white',
+  borderRadius: '2px',
+  boxShadow: '0 0 0 3px #006eb9, 0 0 10px #aaa',
 }, 
 
   buttonContainer: {
