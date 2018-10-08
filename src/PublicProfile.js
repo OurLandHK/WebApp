@@ -52,6 +52,10 @@ const styles = {
     padding: '15px',
     background: '#3f51b5',
     color: '#fff'
+  },
+  profileImage: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
   }
 };
 
@@ -178,7 +182,7 @@ class PublicProfile extends React.Component {
       }
       displayName = this.state.userProfile.displayName;
       var displayNameHtml = <div className={classes.displayName}>{displayName}</div>;
-      imageHtml =  <img src={imgURL} alt="Profile"/>;
+      imageHtml =  <img className={classes.profileImage} src={imgURL} alt="Profile"/>;
       if(this.state.userProfile.desc  != null  && this.state.userProfile.desc !== "") {
         desc = <div>{this.state.userProfile.desc}</div>
       }
