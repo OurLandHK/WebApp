@@ -38,7 +38,7 @@ const styles = theme => ({
   },
   dialogTitle: {
     position: 'relative',
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
+    background: 'linear-gradient(to bottom, #00aed9  50%, #003e89 50%)',
   },
   root: {
      paddingRight: 0

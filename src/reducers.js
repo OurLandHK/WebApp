@@ -16,6 +16,7 @@ import {
   FETCH_ADDRESS_BOOK,
   FETCH_PUBLIC_ADDRESS_BOOK,
   FETCH_FOCUS_MESSAGE,
+  FETCH_GLOBAL_BOOKMARKLIST,
   FETCH_GLOBAL_FOCUS_MESSAGE,
   TOGGLE_ADDRESS_DIALOG,
   TOGGLE_NEARBYEVENT_DIALOG,
@@ -268,8 +269,8 @@ function publicProfileDialogReducer(state={open: false, id: "", fbId: ""}, actio
 
 function ourlandReducer(state={focusMessages: [], globalFocusMessage: [], tagStat: []}, action) {
     switch (action.type) {
-      case FETCH_FOCUS_MESSAGE:
-        return {...state, focusMessages: action.messages};
+      case FETCH_GLOBAL_BOOKMARKLIST:
+        return {...state, bookmarkList: action.bookmarkList};
       case FETCH_GLOBAL_FOCUS_MESSAGE:
         return {...state, globalFocusMessages: action.messages};
       case FETCH_GLOBAL_TAG_STAT:

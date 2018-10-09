@@ -88,6 +88,17 @@ class BookmarkBoard extends React.Component {
     );
   }
 
+  renderPublicMessages() {
+    const { classes, user, ourland } = this.props;
+    console.log(user)
+
+    return (
+      <div className={classes.container}>
+        <BookmarkList bookmarkList={ourland.bookmarkList}/>
+      </div>
+    );
+  }
+
   renderBookmarkBoard() {
 
     const { classes, user} = this.props;
@@ -106,6 +117,7 @@ class BookmarkBoard extends React.Component {
           </Tabs>
         </div>
         {tabValue === constant.myBookmarkLabel && this.renderMessages()}
+        {tabValue === constant.publicBookmarkLabel && this.renderPublicMessages()}
       </div>
     );
   }
@@ -149,7 +161,7 @@ BookmarkBoard.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    
+    ourland: state.ourland,
   };
 }
 
