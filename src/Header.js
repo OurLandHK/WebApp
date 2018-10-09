@@ -14,19 +14,20 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   searchInput: {
-    borderRadius: 4,
+    borderRadius: '10px',
     backgroundColor: theme.palette.common.white,
     border: '1px solid #ced4da',
-  },
+    flex: 1,
+  }, 
   cover: {
     width: 64,
     height: 64,
   },
   dialogTitle: {
-    background: 'white'
+    background: 'linear-gradient(to bottom, #00aed9  50%, #003e89 50%)',
   },
   flex: {  
-    flex: 1,
+    
   }
 });
 
@@ -57,7 +58,7 @@ class Header extends Component {
               <Toolbar>
                 <CardMedia className={classes.cover}  image={"/images/squareLogo.jpg"} onClick={() => {window.location.href = homeUrl}}/>
                 <SignInButton/>
-                <TextField id={constant.searchLabel} className={classes.flex} variant="outlined"  fullWidth margin="normal" value={constant.searchLabel} endAdornment={<InputAdornment position="end"><SearchIcon/></InputAdornment>} onClick={() => this.props.toggleSearchEventDialog(true)}/>
+                <TextField id={constant.searchLabel} className={classes.searchInput} variant="outlined"  fullWidth margin="normal" value={constant.searchLabel} endAdornment={<InputAdornment position="end"><SearchIcon/></InputAdornment>} onClick={() => this.props.toggleSearchEventDialog(true)}/>
               </Toolbar>
             </AppBar>);
   }
