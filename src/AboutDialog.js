@@ -55,14 +55,14 @@ class AboutDialog extends Component {
           </Toolbar>
         </AppBar>
         <div className={classes.container}>
-        <p><b><a href="https://www.facebook.com/pg/HKOurLand">我地.市正(ourland searching)</a></b> 係一個Neighbour Media (街坊媒體) 。用家可以查詢現在身處位置或地址簿內位置 1 公里範圍的社區事:</p>
+        <p><b><a href="https://www.facebook.com/pg/HKOurLand">我地.市正(ourland searching)</a></b> 係一個Neighbour Media (街坊媒體) 。用家可以查詢即時位置或選擇位置附近 1 公里內發生的社區事件:</p>
         <ol>
         <li>公共設施</li>
         <li>社區活動</li>
         <li>社區議題</li>
         </ol>
-        <p>街坊可以利用佢去匯報社區問題，或者跟進解決。當然社區參與者可以利用佢攪活動通知街坊，甚至把自已的聯絡方法罷上去俾人揾。。 </p>
-        <p>我地會把大家的社區參與紀錄列出, 方便其他社區參與者參考及鼓勵大家作出行動。</p>
+        <p>街坊可以隨時隨地「報料」: 匯報社區問題，仲可以一直跟進事態發展。同時，「我地.市正」方便社區參與者攪活動時「報料」通知街坊，同留低自已的聯絡方法。 </p>
+        <p>「我地.市正」會將大家的社區參與紀錄列出, 方便其他社區參與者參考同鼓勵大家作出行動。</p>
         </div>
       </Dialog>
     );
