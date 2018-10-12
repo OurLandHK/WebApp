@@ -737,7 +737,10 @@ function updatePollingResult(messageUUID, result) {
   const db = firebase.firestore();
   var collectionRef = db.collection(config.messageDB);
   return getMessage(messageUUID).then((messageRecord) => {
-    let resultArray = [] || messageRecord.polling.result;
+    let resultArray = [];
+    if(messageRecord.polling.result.length > 0) {
+      resultArray = messageRecord.polling.result;
+    }
     resultArray.push(result);
     messageRecord.polling.result = resultArray;
     return updateMessage(messageUUID, messageRecord, true);
