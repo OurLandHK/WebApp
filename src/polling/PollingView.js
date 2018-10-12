@@ -18,6 +18,9 @@ import { constant } from '../config/default';
 import {
   openSnackbar,
 } from '../actions';
+import {
+  updatePollingResult
+} from '../MessageDB';
 
 const styles = theme => ({
   appBar: {
@@ -116,10 +119,18 @@ class PollingView extends React.Component {
 
   onSubmit() {
     const { selectedOption } = this.state;
+    const { user, polling, messageUUID } = this.props;
+
     if(selectedOption.length > 0) {
-      // console.log("selectedOption")
-      // console.log(selectedOption)
-      // TODO
+      const pollingResult = {};
+      for(var i=0; i<polling.pollingOptionValues.length; i++) {
+        pollingResult[i] = selectedOption.indexOf(i) < 0 ? 0 : 1
+      }
+      let result = {
+        uid: user.user.uid,
+        value: pollingResult
+      }
+      updatePollingResult(messageUUID, result)
     }
   }
 
@@ -171,7 +182,7 @@ class PollingView extends React.Component {
                 })
               }
 
-              <Button size="large" variant="contained" className={classes.button} color="primary" onClick={this.onSubmit()}>
+              <Button size="large" variant="contained" className={classes.button} color="primary" onClick={() => this.onSubmit()}>
                 {constant.polling}
               </Button>
             </Paper>

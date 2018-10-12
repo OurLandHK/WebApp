@@ -134,12 +134,12 @@ function upgradeAllMessage() {
                                 if(val.start.toDate() < now && val.status === constant.statusOptions[0] ) {
                                      val.status = constant.statusOptions[1];
                                      change = true;
-                                } 
+                                }
                                 if(val.start.toDate() > now && val.status === constant.statusOptions[1] ) {
                                     val.status = constant.statusOptions[0];
                                     change = true;
                                }
-                            } 
+                            }
                         }
                     }
                     if(change) {
@@ -733,4 +733,16 @@ function updateMessageThumbnail(messageUUID, imageURL, publicImageURL, thumbnail
     });
 }
 
-export {addMessageGalleryEntry, getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags, updateMessageThumbnail};
+function updatePollingResult(messageUUID, result) {
+  const db = firebase.firestore();
+console.log(messageUUID)
+  var collectionRef = db.collection(config.messageDB);
+  return getMessage(messageUUID).then((messageRecord) => {
+    let resultArray = [] || messageRecord.polling.result;
+    resultArray.push(result);
+    messageRecord.polling.result = resultArray;
+    return updateMessage(messageUUID, messageRecord, true);
+  });
+}
+
+export {addMessageGalleryEntry, getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags, updateMessageThumbnail, updatePollingResult};

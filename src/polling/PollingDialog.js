@@ -55,9 +55,8 @@ class PollingDialog extends React.Component {
   };
 
   render() {
-    const { classes, polling } = this.props;
+    const { classes, polling, messageUUID } = this.props;
     let buttonHtml = null;
-
     return (
       <span>
         <Paper role="button" onClick={(evt) => this.handleRequestOpen(evt)}>
@@ -82,7 +81,7 @@ class PollingDialog extends React.Component {
                 <Typography variant="title" color="inherit" className={classes.flex}>{constant.polling}</Typography>
             </Toolbar>
           </AppBar>
-          <PollingView polling={polling}/>
+          <PollingView polling={polling} messageUUID={messageUUID}/>
         </Dialog>
       </span>
     );

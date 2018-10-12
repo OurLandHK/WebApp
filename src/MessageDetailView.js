@@ -354,7 +354,7 @@ class MessageDetailView extends Component {
     }
 
     if(m.polling) {
-      pollingHtml = <PollingDialog polling={m.polling}/>
+      pollingHtml = <PollingDialog polling={m.polling} messageUUID={m.key}/>
     }
 
     const tab = this.state.tab;
