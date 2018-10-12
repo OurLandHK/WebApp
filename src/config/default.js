@@ -147,6 +147,8 @@ let constant = {
   excessNumOfPollingIndex: "已超過投票選項上限",
   pollingRangeLabel: "離住宅可投票範圍",
   pollingLabel: "參與投票",
+  pollingResultLabel: "投票結果",
+  disabledPollingLabel: "觀看投票結果",
   submitPollingSuccessLabel: "投票成功",
   submitPollingFailureLabel: "投票失敗",
 }

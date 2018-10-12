@@ -13,6 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { constant } from '../config/default';
 import PollingView from './PollingView';
+import PollingResultView from './PollingResultView';
 
 const styles = theme => ({
   appBar: {
@@ -41,8 +42,21 @@ class PollingDialog extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
-        open: false
+        open: false,
+        disabledPolling: false,
       };
+  }
+
+  componentDidMount() {
+    const { polling, user } = this.props;
+    if(polling.result !== undefined && polling.result.length > 0) {
+      polling.result.find((obj, index) => {
+        if(obj.uid == user.user.uid) {
+          this.setState({disabledPolling: true});
+          return;
+        }
+      })
+    }
   }
 
   handleRequestOpen(evt) {
@@ -62,7 +76,7 @@ class PollingDialog extends React.Component {
         <Paper role="button" onClick={(evt) => this.handleRequestOpen(evt)}>
           <Grid container className={classes.pollingContainer} spacing={16}>
             <Grid item >
-              {constant.pollingLabel}
+              { this.state.disabledPolling? constant.disabledPollingLabel: constant.pollingLabel }
             </Grid>
           </Grid>
         </Paper>
@@ -78,10 +92,12 @@ class PollingDialog extends React.Component {
               <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
-                <Typography variant="title" color="inherit" className={classes.flex}>{constant.polling}</Typography>
+                <Typography variant="title" color="inherit" className={classes.flex}>
+                  { this.state.disabledPolling ? constant.pollingResultLabel: constant.polling }</Typography>
+
             </Toolbar>
           </AppBar>
-          <PollingView polling={polling} messageUUID={messageUUID}/>
+          { this.state.disabledPolling ? <PollingResultView polling={polling}/> : <PollingView polling={polling} messageUUID={messageUUID}/>}
         </Dialog>
       </span>
     );

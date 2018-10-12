@@ -83,7 +83,7 @@ class PollingView extends React.Component {
     super(props);
     this.state = {
       numOfMaxPollng: 0,
-      selectedOption: []
+      selectedOption: [],
     }
   }
 
@@ -133,6 +133,7 @@ class PollingView extends React.Component {
       let rv = updatePollingResult(messageUUID, result)
       if(rv) {
         this.props.openSnackbar(constant.submitPollingSuccessLabel, 'success');
+        this.setState({showPollingResult: true})
       } else {
         this.props.openSnackbar(constant.submitPollingFailureLabel, 'error');
       }
