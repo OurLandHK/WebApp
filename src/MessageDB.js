@@ -735,7 +735,6 @@ function updateMessageThumbnail(messageUUID, imageURL, publicImageURL, thumbnail
 
 function updatePollingResult(messageUUID, result) {
   const db = firebase.firestore();
-console.log(messageUUID)
   var collectionRef = db.collection(config.messageDB);
   return getMessage(messageUUID).then((messageRecord) => {
     let resultArray = [] || messageRecord.polling.result;
