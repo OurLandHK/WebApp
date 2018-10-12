@@ -460,5 +460,21 @@ function upgradeAllUser() {
     })
 }
 
+function getUserProfileImage(uid) {
+  const db = firebase.firestore();
+  const collectionRef = db.collection(config.userDB);
+  const docRef = collectionRef.doc(uid);
+  return docRef.get().then(function(doc) {
+      if (doc.exists) {
+          return(doc.data().photoURL);
+      } else {
+          return(null);
+      }
+  }).catch(function(error) {
+      console.log("Error getting document:", error);
+      return(null);
+  });
+}
+
 export {getAddressBook, fetchAllUser, addCompleteMessage, upsertAddress, upgradeAllUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
-    dropBookmark, fetchBookmarkList, addBookmark, getBookmark, updateBookmark, incBookmarkViewCount};
+    dropBookmark, fetchBookmarkList, addBookmark, getBookmark, updateBookmark, incBookmarkViewCount, getUserProfileImage};

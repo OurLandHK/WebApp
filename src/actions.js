@@ -14,6 +14,7 @@ import {
   FETCH_ADDRESS_BOOK,
   FETCH_PUBLIC_ADDRESS_BOOK,
   FETCH_FOCUS_MESSAGE,
+  FETCH_GLOBAL_BOOKMARKLIST,
   UPDATE_PUBLIC_PROFILE_DIALOG,
   TOGGLE_PUBLIC_PROFILE_DIALOG,
   TOGGLE_ADDRESS_DIALOG,
@@ -86,8 +87,8 @@ function fetchPublicAddressBook(address) {
   return {type: FETCH_PUBLIC_ADDRESS_BOOK, addresses: address};
 }
 
-function fetchFocusMessage(message) {
-  return {type: FETCH_FOCUS_MESSAGE, messages: message};
+function fetchGlobalBookmarkList(bookmarkList) {
+  return {type: FETCH_GLOBAL_BOOKMARKLIST, bookmarkList: bookmarkList};
 }
 
 function fetchGlobalFocusMessage(message) {
@@ -374,9 +375,9 @@ export function fetchConcernMessagesFromOurLand() {
     //var db = firebase.firestore();
     /// Use the UID for Ourland HK's account
     let user={uid:config.MasterUID}
-    return getUserProfile(user).then((userProfile)=>{
-      const messages = userProfile.concernMessages;
-      dispatch(fetchFocusMessage(messages));
+    return fetchBookmarkList(user).then((bookmarkList)=>{
+      console.log(bookmarkList);
+      dispatch(fetchGlobalBookmarkList(bookmarkList));
       return fetchFocusMessagesBaseOnGeo(null, 1).then((globalFocusMessage)=>{
         console.log(globalFocusMessage);
         return dispatch(fetchGlobalFocusMessage(globalFocusMessage));

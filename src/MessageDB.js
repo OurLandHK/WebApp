@@ -80,6 +80,7 @@ function upgradeAllMessage() {
                     });
                     // Update for data scheme
                     let change = false;
+                    /*
                     if(val.text.includes("遊戲室")) {
                         if(val.tag  != null ) {
                             change = true;
@@ -98,23 +99,25 @@ function upgradeAllMessage() {
                             change = true;
                         }
                     }
+                    */
                     // renew for activities
                     if(val.start) {
                         // handle for auto change latest update
-                        if(val.endDate) {
-                            let endDate = null;
-                            try {
-                                endDate = val.endDate.toDate();
-                            }
-                            catch(error) {
-                                endDate = null;
-                                // expected output: SyntaxError: unterminated string literal
-                                // Note - error messages will vary depending on browser
-                            }
-                            if(endDate === null) {
-                                val.endDate = new Date(val.endDate);
-                                endDate = val.endDate;
-                            }
+                        let endDate = null;
+                        try {
+                            endDate = val.endDate.toDate();
+                        }
+                        catch(error) {
+                            endDate = null;
+                            // expected output: SyntaxError: unterminated string literal
+                            // Note - error messages will vary depending on browser
+                        }
+                        if(endDate === null) {
+                            val.endDate = new Date(val.endDate);
+                            endDate = val.endDate;
+                        }
+                        if(endDate.getFullYear() > 1970) {
+
                             if(val.status === constant.statusOptions[0]) {
                                 console.log(`End ${val.endDate} > ${now}`)
                                 if(endDate > now ) {
@@ -131,8 +134,12 @@ function upgradeAllMessage() {
                                 if(val.start.toDate() < now && val.status === constant.statusOptions[0] ) {
                                      val.status = constant.statusOptions[1];
                                      change = true;
-                                }
-                            }
+                                } 
+                                if(val.start.toDate() > now && val.status === constant.statusOptions[1] ) {
+                                    val.status = constant.statusOptions[0];
+                                    change = true;
+                               }
+                            } 
                         }
                     }
                     if(change) {

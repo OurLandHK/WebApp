@@ -20,7 +20,7 @@ import PostCommentView from './comment/PostCommentView';
 import timeOffsetStringInChinese from './TimeString';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
-import {checkImageExists} from './util/http';
+import {checkImageExists, checkFirestoreImageExists} from './util/http';
 import ReactHtmlParser from 'react-html-parser';
 import {linkify} from './util/stringHandling';
 import {
@@ -31,6 +31,7 @@ import {connect} from 'react-redux';
 import {constant, RoleEnum} from './config/default';
 import {trackEvent} from './track';
 import PollingDialog from './polling/PollingDialog';
+import {getUserProfileImage} from './UserProfile';
 
 const styles = theme => ({
   button: {
@@ -84,10 +85,12 @@ const styles = theme => ({
 class MessageDetailView extends Component {
   constructor(props) {
     super(props);
-    this.state = {expanded: false,
-        rotate: 'rotate(0deg)',
-        tab: "參與紀錄",
-      };
+    this.state = {
+      expanded: false,
+      rotate: 'rotate(0deg)',
+      tab: "參與紀錄",
+      authorProfileImageUrl: '/images/profile_placeholder.png',
+    };
     this.handleChangeTab = this.handleChangeTab.bind(this);
     this.handleAuthorClick = this.handleAuthorClick.bind(this);
   }
@@ -111,19 +114,30 @@ class MessageDetailView extends Component {
 
   componentDidMount() {
     trackEvent('detail', this.props.message.text + '|' + this.props.message.key);
+    this.fetchAuthorProfileImage(this.props.message.uid);
+  }
+
+  fetchAuthorProfileImage(uid){
+    return getUserProfileImage(uid).then((photoUrl) => {
+      if(checkFirestoreImageExists) {
+        this.setState({
+          authorProfileImageUrl: photoUrl
+        });
+      } else {
+        checkImageExists(photoUrl).then( (imageUrl) => {
+          if(imageUrl) {
+            this.setState({
+              authorProfileImageUrl: photoUrl
+            });
+          }
+        });
+      }
+    })
   }
 
   renderTitle() {
     const { user, message, classes} = this.props;
-//    let post = '張貼';
     let timeOffset = Date.now() - message.createdAt.toDate();
-//    let timeOffsetString = timeOffsetStringInChinese(timeOffset);
-//    let subheader = `於:${timeOffsetString}前${post}`;
-    let photoUrl = message.photoUrl;
-    if(!checkImageExists(photoUrl)) {
-      photoUrl = '/images/profile_placeholder.png';
-    }
-//    let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
     let urgentEventTag = null;
 
     if(user  != null  && user.userProfile  != null  && (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor)) {
@@ -159,11 +173,8 @@ class MessageDetailView extends Component {
     let timeOffset = Date.now() - message.createdAt.toDate();
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     let subheader = `${timeOffsetString}前${post}`;
-    let photoUrl = message.photoUrl;
-    if(!checkImageExists(photoUrl)) {
-      photoUrl = '/images/profile_placeholder.png';
-    }
-    let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
+
+    let fbProfileImage = <Avatar src={this.state.authorProfileImageUrl} onClick={() => this.handleAuthorClick()} />;
     if (message.streetAddress) {
       locationString = `地點: ${message.streetAddress}`; // (${geoString(message.geolocation.latitude, message.geolocation.longitude)})`;
     } else {

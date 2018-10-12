@@ -8,25 +8,33 @@ export function fileExists(fileUrl){
     })
 }
 
-function _checkImageExists(imageUrl, callBack) {
-    var imageData = new Image();
-    imageData.onload = function() {
-        callBack(true);
-    };
-    imageData.onerror = function() {
-        callBack(false);
-    };
-    imageData.src = imageUrl;
+function _checkImageExists(imageUrl) {
+    const imgPromise = new Promise(function imgPromise(resolve, reject) {
+        const imageData = new Image();
+        imageData.addEventListener('load', function imgOnLoad() {
+            resolve(this);
+        });
+        imageData.addEventListener('error', function imgOnError() {
+            reject();
+        });
+        imageData.src = imageUrl;
+    });
+    return imgPromise;
 }
 
 export function checkImageExists(imageFile) {
-    if(useFirestore(imageFile)) {
-        return true;
-    } else {
-        return _checkImageExists(imageFile, function(existsImage) {
-            return(existsImage);
-        });
+  return _checkImageExists(imageFile).then(
+    function success(img){
+      return (true)
+    },
+    function failed(){
+      return (false)
     }
+  );
+}
+
+export function checkFirestoreImageExists(imageFile) {
+  return useFirestore(imageFile)? true: false;
 }
 
 function useFirestore(fileUrl) {

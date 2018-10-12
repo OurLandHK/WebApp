@@ -34,6 +34,7 @@ function Transition(props) {
 const styles = theme =>  ({
     appBar: {
       position: 'relative',
+      background: 'linear-gradient(to bottom, #00aed9  50%, #003e89 50%)',
     },
     flex: {
       flex: 1,
@@ -87,11 +88,20 @@ const styles = theme =>  ({
       textAlign: 'center',
       margin: '40px auto 10px'
     },
-    searchInput: {
-      borderRadius: 4,
+    searchInputIcon: {
+      borderRadius: '10px',
       backgroundColor: theme.palette.common.white,
       border: '1px solid #ced4da',
     }, 
+    searchInput: {
+      borderRadius: '10px',
+      backgroundColor: theme.palette.common.white,
+      border: '1px solid #ced4da',
+      flex: 1,
+    }, 
+    dialogTitle: {
+      background: 'linear-gradient(to bottom, #00aed9  50%, #003e89 50%)',
+    }
   });
 
 class SearchEventDialog extends React.Component {
@@ -190,11 +200,9 @@ class SearchEventDialog extends React.Component {
     let disableSearch = (this.state.streetAddress === null || this.state.streetAddress === "" ? true : false);
 
     return (
-      <div className={this.state.geolocation  != null  && classes.dialogContentWrapper}>
-        <DialogContent className="address-row" display="flex">
-          <MyLocationIcon className={classes.searchInput} flex={1} onClick={() => this.handleGetLocation()} />
+      <React.Fragment>
+        <MyLocationIcon className={classes.searchInputIcon} onClick={() => this.handleGetLocation()} />
           <TextField
-            flex={4}
             autoFocus
             fullWidth
             className={classes.searchInput} 
@@ -203,9 +211,8 @@ class SearchEventDialog extends React.Component {
             type="text"
             value={this.state.streetAddress} onChange={event => this.setState({ streetAddress: event.target.value, disableSumbit: true,  geolocation: null})}
           />
-          <SearchIcon flex={1} disabled={disableSearch} className={classes.searchInput} onClick={() => this.handleGetLocationFromStreetAddress()} />
-        </DialogContent>
-      </div>
+          <SearchIcon disabled={disableSearch} className={classes.searchInputIcon} onClick={() => this.handleGetLocationFromStreetAddress()} />
+      </React.Fragment>
     );
    } else {
     return (
@@ -323,7 +330,7 @@ class SearchEventDialog extends React.Component {
     return (
         <div>
             <Dialog fullScreen open={open} onClose={this.handleClose} transition={Transition}  aria-labelledby="form-dialog-title">
-                <Toolbar>
+                <Toolbar className={classes.dialogTitle}>
                 <IconButton color="contrast" onClick={this.handleClose} aria-label="Close">
                     <CloseIcon />
                 </IconButton>
