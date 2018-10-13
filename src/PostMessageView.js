@@ -278,7 +278,7 @@ class PostMessageView extends Component {
         pollingTitle: this.state.pollingTitle,
         numOfMaxPollng: this.state.numOfMaxPollng,
         pollingRange: this.state.pollingRange,
-        pollingOptionValues: this.state.pollingOptionValues.slice(1),  // index 0 = empty; remove it before inserting to db
+        pollingOptionValues: this.state.pollingOptionValues,
         results: []
       }
 
@@ -574,16 +574,20 @@ class PostMessageView extends Component {
       return this.props.openSnackbar(constant.excessNumOfPollingIndex, 'warning');
     }
 
+    array.push(pollingOptionIndex)
+
     pollingOptionIndex += 1;
 
-     array.push(
-       <TextField key={this.state.pollingOptionIndex} id="link" label={constant.pollingOptionLabel} className={classes.textField} value={this.state.pollingOptionValues[pollingOptionIndex]} onChange={event => {this.state.pollingOptionValues[pollingOptionIndex] = event.target.value; this.forceUpdate()}}/>
-     );
-
      this.setState({
-         pollingOptions: array,
-         pollingOptionIndex: pollingOptionIndex
+       pollingOptions: array,
+       pollingOptionIndex: pollingOptionIndex
      });
+ }
+
+ updatePollingValueOnChange(evt, pollingOptionIndex){
+   const pollingOptionValues = this.state.pollingOptionValues;
+   pollingOptionValues[pollingOptionIndex] = evt.target.value;
+   this.setState({pollingOptionValues});
  }
 
   render() {
@@ -626,6 +630,7 @@ class PostMessageView extends Component {
       if(this.state.pollingOptions.length < this.state.minPollingOptions) {
         this.addPollingOptions(null);
       }
+
       return (
         <React.Fragment>
           {postButtonHtml}
@@ -735,7 +740,9 @@ class PostMessageView extends Component {
                   <br/>
                   <TextField id="pollingRange" type="number" InputProps={{ inputProps: { min: 1, max: 5 } }} helperText={constant.pollingRangeLabel} className={classes.textField} value={this.state.pollingRange} onChange={event => this.setState({pollingRange: event.target.value})}/>
                   {
-                    this.state.pollingOptions.map((value) => { return value })
+                    this.state.pollingOptions.map((value) => {
+                      return <TextField key={value} id="link" label={constant.pollingOptionLabel} className={classes.textField} value={this.state.pollingOptionValues[value]} onChange={(evt) => {this.updatePollingValueOnChange(evt, value)} }/>
+                    })
                   }
                   <br/>
                   <Button variant="raised" color="primary" onClick={(evt) => this.addPollingOptions(evt)}>{constant.addPollingOption}</Button>
