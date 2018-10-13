@@ -11,6 +11,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import distance from '../Distance';
 import { constant } from '../config/default';
 import PollingView from './PollingView';
 import PollingResultView from './PollingResultView';
@@ -43,16 +44,30 @@ class PollingDialog extends React.Component {
       super(props);
       this.state = {
         open: false,
+        isOutOfPollingRange: false,
+        isAlreadyPolled: false,
         disabledPolling: false,
       };
   }
 
   componentDidMount() {
-    const { polling, user } = this.props;
+    const { polling, user, addressBook, geolocation } = this.props;
+    if(polling.pollingRange !== undefined && addressBook.addresses !== undefined && addressBook.addresses.length > 0) {
+      addressBook.addresses.find((obj, index) => {
+        if(obj.geolocation !== undefined && obj.geolocation !== null &&  obj.geolocation.latitude !== undefined && obj.geolocation.longitude !== undefined) {
+          let dis = distance(geolocation.lng, geolocation.lat, obj.geolocation.longitude, obj.geolocation.latitude);
+          if(polling.pollingRange < dis) {
+            this.setState({isOutOfPollingRange: true, disabledPolling: true});
+            return;
+          }
+        }
+      });
+    }
+
     if(polling.result !== undefined && polling.result.length > 0) {
       polling.result.find((obj, index) => {
         if(obj.uid == user.user.uid) {
-          this.setState({disabledPolling: true});
+          this.setState({isAlreadyPolled: true, disabledPolling: true});
           return;
         }
       })
@@ -66,7 +81,23 @@ class PollingDialog extends React.Component {
 
   handleRequestClose = () => {
     this.setState({open: false});
-  };
+  }
+
+  renderPollingLabel() {
+    let pollingLabel = constant.pollingLabel;
+
+    if(this.state.isAlreadyPolled) {
+      pollingLabel = constant.isAlreadyPolledLabel;
+    }else if(this.state.isOutOfPollingRange) {
+      pollingLabel = constant.isOutOfPollingRangeLabel;
+    }
+
+    return (
+      <span>
+        { pollingLabel }
+      </span>
+    );
+  }
 
   render() {
     const { classes, polling, messageUUID } = this.props;
@@ -74,9 +105,9 @@ class PollingDialog extends React.Component {
     return (
       <span>
         <Paper role="button" onClick={(evt) => this.handleRequestOpen(evt)}>
-          <Grid container className={classes.pollingContainer} spacing={16}>
-            <Grid item >
-              { this.state.disabledPolling? constant.disabledPollingLabel: constant.pollingLabel }
+          <Grid container className={classes.pollingContainer} spacing={0}>
+            <Grid item>
+              { this.renderPollingLabel() }
             </Grid>
           </Grid>
         </Paper>
@@ -93,7 +124,8 @@ class PollingDialog extends React.Component {
                 <CloseIcon />
               </IconButton>
                 <Typography variant="title" color="inherit" className={classes.flex}>
-                  { this.state.disabledPolling ? constant.pollingResultLabel: constant.polling }</Typography>
+                  { this.state.disabledPolling ? constant.pollingResultLabel : constant.polling }
+                </Typography>
 
             </Toolbar>
           </AppBar>
@@ -112,6 +144,7 @@ PollingDialog.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   return {
     user: state.user,
+    addressBook: state.addressBook,
   };
 }
 
