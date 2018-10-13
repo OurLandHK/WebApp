@@ -151,6 +151,7 @@ let constant = {
   disabledPollingLabel: "觀看投票結果",
   submitPollingSuccessLabel: "投票成功",
   submitPollingFailureLabel: "投票失敗",
+  numOfPollingLabel: "投票人數",
 }
 
 const happyAndSadEnum = {

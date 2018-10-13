@@ -34,8 +34,15 @@ const styles = theme => ({
     paddingTop: '10px',
     paddingBottom: '10px',
   },
+  metaDataContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   pollingResultContainer: {
     width: '100%',
+    display: 'block',
+    marginTop: '20px',
   },
   pollingTitle: {
     fontSize: '30px',
@@ -43,7 +50,11 @@ const styles = theme => ({
   },
   resultBarContainer: {
     width: '100%',
-    marginTop: '20px'
+    marginBottom: '20px',
+    backgroundColor: '#eee'
+  },
+  resultBarTitle: {
+    marginLeft: '5px'
   },
   resultBar: {
     textAlign: 'right',
@@ -60,13 +71,15 @@ class PollingResultView extends React.Component {
 
     }
   }
-  
-  renderResultBar(title, val) {
+
+  renderResultBar(title, precentage, val) {
     const { classes } = this.props;
     return (
-      <div className={classes.resultBarContainer}>
-        <div>{title}</div>
-        <div className={classes.resultBar} style={{width: val + '%'}}>{val}</div>
+      <div>
+        <div className={classes.resultBarTitle}>{title}</div>
+        <div className={classes.resultBarContainer}>
+          <div className={classes.resultBar} style={{width: precentage + '%'}}>{val}</div>
+        </div>
       </div>
     )
   }
@@ -92,7 +105,7 @@ class PollingResultView extends React.Component {
 
     return (
       <Paper className={classes.root}>
-        <Grid container className={classes.pollingContainer} spacing={16}>
+        <Grid container className={classes.pollingContainer} spacing={0}>
           <Grid item >
             <div className={classes.pollingTitle}>
               {polling.pollingTitle}
@@ -100,10 +113,18 @@ class PollingResultView extends React.Component {
           </Grid>
         </Grid>
 
+        <Grid container className={classes.metaDataContainer} spacing={0}>
+          <Grid item >
+            <div className={classes.numOfMaxPollng}>
+              {constant.numOfPollingLabel}: {polling.result.length}
+            </div>
+          </Grid>
+        </Grid>
+
         <Grid container className={classes.pollingResultContainer} spacing={0}>
           {
             polling.pollingOptionValues.map((val, idx) => {
-              return this.renderResultBar(val, (results[idx] / sum)* 100);
+              return this.renderResultBar(val, (results[idx] / sum)* 100, results[idx]);
             })
           }
         </Grid>
