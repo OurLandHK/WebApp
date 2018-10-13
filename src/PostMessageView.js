@@ -736,7 +736,7 @@ class PostMessageView extends Component {
                   <FormGroup>
                   <TextField id="pollingTitle" label={constant.pollingTitleLabel} className={classes.textField} value={this.state.pollingTitle} onChange={event => this.setState({pollingTitle: event.target.value})}/>
                   <br/>
-                  <TextField id="numOfMaxPollng" type="number" InputProps={{ inputProps: { min: 1, max: 5 } }} helperText={constant.numOfMaxPollngLabel} className={classes.textField} value={this.state.numOfMaxPollng} onChange={event => this.setState({numOfMaxPollng: event.target.value})}/>
+                  <TextField id="numOfMaxPollng" type="number" InputProps={{ inputProps: { min: 1, max: this.state.pollingOptions.length } }} helperText={constant.numOfMaxPollngLabel} className={classes.textField} value={this.state.numOfMaxPollng} onChange={event => this.setState({numOfMaxPollng: event.target.value})}/>
                   <br/>
                   <TextField id="pollingRange" type="number" InputProps={{ inputProps: { min: 1, max: 5 } }} helperText={constant.pollingRangeLabel} className={classes.textField} value={this.state.pollingRange} onChange={event => this.setState({pollingRange: event.target.value})}/>
                   {
