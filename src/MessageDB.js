@@ -738,11 +738,11 @@ function updatePollingResult(messageUUID, result) {
   var collectionRef = db.collection(config.messageDB);
   return getMessage(messageUUID).then((messageRecord) => {
     let resultArray = [];
-    if(messageRecord.polling.result.length > 0) {
+    if(messageRecord.polling.results.length > 0) {
       resultArray = messageRecord.polling.result;
     }
     resultArray.push(result);
-    messageRecord.polling.result = resultArray;
+    messageRecord.polling.results = resultArray;
     return updateMessage(messageUUID, messageRecord, true);
   });
 }

@@ -48,6 +48,7 @@ class PollingDialog extends React.Component {
         isAlreadyPolled: false,
         disabledPolling: false,
       };
+      this.handlePollingDialogCloseCallback = this.handlePollingDialogCloseCallback.bind(this);
   }
 
   componentDidMount() {
@@ -64,9 +65,9 @@ class PollingDialog extends React.Component {
       });
     }
 
-    if(polling.result !== undefined && polling.result.length > 0) {
-      polling.result.find((obj, index) => {
-        if(obj.uid == user.user.uid) {
+    if(polling.results !== undefined && polling.results.length > 0) {
+      polling.results.find((result, index) => {
+        if(result.uid == user.user.uid) {
           this.setState({isAlreadyPolled: true, disabledPolling: true});
           return;
         }
@@ -81,6 +82,10 @@ class PollingDialog extends React.Component {
 
   handleRequestClose = () => {
     this.setState({open: false});
+  }
+
+  handlePollingDialogCloseCallback() {
+    this.handleRequestClose();
   }
 
   renderPollingLabel() {
@@ -129,7 +134,7 @@ class PollingDialog extends React.Component {
 
             </Toolbar>
           </AppBar>
-          { this.state.disabledPolling ? <PollingResultView polling={polling}/> : <PollingView polling={polling} messageUUID={messageUUID}/>}
+          { this.state.disabledPolling ? <PollingResultView polling={polling}/> : <PollingView polling={polling} messageUUID={messageUUID} handlePollingDialogCloseCallback={this.handlePollingDialogCloseCallback}/>}
         </Dialog>
       </span>
     );

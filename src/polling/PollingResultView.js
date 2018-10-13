@@ -88,7 +88,7 @@ class PollingResultView extends React.Component {
     const { classes, polling } = this.props;
     const { numOfMaxPollng, selectedOption } = this.state;
 
-    const results = polling.result
+    const results = polling.results
                   .map(obj => obj.value)
                   .reduce((a, b) => {
                   Object.keys(b).forEach((idx) => {
@@ -116,7 +116,7 @@ class PollingResultView extends React.Component {
         <Grid container className={classes.metaDataContainer} spacing={0}>
           <Grid item >
             <div className={classes.numOfMaxPollng}>
-              {constant.numOfPollingLabel}: {polling.result.length}
+              {constant.numOfPollingLabel}: {polling.results.length}
             </div>
           </Grid>
         </Grid>

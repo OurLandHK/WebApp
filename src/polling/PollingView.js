@@ -133,7 +133,8 @@ class PollingView extends React.Component {
       let rv = updatePollingResult(messageUUID, result)
       if(rv) {
         this.props.openSnackbar(constant.submitPollingSuccessLabel, 'success');
-        this.setState({showPollingResult: true})
+        this.setState({showPollingResult: true});
+        this.props.handlePollingDialogCloseCallback();
       } else {
         this.props.openSnackbar(constant.submitPollingFailureLabel, 'error');
       }
@@ -202,6 +203,7 @@ class PollingView extends React.Component {
 PollingView.propTypes = {
   classes: PropTypes.object.isRequired,
   polling: PropTypes.object.isRequired,
+  handlePollingDialogCloseCallback: PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state, ownProps) => {

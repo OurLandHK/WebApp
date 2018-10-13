@@ -75,7 +75,7 @@ const styles = theme => ({
     border: '2px solid white',
     borderRadius: '2px',
     boxShadow: '0 0 0 3px #006eb9, 0 0 10px #aaa',
-  }, 
+  },
 });
 
 function Transition(props) {
@@ -279,6 +279,7 @@ class PostMessageView extends Component {
         numOfMaxPollng: this.state.numOfMaxPollng,
         pollingRange: this.state.pollingRange,
         pollingOptionValues: this.state.pollingOptionValues.slice(1),  // index 0 = empty; remove it before inserting to db
+        results: []
       }
 
       postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress, desc,
