@@ -51,16 +51,20 @@ const styles = theme => ({
   resultBarContainer: {
     width: '100%',
     marginBottom: '20px',
-    backgroundColor: '#eee'
+    backgroundColor: '#ebeef1'
   },
   resultBarTitle: {
-    marginLeft: '5px'
+    marginLeft: '10px'
   },
   resultBar: {
     textAlign: 'right',
-    padding: '10px',
+    padding: '10px 0px',
     color: 'white',
-    backgroundColor: '#2196F3'
+    backgroundColor: '#0090D9'
+  },
+  resultBarValue: {
+    margin: '0px 10px',
+    fontSize: '18px',
   }
 });
 
@@ -68,26 +72,13 @@ class PollingResultView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      results: {},
+      sum: 0
     }
   }
 
-  renderResultBar(title, precentage, val) {
-    const { classes } = this.props;
-    return (
-      <div>
-        <div className={classes.resultBarTitle}>{title}</div>
-        <div className={classes.resultBarContainer}>
-          <div className={classes.resultBar} style={{width: precentage + '%'}}>{val}</div>
-        </div>
-      </div>
-    )
-  }
-
-  render() {
-    const { classes, polling } = this.props;
-    const { numOfMaxPollng, selectedOption } = this.state;
-
+  componentDidMount() {
+    const { polling } = this.props;
     const results = polling.results
                   .map(obj => obj.value)
                   .reduce((a, b) => {
@@ -96,13 +87,44 @@ class PollingResultView extends React.Component {
                   });
                   return a;
                 }, {});
-                console.log(results)
 
     const sum = Object.keys(results)
                 .reduce( (a, b) => {
                   return a + results[b];
                 }, 0)
 
+    this.setState({
+      results: results,
+      sum: sum
+    })
+  }
+
+  renderResultBar(title, precentage, val) {
+    const { classes } = this.props;
+    var style = {
+      width: precentage + '%'
+    }
+
+    if(precentage == 0) {
+      style = {...style, color: '#000'}
+    }
+
+    return (
+      <div>
+        <div className={classes.resultBarTitle}>{title}</div>
+        <div className={classes.resultBarContainer}>
+          <div className={classes.resultBar} style={style}>
+            <div className={classes.resultBarValue}>{val}</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  render() {
+    const { classes, polling } = this.props;
+    const { numOfMaxPollng, selectedOption } = this.state;
+    console.log(this.state)
     return (
       <Paper className={classes.root}>
         <Grid container className={classes.pollingContainer} spacing={0}>
@@ -124,7 +146,11 @@ class PollingResultView extends React.Component {
         <Grid container className={classes.pollingResultContainer} spacing={0}>
           {
             polling.pollingOptionValues.map((val, idx) => {
-              return this.renderResultBar(val, (results[idx] / sum)* 100, results[idx]);
+              if(Object.keys(this.state.results).length === 0 && this.state.results.constructor === Object) {
+                return this.renderResultBar(val, 0, 0);
+              } else {
+                return this.renderResultBar(val, (this.state.results[idx] / this.state.sum)* 100, this.state.results[idx]);
+              }
             })
           }
         </Grid>
