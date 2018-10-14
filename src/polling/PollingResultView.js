@@ -124,7 +124,7 @@ class PollingResultView extends React.Component {
   render() {
     const { classes, polling } = this.props;
     const { numOfMaxPollng, selectedOption } = this.state;
-    console.log(this.state)
+    
     return (
       <Paper className={classes.root}>
         <Grid container className={classes.pollingContainer} spacing={0}>

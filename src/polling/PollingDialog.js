@@ -100,11 +100,14 @@ class PollingDialog extends React.Component {
   }
 
   renderPollingLabel() {
+    const { status } = this.props;
     let pollingLabel = constant.pollingLabel;
 
-    if(this.state.isAlreadyPolled) {
+    if(status == constant.statusOptions[1]) {
+      pollingLabel = constant.isAlreadyEndedLabel;
+    } else if(this.state.isAlreadyPolled) {
       pollingLabel = constant.isAlreadyPolledLabel;
-    }else if(this.state.isOutOfPollingRange) {
+    } else if(this.state.isOutOfPollingRange) {
       pollingLabel = constant.isOutOfPollingRangeLabel;
     }
 
@@ -156,6 +159,8 @@ class PollingDialog extends React.Component {
 PollingDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   polling: PropTypes.object.isRequired,
+  geolocation: PropTypes.object.isRequired,
+  status: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state, ownProps) => {

@@ -153,6 +153,7 @@ let constant = {
   submitPollingSuccessLabel: "投票成功",
   submitPollingFailureLabel: "投票失敗",
   numOfPollingLabel: "投票人數",
+  isAlreadyEndedLabel: "投票己完結，按此觀看投票結果",
 }
 
 const happyAndSadEnum = {
