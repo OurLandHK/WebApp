@@ -130,14 +130,11 @@ class PollingView extends React.Component {
         uid: user.user.uid,
         value: pollingResult
       }
-      let rv = updatePollingResult(messageUUID, result)
-      if(rv) {
+      updatePollingResult(messageUUID, result).then(() => {
         this.props.openSnackbar(constant.submitPollingSuccessLabel, 'success');
         this.setState({showPollingResult: true});
         this.props.handlePollingDialogCloseCallback();
-      } else {
-        this.props.openSnackbar(constant.submitPollingFailureLabel, 'error');
-      }
+      });
     }
   }
 

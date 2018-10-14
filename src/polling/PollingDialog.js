@@ -15,6 +15,7 @@ import distance from '../Distance';
 import { constant } from '../config/default';
 import PollingView from './PollingView';
 import PollingResultView from './PollingResultView';
+import { getMessage } from '../MessageDB';
 
 const styles = theme => ({
   appBar: {
@@ -47,12 +48,14 @@ class PollingDialog extends React.Component {
         isOutOfPollingRange: false,
         isAlreadyPolled: false,
         disabledPolling: false,
+        polling: {}
       };
       this.handlePollingDialogCloseCallback = this.handlePollingDialogCloseCallback.bind(this);
   }
 
   componentDidMount() {
     const { polling, user, addressBook, geolocation } = this.props;
+    this.setState({polling})
     if(polling.pollingRange !== undefined && addressBook.addresses !== undefined && addressBook.addresses.length > 0) {
       addressBook.addresses.find((obj, index) => {
         if(obj.geolocation !== undefined && obj.geolocation !== null &&  obj.geolocation.latitude !== undefined && obj.geolocation.longitude !== undefined) {
@@ -85,7 +88,15 @@ class PollingDialog extends React.Component {
   }
 
   handlePollingDialogCloseCallback() {
-    this.handleRequestClose();
+    const { messageUUID } = this.props;
+    return getMessage(messageUUID).then((message) => {
+      this.setState({
+        disabledPolling: true,
+        isAlreadyPolled: true,
+        polling: message.polling,
+        open: false
+      })
+    });
   }
 
   renderPollingLabel() {
@@ -105,7 +116,8 @@ class PollingDialog extends React.Component {
   }
 
   render() {
-    const { classes, polling, messageUUID } = this.props;
+    const { classes, messageUUID } = this.props;
+    const { polling } = this.state;
     let buttonHtml = null;
     return (
       <span>
