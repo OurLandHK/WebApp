@@ -95,8 +95,7 @@ const styles = theme => ({
     color: theme.palette.primary.light,
   },
   titleBar: {
-    background:
-      'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+    background: 'linear-gradient(to bottom, #006fbf  50%, #014880 50%)',
   },  
 });
 

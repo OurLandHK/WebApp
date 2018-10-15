@@ -29,9 +29,6 @@ function Transition(props) {
 }
 
 const styles = {
-    appBar: {
-      position: 'relative',
-    },
     flex: {
       flex: 1,
     },
@@ -48,7 +45,11 @@ const styles = {
       bottom:'0',
       right:'0',
       fontSize:'0.5rem',
-    }
+    },
+    dialogTitle: {
+      position: 'relative',
+      background: 'linear-gradient(to bottom, #006fbf  50%, #014880 50%)',
+    },    
   };
 
 function Transition(props) {
@@ -137,7 +138,7 @@ class BookmarkBoard extends React.Component {
           </ListItem>
         </div>
         <Dialog fullScreen open={this.state.open} onRequestClose={this.handleRequestClose} transition={Transition} unmountOnExit>
-          <AppBar className={classes.appBar}>
+          <AppBar className={classes.dialogTitle}>
             <Toolbar>
               <IconButton color="contrast" onClick={this.handleRequestClose} aria-label="Close">
                   <CloseIcon />
