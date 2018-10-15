@@ -34,7 +34,7 @@ function Transition(props) {
 const styles = theme =>  ({
     appBar: {
       position: 'relative',
-      background: 'linear-gradient(to bottom, #00aed9  50%, #003e89 50%)',
+      background: 'linear-gradient(to bottom, #006fbf  50%, #014880 50%)',
     },
     flex: {
       flex: 1,
@@ -100,7 +100,7 @@ const styles = theme =>  ({
       flex: 1,
     }, 
     dialogTitle: {
-      background: 'linear-gradient(to bottom, #00aed9  50%, #003e89 50%)',
+      background: 'linear-gradient(to bottom, #006fbf  50%, #014880 50%)',
     }
   });
 

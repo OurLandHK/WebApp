@@ -26,6 +26,7 @@ function Transition(props) {
 const styles = {
     appBar: {
       position: 'relative',
+      background: 'linear-gradient(to bottom, #006fbf  50%, #014880 50%)',
     },
     flex: {
       flex: 1,
