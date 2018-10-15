@@ -34,6 +34,18 @@ const styles = theme => ({
     width: '64px',
     height: '64px'
   },
+  signButton: {
+  fontWeight: 'bold',
+  display: 'inline-block',
+  margin: theme.spacing.unit,
+  textAlign: 'center',
+  color: 'white',
+  backgroundColor: '#006eb9',
+//   padding: '5px',
+  border: '2px solid white',
+  borderRadius: '2px',
+  boxShadow: '0 0 0 3px #006eb9, 0 0 10px #aaa',
+}, 
   avatar: {
     backgroundColor: red[500],
   },
@@ -219,10 +231,7 @@ class ShareDrawer extends React.Component {
     return (
       <span>
         <Button
-          variant="fab"
-          color="primary"
-          className={classes.shareButton}
-          raised={true}
+          className={classes.signButton}
           onClick={this.toggleDrawer('bottom', true)}
         >
           <ShareIcon />
