@@ -30,6 +30,7 @@ import {
 import {connect} from 'react-redux';
 import {constant, RoleEnum} from './config/default';
 import {trackEvent} from './track';
+import PollingDialog from './polling/PollingDialog';
 import {getUserProfileImage} from './UserProfile';
 
 const styles = theme => ({
@@ -346,9 +347,14 @@ class MessageDetailView extends Component {
     let baseHtml = <Grid container spacing={0}> {this.renderBase()}</Grid>;
     let dateHtml = this.renderTimeHtml();
     let descHtml = null;
+    let pollingHtml = null;
     if(m.desc) {
       let text = '<div>'+linkify(m.desc)+'</div>';
       descHtml = ReactHtmlParser(text);
+    }
+
+    if(m.polling) {
+      pollingHtml = <PollingDialog polling={m.polling} messageUUID={m.key} geolocation={geolocation} status={m.status}/>
     }
 
     const tab = this.state.tab;
@@ -365,6 +371,7 @@ class MessageDetailView extends Component {
             </CardContent>
             {dateHtml}
             <MessageAction message={m} happyAndSad={this.props.happyAndSad}/>
+            {pollingHtml}
             <AppBar position="static" className={classes.appBar}>
               <Tabs value={tab} onChange={this.handleChangeTab} fullWidth>
                 <Tab label="參與紀錄" value="參與紀錄"/>

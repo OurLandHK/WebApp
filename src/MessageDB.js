@@ -134,14 +134,14 @@ function upgradeAllMessage() {
                                 if(val.start.toDate() < now && val.status === constant.statusOptions[0] ) {
                                      val.status = constant.statusOptions[1];
                                      change = true;
-                                } 
+                                }
                                 if(val.start.toDate() > now && val.status === constant.statusOptions[1] ) {
                                     val.status = constant.statusOptions[0];
                                     change = true;
                                }
-                            } 
+                            }
                         }
-                    }         
+                    }
                     if(change) {
                         return updateMessage(val.key, val, changeLastUpdate);
                     } else {
@@ -232,7 +232,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
     }
  }
 
- function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, desc, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status, isReportedUrgentEvent, isApprovedUrgentEvent, isUrgentEvent) {
+ function addMessage(key, message, currentUser, userProfile, tags, geolocation, streetAddress, desc, startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, link, imageUrl, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, status, isReportedUrgentEvent, isApprovedUrgentEvent, isUrgentEvent, polling) {
     let now = Date.now();
     if(startDate === null)
     {
@@ -253,9 +253,9 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
     let tagfilter = tagsToTagfilter(tags);
     let gallery = [];
     if(imageUrl  != null ) {
-        let galleryEntry = {imageURL: imageUrl, 
-            publicImageURL: publicImageURL, 
-            thumbnailImageURL: thumbnailImageURL, 
+        let galleryEntry = {imageURL: imageUrl,
+            publicImageURL: publicImageURL,
+            thumbnailImageURL: thumbnailImageURL,
             thumbnailPublicImageURL: thumbnailPublicImageURL,
             caption: message};
         gallery.push(galleryEntry);
@@ -282,16 +282,17 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         weekdaysOpennings: weekdaysOpennings,
         endDate: new Date(endDate),
         link: link,
-        imageUrl: imageUrl, 
-        publicImageURL: publicImageURL, 
-        thumbnailImageURL: thumbnailImageURL, 
+        imageUrl: imageUrl,
+        publicImageURL: publicImageURL,
+        thumbnailImageURL: thumbnailImageURL,
         thumbnailPublicImageURL: thumbnailPublicImageURL,
         gallery: gallery,
         status: status,
         viewCount: 0,
         isReportedUrgentEvent: isReportedUrgentEvent,
         isApprovedUrgentEvent: isApprovedUrgentEvent,
-        isUrgentEvent: isUrgentEvent
+        isUrgentEvent: isUrgentEvent,
+        polling: polling,
       };
     // Use firestore
     const db = firebase.firestore();
@@ -475,11 +476,11 @@ function updateMessageImageURL(messageKey, imageURL, publicImageURL, thumbnailIm
 // add image to gallery to show in message detail. This will take effect after approved photocomment.
 function addMessageGalleryEntry(messageKey, imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL, caption) {
     if(imageURL  != null ) {
-        let galleryEntry = {imageURL: imageURL, 
-            publicImageURL: publicImageURL, 
-            thumbnailImageURL: thumbnailImageURL, 
+        let galleryEntry = {imageURL: imageURL,
+            publicImageURL: publicImageURL,
+            thumbnailImageURL: thumbnailImageURL,
             thumbnailPublicImageURL: thumbnailPublicImageURL,
-            caption: caption} 
+            caption: caption}
         return getMessage(messageKey).then((messageRecord) => {
             let add = true;
             if(messageRecord.gallery  != null ) {
@@ -496,7 +497,7 @@ function addMessageGalleryEntry(messageKey, imageURL, publicImageURL, thumbnailI
                 return updateMessage(messageKey, messageRecord, false);
             } else {
                 return messageKey;
-            }    
+            }
         });
     } else {
         return messageKey;
@@ -630,7 +631,7 @@ function addComment(messageUUID, currentUser, userProfile, commentText, galleryE
                     commentRecord.link = link;
                 } else {
                     if(tags  != null ) {
-                        commentRecord.tags = tags;     
+                        commentRecord.tags = tags;
                     } else {
                         if(galleryEntry  != null ) {
                             commentRecord.text = constant.updateThumbnailMessage;
@@ -726,10 +727,24 @@ function updateMessageThumbnail(messageUUID, imageURL, publicImageURL, thumbnail
     return getMessage(messageUUID).then((messageRecord) => {
         messageRecord.imageUrl = imageURL;
         messageRecord.publicImageURL = publicImageURL;
-        messageRecord.thumbnailImageURL = thumbnailImageURL; 
+        messageRecord.thumbnailImageURL = thumbnailImageURL;
         messageRecord.thumbnailPublicImageURL = thumbnailPublicImageURL;
         return updateMessage(messageUUID, messageRecord, true);
     });
 }
 
-export {addMessageGalleryEntry, getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags, updateMessageThumbnail};
+function updatePollingResult(messageUUID, result) {
+  const db = firebase.firestore();
+  var collectionRef = db.collection(config.messageDB);
+  return getMessage(messageUUID).then((messageRecord) => {
+    let resultArray = [];
+    if(messageRecord.polling.results.length > 0) {
+      resultArray = messageRecord.polling.result;
+    }
+    resultArray.push(result);
+    messageRecord.polling.results = resultArray;
+    return updateMessage(messageUUID, messageRecord, true);
+  });
+}
+
+export {addMessageGalleryEntry, getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags, updateMessageThumbnail, updatePollingResult};

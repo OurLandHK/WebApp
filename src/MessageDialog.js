@@ -93,8 +93,8 @@ class MessageDialog extends React.Component {
       if(this.props.recentMessage.recentids.indexOf(uuid) === -1) {
         incMessageViewCount(uuid);
       }
-      console.log(uuid);
-      this.props.updateRecentMessage(uuid, false);    
+      
+      this.props.updateRecentMessage(uuid, false);
       if(this.props.user  && this.props.user.user) {
         // get sad and happy inital value
         return getHappyAndSad(uuid, this.props.user.user).then((data) => {
@@ -203,7 +203,7 @@ const mapDispatchToProps = (dispatch) => {
               dispatch(checkAuthState()),
     updateRecentMessage:
       (recentMessageID, open) =>
-        dispatch(updateRecentMessage(recentMessageID, open)),             
+        dispatch(updateRecentMessage(recentMessageID, open)),
   }
 };
 

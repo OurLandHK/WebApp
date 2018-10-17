@@ -137,7 +137,23 @@ let constant = {
   updateFocusMessageFailure: "更新焦點社區事件失敗",
   dropFocusMessageSuccess: "刪除焦點社區事件成功",
   dropFocusMessageFailure: "刪除焦點社區事件失敗",
-  FocusViewTitleWarning: ""
+  FocusViewTitleWarning: "",
+  polling: "投票",
+  addPollingLabel: "新增投票",
+  addPollingOption: "新增投票選項",
+  pollingOptionLabel: "投票選項",
+  pollingTitleLabel: "投票標題",
+  numOfMaxPollngLabel: "用戶最多可投票次數",
+  excessNumOfPollingIndex: "已超過投票選項上限",
+  pollingRangeLabel: "離住宅可投票範圍",
+  pollingLabel: "參與投票",
+  pollingResultLabel: "投票結果",
+  isOutOfPollingRangeLabel: "閣下不符合投票條件，按此觀看投票結果",
+  isAlreadyPolledLabel: "閣下已投票，按此觀看投票結果",
+  submitPollingSuccessLabel: "投票成功",
+  submitPollingFailureLabel: "投票失敗",
+  numOfPollingLabel: "投票人數",
+  isAlreadyEndedLabel: "投票己完結，按此觀看投票結果",
 }
 
 const happyAndSadEnum = {
