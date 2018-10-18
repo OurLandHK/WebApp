@@ -596,7 +596,20 @@ class PostMessageView extends Component {
     let startTime = new Date().toLocaleTimeString();
     let timeHtml = null;
     let urgentHtml = null;
-    let pollingHtml = null;
+    let pollingHtml =  null;
+    if (user.userProfile && (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor || user.userProfile.role === RoleEnum.betaUser)) {
+        pollingHtml = <FormGroup>
+                        <FormControlLabel
+                        label={constant.addPollingLabel}
+                        control={
+                          <Checkbox
+                            checked={this.state.pollingExpanded}
+                            onChange={() => this.handlePollingClick()}
+                            value="checkedA" />
+                          }
+                        />
+                    </FormGroup>;
+    }
     if(userProfile  != null  && (userProfile.role === RoleEnum.admin ||  userProfile.role === RoleEnum.betaUser || userProfile.role === RoleEnum.monitor)) {
       urgentHtml = <FormGroup>
                     <FormControlLabel
@@ -721,17 +734,7 @@ class PostMessageView extends Component {
                   </FormGroup>
                   <br/>
                 </Collapse>
-                <FormGroup>
-                  <FormControlLabel
-                  label={constant.addPollingLabel}
-                  control={
-                    <Checkbox
-                      checked={this.state.pollingExpanded}
-                      onChange={() => this.handlePollingClick()}
-                      value="checkedA" />
-                    }
-                  />
-                </FormGroup>
+                {pollingHtml}
                 <Collapse in={this.state.pollingExpanded} transitionDuration="auto" unmountOnExit>
                   <FormGroup>
                   <TextField id="pollingTitle" label={constant.pollingTitleLabel} className={classes.textField} value={this.state.pollingTitle} onChange={event => this.setState({pollingTitle: event.target.value})}/>

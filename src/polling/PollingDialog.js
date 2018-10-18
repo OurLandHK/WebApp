@@ -12,7 +12,7 @@ import Slide from '@material-ui/core/Slide';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import distance from '../Distance';
-import { constant } from '../config/default';
+import { constant, addressEnum } from '../config/default';
 import PollingView from './PollingView';
 import PollingResultView from './PollingResultView';
 import { getMessage } from '../MessageDB';
@@ -56,16 +56,22 @@ class PollingDialog extends React.Component {
   componentDidMount() {
     const { polling, user, addressBook, geolocation } = this.props;
     this.setState({polling})
+    let outOfRange = true;
+    // check for home or office address within the polling distance
     if(polling.pollingRange !== undefined && addressBook.addresses !== undefined && addressBook.addresses.length > 0) {
       addressBook.addresses.find((obj, index) => {
-        if(obj.geolocation !== undefined && obj.geolocation !== null &&  obj.geolocation.latitude !== undefined && obj.geolocation.longitude !== undefined) {
+        if(obj.type !== addressEnum.other && obj.geolocation !== undefined && obj.geolocation !== null &&  obj.geolocation.latitude !== undefined && obj.geolocation.longitude !== undefined) {
           let dis = distance(geolocation.lng, geolocation.lat, obj.geolocation.longitude, obj.geolocation.latitude);
-          if(polling.pollingRange < dis) {
-            this.setState({isOutOfPollingRange: true, disabledPolling: true});
-            return;
+          console.log(`${polling.pollingRange} ${dis}`)
+          if(polling.pollingRange > dis) {
+            outOfRange = false;
           }
         }
       });
+      if(outOfRange) {
+        this.setState({isOutOfPollingRange: true, disabledPolling: true})
+      };
+      return;
     }
 
     if(polling.results !== undefined && polling.results.length > 0) {

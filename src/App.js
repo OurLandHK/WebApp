@@ -12,6 +12,7 @@ import Main from './Main';
 import PublicProfile from './PublicProfile';
 import Header from './Header';
 import PostMessageView from './PostMessageView';
+import Badge from '@material-ui/core/Badge';
 import BookmarkBoard from './bookmark/BookmarkBoard';
 import rootReducer from './reducers';
 import Person from './Person';
@@ -122,10 +123,22 @@ class App extends Component {
        http://stackoverflow.com/a/34015469/988941
     */
     //injectTapEventPlugin();
+
+    const { classes, user} = this.props;
+    const {id, bookmark} = this.props.recentMessage;
+    let userCount = 0;
+    if(user.userProfile) {
+      userCount = 1;
+    }
+    let output = null;
+    let badgeCount = userCount;
+    if(id !== "" || bookmark !== "") {
+      badgeCount++;
+    }
+
     let mainScreen = null;
     let linebreak = <React.Fragment><br/><br/></React.Fragment>;
     const { tab } = this.state;
-    const { user } = this.props;
     switch(tab) {
       case 'notification':
         mainScreen = <NotificationsDialog/>;
@@ -147,7 +160,6 @@ class App extends Component {
             />
         break;
     }
-
     return (
         <div className="wrapper">
           <CssBaseline />
@@ -161,7 +173,12 @@ class App extends Component {
               value={tab}
               onChange={this.handleChange}>
               <BottomNavigationAction value='main' label={constant.homeLabel} icon={<HomeIcon />} />
-              <BottomNavigationAction value='notification' label={constant.notificationLabel} icon={<NotificationsIcon />} />
+              <BottomNavigationAction value='notification' label={constant.notificationLabel} 
+                  icon={
+                  <Badge badgeContent={badgeCount} color="primary">
+                    <NotificationsIcon />
+                  </Badge>} 
+              />
               <PostMessageView />
               <BottomNavigationAction value='leader' label={constant.leaderBoardLabel} icon={<RateReviewIcon />} />
               <BottomNavigationAction value='person' label={constant.userLabel} icon={<PersonIcon />} />
@@ -179,6 +196,8 @@ const mapStateToProps = (state, ownProps) => {
     filter : state.filter,
     geolocation: state.geolocation,
     user: state.user,
+    addressBook: state.addressBook,
+    recentMessage : state.recentMessage,    
   };
 }
 
