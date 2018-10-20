@@ -37,14 +37,15 @@ https://google.github.io/styleguide/jsguide.html
 
 2. Install the Firebase Command Line Interface (**For Windows, please use Powershell with administrator privileges**)
     * Install Node.js: https://nodejs.org/en/
-	  * Install windows-build-tools on Windows environment: `npm install --global --production windows-build-tools`
+	  * Install windows-build-tools on Windows environment:
+    `npm install --global --production windows-build-tools`
     * Checkout the source code
     * Install project dependencies
       ```bash
       cd WebApp
       npm install
       cd functions
-  		npm install
+      npm install
       ```
     * Setup firebase configuration
   		```bash
