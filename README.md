@@ -16,7 +16,7 @@ https://google.github.io/styleguide/jsguide.html
 4. Involve
   * Get involved in resolving community affairs or vote on social issues
 5. Notification
-  * Push latest notifications such as RunOurCity or planned changes to bus routes to users' home addresses or office addressees
+  * Push latest notifications such as RunOurCity or planned changes to bus routes to users' home addresses or office addresses
 
 ## Project Setup
 1. Create a Firebase project and Facebook App and setup your application
