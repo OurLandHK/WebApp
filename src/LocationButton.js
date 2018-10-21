@@ -52,6 +52,7 @@ class LocationButton extends Component {
     this.geolocation = null;
     this.streetAddress = null;
     this.geoLocation = null;
+    this.zoom = 15;
     this.geoLocationSearch = {
       latitude: "",
       longitude: ""
@@ -74,6 +75,7 @@ class LocationButton extends Component {
       streetAddress: this.streetAddress,
       geoLocationSearch: this.geoLocationSearch,
       geolocation: this.geolocation,
+      zoom: this.zoom,
       disableSumbit: true
     };
     this.disabled = false;
@@ -128,13 +130,14 @@ class LocationButton extends Component {
     this.setState({geolocation: pos.coords, disableSumbit: false});
   }
 
-  onMapCenterChange(center){
+  onMapCenterChange(center, zoom){
     var pos = { coords:
           {
             latitude: center.lat(),
             longitude: center.lng()
           }
         };
+    this.setState({zoom: zoom});
     this.geoSuccessCallBack(pos);
   }
 
@@ -281,7 +284,7 @@ class LocationButton extends Component {
 
   render() {
     //const {fetchLocation, geoLocation} = this.props;
-    const zoom=15;
+    
     const pos = this.state.geolocation;
     const classes = this.props.classes;
     let geolocation = null;
@@ -333,7 +336,7 @@ class LocationButton extends Component {
           {this.renderStreetAddressSearch()}
           {this.renderGeoLocationSearch()}
           <p>{locationString}</p>
-          {this.state.geolocation  != null   && <EventMap center={geolocation} zoom={zoom} onCenterChange={this.onMapCenterChange}/>}
+          {this.state.geolocation  != null   && <EventMap center={geolocation} zoom={this.state.zoom} onCenterChange={this.onMapCenterChange}/>}
         </Dialog>
 
       </React.Fragment>);
