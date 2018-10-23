@@ -17,10 +17,9 @@ export class EventMap extends Component {
     this.onDragEnd = this.onDragEnd.bind(this);
   }
 
-  onDragEnd(pos) {
-    console.log('mapProps', pos);
+  onDragEnd(pos, zoom) {
     if (this.props.onCenterChange !== undefined)
-      this.props.onCenterChange(pos);
+      this.props.onCenterChange(pos, zoom);
   }
 
   render() {
@@ -31,7 +30,6 @@ export class EventMap extends Component {
         containerElement: <div style={{ height: `40vh` }} />,
         mapElement: <div style={{ height: `100%` }} />,
       }),
-      withState('zoom', 'onZoomChange', 8),
       withHandlers(() => {
         const refs = {
           map: undefined,
@@ -40,13 +38,11 @@ export class EventMap extends Component {
         return {
           onDragEnd: () => () => {
             let pos = refs.map.getCenter();
-            this.onDragEnd(pos);
+            let zoom = refs.map.getZoom();
+            this.onDragEnd(pos, zoom);
           },
           onMapMounted: () => ref => {
             refs.map = ref
-          },
-          onZoomChanged: ({ onZoomChange }) => () => {
-            onZoomChange(refs.map.getZoom())
           }
         }
       }),
