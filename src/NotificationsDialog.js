@@ -60,6 +60,7 @@ class NotificationsDialog extends React.Component {
     this.state = {
       messageIds: [],
       open: false,
+      messageIdsLength: 0,
     };
     this.setMessage = this.setMessage.bind(this);
     this.clear = this.clear.bind(this);
@@ -115,11 +116,11 @@ class NotificationsDialog extends React.Component {
     {
       messageIds.push(messageUUID);
     }
+    console.log(messageUUID);
     this.setState({messageIds: messageIds});
   }
 
   clear() {
-    //console.log("clear  message list")geocode.longitude
     this.setState({messageIds: []});
   }
 
@@ -172,7 +173,6 @@ class NotificationsDialog extends React.Component {
       <div className={classes.container}>
         <FilterBar disableLocationDrawer={true}/>
         <MessageList
-          ref={(messageList) => {this.state.messageList = messageList;}}
           eventNumber={100}
           distance={10}
           messageIds={this.state.messageIds}
@@ -215,8 +215,13 @@ class NotificationsDialog extends React.Component {
     }
 
     missionHtml = this.renderMission();
-    if(this.state.messageIds.length) {
-      messageHtml = this.renderMessages();
+    if(this.state.messageIds.length > 0) {
+      if(this.state.messageIds.length != this.state.messageIdsLength) {
+        this.state.messageIdsLength = this.state.messageIds.length;
+        messageHtml = null;
+      } else {
+        messageHtml = this.renderMessages();
+      }
     }
 
 
