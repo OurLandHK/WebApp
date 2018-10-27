@@ -116,7 +116,7 @@ class Ranking extends Component {
   };
 
   renderUser(user, rank) {
-    const { classes } = this.props;
+    const { classes, distance } = this.props;
     var imgURL = '/images/profile_placeholder.png';
     if(checkImageExists(user.photoURL)) {
       imgURL = user.photoURL;
@@ -131,7 +131,7 @@ class Ranking extends Component {
             />
         }
         title={`第${rank}名`}
-        subheader={user.displayName}
+        subheader={`${user.displayName}發佈了${user.count}項社區事項`}
         onClick={() => this.openPublicProfileDialog(user.id, user.fbuid)}
         />
     </Card>

@@ -82,7 +82,7 @@ class LeaderBoard extends React.Component {
             />
           }
           title={`第${rank}名`}
-          subheader={user.displayName}
+          subheader={`${user.displayName}發佈了${user.publishMessagesCount}項社區事項`}
           onClick={() => this.openPublicProfileDialog(user.id, user.fbuid)}
         />
       </Card>
