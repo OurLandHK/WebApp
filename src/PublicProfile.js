@@ -18,7 +18,7 @@ import { togglePublicProfileDialog } from './actions';
 import {fetchBookmarkList, getUserProfile, getAddressBook} from './UserProfile';
 import ShareDrawer from './ShareDrawer';
 import BookmarkList from './bookmark/BookmarkList';
-import {checkImageExists} from './util/http';
+import {checkImageExists, checkFirestoreImageExists} from './util/http';
 import {constant} from './config/default';
 import {trackEvent} from './track';
 import MissionView from './mission/MissionView';
@@ -176,9 +176,15 @@ class PublicProfile extends React.Component {
     let facebookhtml = null;
     let missionHtml = null;
     if(this.state.userProfile  != null ) {
-      var imgURL = '/images/profile_placeholder.png';
-      if(checkImageExists(this.state.userProfile.photoURL)) {
+      let imgURL = '/images/profile_placeholder.png';
+      if(checkFirestoreImageExists(this.state.userProfile.photoURL)) {
         imgURL = this.state.userProfile.photoURL;
+      } else {
+        checkImageExists(this.state.userProfile.photoURL).then( (imageUrl) => {
+          if(imageUrl) {
+            imgURL = this.state.userProfile.photoURL;
+          }
+        });
       }
       displayName = this.state.userProfile.displayName;
       var displayNameHtml = <div className={classes.displayName}>{displayName}</div>;
