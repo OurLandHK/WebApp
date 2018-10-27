@@ -173,23 +173,21 @@ class SearchEventDialog extends React.Component {
 
   handleGetLocation() {
     this.setState({geolocation: null});
-    if (this.disabled) {
-      alert('Location not supported!');
-    }
-    else {
-      getCurrentLocation(this.geoSuccessCallBack, this.errorCallBack, this.notSupportedCallback);
-    }
+    (this.disabled)
+      ?
+        alert('Location not supported!')
+      :
+        getCurrentLocation(this.geoSuccessCallBack, this.errorCallBack, this.notSupportedCallback);
   }
 
 
   handleGetLocationFromStreetAddress() {
     this.setState({geolocation: null});
-    if (this.disabled) {
-      alert('Location not supported!');
-    }
-    else {
-      getGeoLocationFromStreetAddress(this.state.streetAddress, this.streetAddressSuccessCallBack, this.errorCallBack);
-    }
+    (this.disabled)
+      ?
+        alert('Location not supported!')
+      :
+        getGeoLocationFromStreetAddress(this.state.streetAddress, this.streetAddressSuccessCallBack, this.errorCallBack);
   }
 
   renderStreetAddressSearch() {
@@ -285,27 +283,23 @@ class SearchEventDialog extends React.Component {
     let buttonList = [];
     for(let i = 0; i < TotalButton; i++) {
       let buttonHtml = <Button key={i} className={classes.signButton} aria-label={buttons[i].label}
-          onClick={(evt) => this.handleRequestOpen(evt, buttons[i].label, buttons[i].value)}>
-          {buttons[i].label}
-          </Button>
-        buttonList.push(buttonHtml);
+                        onClick={(evt) => this.handleRequestOpen(evt, buttons[i].label, buttons[i].value)}>
+                        {buttons[i].label}
+                      </Button>
+      buttonList.push(buttonHtml);
     }
     const cardImage = (
       <CardMedia
         className={classes.media}
         image="/images/Dennis9.jpg"
-        title={constant.regionEventLabel}
-      >
+        title={constant.regionEventLabel}>
         {constant.hotItemLabel}
-        <Grid container >
+        <Grid container>
           <Grid container className={classes.buttonGird}>
             {buttonList}
           </Grid>
         </Grid>
-        <div
-          className={classes.mediaCredit}
-        >
-        </div>
+        <div className={classes.mediaCredit} />
       </CardMedia>
     );
     return cardImage;
@@ -316,13 +310,14 @@ class SearchEventDialog extends React.Component {
     let messageHtml = null;
     let hotItemHtml = this.renderHotItem();
 
-    if(this.state.open)  {
+    if (this.state.open)  {
         messageHtml = this.renderMessages();
     }
-    let titleLabel = `${constant.searchEventLabel} - ${this.state.streetAddress}`;
-    if(this.state.searchByTag) {
-      titleLabel = `${constant.searchEventLabel} - ${this.state.titleLabel}`;
-    }
+    let titleLabel = (this.state.searchByTag)
+      ?
+        `${constant.searchEventLabel} - ${this.state.titleLabel}`
+      :
+        `${constant.searchEventLabel} - ${this.state.streetAddress}`;
     return (
         <div>
             <Dialog fullScreen open={open} onClose={this.handleClose} transition={Transition}  aria-labelledby="form-dialog-title">

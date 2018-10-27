@@ -74,22 +74,18 @@ function Transition(props) {
 class PostCommentView extends Component {
   constructor(props) {
     super(props);
-    let tags = '';
-    if(this.props.message.tag) {
-      tags = this.props.message.tag.join();
-    }
-    
+    let tags = (this.props.message.tag) ? this.props.message.tag.join() : '';
     let imagePath = this.props.messageUUID + '/' + uuid.v4();
-    let galleryEntry = {imageURL: null, 
-      publicImageURL: null, 
-      thumbnailImageURL: null, 
-      thumbnailPublicImageURL: null};
+    let galleryEntry = {imageURL: null,
+                        publicImageURL: null,
+                        thumbnailImageURL: null,
+                        thumbnailPublicImageURL: null};
     this.state = {popoverOpen: false, buttonShow: false,
       // comment
       commentSelection: constant.commentOptions[0],
       text: "",
       galleryEntry: galleryEntry,
-      imagePath: imagePath, 
+      imagePath: imagePath,
       geolocation: null,
       streetAddress: null,
       changeStatus: constant.statusOptions[0],
@@ -105,21 +101,21 @@ class PostCommentView extends Component {
   }
 
   componentDidMount() {
-    if (this.props.user  != null  && this.props.user.user  != null ) {
+    if (this.props.user != null  && this.props.user.user != null) {
       //console.log("DidMount Enable Post");
       this.setState({buttonShow: true});
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.user !== this.props.user && this.props.user  != null ) {
+    if (prevProps.user !== this.props.user && this.props.user  != null) {
       //console.log("DidUpdate Enable Post");
       const {user} = this.props.user;
-      if (user) {
-        this.setState({buttonShow: true});
-      } else {
-        this.setState({buttonShow: false});
-      }
+      (user)
+        ?
+          this.setState({buttonShow: true})
+        :
+          this.setState({buttonShow: false});
     }
   }
 
@@ -132,16 +128,16 @@ class PostCommentView extends Component {
     }
     let imagePath = this.props.messageUUID + '/' + uuid.v4();
     //console.log("Request for open " + this.state.popoverOpen);
-    let galleryEntry = {imageURL: null, 
-      publicImageURL: null, 
-      thumbnailImageURL: null, 
+    let galleryEntry = {imageURL: null,
+      publicImageURL: null,
+      thumbnailImageURL: null,
       thumbnailPublicImageURL: null};
     this.setState({
      // Comment
         commentSelection: constant.commentOptions[0],
         text: "",
         galleryEntry: galleryEntry,
-        imagePath: imagePath, 
+        imagePath: imagePath,
         geolocation: null,
         streetAddress: null,
         changeStatus: constant.statusOptions[0],
@@ -164,7 +160,7 @@ class PostCommentView extends Component {
       var id = rv.length;
       rv.push({id:id, text:text});
     });
-    return rv
+    return rv;
   }
 
   locationButtonSubmit = (geolocation, streetAddress) => {
@@ -199,7 +195,7 @@ class PostCommentView extends Component {
         var streetAddress = null;
         var link = null;
         var status = null;
-        
+
         switch(this.state.commentSelection) {
             case constant.commentOptions[0]: //"發表回應":
               commentText = this.state.text;
@@ -263,7 +259,7 @@ class PostCommentView extends Component {
             } else {
               return me.openSnackbar(constant.addCommentFailure, 'error');
             }
-            
+
           });
         } else {
           this.props.openSnackbar(isPost, 'warning');
@@ -335,12 +331,11 @@ class PostCommentView extends Component {
 
   renderUpdateMessageThumbnailHtml() {
     const { message } = this.props;
-      let imageHtml = null;
-      if(message.publicImageURL  != null ) {
-        imageHtml = <MessageDetailViewImage gallery={message.gallery} url={message.publicImageURL} messageUUID={message.key} enableImageSelection={true} handleThumbnailSelect={this.handleThumbnailSelect}/>
-      } else {
-        imageHtml = <MessageDetailViewImage gallery={message.gallery} messageUUID={message.key} enableImageSelection={true} handleThumbnailSelect={this.handleThumbnailSelect}/>
-      }
+    let imageHtml = (message.publicImageURL != null )
+      ?
+        <MessageDetailViewImage gallery={message.gallery} url={message.publicImageURL} messageUUID={message.key} enableImageSelection={true} handleThumbnailSelect={this.handleThumbnailSelect}/>
+      :
+        <MessageDetailViewImage gallery={message.gallery} messageUUID={message.key} enableImageSelection={true} handleThumbnailSelect={this.handleThumbnailSelect}/>;
 
     return (
       <div>
@@ -355,7 +350,7 @@ class PostCommentView extends Component {
 
     if(this.state.buttonShow) {
         let inputHtml = <React.Fragment>
-          <TextField autoFocus required id="message"  fullWidth  multiline rowsMax="20" margin="normal" 
+          <TextField autoFocus required id="message"  fullWidth  multiline rowsMax="20" margin="normal"
                                 helperText="更新事件進度及期望街坊如何參與" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>
           <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.imagePath} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
           </React.Fragment>;
@@ -462,9 +457,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    openSnackbar: 
-      (message, variant) => 
-        dispatch(openSnackbar(message, variant)),        
+    openSnackbar:
+      (message, variant) =>
+        dispatch(openSnackbar(message, variant)),
       checkAuthState:
           () =>
               dispatch(checkAuthState()),
