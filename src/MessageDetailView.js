@@ -119,7 +119,7 @@ class MessageDetailView extends Component {
 
   fetchAuthorProfileImage(uid){
     return getUserProfileImage(uid).then((photoUrl) => {
-      if(checkFirestoreImageExists) {
+      if(checkFirestoreImageExists(photoUrl)) {
         this.setState({
           authorProfileImageUrl: photoUrl
         });
