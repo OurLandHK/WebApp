@@ -2,7 +2,6 @@
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
-import Divider from '@material-ui/core/Divider';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -22,8 +21,6 @@ import {connect} from "react-redux";
 
 // Ourland
 import {fetchBookmarkList, getUserProfile, getAddressBook} from '../UserProfile';
-import ShareDrawer from '../ShareDrawer';
-import {checkImageExists} from '../util/http';
 import {constant, addressEnum} from '../config/default';
 import {trackEvent} from '../track';
 
@@ -66,15 +63,6 @@ const styles = theme => ({
 
 function Transition(props) {
     return <Slide direction="left" {...props} />;
-  }
-
-  function runTaskCheckingFunction(name, userProfile, bookmarkList, addressLis)
-  {
-      var fn = window[name];
-      if(typeof fn !== 'function')
-          return;
-
-      return fn.apply(window, userProfile, bookmarkList, addressLis);
   }
 
   const taskCriterias = [

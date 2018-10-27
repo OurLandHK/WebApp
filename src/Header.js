@@ -3,10 +3,7 @@ import SignInButton from './SignInButton';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import CardMedia from '@material-ui/core/CardMedia';
-import Grid from '@material-ui/core/Grid';
-import SearchIcon from '@material-ui/icons/Search';
 import {connect} from "react-redux";
 import {constant} from "./config/default";
 import {fetchLocation, toggleSearchEventDialog} from "./actions";
@@ -34,10 +31,6 @@ const styles = theme => ({
 
 
 class Header extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleLeftTouchTap() {
     console.log('Open Drawer');
     alert('onTouchTap triggered on the title component');

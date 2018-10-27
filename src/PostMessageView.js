@@ -1,21 +1,16 @@
-/*global FB*/
 import React, { Component } from 'react';
 import {connect} from "react-redux";
-import { Form, Label, Input} from 'reactstrap';
+import { Form } from 'reactstrap';
 import uuid from 'js-uuid';
-import classnames from 'classnames';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
@@ -25,8 +20,7 @@ import Slide from '@material-ui/core/Slide';
 import LocationButton from './LocationButton';
 import postMessage from './PostMessage';
 import SelectedMenu from './SelectedMenu';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import config, {constant, RoleEnum} from './config/default';
+import {constant, RoleEnum} from './config/default';
 import UploadImageButton from './UploadImageButton';
 import IntegrationReactSelect from './IntegrationReactSelect';
 import SignInButton from './SignInButton';
@@ -35,8 +29,6 @@ import {
   checkAuthState,
   updateRecentMessage,
 } from './actions';
-
-
 
 const styles = theme => ({
   root: {
@@ -194,7 +186,6 @@ class PostMessageView extends Component {
       publicImageURL: null,
       thumbnailImageURL: null,
       thumbnailPublicImageURL: null,
-      timeSelection: constant.timeOptions[0],
       opennings: this.props.opennings,
       intervalSelection: this.props.intervalOptions[0],
       durationSelection: this.props.durationOptions[0],
@@ -239,10 +230,12 @@ class PostMessageView extends Component {
           switch(this.state.openningSelection) {
             case this.props.openningOptions[0]:
               everydayOpenning = this.state.opennings[0];
-            break;
+              break;
             case this.props.openningOptions[1]:
               weekdaysOpennings = [this.state.opennings[1], this.state.opennings[2], this.state.opennings[3], this.state.opennings[4], this.state.opennings[5], this.state.opennings[6], this.state.opennings[7]]
-            break;
+              break;
+            default:
+              break;
           }
       }
     }
@@ -348,7 +341,6 @@ class PostMessageView extends Component {
     let tags = [];
     if(value  != null  && value !== '') {
       var partsOfStr = value.split(',');
-      let i = 0;
       partsOfStr.forEach(function(element) {
         tags.push({
           id: tags.length + 1,
@@ -441,8 +433,6 @@ class PostMessageView extends Component {
   renderOpenningHtml() {
 
     let today = this.today();
-    let startTime = this.startTime();
-    let endDateHtml = null;
     let openningHtml = null;
     const classes = this.props.classes;
     switch(this.state.openningSelection) {
@@ -564,8 +554,6 @@ class PostMessageView extends Component {
   }
 
   addPollingOptions(evt) {
-    const {classes} = this.props;
-
     if(evt) evt.preventDefault();
     var array = this.state.pollingOptions;
     let pollingOptionIndex = this.state.pollingOptionIndex;
@@ -593,7 +581,6 @@ class PostMessageView extends Component {
   render() {
     const { user, classes } = this.props;
     let userProfile = user.userProfile;
-    let startTime = new Date().toLocaleTimeString();
     let timeHtml = null;
     let urgentHtml = null;
     let pollingHtml =  null;
@@ -627,7 +614,6 @@ class PostMessageView extends Component {
                             +報料
                           </Button>;
 
-    const { tags } = this.state;
     if(this.state.buttonShow) {
       if(this.state.timeExpanded) {
         switch(this.state.timeSelection) {

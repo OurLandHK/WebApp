@@ -1,9 +1,6 @@
-/*global FB*/
 import React, { Component } from 'react';
-import config, {constant} from './config/default';
+import {constant} from './config/default';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
@@ -162,7 +159,9 @@ class SearchEventDialog extends React.Component {
   geoLocationSuccessCallBack(err, response) {
     if (!err) {
       console.log(response.json.results);
-      this.state.streetAddress = response.json.results[0].formatted_address;
+      this.setState({
+        streetAddress: response.json.results[0].formatted_address
+      });
       this.successCallBack(this.tempGeolocation);
     }
   }

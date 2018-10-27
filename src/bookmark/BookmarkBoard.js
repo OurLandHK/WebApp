@@ -20,13 +20,6 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import {constant} from '../config/default';
 import BookmarkList from './BookmarkList';
 import BookmarkView from './BookmarkView';
-import {
-  checkAuthState,
-} from '../actions';
-
-function Transition(props) {
-  return <Slide direction="left" {...props} />;
-}
 
 const styles = {
     flex: {
@@ -49,7 +42,7 @@ const styles = {
     dialogTitle: {
       position: 'relative',
       background: 'linear-gradient(to bottom, #006fbf  50%, #014880 50%)',
-    },    
+    },
   };
 
 function Transition(props) {
@@ -101,8 +94,6 @@ class BookmarkBoard extends React.Component {
   }
 
   renderBookmarkBoard() {
-
-    const { classes, user} = this.props;
     const { tabValue } = this.state;
     return (
       <div class="bookmakrboard-wrapper">
@@ -125,7 +116,7 @@ class BookmarkBoard extends React.Component {
 
 
   render() {
-    const { classes, user} = this.props;
+    const { classes } = this.props;
     console.log("this.state.open=" + this.state.open)
     return (
       <React.Fragment>
@@ -168,7 +159,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-   
+
   }
 };
 

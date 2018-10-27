@@ -71,14 +71,12 @@ class PollingDialog extends React.Component {
       if(outOfRange) {
         this.setState({isOutOfPollingRange: true, disabledPolling: true})
       };
-      return;
     }
 
     if(polling.results !== undefined && polling.results.length > 0) {
       polling.results.find((result, index) => {
         if(result.uid == user.user.uid) {
           this.setState({isAlreadyPolled: true, disabledPolling: true});
-          return;
         }
       })
     }
@@ -127,7 +125,6 @@ class PollingDialog extends React.Component {
   render() {
     const { classes, messageUUID } = this.props;
     const { polling } = this.state;
-    let buttonHtml = null;
     return (
       <span>
         <Paper role="button" onClick={(evt) => this.handleRequestOpen(evt)}>

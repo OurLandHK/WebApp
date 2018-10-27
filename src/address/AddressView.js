@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import PlaceIcon from '@material-ui/icons/Place';
 import WorkIcon from '@material-ui/icons/Work';
 import HomeIcon from '@material-ui/icons/Home';
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText  from '@material-ui/core/ListItemText';
@@ -16,15 +13,12 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import TextField from '@material-ui/core/TextField';
 import {connect} from "react-redux";
 import { withStyles } from '@material-ui/core/styles';
-import timeOffsetStringInChinese from '../TimeString';
 import geoString from '../GeoLocationString';
 import { openSnackbar, deleteAddress, upsertAddress } from '../actions';
 import  {constant, addressEnum} from '../config/default';
@@ -165,10 +159,8 @@ class AddressView extends Component {
       this.setState({popoverOpen: false});
     }
 
-
-
     render() {
-        const { classes, theme, idx } = this.props;
+        const { classes, idx } = this.props;
         let addressButtonHtml = null;
         let titleText = constant.updateAddressLabel;
         let geolocation = null;
@@ -183,14 +175,16 @@ class AddressView extends Component {
             type = c.type;
             var locationString = constant.addressNotSet;
             switch(type) {
-                case addressEnum.home:
-                    icons = <HomeIcon />;
-                    disableValue = true;
-                    break;
-                case addressEnum.office:
-                    icons = <WorkIcon />;
-                    disableValue = true;
-                    break;
+              case addressEnum.home:
+                icons = <HomeIcon />;
+                disableValue = true;
+                break;
+              case addressEnum.office:
+                icons = <WorkIcon />;
+                disableValue = true;
+                break;
+              default:
+                break;
             }
             if(c.geolocation  != null ) {
                 geolocation = {latitude :c.geolocation.latitude,
@@ -221,7 +215,7 @@ class AddressView extends Component {
                             {icons}
                             <TextField disabled={disableValue} autoFocus required id="message" fullWidth margin="normal" helperText="名稱" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>
                             <LocationButton autoFocus geolocation={geolocation} streetAddress={streetAddress} ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>
-                            
+
                             <FormHelperText>{constant.interestedRadius}</FormHelperText>
                             <Select
                                 value={this.state.distance}
@@ -262,9 +256,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    openSnackbar: 
-    (message, variant) => 
-        dispatch(openSnackbar(message, variant)),                 
+    openSnackbar:
+    (message, variant) =>
+        dispatch(openSnackbar(message, variant)),
     deleteAddress:
       (user, key) =>
         dispatch(deleteAddress(user, key)),

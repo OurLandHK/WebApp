@@ -1,4 +1,3 @@
-/*global FB*/
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import uuid from 'js-uuid';
@@ -28,13 +27,6 @@ import {
 } from '../actions';
 import SignInButton from '../SignInButton'
 import MessageDetailViewImage from '../MessageDetailViewImage';
-
-
-
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
-
 
 const styles = theme => ({
   fab: {
@@ -248,6 +240,8 @@ class PostCommentView extends Component {
                 isPost = constant.pleaseSelectImage;
               }
               break;
+            default:
+              break;
         }
         if(isPost === "") {
           this.setState({popoverOpen: false});
@@ -279,7 +273,6 @@ class PostCommentView extends Component {
     let tags = [];
     if(value  != null  && value !== '') {
       var partsOfStr = value.split(',');
-      let i = 0;
       partsOfStr.forEach(function(element) {
         tags.push({
           id: tags.length + 1,
@@ -403,8 +396,10 @@ class PostCommentView extends Component {
               case constant.commentWithUrgentEventOptions[1]: //"確定為非緊急事項"
                 inputHtml = <TextField autoFocus required id="message" fullWidth margin="normal" helperText="非緊急事件" value={this.state.text} onChange={event => this.setState({ text: event.target.value })}/>;
                 break;
-               case constant.commentWithOwnerOptions[0]: //"更新事項縮圖"
+              case constant.commentWithOwnerOptions[0]: //"更新事項縮圖"
                 inputHtml = this.renderUpdateMessageThumbnailHtml();
+                break;
+              default:
                 break;
               }
         }

@@ -77,13 +77,12 @@ function getAddressBook(user) {
     let collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
     collectionRef.onSnapshot(function() {});
     return collectionRef.get().then(function(querySnapshot){
-        const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
+        const addresses = querySnapshot.docs.map(d => ({...d.data(), id: d.id}));
         return addresses;
     })
     .catch(function(error) {
         console.log("Error getting documents: ", error);
     });
-    return [];
   }
 
 function upsertAddress(user, key, type, text, geolocation, streetAddress) {

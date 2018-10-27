@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
 import {connect} from "react-redux";
 import HomeIcon from '@material-ui/icons/Home';
 import PersonIcon from '@material-ui/icons/Person';
@@ -13,14 +11,11 @@ import PublicProfile from './PublicProfile';
 import Header from './Header';
 import PostMessageView from './PostMessageView';
 import Badge from '@material-ui/core/Badge';
-import BookmarkBoard from './bookmark/BookmarkBoard';
-import rootReducer from './reducers';
 import Person from './Person';
 import LeaderBoard from './LeaderBoard';
 import SearchEventDialog from './SearchEventDialog';
 import CustomizedSnackbars from './CustomizedSnackbars';
 import NotificationsDialog from './NotificationsDialog';
-import { createMuiTheme } from '@material-ui/core/styles';
 
 import {
   fetchAddressBookByUser,
@@ -36,7 +31,6 @@ import {
 import {constant} from './config/default';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 //const store = createStoreWithMiddleware(rootReducer);
 /*const theme = createMuiTheme({
   palette: {
@@ -51,7 +45,7 @@ const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
       main: '#f44336',
       dark: '#ba000d',
       contrastText: '#000',
-    },    
+    },
   },
 });
 */
@@ -124,13 +118,12 @@ class App extends Component {
     */
     //injectTapEventPlugin();
 
-    const { classes, user} = this.props;
+    const { user} = this.props;
     const {id, bookmark} = this.props.recentMessage;
     let userCount = 0;
     if(user.userProfile) {
       userCount = 1;
     }
-    let output = null;
     let badgeCount = userCount;
     if(id !== "" || bookmark !== "") {
       badgeCount++;
@@ -173,11 +166,11 @@ class App extends Component {
               value={tab}
               onChange={this.handleChange}>
               <BottomNavigationAction value='main' label={constant.homeLabel} icon={<HomeIcon />} />
-              <BottomNavigationAction value='notification' label={constant.notificationLabel} 
+              <BottomNavigationAction value='notification' label={constant.notificationLabel}
                   icon={
                   <Badge badgeContent={badgeCount} color="primary">
                     <NotificationsIcon />
-                  </Badge>} 
+                  </Badge>}
               />
               <PostMessageView />
               <BottomNavigationAction value='leader' label={constant.leaderBoardLabel} icon={<RateReviewIcon />} />
@@ -197,7 +190,7 @@ const mapStateToProps = (state, ownProps) => {
     geolocation: state.geolocation,
     user: state.user,
     addressBook: state.addressBook,
-    recentMessage : state.recentMessage,    
+    recentMessage : state.recentMessage,
   };
 }
 

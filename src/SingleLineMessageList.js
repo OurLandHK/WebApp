@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {constant} from './config/default';
 import MessageView from './MessageView';
 import {getMessage} from './MessageDB';
-import GridList from '@material-ui/core/GridList';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
@@ -102,7 +101,7 @@ class SingleLineMessageList extends Component {
 
       });
 //        return (<div className={classes.root}><GridList className={classes.gridList} cellHeight={160} cols={2.5}>{elements}</GridList></div>);
-      messageList = <div className={classes.scrollingWrapper}>{elements}</div>; 
+      messageList = <div className={classes.scrollingWrapper}>{elements}</div>;
       return (<div className="message-list-wrapper">{messageList}</div>);
     }
   }

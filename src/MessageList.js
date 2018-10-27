@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
-import config, {constant} from './config/default';
+import {constant} from './config/default';
 import MessageView from './MessageView';
 import distance from './Distance';
 import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
@@ -14,11 +13,9 @@ const styles = theme => ({
     overflowY: 'hidden',
     whiteSpace: 'nowrap',
   },
-
   scrollingItem: {
       display: 'inline-block',
   },
-
   messageListWrapper: {
     maxHeight: '300px'
   }

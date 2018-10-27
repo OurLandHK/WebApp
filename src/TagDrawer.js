@@ -13,7 +13,7 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import LabelIcon from '@material-ui/icons/LabelOutlined';
 import AllIcon from '@material-ui/icons/AllInclusive';
-import  {constant, addressEnum} from './config/default';
+import {constant} from './config/default';
 import {
   selectedTag
 } from './actions';

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import config, {constant} from './config/default';
+import {constant} from './config/default';
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -23,7 +23,7 @@ const styles = theme => ({
   },
   container: {
     overflowY: 'auto'
-  }  
+  }
 });
 
 class Ranking extends Component {
@@ -120,7 +120,7 @@ class Ranking extends Component {
     var imgURL = '/images/profile_placeholder.png';
     if(checkImageExists(user.photoURL)) {
       imgURL = user.photoURL;
-    }   
+    }
     return (
     <Card className={classes.card}>
         <CardHeader
@@ -139,14 +139,6 @@ class Ranking extends Component {
   }
 
   render() {
-    const classes = this.props.classes;
-    let lon = 0;
-    let lat = 0;
-
-    if(this.state.geolocation  != null  && this.state.geolocation !== constant.invalidLocation) {
-      lon = this.state.geolocation.longitude;
-      lat = this.state.geolocation.latitude;
-    }
     if(this.state.data.length === 0) {
       let statusMessage = this.state.statusMessage;
       return(<h4>{statusMessage}</h4>);
@@ -165,12 +157,12 @@ class Ranking extends Component {
           }
       }
       let ranking = Object.values(userList);
-      
+
       ranking.sort((i, j) => (j.count) - (i.count));
       return (
         <React.Fragment>
             {ranking.map((t, i) => {return this.renderUser(t, i + 1);})}
-        </React.Fragment>);        
+        </React.Fragment>);
     }
   }
 };

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Form, Label, Input} from 'reactstrap';
 import Button  from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -118,7 +117,9 @@ class LocationButton extends Component {
   geoLocationSuccessCallBack(err, response) {
     if (!err) {
       console.log(response.json.results);
-      this.state.streetAddress = response.json.results[0].formatted_address;
+      this.setState({
+        streetAddress: response.json.results[0].formatted_address
+      });
       this.successCallBack(this.tempGeolocation);
     }
   }
@@ -284,7 +285,7 @@ class LocationButton extends Component {
 
   render() {
     //const {fetchLocation, geoLocation} = this.props;
-    
+
     const pos = this.state.geolocation;
     const classes = this.props.classes;
     let geolocation = null;
