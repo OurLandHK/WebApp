@@ -6,13 +6,14 @@
     "@google/maps": "^0.4.6",
     "@material-ui/core": "^3.0.2",
     "@material-ui/icons": "^3.0.1",
+    "@types/googlemaps": "^3.30.16",
     "ajv": "^6.5.1",
     "babel-core": "^6.26.3",
     "bootstrap": "^4.1.1",
     "bootstrap-social": "^5.1.1",
-    "firebase": "^4.13.1",
-    "firebase-tools": "^3.19.1",
-    "jquery": "^1.12.4",
+    "firebase": "^5.5.5",
+    "firebase-tools": "^5.1.1",
+    "jquery": "^3.3.1",
     "js-uuid": "0.0.6",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
@@ -37,7 +38,7 @@
     "webpack": "^3.1.0"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-compile-handlebars": "^0.6.1",
     "gulp-rename": "^1.3.0",
     "react-scripts": "^1.1.5"

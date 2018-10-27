@@ -33,23 +33,16 @@ const styles = theme => ({
     color: '#FFFFFF',
   },
   button: {
-    //    border: '2px solid' ,
-    //    borderColor: green[200],
-    //    width: '100%',
-        fontWeight: 'bold',
-        fontSize: '0.8rem',
-        margin: theme.spacing.unit,
-    //    color: '#FFFFFF',
-        textAlign: 'left',
-        padding: 0,
-        border: 0,
-        borderBottom: '1px solid',
-        borderRadius: 0,
-        minHeight: 'auto'
-    //    backgroundColor: green[500],
-    //    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-    //    display:'flex',
-      },
+    fontWeight: 'bold',
+    fontSize: '0.8rem',
+    margin: theme.spacing.unit,
+    textAlign: 'left',
+    padding: 0,
+    border: 0,
+    borderBottom: '1px solid',
+    borderRadius: 0,
+    minHeight: 'auto'
+  },
   buttonContainer: {
   //  flex: '1 0 auto',
   },
@@ -70,10 +63,10 @@ const styles = theme => ({
     color: 'white',
     backgroundColor: '#006eb9',
     padding: '5px',
-    border: '2px solid white',
-    borderRadius: '2px',
-    boxShadow: '0 0 0 3px #006eb9, 0 0 10px #aaa',
-  }, 
+    '&:hover': {
+      backgroundColor: '#006eb9',
+    }
+  },
 });
 
 

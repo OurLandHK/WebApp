@@ -18,7 +18,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.common.white,
     border: '1px solid #ced4da',
     flex: 1,
-  }, 
+  },
   cover: {
     width: 64,
     height: 64,
@@ -26,8 +26,8 @@ const styles = theme => ({
   dialogTitle: {
     background: 'linear-gradient(to bottom, #006fbf  50%, #014880 50%)',
   },
-  flex: {  
-    
+  flex: {
+
   }
 });
 
@@ -58,7 +58,7 @@ class Header extends Component {
               <Toolbar>
                 <CardMedia className={classes.cover}  image={"/images/我地市正Logo-01.png"} onClick={() => {window.location.href = homeUrl}}/>
                 <SignInButton/>
-                <TextField id={constant.searchLabel} className={classes.searchInput} variant="outlined"  fullWidth margin="normal" value={constant.searchLabel} endAdornment={<InputAdornment position="end"><SearchIcon/></InputAdornment>} onClick={() => this.props.toggleSearchEventDialog(true)}/>
+                <TextField id={constant.searchLabel} className={classes.searchInput} variant="outlined"  fullWidth margin="normal" value={constant.searchLabel} onClick={() => this.props.toggleSearchEventDialog(true)}/>
               </Toolbar>
             </AppBar>);
   }

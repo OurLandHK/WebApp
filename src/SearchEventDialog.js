@@ -48,7 +48,7 @@ const styles = theme =>  ({
       padding: theme.spacing.unit,
       textAlign: 'center',
       color: theme.palette.text.secondary,
-    },    
+    },
     container: {
        overflowY: 'auto'
     },
@@ -79,7 +79,7 @@ const styles = theme =>  ({
       border: '2px solid white',
       borderRadius: '2px',
       boxShadow: '0 0 0 3px #006eb9, 0 0 10px #aaa',
-    }, 
+    },
     chip: {
       margin: theme.spacing.unit / 2,
     },
@@ -92,13 +92,13 @@ const styles = theme =>  ({
       borderRadius: '10px',
       backgroundColor: theme.palette.common.white,
       border: '1px solid #ced4da',
-    }, 
+    },
     searchInput: {
       borderRadius: '10px',
       backgroundColor: theme.palette.common.white,
       border: '1px solid #ced4da',
       flex: 1,
-    }, 
+    },
     dialogTitle: {
       background: 'linear-gradient(to bottom, #006fbf  50%, #014880 50%)',
     }
@@ -125,13 +125,13 @@ class SearchEventDialog extends React.Component {
     this.geoSuccessCallBack = this.geoSuccessCallBack.bind(this);
     this.streetAddressSuccessCallBack = this.streetAddressSuccessCallBack.bind(this);
     this.geoLocationSuccessCallBack = this.geoLocationSuccessCallBack.bind(this);
-    this.notSupportedCallBack = this.notSupportedCallBack.bind(this);      
+    this.notSupportedCallBack = this.notSupportedCallBack.bind(this);
   }
   notSupportedCallBack() {
     this.disabled = true;
     console.log('Disabled');
   }
-  
+
   geoSuccessCallBack(pos) {
     console.log("geoSccessCallBack " +pos.coords.latitude  + pos.coords.longitude);
     this.tempGeolocation = pos;
@@ -180,7 +180,7 @@ class SearchEventDialog extends React.Component {
       getCurrentLocation(this.geoSuccessCallBack, this.errorCallBack, this.notSupportedCallback);
     }
   }
-  
+
 
   handleGetLocationFromStreetAddress() {
     this.setState({geolocation: null});
@@ -205,7 +205,7 @@ class SearchEventDialog extends React.Component {
           <TextField
             autoFocus
             fullWidth
-            className={classes.searchInput} 
+            className={classes.searchInput}
             id="stressAddress"
             placeholder="街道地址(中/英文均可)"
             type="text"
@@ -215,9 +215,7 @@ class SearchEventDialog extends React.Component {
       </React.Fragment>
     );
    } else {
-    return (
-        null
-    );
+    return null;
    }
   }
 
@@ -245,8 +243,6 @@ class SearchEventDialog extends React.Component {
     e.preventDefault();
     this.handleRequestClose();
   }
-
-
 
   renderMessages() {
     const { classes, distance, eventNumber } = this.props;
@@ -288,7 +284,7 @@ class SearchEventDialog extends React.Component {
     const TotalButton = buttons.length;
     let buttonList = [];
     for(let i = 0; i < TotalButton; i++) {
-      let buttonHtml = <Button className={classes.signButton} aria-label={buttons[i].label}
+      let buttonHtml = <Button key={i} className={classes.signButton} aria-label={buttons[i].label}
           onClick={(evt) => this.handleRequestOpen(evt, buttons[i].label, buttons[i].value)}>
           {buttons[i].label}
           </Button>
@@ -371,11 +367,11 @@ const mapDispatchToProps = (dispatch) => {
   return {
     toggleSearchEventDialog: flag =>
       dispatch(toggleSearchEventDialog(flag)),
-    updateSearchEventLocation: geolocation => 
+    updateSearchEventLocation: geolocation =>
       dispatch(updateSearchEventLocation(geolocation)),
     updateFilterLocation:
       (geolocation, distance) =>
-        dispatch(updateFilterLocation(geolocation, distance)),      
+        dispatch(updateFilterLocation(geolocation, distance)),
   }
 };
 
