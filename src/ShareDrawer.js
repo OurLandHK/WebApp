@@ -8,13 +8,10 @@ import Typography from '@material-ui/core/Typography';
 import ShareIcon from '@material-ui/icons/Share';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import yellow from '@material-ui/core/colors/yellow';
 import purple from '@material-ui/core/colors/purple';
-
 
 import {
   ShareButtons,
-  ShareCounts,
   generateShareIcon
 } from 'react-share';
 
@@ -45,7 +42,7 @@ const styles = theme => ({
   border: '2px solid white',
   borderRadius: '2px',
   boxShadow: '0 0 0 3px #006eb9, 0 0 10px #aaa',
-}, 
+},
   avatar: {
     backgroundColor: red[500],
   },
@@ -124,7 +121,7 @@ class ShareDrawer extends React.Component {
       quote = `【 ${message.status} 】 社區事件: ${message.text}`;
 
       if(message.streetAddress !== undefined && message.streetAddress  != null ) {
-        quote += ` - 地點: ${message.streetAddress}`; 
+        quote += ` - 地點: ${message.streetAddress}`;
       }
 
       if(message.start !== undefined && message.start  != null ) {
@@ -135,10 +132,10 @@ class ShareDrawer extends React.Component {
 
           quote += ` - 開始日期: ${dateTimeString}`;
         }
-        
+
       }
     }
-    return quote;    
+    return quote;
   }
 
   renderEmail(shareUrl, m) {
@@ -186,7 +183,7 @@ class ShareDrawer extends React.Component {
         </FacebookShareButton>
       </div>
     );
-  
+
   }
 
   renderTelegram(shareUrl, m) {
@@ -201,7 +198,7 @@ class ShareDrawer extends React.Component {
         </TelegramShareButton>
       </div>
     );
-  
+
   }
 
 
@@ -227,7 +224,7 @@ class ShareDrawer extends React.Component {
       hashtag = "#我地";
       shareUrl = shareUrl + "/user/" + this.props.bookmark.uid + "/" + this.props.bookmark.key;
     }
-    
+
     return (
       <span>
         <Button

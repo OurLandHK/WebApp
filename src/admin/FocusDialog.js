@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,7 +13,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText  from '@material-ui/core/ListItemText';
 import {connect} from "react-redux";
-import config, {constant} from '../config/default';
+import {constant} from '../config/default';
 import FocusList from './FocusList';
 import FocusView from './FocusView';
 
@@ -77,7 +76,7 @@ class FocusDialog extends React.Component {
   render() {
     const { classes} = this.props;let messageHtml = null;let buttonHtml = null;
     let titleText = constant.focusMessagesLabel;
-    let open = this.state.open; 
+    let open = this.state.open;
     if(open)  {
         messageHtml = this.renderMessages();
     }

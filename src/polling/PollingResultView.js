@@ -97,7 +97,7 @@ class PollingResultView extends React.Component {
       width: precentage + '%'
     }
 
-    if(precentage == 0) {
+    if(parseInt(precentage) === 0) {
       style = {...style, color: '#000'}
     }
 

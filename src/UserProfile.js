@@ -221,7 +221,6 @@ function toggleConcernMessage(user, messageUUID) {
         {
             userRecord.concernMessages = [messageUUID];
         }
-        var path = "";
 //        console.log("UserRecord.concernMessages" + userRecord.concernMessages);
         return updateUserRecords(user.uid, userRecord).then(function(userRecordRef){
             return rv;
@@ -306,10 +305,7 @@ function fetchBookmarkList(user) {
             return [];
         } else {
             const bookmarks = querySnapshot.docs.map(bookmarkRef => {
-                let val = bookmarkRef.data();
-                if(val) {
-                    return(val);
-                }
+              return bookmarkRef.data();
             });
             return(bookmarks);
         }

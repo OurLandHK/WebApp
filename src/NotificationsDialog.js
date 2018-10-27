@@ -115,10 +115,7 @@ class NotificationsDialog extends React.Component {
     const lastLoginTime = user.lastLogin;
     addressBook.addresses.map((address) => {
       if(address.geolocation  != null  && (address.type === addressEnum.home || address.type === addressEnum.office)) {
-        let distance = constant.distance;
-        if(address.distance  != null ) {
-          distance = address.distance;
-        }
+        let distance = (address.distance != null ) ? address.distance : constant.distance;
         if(user.userProfile.role === RoleEnum.admin) {
           distance = 100;
         }
@@ -200,7 +197,7 @@ class NotificationsDialog extends React.Component {
 
     missionHtml = this.renderMission();
     if(this.state.messageIds.length > 0) {
-      if(this.state.messageIds.length != this.state.messageIdsLength) {
+      if (this.state.messageIds.length !== this.state.messageIdsLength) {
         this.setState({
           messageIdsLength: this.state.messageIds.length
         });

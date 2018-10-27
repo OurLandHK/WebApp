@@ -12,7 +12,7 @@ class BookmarkList extends Component {
   }
 
   componentDidMount() {
-    if(this.props.bookmarkList != undefined && this.props.bookmarkList != null) {
+    if(this.props.bookmarkList !== undefined && this.props.bookmarkList !== null) {
       let bookmarkList = this.props.bookmarkList;
       this.setState({ bookmarkList });
     }

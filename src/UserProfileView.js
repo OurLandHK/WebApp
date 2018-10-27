@@ -136,10 +136,7 @@ class UserProfileView extends React.Component {
   }
 
   interestedTagsToMultiLabel(interestedTags){
-    var tags = [];
-    interestedTags.map(interestedTag => {
-      tags.push(interestedTag.text);
-    });
+    var tags = interestedTags.map(interestedTag => interestedTag.text);
 
     return tags.join();
   }
@@ -174,7 +171,7 @@ class UserProfileView extends React.Component {
     /*
       User's Email Address
     */
-    const regExp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    const regExp = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
     if(this.state.emailAddress !== '' && !regExp.test(this.state.emailAddress)) {
       error = 1;
     }else {
@@ -228,7 +225,6 @@ class UserProfileView extends React.Component {
           imgURL = this.state.userProfile.photoURL;
         }
         this.path = "UserProfile/" + this.state.user.uid + "/";
-        let desc = (this.state.userProfile.desc) ? this.state.userProfile.desc : "";
     }
     //if(user  != null  && user.userProfile  != null  && (user.userProfile.role === RoleEnum.admin ||  user.userProfile.role === RoleEnum.betaUser || user.userProfile.role === RoleEnum.monitor)) {
       emailHtml = <TextField

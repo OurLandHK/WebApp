@@ -247,7 +247,7 @@ class PostCommentView extends Component {
           this.setState({popoverOpen: false});
           let me = this.props;
           return addComment(this.props.messageUUID, user, userProfile, commentText, galleryEntry, tags, geolocation, streetAddress, link, status, isApprovedUrgentEvent).then(function(commentId){
-            if(commentId != 'undefined' || commentId != null) {
+            if(commentId !== undefined || commentId !== null) {
               me.openSnackbar(constant.addCommentSuccess, 'success');
               return commentId;
             } else {

@@ -118,6 +118,8 @@ class LeaderBoard extends React.Component {
       case 'admin':
         listHtml = <UserList />;
         break;
+      default:
+        break;
     }
     return (
       <div class="leaderboard-wrapper">

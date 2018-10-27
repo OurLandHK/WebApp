@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {constant} from './config/default';
 import Dialog from '@material-ui/core/Dialog';
 import Grid from '@material-ui/core/Grid';
@@ -166,8 +166,8 @@ class SearchEventDialog extends React.Component {
     }
   }
 
-  errorCallBack(error) {
-    console.warn('ERROR(${err.code}): ${err.message}');
+  errorCallBack(err) {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
   }
 
   handleGetLocation() {

@@ -159,7 +159,7 @@ class CommentView extends Component {
                             }
                         });
 
-                        if(galleryEntry.thumbnailUpdate != null &&  galleryEntry.thumbnailUpdate != undefined && galleryEntry.thumbnailUpdate) {
+                        if(galleryEntry.thumbnailUpdate !== null &&  galleryEntry.thumbnailUpdate !== undefined && galleryEntry.thumbnailUpdate) {
                             return updateMessageThumbnail(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL).then((ref) => {
                             if(ref !== 'undefined' && ref !== null) {
                                 return me.openSnackbar(constant.updateMessageThumbnailSuccess, 'success');
@@ -169,7 +169,6 @@ class CommentView extends Component {
                         });
                         }
                     }
-                    return me.openSnackbar(constant.approveMessageSuccess, 'success');;
                 });
             }
         })

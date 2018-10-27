@@ -110,8 +110,7 @@ class MessageView extends Component {
   }
 
   handleClick() {
-    const { updateRecentMessage } = this.props;
-    if(this.props.message.key  != null  && this.props.message.key !== "") {
+    if (this.props.message.key  != null  && this.props.message.key !== "") {
       this.openDialog();
     }
   };

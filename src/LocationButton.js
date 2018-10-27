@@ -155,8 +155,8 @@ class LocationButton extends Component {
     }
   }
 
-  errorCallBack(error) {
-    console.warn('ERROR(${err.code}): ${err.message}');
+  errorCallBack(err) {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
   }
 
   handleGetLocation() {
@@ -354,5 +354,4 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(
   mapStateToProps
-)
-(withStyles(styles)((LocationButton)));
+)(withStyles(styles)(LocationButton));

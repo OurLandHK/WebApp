@@ -123,10 +123,6 @@ function Transition(props) {
                           },
                       ];
 
-  function addressInputed(userProfile, bookmarkList, addressLis) {
-
-  }
-
 class MissionView extends React.Component {
   constructor(props) {
     super(props);
@@ -196,12 +192,11 @@ class MissionView extends React.Component {
 
   // find last mission isn't complete
   renderHighlightMission(taskList) {
-    const { classes } = this.props;
     let rv = null;
     let done = 0;
     if(this.state.userProfile) {
         taskList.map((task) => {
-            if(task.status != constant.missionDone) {
+            if(task.status !== constant.missionDone) {
                 if(!rv) {
                     rv = this.renderTaskCard(task);
                 }
@@ -281,7 +276,7 @@ class MissionView extends React.Component {
             let desc = taskCriteria.desc;
             let badgeName = taskCriteria.badgeName;
             let badgeImage = taskCriteria.badgeImage;
-            if(status != constant.missionDone) {
+            if(status !== constant.missionDone) {
                 badgeImage = "/images/secret.png"
                 badgeName = constant.secretMission;
                 if(taskCriteria.hideBeforeDone) {
@@ -304,8 +299,6 @@ class MissionView extends React.Component {
   }
 
   render() {
-    var displayName = "...";
-    let imageHtml = "等一下";
     let taskHtml = null;
 
     let taskList = [];

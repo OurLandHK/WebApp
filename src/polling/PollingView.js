@@ -92,7 +92,7 @@ class PollingView extends React.Component {
     let numOfPollng = numOfMaxPollng;
     let idx = selectedOption.indexOf(index);
     if(idx < 0) {
-      if(numOfPollng == 0) {
+      if(numOfPollng === 0) {
         return this.props.openSnackbar(constant.excessNumOfPollingIndex, 'warning');
       }
       selectedOption.push(index);

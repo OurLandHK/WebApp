@@ -3,7 +3,6 @@ import {constant} from './config/default';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Slide from '@material-ui/core/Slide';
 import Card from '@material-ui/core/Card';
 import MessageList from './MessageList';
 import {connect} from "react-redux";

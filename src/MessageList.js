@@ -55,7 +55,7 @@ class MessageList extends Component {
     console.log(`componentDidMount ${this.props.id} ${this.state.geolocation.longitude}`);
     if(this.state.messageIds.length !== 0) {
        this.refreshMessageList();
-    } else  if(this.state.geolocation && this.state.geolocation != constant.invalidLocation) {
+    } else if (this.state.geolocation && this.state.geolocation !== constant.invalidLocation) {
       this.updateGlobalFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
    }
   }

@@ -13,7 +13,6 @@ import {
   FETCH_LOCATION,
   FETCH_ADDRESS_BOOK,
   FETCH_PUBLIC_ADDRESS_BOOK,
-  FETCH_FOCUS_MESSAGE,
   FETCH_GLOBAL_BOOKMARKLIST,
   UPDATE_PUBLIC_PROFILE_DIALOG,
   TOGGLE_PUBLIC_PROFILE_DIALOG,
@@ -341,7 +340,7 @@ export function fetchAddressBookByUser(user) {
     getAddressBook(user).then((addresses) => {
       dispatch(fetchAddressBook(addresses));
     });
-    
+
   };
 }
 
@@ -492,7 +491,7 @@ export function fetchTopTwenty() {
     var collectionRef = db.collection(config.userDB).orderBy('publishMessagesCount', 'desc').limit(20);
     collectionRef.onSnapshot(function() {})
     collectionRef.get().then(function(querySnapshot){
-       const users = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
+       const users = querySnapshot.docs.map(d => ({...d.data(), id: d.id}));
        console.log(users);
        dispatch({type: FETCH_TOP_TWENTY, users: users}) ;
     })

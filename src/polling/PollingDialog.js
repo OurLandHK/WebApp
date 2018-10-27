@@ -75,7 +75,7 @@ class PollingDialog extends React.Component {
 
     if(polling.results !== undefined && polling.results.length > 0) {
       polling.results.find((result, index) => {
-        if(result.uid == user.user.uid) {
+        if(result.uid === user.user.uid) {
           this.setState({isAlreadyPolled: true, disabledPolling: true});
         }
       })
@@ -107,7 +107,7 @@ class PollingDialog extends React.Component {
     const { status } = this.props;
     let pollingLabel = constant.pollingLabel;
 
-    if(status == constant.statusOptions[1]) {
+    if(status === constant.statusOptions[1]) {
       pollingLabel = constant.isAlreadyEndedLabel;
     } else if(this.state.isAlreadyPolled) {
       pollingLabel = constant.isAlreadyPolledLabel;
