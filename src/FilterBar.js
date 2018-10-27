@@ -11,8 +11,7 @@ import {fetchLocation} from "./actions";
 
 const styles = {
   filter: {
-    //width: '100%',
-    borderColor: 'primary',
+    justifyContent: 'center',
     fontWeight: 'bold',
     fontSize: '0.8rem',
     textAlign: 'center'

@@ -17,7 +17,7 @@ const styles = theme => ({
     borderRadius: '10px',
     backgroundColor: theme.palette.common.white,
     border: '1px solid #ced4da',
-    flex: 1,
+    flex: 1
   },
   cover: {
     width: 64,

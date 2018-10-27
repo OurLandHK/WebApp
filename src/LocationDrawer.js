@@ -77,9 +77,6 @@ signButton: {
     fontStyle: 'italic',
     fontSize: '1.0rem',
   },
-  container: {
-    width: '98vw'
-  }
 });
 
 
@@ -292,7 +289,7 @@ class LocationDrawer extends React.Component {
       let firstItem = this.renderFirstListItem();
       const { classes } = this.props;
       return (
-      <div className={classes.container}>
+      <div>
           <Button
             variant="outlined" color="primary"
             onClick={() => {this.toggleDrawer(true)}}

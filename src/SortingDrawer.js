@@ -52,9 +52,6 @@ const styles = theme => ({
     fontStyle: 'italic',
     fontSize: '1.0rem',
   },
-  container: {
-    width: '98vw'
-  },
   signButton: {
     fontWeight: 'bold',
     display: 'inline-block',
@@ -137,7 +134,7 @@ class SortingDrawer extends React.Component {
       let sortBtnLabel = this.renderSortBtnLabel();
       const { classes } = this.props;
       return (
-      <div className={classes.container}>
+      <div>
           <Button
             variant="outlined" color="primary"
             onClick={() => {this.toggleDrawer(true)}}
