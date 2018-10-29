@@ -80,15 +80,18 @@ class MessageDialog extends React.Component {
   }
 
   _openDialog(updateURL){
-    let uuid = this.props.uuid;
+    let link = this.props.uuid.split('?fbclid');
+    let uuid = link[0];
+    let uuidWithFbclid = link.length > 1? link [1]: null;
+
     return getMessage(uuid).then((message) => {
       this.message = message;
       if(updateURL) {
         this.lastOnPopState = window.onpopstate;
         window.onpopstate = this.onBackButtonEvent;
-        window.history.pushState("", "", `/detail/${this.props.uuid}`);
+        window.history.pushState("", "", `/detail/` + uuidWithFbclid==null? uuid : uuidWithFbclid);
       }
-      console.log(this.props.user);
+      
       // check the message viewed in this session or not.
       if(this.props.recentMessage.recentids.indexOf(uuid) === -1) {
         incMessageViewCount(uuid);
