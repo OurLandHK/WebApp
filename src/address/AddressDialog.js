@@ -1,4 +1,3 @@
-/*global FB*/
 import React from 'react';
 import {constant} from '../config/default';
 import Dialog from '@material-ui/core/Dialog';

@@ -48,7 +48,7 @@ function fetchFocusMessagesBaseOnGeo(geocode, radius) {
 
     let collectionRef = db.collection(config.focusMessageDB);
     collectionRef.onSnapshot(function() {})
-    if(geocode  != null  && geocode !== NaN && geocode.latitude !== undefined) {
+    if(geocode  != null  && !isNaN(geocode) && geocode.latitude !== undefined) {
         const KM_PER_DEGREE_LATITUDE = 110.574;
         const latDegrees = radius / KM_PER_DEGREE_LATITUDE;
         const latitudeNorth = Math.min(90, geocode.latitude + latDegrees);

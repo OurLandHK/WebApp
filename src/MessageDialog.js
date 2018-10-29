@@ -96,7 +96,7 @@ class MessageDialog extends React.Component {
       if(this.props.recentMessage.recentids.indexOf(uuid) === -1) {
         incMessageViewCount(uuid);
       }
-      
+
       this.props.updateRecentMessage(uuid, false);
       if(this.props.user  && this.props.user.user) {
         // get sad and happy inital value
@@ -129,7 +129,6 @@ class MessageDialog extends React.Component {
   render() {
     const { classes } = this.props;
     var user = null;
-    var uuid = this.props.uuid;
     let titleHtml = null;
     let detailView = null;
     let deleteButton = null;

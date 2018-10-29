@@ -137,7 +137,6 @@ class MessageDetailView extends Component {
 
   renderTitle() {
     const { user, message, classes} = this.props;
-    let timeOffset = Date.now() - message.createdAt.toDate();
     let urgentEventTag = null;
 
     if(user  != null  && user.userProfile  != null  && (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor)) {

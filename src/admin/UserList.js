@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import config, {constant} from '../config/default';
+import {constant} from '../config/default';
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -15,13 +15,12 @@ const styles = theme => ({
     overflowY: 'hidden',
     whiteSpace: 'nowrap',
   },
-
   scrollingItem: {
       display: 'inline-block',
   },
   container: {
     overflowY: 'auto'
-  }  
+  }
 });
 
 class UserList extends Component {
@@ -70,8 +69,6 @@ class UserList extends Component {
 
   fetchUsers(filter) {
     const {
-     eventNumber: numberOfMessage,
-     distance,
      geolocation
     } = filter;
     this.setState({geolocation: geolocation});
@@ -113,14 +110,6 @@ class UserList extends Component {
   }
 
   render() {
-    const classes = this.props.classes;
-    let lon = 0;
-    let lat = 0;
-
-    if(this.state.geolocation  != null  && this.state.geolocation !== constant.invalidLocation) {
-      lon = this.state.geolocation.longitude;
-      lat = this.state.geolocation.latitude;
-    }
     return (
         <React.Fragment>
             {this.state.data.map((t, i) => {return this.renderUser(t, i + 1);})}

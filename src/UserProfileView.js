@@ -1,4 +1,3 @@
-/*global FB*/
 import React from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
 import Button from '@material-ui/core/Button';
@@ -25,17 +24,13 @@ import {
   checkAuthState,
   openSnackbar
 } from './actions';
-import  {constant , RoleEnum} from './config/default';
+import  {constant} from './config/default';
 
 function Transition(props) {
   return <Slide direction="left" {...props} />;
 }
 
 /* eslint-disable flowtype/require-valid-file-annotation */
-
-const currentLocationLabel = "現在位置";
-const officeLocationLabel = "辦公室位置";
-const homeLocationLabel = "屋企位置";
 
 const styles = {
   appBar: {
@@ -141,10 +136,7 @@ class UserProfileView extends React.Component {
   }
 
   interestedTagsToMultiLabel(interestedTags){
-    var tags = [];
-    interestedTags.map(interestedTag => {
-      tags.push(interestedTag.text);
-    });
+    var tags = interestedTags.map(interestedTag => interestedTag.text);
 
     return tags.join();
   }
@@ -179,7 +171,7 @@ class UserProfileView extends React.Component {
     /*
       User's Email Address
     */
-    const regExp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+    const regExp = new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
     if(this.state.emailAddress !== '' && !regExp.test(this.state.emailAddress)) {
       error = 1;
     }else {
@@ -225,25 +217,14 @@ class UserProfileView extends React.Component {
     this.setState({interestedTags});
   }
   render() {
-    const { classes, user, addressBook } = this.props;
+    const { classes } = this.props;
     var imgURL = '/images/profile_placeholder.png';
-    var publish = 0;
-    var concern = 0;
-    var complete = 0;
-    let concernMessage = null;
-    let publishMessage = null;
-    let completeMessage = null;
     let emailHtml = null;
-    let dialogHtml = null;
     if (this.state.user  != null  && this.state.userProfile  != null ) {
         if(checkImageExists(this.state.userProfile.photoURL)) {
           imgURL = this.state.userProfile.photoURL;
         }
         this.path = "UserProfile/" + this.state.user.uid + "/";
-        var desc = '';
-        if(this.state.userProfile.desc) {
-          desc = this.state.userProfile.desc;
-        }
     }
     //if(user  != null  && user.userProfile  != null  && (user.userProfile.role === RoleEnum.admin ||  user.userProfile.role === RoleEnum.betaUser || user.userProfile.role === RoleEnum.monitor)) {
       emailHtml = <TextField
@@ -265,7 +246,7 @@ class UserProfileView extends React.Component {
               <CloseIcon />
             </IconButton>
             <Typography variant="title" color="inherit" className={classes.flex}>
-              <img src={imgURL} style={{height:"20px", width:"20px"}}/>&nbsp;&nbsp;{"使用者設定"}
+              <img src={imgURL} style={{height:"20px", width:"20px"}} alt="使用者設定"/>&nbsp;&nbsp;{"使用者設定"}
             </Typography>
             <Button color="contrast" onClick={() => this.onSubmit()}>
               更新
@@ -335,9 +316,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     checkAuthState:
       () => dispatch(checkAuthState()),
-    openSnackbar: 
-     (message, variant) => 
-       dispatch(openSnackbar(message, variant)),    
+    openSnackbar:
+     (message, variant) =>
+       dispatch(openSnackbar(message, variant)),
   }
 };
 

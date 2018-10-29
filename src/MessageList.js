@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
-import config, {constant} from './config/default';
+import {constant} from './config/default';
 import MessageView from './MessageView';
 import distance from './Distance';
 import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
@@ -14,11 +13,9 @@ const styles = theme => ({
     overflowY: 'hidden',
     whiteSpace: 'nowrap',
   },
-
   scrollingItem: {
       display: 'inline-block',
   },
-
   messageListWrapper: {
     maxHeight: '300px'
   }
@@ -58,7 +55,7 @@ class MessageList extends Component {
     console.log(`componentDidMount ${this.props.id} ${this.state.geolocation.longitude}`);
     if(this.state.messageIds.length !== 0) {
        this.refreshMessageList();
-    } else  if(this.state.geolocation && this.state.geolocation != constant.invalidLocation) {
+    } else if (this.state.geolocation && this.state.geolocation !== constant.invalidLocation) {
       this.updateGlobalFilter(this.state.eventNumber, this.state.distance, this.state.geolocation);
    }
   }

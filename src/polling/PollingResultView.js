@@ -2,16 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 import { constant } from '../config/default';
 
 const styles = theme => ({
@@ -105,7 +97,7 @@ class PollingResultView extends React.Component {
       width: precentage + '%'
     }
 
-    if(precentage == 0) {
+    if(parseInt(precentage) === 0) {
       style = {...style, color: '#000'}
     }
 
@@ -123,8 +115,7 @@ class PollingResultView extends React.Component {
 
   render() {
     const { classes, polling } = this.props;
-    const { numOfMaxPollng, selectedOption } = this.state;
-    
+
     return (
       <Paper className={classes.root}>
         <Grid container className={classes.pollingContainer} spacing={0}>

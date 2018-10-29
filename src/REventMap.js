@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { compose, withProps, withState, withHandlers } from "recompose";
+import { compose, withProps, withHandlers } from "recompose";
 import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import CardMedia from '@material-ui/core/CardMedia';
 

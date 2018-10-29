@@ -1,9 +1,6 @@
-/*global FB*/
-import React, { Component } from 'react';
-import config, {constant} from './config/default';
+import React from 'react';
+import {constant} from './config/default';
 import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
@@ -48,7 +45,7 @@ const styles = theme =>  ({
       padding: theme.spacing.unit,
       textAlign: 'center',
       color: theme.palette.text.secondary,
-    },    
+    },
     container: {
        overflowY: 'auto'
     },
@@ -79,7 +76,7 @@ const styles = theme =>  ({
       border: '2px solid white',
       borderRadius: '2px',
       boxShadow: '0 0 0 3px #006eb9, 0 0 10px #aaa',
-    }, 
+    },
     chip: {
       margin: theme.spacing.unit / 2,
     },
@@ -92,13 +89,13 @@ const styles = theme =>  ({
       borderRadius: '10px',
       backgroundColor: theme.palette.common.white,
       border: '1px solid #ced4da',
-    }, 
+    },
     searchInput: {
       borderRadius: '10px',
       backgroundColor: theme.palette.common.white,
       border: '1px solid #ced4da',
       flex: 1,
-    }, 
+    },
     dialogTitle: {
       background: 'linear-gradient(to bottom, #006fbf  50%, #014880 50%)',
     }
@@ -125,13 +122,13 @@ class SearchEventDialog extends React.Component {
     this.geoSuccessCallBack = this.geoSuccessCallBack.bind(this);
     this.streetAddressSuccessCallBack = this.streetAddressSuccessCallBack.bind(this);
     this.geoLocationSuccessCallBack = this.geoLocationSuccessCallBack.bind(this);
-    this.notSupportedCallBack = this.notSupportedCallBack.bind(this);      
+    this.notSupportedCallBack = this.notSupportedCallBack.bind(this);
   }
   notSupportedCallBack() {
     this.disabled = true;
     console.log('Disabled');
   }
-  
+
   geoSuccessCallBack(pos) {
     console.log("geoSccessCallBack " +pos.coords.latitude  + pos.coords.longitude);
     this.tempGeolocation = pos;
@@ -162,34 +159,34 @@ class SearchEventDialog extends React.Component {
   geoLocationSuccessCallBack(err, response) {
     if (!err) {
       console.log(response.json.results);
-      this.state.streetAddress = response.json.results[0].formatted_address;
+      this.setState({
+        streetAddress: response.json.results[0].formatted_address
+      });
       this.successCallBack(this.tempGeolocation);
     }
   }
 
-  errorCallBack(error) {
-    console.warn('ERROR(${err.code}): ${err.message}');
+  errorCallBack(err) {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
   }
 
   handleGetLocation() {
     this.setState({geolocation: null});
-    if (this.disabled) {
-      alert('Location not supported!');
-    }
-    else {
-      getCurrentLocation(this.geoSuccessCallBack, this.errorCallBack, this.notSupportedCallback);
-    }
+    (this.disabled)
+      ?
+        alert('Location not supported!')
+      :
+        getCurrentLocation(this.geoSuccessCallBack, this.errorCallBack, this.notSupportedCallback);
   }
-  
+
 
   handleGetLocationFromStreetAddress() {
     this.setState({geolocation: null});
-    if (this.disabled) {
-      alert('Location not supported!');
-    }
-    else {
-      getGeoLocationFromStreetAddress(this.state.streetAddress, this.streetAddressSuccessCallBack, this.errorCallBack);
-    }
+    (this.disabled)
+      ?
+        alert('Location not supported!')
+      :
+        getGeoLocationFromStreetAddress(this.state.streetAddress, this.streetAddressSuccessCallBack, this.errorCallBack);
   }
 
   renderStreetAddressSearch() {
@@ -205,7 +202,7 @@ class SearchEventDialog extends React.Component {
           <TextField
             autoFocus
             fullWidth
-            className={classes.searchInput} 
+            className={classes.searchInput}
             id="stressAddress"
             placeholder="街道地址(中/英文均可)"
             type="text"
@@ -215,9 +212,7 @@ class SearchEventDialog extends React.Component {
       </React.Fragment>
     );
    } else {
-    return (
-        null
-    );
+    return null;
    }
   }
 
@@ -245,8 +240,6 @@ class SearchEventDialog extends React.Component {
     e.preventDefault();
     this.handleRequestClose();
   }
-
-
 
   renderMessages() {
     const { classes, distance, eventNumber } = this.props;
@@ -288,28 +281,24 @@ class SearchEventDialog extends React.Component {
     const TotalButton = buttons.length;
     let buttonList = [];
     for(let i = 0; i < TotalButton; i++) {
-      let buttonHtml = <Button className={classes.signButton} aria-label={buttons[i].label}
-          onClick={(evt) => this.handleRequestOpen(evt, buttons[i].label, buttons[i].value)}>
-          {buttons[i].label}
-          </Button>
-        buttonList.push(buttonHtml);
+      let buttonHtml = <Button key={i} className={classes.signButton} aria-label={buttons[i].label}
+                        onClick={(evt) => this.handleRequestOpen(evt, buttons[i].label, buttons[i].value)}>
+                        {buttons[i].label}
+                      </Button>
+      buttonList.push(buttonHtml);
     }
     const cardImage = (
       <CardMedia
         className={classes.media}
         image="/images/Dennis9.jpg"
-        title={constant.regionEventLabel}
-      >
+        title={constant.regionEventLabel}>
         {constant.hotItemLabel}
-        <Grid container >
+        <Grid container>
           <Grid container className={classes.buttonGird}>
             {buttonList}
           </Grid>
         </Grid>
-        <div
-          className={classes.mediaCredit}
-        >
-        </div>
+        <div className={classes.mediaCredit} />
       </CardMedia>
     );
     return cardImage;
@@ -320,13 +309,14 @@ class SearchEventDialog extends React.Component {
     let messageHtml = null;
     let hotItemHtml = this.renderHotItem();
 
-    if(this.state.open)  {
+    if (this.state.open)  {
         messageHtml = this.renderMessages();
     }
-    let titleLabel = `${constant.searchEventLabel} - ${this.state.streetAddress}`;
-    if(this.state.searchByTag) {
-      titleLabel = `${constant.searchEventLabel} - ${this.state.titleLabel}`;
-    }
+    let titleLabel = (this.state.searchByTag)
+      ?
+        `${constant.searchEventLabel} - ${this.state.titleLabel}`
+      :
+        `${constant.searchEventLabel} - ${this.state.streetAddress}`;
     return (
         <div>
             <Dialog fullScreen open={open} onClose={this.handleClose} transition={Transition}  aria-labelledby="form-dialog-title">
@@ -371,11 +361,11 @@ const mapDispatchToProps = (dispatch) => {
   return {
     toggleSearchEventDialog: flag =>
       dispatch(toggleSearchEventDialog(flag)),
-    updateSearchEventLocation: geolocation => 
+    updateSearchEventLocation: geolocation =>
       dispatch(updateSearchEventLocation(geolocation)),
     updateFilterLocation:
       (geolocation, distance) =>
-        dispatch(updateFilterLocation(geolocation, distance)),      
+        dispatch(updateFilterLocation(geolocation, distance)),
   }
 };
 

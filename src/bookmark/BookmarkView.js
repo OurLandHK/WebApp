@@ -23,10 +23,10 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import ShareDrawer from '../ShareDrawer';
 import timeOffsetStringInChinese from '../TimeString';
-import  {constant, RoleEnum} from '../config/default';
+import  {constant} from '../config/default';
 import  MessageList from '../MessageList';
 import TagDrawer from '../TagDrawer';
-import {fileExists, checkImageExists} from '../util/http';
+import {checkImageExists} from '../util/http';
 import ReactHtmlParser from 'react-html-parser';
 import {linkify} from '../util/stringHandling';
 import { dropBookmark, addBookmark, updateBookmark, incBookmarkViewCount, getUserProfile} from '../UserProfile';
@@ -63,7 +63,7 @@ const styles = theme => ({
         alignContent: 'center',
 
         padding: '8px'
-    },      
+    },
 });
 
 class BookmarkView extends Component {
@@ -72,7 +72,7 @@ class BookmarkView extends Component {
         let title = "";
         let messages = [];
         let desc = "";
-        let key = "";   
+        let key = "";
         let uid = "";
         let readonly = false;
         let open = false;
@@ -84,7 +84,7 @@ class BookmarkView extends Component {
             desc = c.desc;
             uid = c.uid;
             readonly = true;
-        }        
+        }
         if(this.props.open !== undefined) {
             open = this.props.open;
         }
@@ -131,7 +131,7 @@ class BookmarkView extends Component {
         let title = "";
         let messages = [];
         let desc = "";
-        let key = "";  
+        let key = "";
         let uid = "";
         let readonly = false;
         if(this.props.bookmark  != null ) {
@@ -150,14 +150,14 @@ class BookmarkView extends Component {
                 incViewCount = true;
               }
               updateRecentBookmark(uid, key, false);
-        
+
               if(incViewCount) {
                 let user = {uid: uid};
                 incBookmarkViewCount(user, key);
               }
             }
           };
-        
+
         this.setState({
             popoverOpen: true,
             title: title,
@@ -169,7 +169,7 @@ class BookmarkView extends Component {
         });
         window.history.pushState("", "", `/user/${uid}/${key}`)
       }
-    
+
     handleRequestClose() {
         //window.history.pushState("", "", "/");
         if(this.props.closeDialog  != null ) {
@@ -182,13 +182,13 @@ class BookmarkView extends Component {
                uid: ""
             });
         }
-    };   
+    };
 
     onBackButtonEvent(e) {
         e.preventDefault();
         this.handleRequestClose();
       }
-        
+
 
     onSubmit() {
         const { user } = this.props;
@@ -203,13 +203,13 @@ class BookmarkView extends Component {
                 bookmark.desc = this.state.desc;
                 updateBookmark(user.user, bookmark.key, bookmark, true).then(()=> {this.props.checkAuthState();});
             } else {
-                addBookmark(uuid.v4(), 
-                user.user, 
+                addBookmark(uuid.v4(),
+                user.user,
                 this.state.title,
                 this.state.desc,
                 this.state.messages).then(()=> {this.props.checkAuthState();});
-            }       
-            this.setState({popoverOpen: false});  
+            }
+            this.setState({popoverOpen: false});
         }
     }
 
@@ -219,15 +219,15 @@ class BookmarkView extends Component {
           updatePublicProfileDialog(bookmark.uid, bookmark.uid, true)
         }
       };
-    
+
     onDelete() {
       const { user } = this.props;
-      if (user.user.uid === this.state.uid) {         
+      if (user.user.uid === this.state.uid) {
         dropBookmark(user.user, this.state.key).then(()=> {this.props.checkAuthState();});
-      }  
+      }
       this.setState({popoverOpen: false});
     }
-    
+
     renderReadonly() {
         let viewCountString = constant.viewCountLabel;
         const { bookmark, classes} = this.props;
@@ -238,7 +238,7 @@ class BookmarkView extends Component {
         let photoUrl = '/images/profile_placeholder.png';
         let displayName = "";
         if(this.state.userProfile  != null  && checkImageExists(this.state.userProfile.photoURL)) {
-            displayName =  this.state.userProfile.displayName,
+            displayName =  this.state.userProfile.displayName;
             photoUrl = this.state.userProfile.photoURL;
         }
         let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
@@ -247,7 +247,7 @@ class BookmarkView extends Component {
         } else {
             viewCountString += 0;
         }
-  
+
         return (
           <Grid container spacing={16}>
             <Grid item className={classes.authorGrid}>
@@ -295,12 +295,12 @@ class BookmarkView extends Component {
             }
             if(user.user  != null  && user.user.uid === c.uid) {
                 deleteButtonHtml = <IconButton color="contrast" onClick={() => this.onDelete()} aria-label="Delete">
-                                    <DeleteIcon />  
+                                    <DeleteIcon />
                                     </IconButton>
             }
         } else {
             titleText = constant.addBookmarkLabel;
-            addressButtonHtml = 
+            addressButtonHtml =
                 <ListItem button onClick={(evt) => this.handleRequestOpen(evt)}>
                     <AddIcon/>
                     <ListItemText primary={constant.addBookmarkLabel} />
@@ -323,9 +323,9 @@ class BookmarkView extends Component {
         } else {
             actionButtonHtml = <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>{titleText}</Button>;
             titleEditHtml = <TextField disabled={this.state.readonly} autoFocus required inputRef={(tf) => {this.titleTextField = tf;}} id="title" fullWidth margin="normal" helperText={constant.bookmarkTitleLabel} value={this.state.title} onChange={event => this.setState({ title: event.target.value })}/>
-            descHtml = <TextField disabled={this.state.readonly} required id="desc" fullWidth  
+            descHtml = <TextField disabled={this.state.readonly} required id="desc" fullWidth
                     multiline
-                    rowsMax="20" 
+                    rowsMax="20"
                     margin="normal" helperText={constant.descLabel} value={this.state.desc} onChange={event => this.setState({ desc: event.target.value })}/>
         }
         return(<span>
@@ -351,7 +351,7 @@ class BookmarkView extends Component {
                             {descHtml}
                             <TagDrawer isRenderTagList={isRenderTagList}/>
                             {messageHtml}
-                        </DialogContent>  
+                        </DialogContent>
                     </Dialog>
                 </span>);
     }
@@ -371,11 +371,11 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        openSnackbar: 
-        (message, variant) => 
-          dispatch(openSnackbar(message, variant)),           
+        openSnackbar:
+        (message, variant) =>
+          dispatch(openSnackbar(message, variant)),
         checkAuthState:
-        () => dispatch(checkAuthState()),    
+        () => dispatch(checkAuthState()),
         updateRecentBookmark:
         (uid, bookmark, open) => dispatch(updateRecentBookmark(uid, bookmark, open)),
         updatePublicProfileDialog:

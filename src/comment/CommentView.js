@@ -5,7 +5,6 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
 import timeOffsetStringInChinese from '../TimeString';
 import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
@@ -42,7 +41,7 @@ const styles = theme => ({
     tileMedia: {
         width: 151,
         height: 151,
-    },    
+    },
 });
 
 class CommentView extends Component {
@@ -111,7 +110,7 @@ class CommentView extends Component {
             default:
                 console.log('Option: ' + constant.commentOptions[0]);
                 messageRecord = null; // for update time
-                break;                
+                break;
         }
 
         return updateMessage(messageUUID, messageRecord, true).then(() => {
@@ -137,7 +136,7 @@ class CommentView extends Component {
                                 }else {
                                     return me.openSnackbar(constant.addCompleteMessageFailure, 'error');
                                 }
-                                
+
                             })
                         } else {
                             if(ref !== 'undefined' && ref !== null) {
@@ -160,7 +159,7 @@ class CommentView extends Component {
                             }
                         });
 
-                        if(galleryEntry.thumbnailUpdate != null &&  galleryEntry.thumbnailUpdate != undefined && galleryEntry.thumbnailUpdate) {
+                        if(galleryEntry.thumbnailUpdate !== null &&  galleryEntry.thumbnailUpdate !== undefined && galleryEntry.thumbnailUpdate) {
                             return updateMessageThumbnail(messageUUID, galleryEntry.imageURL, galleryEntry.publicImageURL, galleryEntry.thumbnailImageURL, galleryEntry.thumbnailPublicImageURL).then((ref) => {
                             if(ref !== 'undefined' && ref !== null) {
                                 return me.openSnackbar(constant.updateMessageThumbnailSuccess, 'success');
@@ -168,9 +167,8 @@ class CommentView extends Component {
                                 return me.openSnackbar(constant.updateMessageThumbnailFailure, 'error');
                             }
                         });
-                        } 
-                    } 
-                    return me.openSnackbar(constant.approveMessageSuccess, 'success');;  
+                        }
+                    }
                 });
             }
         })
@@ -239,7 +237,7 @@ class CommentView extends Component {
                 }
             }
         }
-    } 
+    }
     text = '<div>'+linkify(text)+'</div>';
     let textHtml = ReactHtmlParser(text);
     if(galleryEntry  != null ) {
@@ -274,8 +272,8 @@ class CommentView extends Component {
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     let subtitle = '張貼於：' + timeOffsetString + '前 ' + approvedLog;
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
-    return (<Card container className={classes.card}>    
-                {fbProfileImage}               
+    return (<Card container className={classes.card}>
+                {fbProfileImage}
                 <div className={classes.details}>
                     <CardContent className={classes.content} zeroMinWidth>
                         {textHtml}
@@ -285,7 +283,7 @@ class CommentView extends Component {
                     </CardContent>
                 </div>
                 {approvedButton}
-                {galleryImage} 
+                {galleryImage}
             </Card>);
   }
 }
@@ -309,9 +307,9 @@ CommentView.propTypes = {
         checkAuthState:
             () =>
                 dispatch(checkAuthState()),
-         openSnackbar: 
-         (message, variant) => 
-            dispatch(openSnackbar(message, variant)),        
+         openSnackbar:
+         (message, variant) =>
+            dispatch(openSnackbar(message, variant)),
     }
   };
 

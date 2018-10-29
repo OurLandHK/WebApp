@@ -1,21 +1,10 @@
-/*global FB*/
-import React, { Component } from 'react';
-import * as firebase from 'firebase';
-import config, {constant, addressEnum, RoleEnum} from './config/default';
+import React from 'react';
+import {constant, addressEnum, RoleEnum} from './config/default';
 import MessageView from './MessageView';
 import BookmarkView from './bookmark/BookmarkView';
-import Dialog from '@material-ui/core/Dialog';
-import Badge from '@material-ui/core/Badge';
-import IconButton from '@material-ui/core/IconButton';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
 import MessageList from './MessageList';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MissionView from './mission/MissionView';
 import FilterBar from './FilterBar';
 import {fetchMessagesBaseOnGeo, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags, getMessage} from './MessageDB';
@@ -24,11 +13,6 @@ import {
   toggleAddressDialog,
 } from "./actions";
 import {connect} from "react-redux";
-
-function Transition(props) {
-  return <Slide direction="down" {...props} />;
-}
-
 
 const styles = {
     appBar: {
@@ -131,10 +115,7 @@ class NotificationsDialog extends React.Component {
     const lastLoginTime = user.lastLogin;
     addressBook.addresses.map((address) => {
       if(address.geolocation  != null  && (address.type === addressEnum.home || address.type === addressEnum.office)) {
-        let distance = constant.distance;
-        if(address.distance  != null ) {
-          distance = address.distance;
-        }
+        let distance = (address.distance != null ) ? address.distance : constant.distance;
         if(user.userProfile.role === RoleEnum.admin) {
           distance = 100;
         }
@@ -155,7 +136,7 @@ class NotificationsDialog extends React.Component {
 
   handleRequestOpen(evt) {
     evt.preventDefault();
-    const { classes, user} = this.props;
+    const {user} = this.props;
     if(this.state.messageIds.length > 0 || user.userProfile) {
         this.setState({open: true});
     }
@@ -183,7 +164,7 @@ class NotificationsDialog extends React.Component {
   }
 
   renderMission() {
-    const { classes, user, addressBook } = this.props;
+    const { user, addressBook } = this.props;
     if(user.userProfile) {
       return (
         <React.Fragment>
@@ -199,7 +180,7 @@ class NotificationsDialog extends React.Component {
 
 
   render() {
-    const { classes, user} = this.props;
+    const {user} = this.props;
     const {queryMessage, bookmark} = this.state;
     let messageHtml = null;
     let missionHtml = null;
@@ -216,8 +197,11 @@ class NotificationsDialog extends React.Component {
 
     missionHtml = this.renderMission();
     if(this.state.messageIds.length > 0) {
-      if(this.state.messageIds.length != this.state.messageIdsLength) {
-        this.state.messageIdsLength = this.state.messageIds.length;
+      if (this.state.messageIds.length !== this.state.messageIdsLength) {
+        this.setState({
+          messageIdsLength: this.state.messageIds.length
+        });
+
         messageHtml = null;
       } else {
         messageHtml = this.renderMessages();

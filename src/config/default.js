@@ -95,7 +95,6 @@ let constant = {
   tagLabel: '分類',
   tagPlaceholder: '新增分類',
   interestedTagPlaceholder: '新增喜愛分類',
-  notificationLabel: '通知',
   weekdayLabel : ['日', '一', '二', '三', '四', '五', '六'],
   openningOptions : ['每日', '自訂'],
   intervalOptions : ['不重複', '每星期', '每兩星期','每月'],

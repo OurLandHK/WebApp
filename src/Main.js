@@ -1,6 +1,5 @@
 import { withStyles } from '@material-ui/core/styles';
 import NearbyEventDialog from './NearbyEventDialog';
-import RegionEventDialog from './RegionEventDialog';
 import MessageView from './MessageView';
 import BookmarkView from './bookmark/BookmarkView';
 import {getMessage} from './MessageDB';

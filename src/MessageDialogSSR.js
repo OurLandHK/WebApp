@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {connect} from "react-redux";
 import {
   checkAuthState,
-  fetchConcernMessagesFromOurLand,  
+  fetchConcernMessagesFromOurLand,
 } from './actions';
 
 import MessageDialog from './MessageDialog';
@@ -24,9 +24,9 @@ class MessageDialogSSR extends Component {
          <MessageDialog
            uuid={uuid}
            open={true}
-           openDialog={()=>{}} openDialog={openDialog => this.openDialog = openDialog}
+           openDialog={openDialog => this.openDialog = openDialog}
            ref={(messageDialog) => {this.messageDialog = messageDialog;}}
-           closeDialog={() => {window.location.href = homeUrl;}} 
+           closeDialog={() => {window.location.href = homeUrl;}}
          />
         }
       </React.Fragment>

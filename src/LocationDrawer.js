@@ -64,11 +64,10 @@ signButton: {
   color: 'white',
   backgroundColor: '#006eb9',
   padding: '5px',
-  border: '2px solid white',
-  borderRadius: '2px',
-  boxShadow: '0 0 0 3px #006eb9, 0 0 10px #aaa',
-}, 
-
+  '&:hover': {
+    backgroundColor: '#006eb9',
+  }
+},
   buttonContainer: {
 //    flex: '1 0 auto',
   },
@@ -78,9 +77,6 @@ signButton: {
     fontStyle: 'italic',
     fontSize: '1.0rem',
   },
-  container: {
-    width: '98vw'
-  }
 });
 
 
@@ -229,7 +225,7 @@ class LocationDrawer extends React.Component {
         //console.log(text);
         icons = <FolderIcon />
         return (
-          <ListItem button onClick={() => {this.setLocationPrefix(this.state.locationPrefix + text + '/')}}>
+          <ListItem key={text} button onClick={() => {this.setLocationPrefix(this.state.locationPrefix + text + '/')}}>
             <ListItemIcon>
             {icons}
             </ListItemIcon>
@@ -239,7 +235,7 @@ class LocationDrawer extends React.Component {
       } else if (locationString !== constant.addressNotSet ) {
        text = `${text} ${constant.nearby} ${distance}${constant.kilometre}`;
        return (
-         <ListItem button onClick={() => {this.setLocation(this.state.locationPrefix + text, distance, geolocation)}}>
+         <ListItem key={text} button onClick={() => {this.setLocation(this.state.locationPrefix + text, distance, geolocation)}}>
            <ListItemIcon>
            {icons}
            </ListItemIcon>
@@ -248,7 +244,7 @@ class LocationDrawer extends React.Component {
        );
      } else {
 //       console.log(text + " " +  address.geolocation + " " + locationString)
-       return (null);
+       return null;
      }
     });
   }
@@ -293,7 +289,7 @@ class LocationDrawer extends React.Component {
       let firstItem = this.renderFirstListItem();
       const { classes } = this.props;
       return (
-      <div className={classes.container}>
+      <div>
           <Button
             variant="outlined" color="primary"
             onClick={() => {this.toggleDrawer(true)}}

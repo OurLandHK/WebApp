@@ -2,7 +2,6 @@
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import IconButton from '@material-ui/core/IconButton';
-import Divider from '@material-ui/core/Divider';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -22,8 +21,6 @@ import {connect} from "react-redux";
 
 // Ourland
 import {fetchBookmarkList, getUserProfile, getAddressBook} from '../UserProfile';
-import ShareDrawer from '../ShareDrawer';
-import {checkImageExists} from '../util/http';
 import {constant, addressEnum} from '../config/default';
 import {trackEvent} from '../track';
 
@@ -47,7 +44,7 @@ const styles = theme => ({
     },
       title: {
     //      textOverflow: 'ellipsis',
-        
+
       },
       cover: {
         width: 64,
@@ -61,22 +58,13 @@ const styles = theme => ({
       thumbnailGrid: {
         padding: '8px'
       },
-    
+
 });
 
 function Transition(props) {
     return <Slide direction="left" {...props} />;
   }
-  
-  function runTaskCheckingFunction(name, userProfile, bookmarkList, addressLis)
-  {
-      var fn = window[name];
-      if(typeof fn !== 'function')
-          return;
-  
-      return fn.apply(window, userProfile, bookmarkList, addressLis);
-  }
-  
+
   const taskCriterias = [
                           {
                               taskname: "第一次",
@@ -110,7 +98,7 @@ function Transition(props) {
                             hideBeforeDone: false,
                             badgeName: "一打(暫定)",
                             badgeImage: "/images/trophy-emoji-png-1.png",
-                          }, 
+                          },
                           {
                             taskname: "一路發(暫定)",
                             desc: "報料168次",
@@ -134,10 +122,6 @@ function Transition(props) {
                             badgeImage: "/images/trophy-emoji-png-6.png",
                           },
                       ];
-  
-  function addressInputed(userProfile, bookmarkList, addressLis) {
-  
-  }
 
 class MissionView extends React.Component {
   constructor(props) {
@@ -208,12 +192,11 @@ class MissionView extends React.Component {
 
   // find last mission isn't complete
   renderHighlightMission(taskList) {
-    const { classes } = this.props;
     let rv = null;
     let done = 0;
     if(this.state.userProfile) {
         taskList.map((task) => {
-            if(task.status != constant.missionDone) {
+            if(task.status !== constant.missionDone) {
                 if(!rv) {
                     rv = this.renderTaskCard(task);
                 }
@@ -221,9 +204,9 @@ class MissionView extends React.Component {
                 done++;
             }
         })
-    } 
+    }
     if(this.publicProfileView) {
-        rv = 
+        rv =
           <ListItem button>
             <ListItemIcon>
                 <DoneAll />
@@ -238,7 +221,7 @@ class MissionView extends React.Component {
     const classes = this.props.classes;
 //    console.log(task);
     let summary = <Grid className={classes.summaryGrid} item xs>
-                      <Typography noWrap='true' className={classes.title} variant="title"> {task.taskname}: {task.status}</Typography>
+                      <Typography noWrap={true} className={classes.title} variant="title"> {task.taskname}: {task.status}</Typography>
                       <Typography className={classes.auther}>{task.desc}</Typography>
                   </Grid>
     let thumbnail = <Grid item className={classes.thumbnailGrid}><CardMedia className={classes.cover}  image={task.badgeImage}/> </Grid>
@@ -276,7 +259,7 @@ class MissionView extends React.Component {
             let validateObject = this.state.userProfile[taskCriteria.checkObjectinUserPorilfe];
             let status = `0/${taskCriteria.threshold}`;
             if(validateObject) {
-                let currentStatus = validateObject[taskCriteria.checkField];            
+                let currentStatus = validateObject[taskCriteria.checkField];
                 switch(taskCriteria.passCritera) {
                     case 'greater':
                         if(currentStatus >= taskCriteria.threshold) {
@@ -286,14 +269,14 @@ class MissionView extends React.Component {
                         }
                         break;
                     default:
-                        status = `${currentStatus}/${taskCriteria.threshold}`;                
+                        status = `${currentStatus}/${taskCriteria.threshold}`;
                 }
             }
             let taskname = taskCriteria.taskname;
             let desc = taskCriteria.desc;
             let badgeName = taskCriteria.badgeName;
             let badgeImage = taskCriteria.badgeImage;
-            if(status != constant.missionDone) {
+            if(status !== constant.missionDone) {
                 badgeImage = "/images/secret.png"
                 badgeName = constant.secretMission;
                 if(taskCriteria.hideBeforeDone) {
@@ -316,8 +299,6 @@ class MissionView extends React.Component {
   }
 
   render() {
-    var displayName = "...";
-    let imageHtml = "等一下";
     let taskHtml = null;
 
     let taskList = [];

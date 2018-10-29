@@ -10,7 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import EventListDialog from './EventListDialog';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText  from '@material-ui/core/ListItemText';
 import {connect} from "react-redux";

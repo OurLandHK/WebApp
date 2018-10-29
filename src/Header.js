@@ -3,10 +3,7 @@ import SignInButton from './SignInButton';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import CardMedia from '@material-ui/core/CardMedia';
-import Grid from '@material-ui/core/Grid';
-import SearchIcon from '@material-ui/icons/Search';
 import {connect} from "react-redux";
 import {constant} from "./config/default";
 import {fetchLocation, toggleSearchEventDialog} from "./actions";
@@ -17,8 +14,8 @@ const styles = theme => ({
     borderRadius: '10px',
     backgroundColor: theme.palette.common.white,
     border: '1px solid #ced4da',
-    flex: 1,
-  }, 
+    flex: 1
+  },
   cover: {
     width: 64,
     height: 64,
@@ -26,18 +23,14 @@ const styles = theme => ({
   dialogTitle: {
     background: 'linear-gradient(to bottom, #006fbf  50%, #014880 50%)',
   },
-  flex: {  
-    
+  flex: {
+
   }
 });
 
 
 
 class Header extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleLeftTouchTap() {
     console.log('Open Drawer');
     alert('onTouchTap triggered on the title component');
@@ -58,7 +51,7 @@ class Header extends Component {
               <Toolbar>
                 <CardMedia className={classes.cover}  image={"/images/我地市正Logo-01.png"} onClick={() => {window.location.href = homeUrl}}/>
                 <SignInButton/>
-                <TextField id={constant.searchLabel} className={classes.searchInput} variant="outlined"  fullWidth margin="normal" value={constant.searchLabel} endAdornment={<InputAdornment position="end"><SearchIcon/></InputAdornment>} onClick={() => this.props.toggleSearchEventDialog(true)}/>
+                <TextField id={constant.searchLabel} className={classes.searchInput} variant="outlined"  fullWidth margin="normal" value={constant.searchLabel} onClick={() => this.props.toggleSearchEventDialog(true)}/>
               </Toolbar>
             </AppBar>);
   }

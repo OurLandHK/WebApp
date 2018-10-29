@@ -77,13 +77,12 @@ function getAddressBook(user) {
     let collectionRef = db.collection(config.userDB).doc(user.uid).collection(config.addressBook);
     collectionRef.onSnapshot(function() {});
     return collectionRef.get().then(function(querySnapshot){
-        const addresses = querySnapshot.docs.map(d => ({... d.data(), id: d.id}));
+        const addresses = querySnapshot.docs.map(d => ({...d.data(), id: d.id}));
         return addresses;
     })
     .catch(function(error) {
         console.log("Error getting documents: ", error);
     });
-    return [];
   }
 
 function upsertAddress(user, key, type, text, geolocation, streetAddress) {
@@ -222,7 +221,6 @@ function toggleConcernMessage(user, messageUUID) {
         {
             userRecord.concernMessages = [messageUUID];
         }
-        var path = "";
 //        console.log("UserRecord.concernMessages" + userRecord.concernMessages);
         return updateUserRecords(user.uid, userRecord).then(function(userRecordRef){
             return rv;
@@ -307,10 +305,7 @@ function fetchBookmarkList(user) {
             return [];
         } else {
             const bookmarks = querySnapshot.docs.map(bookmarkRef => {
-                let val = bookmarkRef.data();
-                if(val) {
-                    return(val);
-                }
+              return bookmarkRef.data();
             });
             return(bookmarks);
         }
