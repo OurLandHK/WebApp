@@ -47,8 +47,8 @@ if (root) {
 const detailRoot = document.getElementById('detailRoot');
 if (detailRoot) {
   const segments = document.URL.split('/');
-  let path = segments[segments.length - 1];
-  path.split('?');  
+  console.log(segments)
+  let path = segments[segments.length - 1].split('?');
   const uuid = path[0];
   ReactDOM.render(
     <MuiThemeProvider theme={theme}>
@@ -74,12 +74,10 @@ if (userRoot) {
   let userid = parts[userIndex];
   let bookmarkid = null;
   if(userIndex < parts.length - 1) {
-    let path = parts[userIndex+1];
-    path.split('?');  
+    let path = parts[userIndex+1].split('?');
     bookmarkid = path[0];
   } else {
-    let path = userid;
-    path.split('?');  
+    let path = userid.split('?');
     userid = path[0];
   }
   console.log(`userID ${userid} bookmarkID ${bookmarkid}`);
