@@ -353,7 +353,7 @@ class MessageDetailView extends Component {
       descHtml = ReactHtmlParser(text);
     }
 
-    if(m.polling) {
+    if(m.polling && m.polling.pollingTitle !== "") {
       pollingHtml = <PollingDialog polling={m.polling} messageUUID={m.key} geolocation={geolocation} status={m.status}/>
     }
 
