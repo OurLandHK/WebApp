@@ -24,6 +24,7 @@ import {constant, RoleEnum} from './config/default';
 import UploadImageButton from './UploadImageButton';
 import IntegrationReactSelect from './IntegrationReactSelect';
 import SignInButton from './SignInButton';
+import {parseVenue, parseDate} from './util/messageParser';
 import {
   openSnackbar,
   checkAuthState,
@@ -199,6 +200,23 @@ class PostMessageView extends Component {
       popoverOpen: false,
     });
   };
+
+  handleMessageDescOnChange(evt) {
+    let messageDesc = evt.target.value;
+    this.setState({ summary: messageDesc });
+
+    parseDate(messageDesc).then((date) => {
+      if(date != null) {
+        this.setState({ start: date });
+      }
+    });
+
+    parseTime(messageDesc).then((time) => {
+      if(time != null) {
+        this.setState({ startTime: time });
+      }
+    });
+  }
 
   onSubmit() {
     //console.log(" expand:  " + this.state.timeExpanded + " " + this.state.intervalSelection + " " + this.state.durationSelection + " " + this.state.start)
@@ -662,7 +680,7 @@ class PostMessageView extends Component {
                     fullWidth
                     margin="normal"
                     value={this.state.summary}
-                    onChange={event => this.setState({ summary: event.target.value })}
+                    onChange={event => this.handleMessageDescOnChange(event)}
                     inputRef={(tf) => {this.summaryTextField = tf;}}
                   />
                   <IntegrationReactSelect
