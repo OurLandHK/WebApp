@@ -1,7 +1,9 @@
+import { getGeoLocationFromStreetAddress } from '../Location';
+ 
 /**
  * Parse message description and return a string with YYYY-MM-DD format if it matches with below regex
  * @param {string} messageDesc
- * @returns {string} 
+ * @returns {(string|null)} 
  */
 export function parseDate(messageDesc) {
     return new Promise( (resolve, reject) => {
@@ -40,7 +42,7 @@ export function parseDate(messageDesc) {
 /**
  * Parse message description and return a string with HH:MM format if it matches with below regex
  * @param {string} messageDesc
- * @returns {string} 
+ * @returns {(string|null)} 
  */
 export function parseTime(messageDesc) {
     return new Promise( (resolve, reject) => {
@@ -49,6 +51,40 @@ export function parseTime(messageDesc) {
         
         if(messageDesc.match(r1) != null) {
             resolve(messageDesc.match(r1)[0]);
+        } else {
+            reject(null);
+        }
+    }); 
+}
+
+
+/**
+ * Parse message description and return geo location if the location can be resolved
+ * @param {string} messageDesc
+ * @returns {(object|null)} 
+ */
+export function parseLocation(messageDesc) {
+    return new Promise( (resolve, reject) => {
+        let r1 = /(地點|地址)(:| :)(.*)/u;
+        
+        if(messageDesc.match(r1) != null) {
+            if(messageDesc.match(r1)[3] != null) {
+                getGeoLocationFromStreetAddress(
+                    messageDesc.match(r1)[3], 
+                    function(err, response){
+                        // success callback
+                        if(err) {
+                            reject(null);
+                        } else {
+                            resolve(response)
+                        }
+                    }, 
+                    function() {
+                        // error callback
+                        reject(null);
+                    }
+                )
+            }
         } else {
             reject(null);
         }
