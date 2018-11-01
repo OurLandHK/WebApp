@@ -250,7 +250,7 @@ class MissionView extends React.Component {
         taskname: "設定地址",
         desc: "設定住宅或工作的地址",
         badgeName: "有腳既雀仔",
-        badgeImage: "/images/squareLogo.jpg",
+        badgeImage: "/images/SquareLogo.png",
         status: addressStatus,
     }
       rv.push(addressTask);
