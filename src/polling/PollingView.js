@@ -97,7 +97,7 @@ class PollingView extends React.Component {
       }
       selectedOption.push(index);
       numOfPollng--;
-    }else{
+    } else {
       numOfPollng++;
       selectedOption.splice(idx, 1);
     }

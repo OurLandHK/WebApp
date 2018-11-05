@@ -83,13 +83,13 @@ class SortingDrawer extends React.Component {
   };
 
   setSorting(sorting){
-  	 if(sorting === 'sortByLastUpdate'){
+  	 if(sorting === constant.sortByLastUpdateLabel){
       this.setState({
         selectedSorting: sorting,
         isSortByLastUpdate: true,
         isSortByDistance: false
       });
-    } else if(sorting === 'sortByDistance'){
+    } else if(sorting === constant.sortByDistanceLabel){
       this.setState({
         selectedSorting: sorting,
         isSortByDistance: true,
@@ -98,18 +98,18 @@ class SortingDrawer extends React.Component {
     }
 
     this.toggleDrawer(false);
-    const { selectedSorting } = this.props;
-    selectedSorting(sorting);
+    const { selectedSorting, filterID } = this.props;
+    selectedSorting(sorting, filterID);
   }
 
   renderSortByLastUpdate() {
-    return (<ListItem button onClick={() => {this.setSorting('sortByLastUpdate')}}>
+    return (<ListItem button onClick={() => {this.setSorting(constant.sortByLastUpdateLabel)}}>
                <ListItemText primary={constant.sortByLastUpdateLabel} />
             </ListItem>);
   }
 
   renderSortByDistance(){
-  	return (<ListItem button onClick={() => {this.setSorting('sortByDistance')}}>
+  	return (<ListItem button onClick={() => {this.setSorting(constant.sortByDistanceLabel)}}>
                <ListItemText primary={constant.sortByDistanceLabel} />
             </ListItem>);
   }
@@ -175,8 +175,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
   	selectedSorting:
-      sorting =>
-        dispatch(selectedSorting(sorting)),
+      (sorting, filterID) =>
+        dispatch(selectedSorting(sorting, filterID)),
   }
 };
 

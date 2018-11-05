@@ -6,7 +6,7 @@ This is the abstraction layer to get all Global Setting for the Appl
 
 import * as firebase from 'firebase';
 import config from './config/default';
-import distance from './Distance';
+import distance from './util/Distance';
 
 
 function degreesToRadians(degrees) {return (degrees * Math.PI)/180;}

@@ -138,7 +138,7 @@ class LocationDrawer extends React.Component {
       this.toggleDrawer(false);
       const { updateFilterLocation } = this.props;
 
-      updateFilterLocation(coords, distance);
+      updateFilterLocation(coords, distance, this.props.filterID);
   }
 
   setLocationPrefix(prefix) {
@@ -257,7 +257,7 @@ class LocationDrawer extends React.Component {
   currentLocationOnClick() {
     this.setState({...this.state, isUsingCurrentLocation: true});
     this.setState({distance: this.props.filter.defaultDistance});
-    this.props.updateFilterWithCurrentLocation();
+    this.props.updateFilterWithCurrentLocation(this.props.filterID);
     this.toggleDrawer(false);
   }
 
@@ -339,10 +339,10 @@ const mapDispatchToProps = (dispatch) => {
     fetchAddressBookFromOurLand:
       () => dispatch(fetchAddressBookFromOurLand()),
     updateFilterLocation:
-      (geolocation, distance) =>
-        dispatch(updateFilterLocation(geolocation, distance)),
+      (geolocation, distance, filterID) =>
+        dispatch(updateFilterLocation(geolocation, distance, filterID)),
     updateFilterWithCurrentLocation:
-      () => dispatch(updateFilterWithCurrentLocation()),
+      (filterID) => dispatch(updateFilterWithCurrentLocation(filterID)),
     toggleAddressDialog:
       (flag) => dispatch(toggleAddressDialog(flag)),
   }

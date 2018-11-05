@@ -74,14 +74,19 @@ function addressBookReducer(state={addresses:[], publicAddresses:[]}, action) {
   }
 }
 
-function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, eventNumber: constant.defaultEventNumber, geolocation: null, distance: 1, defaultDistance: 1, selectedTag: null, tagList: []}, action) {
+function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, eventNumber: constant.defaultEventNumber, geolocation: null, distance: 1, defaultDistance: 1, selectedTag: {}, tagList: {}}, action) {
   let distance = action.distance;
+  let selectedTag = state.selectedTag;
+  let selectedSorting = state.selectedSorting;
+  let tagList = state.tagList;
   switch (action.type) {
     case UPDATE_FILTER_DEFAULT:
+      selectedTag = {};
+      tagList = {}; 
       return {
-        selectedTag: null,
-        selectedSorting: 'sortByLastUpdate',
-        tagList: [],
+        selectedTag: selectedTag,
+        selectedSorting: {},
+        tagList: tagList,
         defaultEventNumber: action.eventNumber,
         eventNumber: action.eventNumber,
         geolocation: action.geolocation,
@@ -96,10 +101,12 @@ function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, e
       if(state.defaultEventNumber > eventNumber) {
         eventNumber = state.defaultEventNumber;
       }
+      selectedTag[action.filterID] = null;
+      tagList[action.filterID] = []; 
       return {
         ...state,
-        selectedTag: null,
-        tagList: [],
+        selectedTag: selectedTag,
+        tagList: tagList,
         eventNumber: eventNumber,
         geolocation: action.geolocation,
         distance: distance
@@ -108,45 +115,55 @@ function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, e
       if(state.defaultDistance > distance || distance === undefined) {
         distance = state.defaultDistance;
       }
+      selectedTag[action.filterID] = null;
+      tagList[action.filterID] = []; 
       return {
         ...state,
-        selectedTag: null,
-        tagList: [],
+        selectedTag: selectedTag,
+        tagList: tagList,
         geolocation: action.geolocation,
         distance: distance
       }
     case UPDATE_FILTER_TAG_LIST:
-      var tagList = state.tagList;
-      var newTagList = action.tagList;
+      //let filteredTagList = state.tagList[action.filterID];
+      let newTagList = action.tagList;
+      if(tagList[action.filterID] === undefined) {
+        tagList[action.filterID] = [];
+      }
       if(newTagList  != null ) {
         newTagList.map((tag) => {
-          if(!tagList.includes(tag)) {
-            tagList.push(tag);
+          if(!tagList[action.filterID].includes(tag)) {
+            tagList[action.filterID].push(tag);
           }
           return;
         });
       }
-      //console.log("update Tag List" + tagList.join());
+      selectedTag[action.filterID] = null;
+      //tagList[action.filterID] = filteredTagList; 
       return {
         ...state,
-        selectedTag: null,
+        selectedTag: selectedTag,
         tagList: tagList,
       };
     case RESET_FILTER_TAGS:
+      selectedTag[action.filterID] = null;
+      tagList[action.filterID] = []; 
       return {
         ...state,
-        selectedTag: null,
-        tagList: []
+        selectedTag: selectedTag,
+        tagList: tagList
       };
     case UPDATE_FILTER_TAG:
+      selectedTag[action.filterID] = action.selectedTag;
       return {
         ...state,
-        selectedTag: action.selectedTag
+        selectedTag: selectedTag
       };
     case UPDATE_FILTER_SORTING:
+      selectedSorting[action.filterID] = action.selectedSorting;
       return {
         ...state,
-        selectedSorting: action.selectedSorting
+        selectedSorting: selectedSorting
       };
     default:
       return state;

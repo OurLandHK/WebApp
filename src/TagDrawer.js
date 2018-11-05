@@ -90,9 +90,15 @@ class TagDrawer extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.filter.tagList !== this.props.filter.tagList) {
+    if (prevProps.filter.tagList[this.props.filterID] !== this.props.filter.tagList[this.props.filterID] ||
+      (this.props.filter.tagList[this.props.filterID] !== undefined && this.props.filter.tagList[this.props.filterID] !== this.state.tagList)) {
       this.setTag(null);
-      this.setState({tagList: this.props.filter.tagList})
+      let tagList = this.props.filter.tagList[this.props.filterID];
+      if(tagList === undefined) {
+        tagList = [];
+      }
+      console.log(this.props.filterID + " "+ tagList)
+      this.setState({tagList: tagList})
     }
   }
 
@@ -114,7 +120,7 @@ class TagDrawer extends React.Component {
     }
     this.toggleDrawer(false);
     const { selectedTag } = this.props;
-    selectedTag(tag);
+    selectedTag(tag, this.props.filterID);
   }
 
   renderTagList() {
@@ -190,8 +196,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     selectedTag:
-      tag =>
-        dispatch(selectedTag(tag)),
+      (tag, filterID) =>
+        dispatch(selectedTag(tag, filterID)),
   }
 };
 

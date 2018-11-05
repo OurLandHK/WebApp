@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 import SingleLineMessageList from './SingleLineMessageList';
 import Typography from '@material-ui/core/Typography';
-import { default as dist } from './Distance';
+import { default as dist } from './util/Distance';
 
 const styles = theme => ({
   title: {

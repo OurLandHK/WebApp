@@ -244,15 +244,16 @@ class SearchEventDialog extends React.Component {
   renderMessages() {
     const { classes, distance, eventNumber } = this.props;
     if(this.state.searchByTag) {
+      let id = constant.searchEventLabel + "Tag";
       return (<div className={classes.container}>
-          <FilterBar isUsePublicAddressBook={true}/>
+          <FilterBar isUsePublicAddressBook={true} filterID={id}/>
           <MessageList
             isUsePublicAddressBook={true}
             ref={(messageList) => {this.messageList = messageList;}}
             eventNumber={eventNumber}
             distance={distance}
             tagFilter={this.state.filter}
-            id={constant.searchEventLabel}
+            id={id}
           />
         </div>);
     } else {
@@ -260,7 +261,7 @@ class SearchEventDialog extends React.Component {
       console.log(`${this.state.geolocation.longitude} ${this.state.geolocation.latitude}`)
       return (
         <div className={classes.container}>
-          <FilterBar disableLocationDrawer={true}/>
+          <FilterBar disableLocationDrawer={true} filterID={constant.searchEventLabel}/>
           <MessageList
             isUsePublicAddressBook={true}
             ref={(messageList) => {this.messageList = messageList;}}

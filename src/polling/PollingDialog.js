@@ -11,7 +11,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import distance from '../Distance';
+import distance from '../util/Distance';
 import { constant, addressEnum } from '../config/default';
 import PollingView from './PollingView';
 import PollingResultView from './PollingResultView';
@@ -67,6 +67,7 @@ class PollingDialog extends React.Component {
             outOfRange = false;
           }
         }
+        return;
       });
       if(outOfRange) {
         this.setState({isOutOfPollingRange: true, disabledPolling: true})
@@ -77,6 +78,7 @@ class PollingDialog extends React.Component {
       polling.results.find((result, index) => {
         if(result.uid === user.user.uid) {
           this.setState({isAlreadyPolled: true, disabledPolling: true});
+          return;
         }
       })
     }

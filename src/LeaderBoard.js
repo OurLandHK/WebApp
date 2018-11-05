@@ -87,7 +87,7 @@ class LeaderBoard extends React.Component {
     const { classes } = this.props;
     return (
         <React.Fragment>
-          <FilterBar ranking={true} />
+          <FilterBar ranking={true} filterID="LeaderBoard"/>
           <div className={classes.container}>
             <Ranking
               ref={(ranking) => {this.ranking = ranking}}
@@ -161,7 +161,7 @@ const mapDispatchToProps = (dispatch) => {
       (userId, fbuid, open) =>
         dispatch(updatePublicProfileDialog(userId, fbuid, open)),
     updateFilterWithCurrentLocation:
-      () => dispatch(updateFilterWithCurrentLocation()),
+      (filterID) => dispatch(updateFilterWithCurrentLocation(filterID)),
   }
 };
 

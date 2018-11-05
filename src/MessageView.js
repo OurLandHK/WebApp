@@ -5,7 +5,7 @@ import MessageDialog from './MessageDialog';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Grid from '@material-ui/core/Grid'
-import distance from './Distance';
+import distance from './util/Distance';
 import timeOffsetStringInChinese from './TimeString.js';
 import { withStyles } from '@material-ui/core/styles';
 import FiberNewIcon from '@material-ui/icons/FiberNew';

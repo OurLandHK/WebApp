@@ -203,6 +203,7 @@ class MissionView extends React.Component {
             } else {
                 done++;
             }
+            return;
         })
     }
     if(this.publicProfileView) {
@@ -239,12 +240,13 @@ class MissionView extends React.Component {
       // check for addressBook
       let addressStatus = '未輸入';
       this.state.addressList.map((address) => {
-          console.log(address);
+        //  console.log(address);
         if(address.type === addressEnum.home || address.type === addressEnum.office) {
             if(address.geolocation) {
                 addressStatus = constant.missionDone;
             }
         }
+        return;
       });
       let addressTask = {
         taskname: "設定地址",
