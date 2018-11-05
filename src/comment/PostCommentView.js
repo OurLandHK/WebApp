@@ -147,10 +147,9 @@ class PostCommentView extends Component {
   };
 
   tagTextToTags(tag) {
-    var rv = [];
-    tag.map((text) => {
-      var id = rv.length;
-      rv.push({id:id, text:text});
+    let rv = tag.map((text) => {
+      let id = rv.length;
+      return {id:id, text:text};
     });
     return rv;
   }

@@ -15,7 +15,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText  from '@material-ui/core/ListItemText';
 import {connect} from "react-redux";
-import { toggleEventListDialog } from './actions';
+import { toggleEventListDialog, resetTagList } from './actions';
 import FilterBar from './FilterBar';
 
 function Transition(props) {
@@ -81,6 +81,7 @@ class EventListDialog extends React.Component {
   handleRequestOpen(evt) {
     evt.preventDefault();
     if(this.state.messageIds.length > 0) {
+        this.props.resetTagList(this.props.title);
         this.setState({open: true});
     }
   }
@@ -100,6 +101,7 @@ class EventListDialog extends React.Component {
           eventNumber={100}
           distance={10}
           messageIds={this.state.messageIds}
+          id={this.props.title}
         />
       </div>
     );
@@ -133,7 +135,7 @@ class EventListDialog extends React.Component {
                         <Typography variant="title" color="inherit" className={classes.flex}>{this.state.userName} {this.state.title}</Typography>
                     </Toolbar>
                 </AppBar>
-                <FilterBar disableLocationDrawer={true}/>
+                <FilterBar disableLocationDrawer={true} filterID={this.props.title}/>
                 {messageHtml}
             </Dialog>
         </span>);
@@ -154,6 +156,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     toggleEventListDialog: flag => 
       dispatch(toggleEventListDialog(flag)),
+    resetTagList: filterID =>
+      dispatch(resetTagList(filterID)),
   }
 };
 

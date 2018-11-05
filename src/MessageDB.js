@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import config, {constant} from './config/default';
-import distance from './Distance';
+import distance from './util/Distance';
 import {updateTagStat} from './GlobalDB';
 
 function tagsToTagfilter(tags) {

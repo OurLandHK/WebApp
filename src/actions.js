@@ -123,34 +123,34 @@ function dispatchFilterDefault(eventNumber, distance, geolocation) {
   return {type: UPDATE_FILTER_DEFAULT, eventNumber: eventNumber, geolocation: geolocation, distance: distance}
 }
 
-function dispatchFilter(eventNumber, distance, geolocation) {
-  return {type: UPDATE_FILTER, eventNumber: eventNumber, geolocation: geolocation, distance: distance}
+function dispatchFilter(eventNumber, distance, geolocation, filterID) {
+  return {type: UPDATE_FILTER, eventNumber: eventNumber, geolocation: geolocation, distance: distance, filterID: filterID}
 }
 
-function dispatchFilterLocation(geolocation, distance) {
-  return {type: UPDATE_FILTER_LOCATION, geolocation: geolocation, distance: distance};
+function dispatchFilterLocation(geolocation, distance, filterID) {
+  return {type: UPDATE_FILTER_LOCATION, geolocation: geolocation, distance: distance, filterID: filterID};
 }
 
 
-function dispatchFilterTagList(tagList) {
-  return {type: UPDATE_FILTER_TAG_LIST, tagList: tagList}
+function dispatchFilterTagList(tagList, filterID) {
+  return {type: UPDATE_FILTER_TAG_LIST, tagList: tagList, filterID: filterID}
 }
 
 function dispatchRegionButtonList(buttonList){
   return {type: UPDATE_REGIONEVENT_BUTTONLIST, buttonList: buttonList}
 }
 
-function dispatchTagsRest() {
-  return {type: RESET_FILTER_TAGS}
+function dispatchTagsRest(filterID) {
+  return {type: RESET_FILTER_TAGS, filterID: filterID}
 }
 
-function dispatchSelectedTag(selectedTag) {
-  return {type: UPDATE_FILTER_TAG, selectedTag: selectedTag}
+function dispatchSelectedTag(selectedTag, filterID) {
+  return {type: UPDATE_FILTER_TAG, selectedTag: selectedTag, filterID: filterID}
 }
 
 
-function dispatchSelectedSorting(selectedSorting){
-  return {type: UPDATE_FILTER_SORTING, selectedSorting: selectedSorting}
+function dispatchSelectedSorting(selectedSorting, filterID){
+  return {type: UPDATE_FILTER_SORTING, selectedSorting: selectedSorting, filterID: filterID}
 }
 
 function dispatchOpenSnackbar(message, variant) {
@@ -176,7 +176,7 @@ export function fetchLocation(callback=receiveLocation) {
         maximumAge: 0
       };
       navigator.geolocation.getCurrentPosition((geoLocation) => {
-        console.log(geoLocation);
+//        console.log(geoLocation);
         callback(geoLocation);
       },
       (error) => {
@@ -283,9 +283,9 @@ export function togglePublicProfileDialog(flag) {
   };
 }
 
-export function updateFilter(eventNumber, distance, geolocation) {
+export function updateFilter(eventNumber, distance, geolocation, filterID) {
   return dispatch => {
-    dispatch(dispatchFilter(eventNumber, distance, geolocation));
+    dispatch(dispatchFilter(eventNumber, distance, geolocation, filterID));
   };
 }
 
@@ -296,41 +296,41 @@ export function updateFilterDefault(eventNumber, distance, geolocation) {
 }
 
 
-export function updateFilterLocation(geolocation, distance) {
+export function updateFilterLocation(geolocation, distance, filterID) {
   return dispatch => {
-    dispatch(dispatchFilterLocation(geolocation, distance));
+    dispatch(dispatchFilterLocation(geolocation, distance, filterID));
   };
 }
 
-export function updateFilterTagList(tagList) {
+export function updateFilterTagList(tagList, filterID) {
   return dispatch => {
-    dispatch(dispatchFilterTagList(tagList));
+    dispatch(dispatchFilterTagList(tagList, filterID));
   };
 }
 
-export function resetTagList() {
+export function resetTagList(filterID) {
   return dispatch => {
-    dispatch(dispatchTagsRest());
+    dispatch(dispatchTagsRest(filterID));
   };
 }
 
-export function selectedTag(selectedTag) {
+export function selectedTag(selectedTag, filterID) {
   return dispatch => {
-    dispatch(dispatchSelectedTag(selectedTag));
+    dispatch(dispatchSelectedTag(selectedTag, filterID));
   };
 }
 
-export function selectedSorting(selectedSorting) {
+export function selectedSorting(selectedSorting, filterID) {
   return dispatch => {
-    dispatch(dispatchSelectedSorting(selectedSorting));
+    dispatch(dispatchSelectedSorting(selectedSorting, filterID));
   };
 }
 
-export function updateFilterWithCurrentLocation() {
+export function updateFilterWithCurrentLocation(filterID) {
   return dispatch => {
     dispatch(fetchLocation(geolocation => {
       dispatch(receiveLocation(geolocation));
-      dispatch(updateFilterLocation(geolocation.coords));
+      dispatch(updateFilterLocation(geolocation.coords, 1, filterID));
     }));
   }
 }

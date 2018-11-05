@@ -142,7 +142,7 @@ class NearbyEventDialog extends React.Component {
 
     if(this.state.showList)  {
       messageHtml = this.renderMessages();
-      filterBar = <FilterBar isUsePublicAddressBook={true}/>;
+      filterBar = <FilterBar isUsePublicAddressBook={true} filterID={constant.nearbyEventLabel}/>;
     } else {
       this.setState({showList: true});
       //console.log('offthe List');
