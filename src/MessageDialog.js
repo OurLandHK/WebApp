@@ -58,6 +58,7 @@ class MessageDialog extends React.Component {
       this.message = null;
       this.happyAndSad = happyAndSadEnum.nothing; // (1 = happy, -1 = sad)
       this.openDialog = this.openDialog.bind(this);
+      this._openDialog = this._openDialog.bind(this);
       this.props.openDialog(this.openDialog);
   }
 
@@ -76,20 +77,20 @@ class MessageDialog extends React.Component {
   }
 
   openDialog(){
+    var uuid = this.props.uuid;
+    console.log("openDialog uuid: " + uuid);    
     this._openDialog(true);
   }
 
   _openDialog(updateURL){
-    let link = this.props.uuid.split('?fbclid');
-    let uuid = link[0];
-    let uuidWithFbclid = link.length > 1? link [1]: null;
+    let uuid = this.props.uuid;
 
     return getMessage(uuid).then((message) => {
       this.message = message;
       if(updateURL) {
         this.lastOnPopState = window.onpopstate;
         window.onpopstate = this.onBackButtonEvent;
-        window.history.pushState("", "", `/detail/` + uuidWithFbclid==null? uuid : uuidWithFbclid);
+        window.history.pushState("", "", `/detail/` + uuid);
       }
       
       // check the message viewed in this session or not.

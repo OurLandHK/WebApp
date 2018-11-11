@@ -29,6 +29,7 @@ import {
   UPDATE_REGIONEVENT_BUTTONLIST,
   FETCH_GLOBAL_TAG_STAT,
   OPEN_SNACKBAR,
+  FETCH_FCM_TOKEN,
   CLOSE_SNACKBAR,
   UPDATE_SEARCHEVENT_LOCATION,
   TOGGLE_SEARCHEVENT_DIALOG,
@@ -46,7 +47,7 @@ function geoLocationReducer(state={pos: null, enabled: true}, action) {
   }
 }
 
-function userReducer(state={user: null, userProfile: null, lastLogin: null, bookmarkList: [], loading: true}, action) {
+function userReducer(state={user: null, fcmToken: null, userProfile: null, lastLogin: null, bookmarkList: [], loading: true}, action) {
   switch (action.type) {
     case FETCH_USER:
       return {...state, user: action.user, loading: action.loading};
@@ -55,6 +56,10 @@ function userReducer(state={user: null, userProfile: null, lastLogin: null, book
         return {...state, userProfile: action.userProfile, lastLogin: action.lastLogin, bookmarkList: action.bookmarkList};
       } else {
         return {...state, userProfile: action.userProfile, bookmarkList: action.bookmarkList};
+      }
+    case FETCH_FCM_TOKEN:
+      if(action.fcmToken !== null || action.fcmToken !== undefined) {
+        return {...state, fcmToken: action.fcmToken};
       }
     default:
       return state;
@@ -301,7 +306,7 @@ function ourlandReducer(state={focusMessages: [], globalFocusMessage: [], tagSta
     { label: '活動' },
     { label: '環保'},
     { label: '公共設施' },
-    { label: '假日診所' },
+    { label: '義工招募' },
     { label: '兒童遊樂場' },
     { label: '郵箱' },
     { label: '寵物' },

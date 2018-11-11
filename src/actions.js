@@ -14,6 +14,7 @@ import {
   FETCH_ADDRESS_BOOK,
   FETCH_PUBLIC_ADDRESS_BOOK,
   FETCH_GLOBAL_BOOKMARKLIST,
+  FETCH_FCM_TOKEN,
   UPDATE_PUBLIC_PROFILE_DIALOG,
   TOGGLE_PUBLIC_PROFILE_DIALOG,
   TOGGLE_ADDRESS_DIALOG,
@@ -100,6 +101,10 @@ function fetchUser(user, loading=false) {
 
 function fetchUserProfile(userProfile, lastLogin, bookmarkList) {
   return {type: FETCH_USER_PROFILE, userProfile: userProfile, lastLogin: lastLogin, bookmarkList: bookmarkList};
+}
+
+function fetchFCM(fcmToken) {
+  return {type: FETCH_FCM_TOKEN, fcmToken: fcmToken};
 }
 
 function dispatchRecentMessage(id, open) {
@@ -194,6 +199,29 @@ export function fetchLocation(callback=receiveLocation) {
       callback(blockLocation);
       //dispatch(disableLocation())
     }
+  }
+}
+
+export function checkMessageState() {
+  console.log("checkMessageState");
+  return dispatch => {
+    const messaging = firebase.messaging();
+    return messaging.requestPermission().then(() => {
+      console.log("Have Permission");
+      return messaging.getToken().then((token) => {
+        console.log("FCM Token:", token);
+        return dispatch(fetchFCM(token));
+        //you probably want to send your new found FCM token to the
+        //application server so that they can send any push
+        //notification to you.
+      })
+    }).catch(error => {
+      if (error.code === "messaging/permission-blocked") {
+        console.log("Please Unblock Notification Request Manually");
+      } else {
+        console.log("Error Occurred", error);
+      }
+    });
   }
 }
 
