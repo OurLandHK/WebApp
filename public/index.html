@@ -58,7 +58,7 @@
         deferredPrompt = e;
         // Update UI notify the user they can add to home screen
         let a2hsBtn = document.querySelector(".ad2hs-prompt");  // hide our user interface that shows our A2HS button
-        a2hsBtn.style.display = 'none';  // Show the prompt
+        // a2hsBtn.style.display = 'none';  // Show the prompt
         deferredPrompt.prompt();  // Wait for the user to respond to the prompt
         deferredPrompt.userChoice
           .then(function(choiceResult){

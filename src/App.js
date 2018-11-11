@@ -22,6 +22,7 @@ import {
   fetchAddressBookFromOurLand,
   fetchConcernMessagesFromOurLand,
   updateFilterDefault,
+  checkMessageState,
   checkAuthState,
   updateRecentMessage,
   updatePublicProfileDialog,
@@ -95,6 +96,7 @@ class App extends Component {
   }
 
   componentWillMount() {
+    this.props.checkMessageState();
     this.props.checkAuthState();
     this.props.fetchAddressBookFromOurLand();
     this.props.fetchConcernMessagesFromOurLand();
@@ -199,6 +201,8 @@ const mapDispatchToProps = (dispatch) => {
     updateFilterDefault:
       (eventNumber, distance, geolocation) =>
         dispatch(updateFilterDefault(eventNumber, distance, geolocation)),
+    checkMessageState:
+      () => dispatch(checkMessageState()),
     checkAuthState:
       () => dispatch(checkAuthState()),
     fetchAddressBookByUser:

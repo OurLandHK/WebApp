@@ -113,33 +113,41 @@ pushOriginal(blob) {
         var fullPath = snapshot.metadata.fullPath;
         this.imageUrlRef = firebase.storage().ref(fullPath);
         var firebaseImageURL = firebase.storage().ref(fullPath).toString();
-        var publicImageURL = snapshot.downloadURL;
         this.imageURL = firebaseImageURL;
-        this.publicImageURL = publicImageURL;
-        if(!this.isOriginalOnly){
-          imageResizer(this.thumbnailFile, 128, 128, "image/jpeg", 0.5, this.pushThumbnail);
-        }else{
-          this.setState({publicThumbnailImagURL: this.publicImageURL});
-          if(this.props.uploadFinish  != null ) {
-            this.props.uploadFinish(this.imageURL, this.publicImageURL, this.thumbnailImageURL, this.publicThumbnailImagURL);
+        return this.imageUrlRef.getDownloadURL().then((downloadURL) => {
+          return downloadURL;
+        }).then((publicImageURL) => {
+          console.log(`Upload Thumbnail ${firebaseImageURL} ${publicImageURL}`);
+          this.publicImageURL = publicImageURL;
+          if(!this.isOriginalOnly){
+            imageResizer(this.thumbnailFile, 128, 128, "image/jpeg", 0.5, this.pushThumbnail);
+          }else{
+            this.setState({publicThumbnailImagURL: this.publicImageURL});
+            if(this.props.uploadFinish  != null ) {
+              this.props.uploadFinish(this.imageURL, this.publicImageURL, this.thumbnailImageURL, this.publicThumbnailImagURL);
+            }
           }
-        }
+        });
     });
 };
 
   pushThumbnail(blob) {
     var filename = (this.props.thumbnailFilename==null? this.defaultThumbnail: this.props.thumbnailFilename);
-    uploadImage(this.props.path, filename, blob).then((snapshot) =>  {
+    return uploadImage(this.props.path, filename, blob).then((snapshot) =>  {
         var thumbnailFullPath = snapshot.metadata.fullPath;
         this.thumbnailImageURLRef = firebase.storage().ref(thumbnailFullPath);
         var thumbnailFirebaseImageURL = firebase.storage().ref(thumbnailFullPath).toString();
-        var thumbnailPublicImageURL = snapshot.downloadURL;
         this.thumbnailImageURL = thumbnailFirebaseImageURL;
-        this.publicThumbnailImagURL = thumbnailPublicImageURL;
-        this.setState({publicThumbnailImagURL: this.publicThumbnailImagURL});
-        if(this.props.uploadFinish  != null ) {
-            this.props.uploadFinish(this.imageURL, this.publicImageURL, this.thumbnailImageURL, this.publicThumbnailImagURL);
-        }
+        return this.thumbnailImageURLRef.getDownloadURL().then(function(downloadURL) {
+          return downloadURL;
+        }).then((thumbnailPublicImageURL) => {
+          console.log(`Upload Thumbnail ${thumbnailFirebaseImageURL} ${thumbnailPublicImageURL}`);
+          this.publicThumbnailImagURL = thumbnailPublicImageURL;
+          this.setState({publicThumbnailImagURL: this.publicThumbnailImagURL});
+          if(this.props.uploadFinish  != null ) {
+              this.props.uploadFinish(this.imageURL, this.publicImageURL, this.thumbnailImageURL, this.publicThumbnailImagURL);
+          }
+        });
     });
 }
 

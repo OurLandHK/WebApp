@@ -1,7 +1,5 @@
 import React from 'react';
-//import * as firebase from 'firebase';
 import PropTypes from 'prop-types';
-//import classnames from 'classnames';
 import {connect} from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
