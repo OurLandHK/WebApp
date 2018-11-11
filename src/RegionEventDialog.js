@@ -115,6 +115,7 @@ class RegionEventDialog extends React.Component {
           distance={distance}
           geolocation={geolocation}
           tagFilter={this.state.filter}
+          id={constant.nearbyEventLabel}
         />
       </div>
     );
@@ -186,7 +187,7 @@ class RegionEventDialog extends React.Component {
                         <Typography variant="title" color="inherit" className={classes.flex}>{constant.nearbyEventLabel} - {this.state.titleLabel}</Typography>
                     </Toolbar>
                 </AppBar>
-                <FilterBar isUsePublicAddressBook={true}/>
+                <FilterBar isUsePublicAddressBook={true} filterID={constant.nearbyEventLabel}/>
                 {messageHtml}
             </Dialog>
         </span>);

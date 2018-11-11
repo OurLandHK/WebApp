@@ -230,6 +230,7 @@ class FocusView extends Component {
                     eventNumber={100}
                     distance={10}
                     messageIds={this.state.messages}
+                    id={titleText}
                 />
             }
         } else {

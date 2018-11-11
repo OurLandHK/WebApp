@@ -10,18 +10,18 @@
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Our Land">
-    <meta name="theme-color" content="#303F9F">
+    <meta name="application-name" content="我地.市正">
+    <meta name="theme-color" content="#006eb9">
 
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="我地 Our Land">
-    <meta name="apple-mobile-web-app-status-bar-style" content="#303F9F">
+    <meta name="apple-mobile-web-app-title" content="我地.市正">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#006eb9">
 
     <!-- Tile icon for Win8 -->
-    <meta name="msapplication-TileColor" content="#3372DF">
-    <meta name="msapplication-navbutton-color" content="#303F9F">
+    <meta name="msapplication-TileColor" content="#006eb9">
+    <meta name="msapplication-navbutton-color" content="#006eb9">
 
     <!-- Material Design Lite -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -32,6 +32,44 @@
     <link rel="stylesheet" href="styles/main.min.css">
   </head>
   <body>
-    <div id="root"></div>
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <div id="root" class="container"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('ServiceWorker.js').then(function(registration) {
+            console.log('Service Worker registration successful', registration.scope);
+          }, function(err) {
+            console.log('Service Worker registration failed', err);
+          }).catch(function(err) {
+            console.log(err);
+          });
+        });
+      } else {
+        console.log('Service Worker is not supported by browser.');
+      }
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        e.preventDefault();
+        // Stash the event so it can be triggered later.
+        deferredPrompt = e;
+        // Update UI notify the user they can add to home screen
+        let a2hsBtn = document.querySelector(".ad2hs-prompt");  // hide our user interface that shows our A2HS button
+        a2hsBtn.style.display = 'none';  // Show the prompt
+        deferredPrompt.prompt();  // Wait for the user to respond to the prompt
+        deferredPrompt.userChoice
+          .then(function(choiceResult){
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User accepted the A2HS prompt');
+            } else {
+              console.log('User dismissed the A2HS prompt');
+            }
+          });
+        deferredPrompt = null;
+      });
+    </script>
   </body>
 </html>

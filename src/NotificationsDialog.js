@@ -152,11 +152,12 @@ class NotificationsDialog extends React.Component {
       <React.Fragment>
       <p>{constant.recentUpdate}</p>
       <div className={classes.container}>
-        <FilterBar disableLocationDrawer={true}/>
+        <FilterBar disableLocationDrawer={true} filterID={constant.recentEventLabel}/>
         <MessageList
           eventNumber={100}
           distance={10}
           messageIds={this.state.messageIds}
+          id={constant.recentEventLabel}
         />
       </div>
       </React.Fragment>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {constant} from './config/default';
 import MessageView from './MessageView';
-import distance from './Distance';
+import distance from './util/Distance';
 import {getMessage, fetchMessagesBaseOnGeo} from './MessageDB';
 import { fetchLocation, updateFilter, updateFilterTagList} from './actions';
 import {connect} from "react-redux";
@@ -43,7 +43,7 @@ class MessageList extends Component {
       data:[],
       messageIds: messageIds,
       selectedTag: null,
-      selectedSorting: null,
+      selectedSorting: constant.sortByLastUpdateLabel,
       statusMessage: statusMessage,
     };
     this.updateGlobalFilter = this.updateGlobalFilter.bind(this);
@@ -63,12 +63,13 @@ class MessageList extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.state.messageIds.length === 0 && (this.props.filter.geolocation !== prevProps.filter.geolocation ||
       this.props.filter.distance !== prevProps.filter.distance ||
-      this.props.filter.selectedSorting !== prevProps.filter.selectedSorting ||
+      this.props.filter.selectedSorting[this.props.id] !== prevProps.filter.selectedSorting[this.props.id] ||
       this.props.tagFilter !== prevProps.tagFilter)) {
       this.refreshMessageList();
     } else {
-      if(this.props.filter.selectedTag !== prevProps.filter.selectedTag) {
-        this.setState({selectedTag: this.props.filter.selectedTag});
+      if(this.props.filter.selectedTag[this.props.id] !== prevProps.filter.selectedTag[this.props.id] ||
+        (this.props.filter.selectedTag[this.props.id] !== undefined && this.props.filter.selectedTag[this.props.id] !== this.state.selectedTag)) {
+        this.setState({selectedTag: this.props.filter.selectedTag[this.props.id]});
       }
       if(this.props.filter.sorting &&  this.props.filter.sorting !== prevProps.filter.sorting){
         this.setState({selectedSorting: this.props.filter.selectedSorting});
@@ -79,7 +80,7 @@ class MessageList extends Component {
   updateGlobalFilter(eventNumber, distance, geolocation) {
     //console.log("ML Update Filter: " + geolocation);
     const { updateFilter } = this.props;
-    updateFilter(eventNumber, distance, geolocation);
+    updateFilter(eventNumber, distance, geolocation, this.props.filterID);
   }
 
   refreshMessageList() {
@@ -96,7 +97,7 @@ class MessageList extends Component {
       return;
     }
     if(val.tag  !== undefined && val.tag  !== null  && val.tag.length > 0) {
-      this.props.updateFilterTagList(val.tag);
+      this.props.updateFilterTagList(val.tag, this.props.id);
     }
     this.state.data.push(val);
     this.setState({data:this.state.data});
@@ -152,15 +153,13 @@ class MessageList extends Component {
       lat = this.state.geolocation.latitude;
     }
 
-    let sorting = this.props.filter.selectedSorting;
-    if(sorting === 'sortByLastUpdate'){
+    let sorting = this.props.filter.selectedSorting[this.props.id];
+    if(sorting === constant.sortByLastUpdateLabel || sorting === undefined){
       this.state.data.sort((i, j) => (j.lastUpdate==null?j.createdAt.toDate():j.lastUpdate.toDate()) - (i.lastUpdate==null?i.createdAt.toDate():i.lastUpdate.toDate()));
-    }else if(sorting === 'sortByDistance'){
+    }else if(sorting === constant.sortByDistanceLabel){
       this.state.data.sort((i, j) => (distance(i.geolocation.longitude,i.geolocation.latitude,lon,lat))
         - (distance(j.geolocation.longitude,j.geolocation.latitude,lon,lat)));
     }
-
-//    console.log(this.state.data.length + " " + this.props.id);
 
     if(this.state.data.length === 0) {
       let statusMessage = this.state.statusMessage;
@@ -196,11 +195,11 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchLocation: () => dispatch(fetchLocation()),
     updateFilter:
-      (eventNumber, distance, geolocation) =>
-        dispatch(updateFilter(eventNumber, distance, geolocation)),
+      (eventNumber, distance, geolocation, filterID) =>
+        dispatch(updateFilter(eventNumber, distance, geolocation, filterID)),
     updateFilterTagList:
-        (tagList) =>
-          dispatch(updateFilterTagList(tagList)),
+        (tagList, filterID) =>
+          dispatch(updateFilterTagList(tagList, filterID)),
   }
 };
 

@@ -290,6 +290,7 @@ class BookmarkView extends Component {
                     eventNumber={100}
                     distance={10}
                     messageIds={this.state.messages}
+                    id={titleText}
                 />
                 isRenderTagList = true;
             }
@@ -349,7 +350,7 @@ class BookmarkView extends Component {
                             {readonlyHtml}
                             {titleEditHtml}
                             {descHtml}
-                            <TagDrawer isRenderTagList={isRenderTagList}/>
+                            <TagDrawer isRenderTagList={isRenderTagList} filterID={titleText}/>
                             {messageHtml}
                         </DialogContent>
                     </Dialog>

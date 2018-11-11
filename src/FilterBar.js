@@ -48,16 +48,16 @@ class FilterBar extends  Component {
     const classes = this.props.classes;
     if(this.disableLocationDrawer) {
       return (<Toolbar className={classes.filter}>
-         <TagDrawer /> 按 <SortingDrawer/> <div flex={1}/>
+         <TagDrawer filterID={this.props.filterID}/> 按 <SortingDrawer filterID={this.props.filterID}/> <div flex={1}/>
       </Toolbar>);
     } else {
       if(this.ranking) {
         return (<Toolbar className={classes.filter}>
-                  <LocationDrawer isUsePublicAddressBook={true}/>
+                  <LocationDrawer isUsePublicAddressBook={true} filterID={this.props.filterID}/>
               </Toolbar>);
       } else {
         return (<Toolbar className={classes.filter}>
-                  <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook}/> 的 <TagDrawer /> 按 <SortingDrawer/> <div flex={1}/>
+                  <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook} filterID={this.props.filterID}/> 的 <TagDrawer filterID={this.props.filterID}/> 按 <SortingDrawer filterID={this.props.filterID}/> <div flex={1}/>
                 </Toolbar>);
       }
     }

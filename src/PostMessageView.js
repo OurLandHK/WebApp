@@ -24,7 +24,7 @@ import {constant, RoleEnum} from './config/default';
 import UploadImageButton from './UploadImageButton';
 import IntegrationReactSelect from './IntegrationReactSelect';
 import SignInButton from './SignInButton';
-import {parseVenue, parseDate} from './util/messageParser';
+import { parseTime, parseDate, parseLocation } from './util/messageParser';
 import {
   openSnackbar,
   checkAuthState,
@@ -111,7 +111,9 @@ class PostMessageView extends Component {
       pollingTitle: "",
       minPollingOptions: 2,
       numOfMaxPollng: 1,
-      pollingRange: 1
+      pollingRange: 1,
+      geolocation: null,
+      streetAddress: null,
     };
     this.handleRequestDelete = this.handleRequestDelete.bind(this);
     this.handleTouchTap = this.handleTouchTap.bind(this);
@@ -203,17 +205,33 @@ class PostMessageView extends Component {
 
   handleMessageDescOnChange(evt) {
     let messageDesc = evt.target.value;
-    this.setState({ summary: messageDesc });
+    this.setState({ desc: messageDesc });
 
     parseDate(messageDesc).then((date) => {
       if(date != null) {
+        console.log("Setting Date: " + date)
         this.setState({ start: date });
       }
     });
 
     parseTime(messageDesc).then((time) => {
       if(time != null) {
+        console.log("Setting  Time: " + time)
         this.setState({ startTime: time });
+      }
+    });
+
+    parseLocation(messageDesc).then((response) => {
+      if(response != null) {
+        console.log("Setting  response: ")
+        console.log(response)
+        this.setState({
+          streetAddress: response.json.results[0].formatted_address,
+          geolocation: {
+            latitude: response.json.results[0].geometry.location.lat,
+            longitude: response.json.results[0].geometry.location.lng
+          }
+        });
       }
     });
   }
@@ -293,22 +311,22 @@ class PostMessageView extends Component {
         results: []
       }
 
-      postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress, desc,
-        startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link,
-        imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
-        this.state.status, this.state.isReportedUrgentEvent, this.state.isApprovedUrgentEvent, isUrgentEvent, polling).then((messageKey) => {
-          const { updateRecentMessage, checkAuthState} = this.props;
-          if(messageKey  != null  && messageKey !== "") {
-            updateRecentMessage(messageKey, false);
-            checkAuthState();
-            this.props.openSnackbar(constant.createMessageSuccess, 'success');
-            this.setState({
-              popoverOpen: false
-            });
-          } else {
-            this.props.openSnackbar(constant.createMessageFailure, 'error');
-          }
-        });
+      // postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress, desc,
+      //   startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link,
+      //   imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
+      //   this.state.status, this.state.isReportedUrgentEvent, this.state.isApprovedUrgentEvent, isUrgentEvent, polling).then((messageKey) => {
+      //     const { updateRecentMessage, checkAuthState} = this.props;
+      //     if(messageKey  != null  && messageKey !== "") {
+      //       updateRecentMessage(messageKey, false);
+      //       checkAuthState();
+      //       this.props.openSnackbar(constant.createMessageSuccess, 'success');
+      //       this.setState({
+      //         popoverOpen: false
+      //       });
+      //     } else {
+      //       this.props.openSnackbar(constant.createMessageFailure, 'error');
+      //     }
+      //   });
     }
   }
 
@@ -680,7 +698,7 @@ class PostMessageView extends Component {
                     fullWidth
                     margin="normal"
                     value={this.state.summary}
-                    onChange={event => this.handleMessageDescOnChange(event)}
+                    onChange={event => this.setState({ summary: event.target.value })}
                     inputRef={(tf) => {this.summaryTextField = tf;}}
                   />
                   <IntegrationReactSelect
@@ -693,7 +711,7 @@ class PostMessageView extends Component {
                     <TextField id="status" label="現況" className={classes.textField} disabled value={this.state.status} />
                   </div>
                   <br/>
-                    <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>
+                    <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}} geolocation={this.state.geolocation} streetAddress={this.state.streetAddress} onSubmit={this.locationButtonSubmit}/>
                 </FormGroup>
                 <FormGroup>
                 <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.key} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
@@ -714,8 +732,15 @@ class PostMessageView extends Component {
                 </FormGroup>
                 <Collapse in={this.state.descExpanded} transitionDuration="auto" unmountOnExit>
                   <FormGroup>
-                    <TextField autoFocus required id="desc"  fullWidth  multiline rowsMax="20" margin="normal"
-                                helperText="事件詳情及期望街坊如何參與 時間等資料請用詳細時間" value={this.state.desc} onChange={event => this.setState({ desc: event.target.value })}/>
+                    <TextField autoFocus required 
+                                id="desc"  
+                                fullWidth  
+                                multiline 
+                                rowsMax="20" 
+                                margin="normal"
+                                helperText="事件詳情及期望街坊如何參與 時間等資料請用詳細時間" 
+                                value={this.state.desc} 
+                                onChange={event => this.handleMessageDescOnChange(event)}/>
 
                   </FormGroup>
                   <br/>

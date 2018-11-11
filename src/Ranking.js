@@ -116,7 +116,7 @@ class Ranking extends Component {
   };
 
   renderUser(user, rank) {
-    const { classes, distance } = this.props;
+    const { classes} = this.props;
     var imgURL = '/images/profile_placeholder.png';
     if(checkImageExists(user.photoURL)) {
       imgURL = user.photoURL;
