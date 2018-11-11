@@ -8,13 +8,13 @@ import { getGeoLocationFromStreetAddress } from '../Location';
 export function parseDate(messageDesc) {
     return new Promise( (resolve, reject) => {
         // YYYY-MM-DD
-        let r1 = /(20[1-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])/g;
+        let r1 = /(20[1-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])/;
         // DD/MM/YYYY
         let r2 = /(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/(20[1-9]{2})/;
         // 10月31日
-        let r3 = /(0[1-9]|1[0-2]).(0[1-9]|[12]\d|3[01])./;
+        let r3 = /(0[1-9]|1[0-2])月(0[1-9]|[12]\d|3[01])日/u;
         // 2018年10月31日
-        let r4 = /(20[1-9]{2}).(0[1-9]|1[0-2]).(0[1-9]|[12]\d|3[01])./;
+        let r4 = /(20[1-9]{2})年(0[1-9]|1[0-2])月(0[1-9]|[12]\d|3[01])./;
 
         if(messageDesc.match(r1) != null) {
             resolve(messageDesc.match(r1)[0]);
@@ -34,7 +34,7 @@ export function parseDate(messageDesc) {
             let DD = messageDesc.match(r4)[3];
             resolve(YYYY + '-' + MM + '-' + DD);
         } else {
-            reject(null);
+            resolve(null);
         }
     }); 
 }
@@ -47,12 +47,23 @@ export function parseDate(messageDesc) {
 export function parseTime(messageDesc) {
     return new Promise( (resolve, reject) => {
         // HH:MM
-        let r1 = /([0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]/g;
+        let r1 = /(2[0-3]|[01]?[0-9]):([0-5]?[0-9])/;
         
         if(messageDesc.match(r1) != null) {
-            resolve(messageDesc.match(r1)[0]);
+            let HH = messageDesc.match(r1)[1];
+            let MM = messageDesc.match(r1)[2];
+
+            if(HH.length == 1) {
+                HH = '0' + HH
+            }
+
+            if(MM.length == 1) {
+                MM = '0' + MM
+            }
+
+            resolve(HH + ':' + MM);
         } else {
-            reject(null);
+            resolve(null);
         }
     }); 
 }
@@ -74,19 +85,19 @@ export function parseLocation(messageDesc) {
                     function(err, response){
                         // success callback
                         if(err) {
-                            reject(null);
+                            resolve(null);
                         } else {
                             resolve(response)
                         }
                     }, 
                     function() {
                         // error callback
-                        reject(null);
+                        resolve(null);
                     }
                 )
             }
         } else {
-            reject(null);
+            resolve(null);
         }
     }); 
 }
