@@ -89,6 +89,16 @@ class LocationButton extends Component {
     console.log(this.state.geoLocationSearch)
   }
 
+  componentDidUpdate(previousProps, previousState) {
+    const { streetAddress, geolocation } = this.props;
+    if (previousProps.streetAddress !== this.props.streetAddress || previousProps.geolocation !== this.props.geolocation ) { 
+      this.setState({
+        streetAddress,
+        geolocation
+      });
+    }
+  }
+
   notSupportedCallBack() {
     this.disabled = true;
     console.log('Disabled');
