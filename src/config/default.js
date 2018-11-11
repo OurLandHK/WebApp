@@ -153,6 +153,13 @@ let constant = {
   submitPollingFailureLabel: "投票失敗",
   numOfPollingLabel: "投票人數",
   isAlreadyEndedLabel: "投票己完結，按此觀看投票結果",
+  parseDateMessage: "我地偵測活動開始日期已設為：",
+  parseTimeMessage: "我地偵測活動開始時間已設為：",
+  parseLocationMessage: "我地偵測活動地點已設為：",
+  parseSuffixMessage: "，若正確請按此按鈕。",
+  parseDateSuccessMessage: "活動開始日期已設為： ",
+  parseTimeSuccessMessage: "活動開始時間已設為： ",
+  parseLocationSuccessMessage: "活動地點已設為： ",
 }
 
 const happyAndSadEnum = {
