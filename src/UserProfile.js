@@ -243,6 +243,34 @@ function isConcernMessage(user, messageUUID) {
     });
 }
 
+function updateUserFcm(user, fcmToken) {
+    return getUserProfile(user).then((userRecord) => {
+        var rv = true;
+        if(userRecord.fcmTokens  != null )
+        {
+            var index = userRecord.fcmTokens.indexOf(fcmToken);
+            if(index === -1)
+            {
+                userRecord.fcmTokens.push(fcmToken);
+            }
+            else
+            {
+                rv = false;
+            }
+        }
+        else
+        {
+            userRecord.fcmTokens = [fcmToken];
+        }
+        if(rv) {
+            return updateUserRecords(user.uid, userRecord).then(function(userRecordRef){
+                return rv;
+            });
+        } else {
+            return rv;
+        }
+    });   
+}
 
 function updateUserRecords(userid, userRecord) {
     let now = Date.now();
@@ -471,5 +499,5 @@ function getUserProfileImage(uid) {
   });
 }
 
-export {getAddressBook, fetchAllUser, addCompleteMessage, upsertAddress, upgradeAllUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
+export {updateUserFcm, getAddressBook, fetchAllUser, addCompleteMessage, upsertAddress, upgradeAllUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
     dropBookmark, fetchBookmarkList, addBookmark, getBookmark, updateBookmark, incBookmarkViewCount, getUserProfileImage};

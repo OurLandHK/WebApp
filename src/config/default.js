@@ -28,6 +28,7 @@ let config = {
   commentDB: "comment",
   bookDB: "Bookmark",
   TagStatisticKey: "TagStatistic",
+  fcmDB: 'fcmDB', // for all fcmDB
   analyticsID: isProduction() ? "UA-124203709-1" : "UA-124203709-2",
 };
 
