@@ -219,6 +219,16 @@ function getTagStat() {
     });
 }
 
+function updateFcmDB(fcmToken, userid) {
+    let now = Date.now();
+    let lastLogin = new Date(now);
+    let db = firebase.firestore();
+    let collectionRef = db.collection(config.fcmDB);
+    let fcmRecord = {fcmToken: fcmToken, userid: userid, lastLogin: lastLogin}
+    return collectionRef.doc(fcmToken).set(fcmRecord).then(function(tagRef) {
+        console.log("fcmToken: ", fcmRecord);
+        return(tagRef);
+    })
+}
 
-
-export {getTagStat, dropFocusMessage, fetchFocusMessagesBaseOnGeo, addFocusMessage, getFocusMessage, updateFocusMessage, updateTagStat};
+export {updateFcmDB, getTagStat, dropFocusMessage, fetchFocusMessagesBaseOnGeo, addFocusMessage, getFocusMessage, updateFocusMessage, updateTagStat};
