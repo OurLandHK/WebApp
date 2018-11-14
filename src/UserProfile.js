@@ -1,4 +1,5 @@
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 import uuid from 'js-uuid';
 import config, {constant, addressEnum, RoleEnum} from './config/default';
 

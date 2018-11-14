@@ -116,8 +116,12 @@ class MessageDialog extends React.Component {
   handleRequestClose = () => {
     //console.log('close');
     window.onpopstate = this.lastOnPopState;
-    window.history.pushState("", "", '/');
-    this.setState({ open: false });
+    if(this.props.closeDialog  != null ) {
+      this.props.closeDialog();
+    } else {
+      window.history.pushState("", "", '/');
+      this.setState({ open: false });
+    }
   };
 
   handleRequestDelete = () => {

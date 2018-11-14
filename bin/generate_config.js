@@ -6,8 +6,12 @@ fbcli.setup.web().then(config => {
     `let firebaseConfig = ${JSON.stringify(config)};`
   );
   fs.writeFileSync(
+    'src/firebase-config.js',
+    `let firebaseConfig = ${JSON.stringify(config)};`
+  );
+  fs.writeFileSync(
     'src/config/firebase.js',
-    `import * as firebase from 'firebase';firebase.initializeApp(${JSON.stringify(config)});`
+    `import firebase from 'firebase/app';firebase.initializeApp(${JSON.stringify(config)});`
   );
 });
 

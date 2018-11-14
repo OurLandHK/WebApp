@@ -3,8 +3,8 @@
 This is the abstraction layer to get all Global Setting for the Appl
 
 */
-
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 import config from './config/default';
 import distance from './util/Distance';
 

@@ -32,10 +32,16 @@ import {
   UPDATE_SEARCHEVENT_LOCATION,
   TOGGLE_SEARCHEVENT_DIALOG,
 } from './actions/types';
-import * as firebase from 'firebase';
+// import firebaseConfig from './firebase-config'
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
+import 'firebase/messaging';
 import config, {constant} from './config/default';
 import {getUserProfile, updateUserProfile, fetchBookmarkList, getAddressBook} from './UserProfile';
 import {fetchFocusMessagesBaseOnGeo, getTagStat} from './GlobalDB';
+
+let firebaseConfig = {"apiKey":"AIzaSyCR7LWgb_I_ATv9T9SKCc-4Lb6CdHL2bLU","databaseURL":"https://ourlandtest.firebaseio.com","storageBucket":"ourlandtest.appspot.com","authDomain":"ourlandtest.firebaseapp.com","messagingSenderId":"7572079733","projectId":"ourlandtest"};
 
 const currentLocationLabel = "現在位置";
 
@@ -167,6 +173,8 @@ function dispatchCloseSnackbar() {
 }
 
 export function init3rdPartyLibraries() {
+  console.log(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   const settings = {/* your settings... */ timestampsInSnapshots: true};
   db.settings(settings);
