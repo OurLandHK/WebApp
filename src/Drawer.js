@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import InboxIcon from '@material-ui/icons/Inbox';
@@ -29,10 +28,6 @@ import {upgradeAllMessage} from './MessageDB';
 import { constant, RoleEnum } from './config/default';
 import AboutDialog from './AboutDialog';
 import SignOutButton from './SignOutButton';
-
-const currentLocationLabel = "現在位置";
-const officeLocationLabel = "辦公室位置";
-const homeLocationLabel = "屋企位置";
 
 
 class DrawerMenu extends Component {

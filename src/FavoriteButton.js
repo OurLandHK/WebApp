@@ -1,10 +1,8 @@
-import * as firebase from 'firebase';
+
 import React, { Component } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
-import green from '@material-ui/core/colors/green';
-import red from '@material-ui/core/colors/red';
 import { withStyles } from '@material-ui/core/styles';
 import {updateMessageConcernUser} from './MessageDB';
 import {

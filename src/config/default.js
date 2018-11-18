@@ -1,6 +1,5 @@
-import './firebase';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
-import * as firebase from 'firebase';
 
 const isProduction = () => {
   const location = window.location;

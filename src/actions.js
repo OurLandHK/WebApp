@@ -32,7 +32,11 @@ import {
   UPDATE_SEARCHEVENT_LOCATION,
   TOGGLE_SEARCHEVENT_DIALOG,
 } from './actions/types';
-import * as firebase from 'firebase';
+import {firebaseConfig} from './firebase-config'
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
+import 'firebase/messaging';
 import config, {constant} from './config/default';
 import {getUserProfile, updateUserProfile, fetchBookmarkList, getAddressBook} from './UserProfile';
 import {fetchFocusMessagesBaseOnGeo, getTagStat} from './GlobalDB';
@@ -167,6 +171,8 @@ function dispatchCloseSnackbar() {
 }
 
 export function init3rdPartyLibraries() {
+  //console.log(firebaseConfig);
+  firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   const settings = {/* your settings... */ timestampsInSnapshots: true};
   db.settings(settings);

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
 import {constant} from '../config/default';
 import CommentView from './CommentView';
 import {fetchCommentsBaseonMessageID} from '../MessageDB';
