@@ -1,1 +1,0 @@
-export let firebaseConfig = {"apiKey":"AIzaSyCR7LWgb_I_ATv9T9SKCc-4Lb6CdHL2bLU","databaseURL":"https://ourlandtest.firebaseio.com","storageBucket":"ourlandtest.appspot.com","authDomain":"ourlandtest.firebaseapp.com","messagingSenderId":"7572079733","projectId":"ourlandtest"};
