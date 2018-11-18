@@ -7,7 +7,7 @@ fbcli.setup.web().then(config => {
   );
   fs.writeFileSync(
     'src/firebase-config.js',
-    `let firebaseConfig = ${JSON.stringify(config)};`
+    `export let firebaseConfig = ${JSON.stringify(config)};`
   );
   fs.writeFileSync(
     'src/config/firebase.js',
