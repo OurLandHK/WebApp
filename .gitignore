@@ -1,4 +1,6 @@
 src/config/firebase.js
+public/firebase-config.js
+src/firebase-config.js
 build
 **.DS_Store
 functions/node_modules

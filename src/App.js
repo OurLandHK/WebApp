@@ -16,12 +16,15 @@ import LeaderBoard from './LeaderBoard';
 import SearchEventDialog from './SearchEventDialog';
 import CustomizedSnackbars from './CustomizedSnackbars';
 import NotificationsDialog from './NotificationsDialog';
+import {updateUserFcm} from './UserProfile';
+import {updateFcmDB} from './GlobalDB';
 
 import {
   fetchAddressBookByUser,
   fetchAddressBookFromOurLand,
   fetchConcernMessagesFromOurLand,
   updateFilterDefault,
+  checkMessageState,
   checkAuthState,
   updateRecentMessage,
   updatePublicProfileDialog,
@@ -95,6 +98,7 @@ class App extends Component {
   }
 
   componentWillMount() {
+    this.props.checkMessageState();
     this.props.checkAuthState();
     this.props.fetchAddressBookFromOurLand();
     this.props.fetchConcernMessagesFromOurLand();
@@ -103,9 +107,19 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.user !== this.props.user && this.props.user.user) {
-      this.props.fetchAddressBookByUser(this.props.user.user);
-    }
+    if (prevProps.user !== this.props.user) {
+      if(this.props.user.user) {
+        this.props.fetchAddressBookByUser(this.props.user.user);
+        if(this.props.user.fcmToken && this.props.user.userProfile) {
+          updateUserFcm(this.props.user.user, this.props.user.fcmToken);
+          updateFcmDB(this.props.user.fcmToken, this.props.user.user.uid);
+        }
+      } else {
+        if(this.props.user.fcmToken) {
+          updateFcmDB(this.props.user.fcmToken, null);
+        }
+      }
+    } 
   }
 
   handleChange = (event, value) => {
@@ -199,6 +213,8 @@ const mapDispatchToProps = (dispatch) => {
     updateFilterDefault:
       (eventNumber, distance, geolocation) =>
         dispatch(updateFilterDefault(eventNumber, distance, geolocation)),
+    checkMessageState:
+      () => dispatch(checkMessageState()),
     checkAuthState:
       () => dispatch(checkAuthState()),
     fetchAddressBookByUser:

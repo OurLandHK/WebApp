@@ -1,6 +1,5 @@
-import './firebase';
+import firebase from 'firebase/app';
 import 'firebase/firestore';
-import * as firebase from 'firebase';
 
 const isProduction = () => {
   const location = window.location;
@@ -28,6 +27,7 @@ let config = {
   commentDB: "comment",
   bookDB: "Bookmark",
   TagStatisticKey: "TagStatistic",
+  fcmDB: 'fcmDB', // for all fcmDB
   analyticsID: isProduction() ? "UA-124203709-1" : "UA-124203709-2",
 };
 

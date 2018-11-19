@@ -3,8 +3,8 @@
 This is the abstraction layer to get all Global Setting for the Appl
 
 */
-
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 import config from './config/default';
 import distance from './util/Distance';
 
@@ -219,6 +219,16 @@ function getTagStat() {
     });
 }
 
+function updateFcmDB(fcmToken, userid) {
+    let now = Date.now();
+    let lastLogin = new Date(now);
+    let db = firebase.firestore();
+    let collectionRef = db.collection(config.fcmDB);
+    let fcmRecord = {fcmToken: fcmToken, userid: userid, lastLogin: lastLogin}
+    return collectionRef.doc(fcmToken).set(fcmRecord).then(function(tagRef) {
+        console.log("fcmToken: ", fcmRecord);
+        return(tagRef);
+    })
+}
 
-
-export {getTagStat, dropFocusMessage, fetchFocusMessagesBaseOnGeo, addFocusMessage, getFocusMessage, updateFocusMessage, updateTagStat};
+export {updateFcmDB, getTagStat, dropFocusMessage, fetchFocusMessagesBaseOnGeo, addFocusMessage, getFocusMessage, updateFocusMessage, updateTagStat};

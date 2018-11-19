@@ -1,4 +1,5 @@
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 import config, {constant} from './config/default';
 import distance from './util/Distance';
 import {updateTagStat} from './GlobalDB';
