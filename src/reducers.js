@@ -79,7 +79,7 @@ function addressBookReducer(state={addresses:[], publicAddresses:[]}, action) {
   }
 }
 
-function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, eventNumber: constant.defaultEventNumber, geolocation: null, distance: 1, defaultDistance: 1, selectedTag: {}, tagList: {}}, action) {
+function filterReducer(state={defaultEventNumber: constant.defaultEventNumber, eventNumber: constant.defaultEventNumber, geolocation: null, distance: 1, defaultDistance: 1, selectedTag: {}, tagList: {}, selectedSorting: {}}, action) {
   let distance = action.distance;
   let selectedTag = state.selectedTag;
   let selectedSorting = state.selectedSorting;
