@@ -153,7 +153,10 @@ class MessageList extends Component {
       lat = this.state.geolocation.latitude;
     }
 
-    let sorting = this.props.filter.selectedSorting[this.props.id];
+    let sorting = constant.sortByLastUpdateLabel;
+    if(this.props.filter.selectedSorting) {
+      sorting = this.props.filter.selectedSorting[this.props.id];
+    }
     if(sorting === constant.sortByLastUpdateLabel || sorting === undefined){
       this.state.data.sort((i, j) => (j.lastUpdate==null?j.createdAt.toDate():j.lastUpdate.toDate()) - (i.lastUpdate==null?i.createdAt.toDate():i.lastUpdate.toDate()));
     }else if(sorting === constant.sortByDistanceLabel){
