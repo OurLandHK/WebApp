@@ -64,17 +64,19 @@ if (userRoot) {
   const parts = document.URL.split('/');
   let userIndex = parts.length - 1;
   while(userIndex > 0) {
-    //console.log(req.url + "  " + parts[userIndex] + " " + userIndex)
+    console.log(parts[userIndex] + " " + userIndex)
     if(parts[userIndex] === 'user') {
           userIndex++;
           break;
     }
     userIndex--;
   }
-  let userid = parts[userIndex];
+  let userid = parts[userIndex];  
   let bookmarkid = null;
   if(userIndex < parts.length - 1) {
+    console.log(parts[userIndex + 1]);
     let path = parts[userIndex+1].split('?');
+    console.log(path);
     bookmarkid = path[0];
   } else {
     let path = userid.split('?');
