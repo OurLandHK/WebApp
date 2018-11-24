@@ -62,7 +62,11 @@ app.get('**', (req, res) => {
   const userid = parts[userIndex];
   let bookmarkid = null;
   if(userIndex < parts.length - 1) {
-    bookmarkid = parts[userIndex+1];
+    let path = parts[userIndex+1].split('?');
+    bookmarkid = path[0];
+  } else {
+    let path = userid.split('?');
+    userid = path[0];
   }
   console.log(`userID ${userid} bookmarkID ${bookmarkid}`);
   return getUserProfile(userid).then(userPrfile => {

@@ -21,8 +21,9 @@ function getMessage(uuid) {
 
 app.get('**', (req, res) => {
   cors(req, res, () => {});
-  const parts = req.url.split('/');
-  const uuid = parts[parts.length - 1];
+  const segments = req.url.split('/');
+  let path = segments[segments.length - 1].split('?');
+  const uuid = path[0];
   console.log(uuid);
   getMessage(uuid).then(message => {
     let finalHtml = index;

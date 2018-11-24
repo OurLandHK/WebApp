@@ -22,15 +22,11 @@
     }],
     "rewrites":[
       {
-        "source": "/detail/*",
+        "source": "/detail/**",
         "function": "detailView"
       },
       {
-        "source": "/user/*",
-        "function": "userView"
-      },
-      {
-        "source": "/user/*/*",
+        "source": "/user/**",
         "function": "userView"
       }            
     ]
