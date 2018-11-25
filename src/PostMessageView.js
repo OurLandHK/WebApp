@@ -24,6 +24,10 @@ import {constant, RoleEnum} from './config/default';
 import UploadImageButton from './UploadImageButton';
 import IntegrationReactSelect from './IntegrationReactSelect';
 import SignInButton from './SignInButton';
+import { parseTime, parseDate, parseLocation } from './util/messageParser';
+import ParseDateButton from './ParseDateButton';
+import ParseTimeButton from './ParseTimeButton';
+import ParseLocationButton from './ParseLocationButton';
 import {
   openSnackbar,
   checkAuthState,
@@ -68,6 +72,11 @@ const styles = theme => ({
     borderRadius: '2px',
     boxShadow: '0 0 0 3px #006eb9, 0 0 10px #aaa',
   },
+  parseButton: {
+    width: '300px',
+    height: '80px',
+    margin: '10px auto'
+  }
 });
 
 function Transition(props) {
@@ -110,7 +119,16 @@ class PostMessageView extends Component {
       pollingTitle: "",
       minPollingOptions: 2,
       numOfMaxPollng: 1,
-      pollingRange: 1
+      pollingRange: 1,
+      geolocation: null,
+      streetAddress: null,
+      isParseDateButtonVisible: false,
+      isParseTimeButtonVisible: false,
+      isParseLocationButtonVisible: false,
+      parsedStartDate: null,
+      parsedStartTime: null,
+      parsedStreetAddress: null,
+      parsedGeolocation: null
     };
     this.handleRequestDelete = this.handleRequestDelete.bind(this);
     this.handleTouchTap = this.handleTouchTap.bind(this);
@@ -120,6 +138,9 @@ class PostMessageView extends Component {
     this.renderActivitiesHtml = this.renderActivitiesHtml.bind(this);
     this.setOpenning = this.setOpenning.bind(this);
     this.addPollingOptions = this.addPollingOptions.bind(this);
+    this.handleParseDateButtonClick = this.handleParseDateButtonClick.bind(this);
+    this.handleParseTimeButtonClick = this.handleParseTimeButtonClick.bind(this);
+    this.handleParseLocationButtonClick = this.handleParseLocationButtonClick.bind(this);
     this.summaryTextField = null;
 
   }
@@ -200,6 +221,84 @@ class PostMessageView extends Component {
     });
   };
 
+  handleMessageDescOnChange(evt) {
+    let messageDesc = evt.target.value;
+    this.setState({ desc: messageDesc });
+
+    parseDate(messageDesc).then((date) => {
+      if(date != null) {
+        this.setState({ 
+          parsedStartDate: date,
+          isParseDateButtonVisible: true 
+        });
+      } else {
+        this.setState({ 
+          parsedStartDate: null,
+          isParseDateButtonVisible: false 
+        });
+      }
+    });
+
+    parseTime(messageDesc).then((time) => {
+      if(time != null) {
+        this.setState({ 
+          parsedStartTime: time,
+          isParseTimeButtonVisible: true,
+        });
+      } else {
+        this.setState({ 
+          parsedStartTime: null,
+          isParseTimeButtonVisible: false 
+        });
+      }
+    });
+
+    parseLocation(messageDesc).then((response) => {
+      if(response != null) {
+        this.setState({
+          parsedStreetAddress: response.json.results[0].formatted_address,
+          parsedGeolocation: {
+            latitude: response.json.results[0].geometry.location.lat,
+            longitude: response.json.results[0].geometry.location.lng
+          },
+          isParseLocationButtonVisible: true
+        });
+      } else {
+        this.setState({ 
+          parsedStreetAddress: null,
+          parsedGeolocation: null,
+          isParseLocationButtonVisible: false 
+        });
+      }
+    });
+  }
+
+  handleParseDateButtonClick() {
+    const { parsedStartDate } = this.state;
+    this.setState({
+      start: parsedStartDate,
+      parsedStartDate: null,
+      isParseDateButtonVisible: false
+    });
+  }
+
+  handleParseTimeButtonClick() {
+    const { parsedStartTime } = this.state;
+    this.setState({
+      startTime: parsedStartTime,
+      isParseTimeButtonVisible: false
+    });
+  }
+
+  handleParseLocationButtonClick() {
+    const { parsedStreetAddress, parsedGeolocation } = this.state;
+    this.setState({
+      streetAddress: parsedStreetAddress,
+      geolocation: parsedGeolocation,
+      isParseLocationButtonVisible: false
+    });
+  }
+
   onSubmit() {
     //console.log(" expand:  " + this.state.timeExpanded + " " + this.state.intervalSelection + " " + this.state.durationSelection + " " + this.state.start)
     let interval = null;
@@ -275,22 +374,22 @@ class PostMessageView extends Component {
         results: []
       }
 
-      postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress, desc,
-        startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link,
-        imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
-        this.state.status, this.state.isReportedUrgentEvent, this.state.isApprovedUrgentEvent, isUrgentEvent, polling).then((messageKey) => {
-          const { updateRecentMessage, checkAuthState} = this.props;
-          if(messageKey  != null  && messageKey !== "") {
-            updateRecentMessage(messageKey, false);
-            checkAuthState();
-            this.props.openSnackbar(constant.createMessageSuccess, 'success');
-            this.setState({
-              popoverOpen: false
-            });
-          } else {
-            this.props.openSnackbar(constant.createMessageFailure, 'error');
-          }
-        });
+      // postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress, desc,
+      //   startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link,
+      //   imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
+      //   this.state.status, this.state.isReportedUrgentEvent, this.state.isApprovedUrgentEvent, isUrgentEvent, polling).then((messageKey) => {
+      //     const { updateRecentMessage, checkAuthState} = this.props;
+      //     if(messageKey  != null  && messageKey !== "") {
+      //       updateRecentMessage(messageKey, false);
+      //       checkAuthState();
+      //       this.props.openSnackbar(constant.createMessageSuccess, 'success');
+      //       this.setState({
+      //         popoverOpen: false
+      //       });
+      //     } else {
+      //       this.props.openSnackbar(constant.createMessageFailure, 'error');
+      //     }
+      //   });
     }
   }
 
@@ -479,7 +578,7 @@ class PostMessageView extends Component {
           id="start"
           label="開始日期"
           type="date"
-          defaultValue={today}
+          value={this.state.start}
           className={classes.textField}
           margin="normal"
           onChange={event => this.setState({ start: event.target.value })}
@@ -520,7 +619,7 @@ class PostMessageView extends Component {
           id="start"
           label="開始日期"
           type="date"
-          defaultValue={today}
+          value={this.state.start}
           className={classes.textField}
           margin="normal"
           onChange={event => this.setState({ start: event.target.value })}
@@ -532,7 +631,7 @@ class PostMessageView extends Component {
           id="startTime"
           label="開始時間"
           type="time"
-          defaultValue={startTime}
+          value={this.state.startTime}
           className={classes.textField}
           onChange={event => this.setState({ startTime: event.target.value })}
           InputLabelProps={{
@@ -675,7 +774,7 @@ class PostMessageView extends Component {
                     <TextField id="status" label="現況" className={classes.textField} disabled value={this.state.status} />
                   </div>
                   <br/>
-                    <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}} onSubmit={this.locationButtonSubmit}/>
+                    <LocationButton ref={(locationButton) => {this.locationButton = locationButton;}} geolocation={this.state.geolocation} streetAddress={this.state.streetAddress} onSubmit={this.locationButtonSubmit}/>
                 </FormGroup>
                 <FormGroup>
                 <UploadImageButton ref={(uploadImageButton) => {this.uploadImageButton = uploadImageButton;}} path={this.state.key} uploadFinish={(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL) => {this.uploadFinish(imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL);}}/>
@@ -696,9 +795,18 @@ class PostMessageView extends Component {
                 </FormGroup>
                 <Collapse in={this.state.descExpanded} transitionDuration="auto" unmountOnExit>
                   <FormGroup>
-                    <TextField autoFocus required id="desc"  fullWidth  multiline rowsMax="20" margin="normal"
-                                helperText="事件詳情及期望街坊如何參與 時間等資料請用詳細時間" value={this.state.desc} onChange={event => this.setState({ desc: event.target.value })}/>
-
+                    <TextField autoFocus required 
+                                id="desc"  
+                                fullWidth  
+                                multiline 
+                                rowsMax="20" 
+                                margin="normal"
+                                helperText="事件詳情及期望街坊如何參與 時間等資料請用詳細時間" 
+                                value={this.state.desc} 
+                                onChange={event => this.handleMessageDescOnChange(event)}/>
+                  <ParseDateButton className={classes.parseButton} isVisible={this.state.isParseDateButtonVisible} parsedStartDate={this.state.parsedStartDate} handleParseDateButtonClick={this.handleParseDateButtonClick}/>
+                  <ParseTimeButton className={classes.parseButton} isVisible={this.state.isParseTimeButtonVisible} parsedStartTime={this.state.parsedStartTime} handleParseTimeButtonClick={this.handleParseTimeButtonClick}/>
+                  <ParseLocationButton className={classes.parseButton} isVisible={this.state.isParseLocationButtonVisible} parsedStreetAddress={this.state.parsedStreetAddress} handleParseLocationButtonClick={this.handleParseLocationButtonClick}/>
                   </FormGroup>
                   <br/>
                 </Collapse>
