@@ -48,19 +48,26 @@ export function parseTime(messageDesc) {
     return new Promise( (resolve, reject) => {
         // HH:MM
         let r1 = /(2[0-3]|[01]?[0-9]):([0-5]?[0-9])/;
+        let r2 = /(下午)/;
         
         if(messageDesc.match(r1) != null) {
             let HH = messageDesc.match(r1)[1];
             let MM = messageDesc.match(r1)[2];
 
             if(HH.length == 1) {
-                HH = '0' + HH
+                HH = '0' + HH;
             }
 
             if(MM.length == 1) {
-                MM = '0' + MM
+                MM = '0' + MM;
             }
 
+            if(messageDesc.match(r2) != null) {
+                if(parseInt(HH) < 12) {
+                    HH = parseInt(HH) + 12;
+                }
+            }
+            
             resolve(HH + ':' + MM);
         } else {
             resolve(null);
