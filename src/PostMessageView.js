@@ -210,7 +210,24 @@ class PostMessageView extends Component {
       opennings: this.props.opennings,
       intervalSelection: this.props.intervalOptions[0],
       durationSelection: this.props.durationOptions[0],
-      openningSelection: this.props.openningOptions[0]
+      openningSelection: this.props.openningOptions[0],
+      pollingOptions: [],
+      pollingOptionValues: [],
+      pollingOptionIndex: 0,
+      maxOfPollingOptionIndex: 6,
+      pollingTitle: "",
+      minPollingOptions: 2,
+      numOfMaxPollng: 1,
+      pollingRange: 1,
+      geolocation: null,
+      streetAddress: null,
+      isParseDateButtonVisible: false,
+      isParseTimeButtonVisible: false,
+      isParseLocationButtonVisible: false,
+      parsedStartDate: null,
+      parsedStartTime: null,
+      parsedStreetAddress: null,
+      parsedGeolocation: null
     });
   }
 
@@ -278,7 +295,8 @@ class PostMessageView extends Component {
     this.setState({
       start: parsedStartDate,
       parsedStartDate: null,
-      isParseDateButtonVisible: false
+      isParseDateButtonVisible: false,
+      timeExpanded: true
     });
   }
 
@@ -286,7 +304,9 @@ class PostMessageView extends Component {
     const { parsedStartTime } = this.state;
     this.setState({
       startTime: parsedStartTime,
-      isParseTimeButtonVisible: false
+      parsedStartTime: null,
+      isParseTimeButtonVisible: false,
+      timeExpanded: true
     });
   }
 
@@ -300,7 +320,7 @@ class PostMessageView extends Component {
   }
 
   onSubmit() {
-    //console.log(" expand:  " + this.state.timeExpanded + " " + this.state.intervalSelection + " " + this.state.durationSelection + " " + this.state.start)
+    console.log(" expand:  " + this.state.timeExpanded + " " + this.state.intervalSelection + " " + this.state.durationSelection + " " + this.state.start)
     let interval = null;
     let duration = null;
     let startDate = null;
@@ -374,22 +394,22 @@ class PostMessageView extends Component {
         results: []
       }
 
-      // postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress, desc,
-      //   startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link,
-      //   imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
-      //   this.state.status, this.state.isReportedUrgentEvent, this.state.isApprovedUrgentEvent, isUrgentEvent, polling).then((messageKey) => {
-      //     const { updateRecentMessage, checkAuthState} = this.props;
-      //     if(messageKey  != null  && messageKey !== "") {
-      //       updateRecentMessage(messageKey, false);
-      //       checkAuthState();
-      //       this.props.openSnackbar(constant.createMessageSuccess, 'success');
-      //       this.setState({
-      //         popoverOpen: false
-      //       });
-      //     } else {
-      //       this.props.openSnackbar(constant.createMessageFailure, 'error');
-      //     }
-      //   });
+      postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress, desc,
+         startDate, duration, interval, startTime, everydayOpenning, weekdaysOpennings, endDate, this.state.link,
+         imageURL, publicImageURL, thumbnailImageURL, thumbnailPublicImageURL,
+         this.state.status, this.state.isReportedUrgentEvent, this.state.isApprovedUrgentEvent, isUrgentEvent, polling).then((messageKey) => {
+           const { updateRecentMessage, checkAuthState} = this.props;
+           if(messageKey  != null  && messageKey !== "") {
+             updateRecentMessage(messageKey, false);
+             checkAuthState();
+             this.props.openSnackbar(constant.createMessageSuccess, 'success');
+             this.setState({
+               popoverOpen: false
+             });
+           } else {
+             this.props.openSnackbar(constant.createMessageFailure, 'error');
+           }
+         });
     }
   }
 

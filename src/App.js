@@ -98,7 +98,13 @@ class App extends Component {
   }
 
   componentWillMount() {
-    this.props.checkMessageState();
+    if /* if we're on iOS, Disable Message */
+    ((navigator.platform.indexOf("iPhone") !== -1) ||
+     (navigator.platform.indexOf("iPad") !== -1) ||
+     (navigator.platform.indexOf("iPod") !== -1)) {
+    } else {/* else use Google */
+      this.props.checkMessageState();
+    }
     this.props.checkAuthState();
     this.props.fetchAddressBookFromOurLand();
     this.props.fetchConcernMessagesFromOurLand();
