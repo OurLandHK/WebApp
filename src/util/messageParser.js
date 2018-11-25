@@ -83,7 +83,7 @@ export function parseTime(messageDesc) {
  */
 export function parseLocation(messageDesc) {
     return new Promise( (resolve, reject) => {
-        let r1 = /(地點|地址)(:| :)(.*)/u;
+        let r1 = /(地點|地址)(:| :|：| ：)(.*)/u;
         
         if(messageDesc.match(r1) != null) {
             if(messageDesc.match(r1)[3] != null) {
