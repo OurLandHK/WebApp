@@ -22,10 +22,10 @@ export function parseDate(messageDesc) {
             let YYYY = messageDesc.match(r2)[3];
             let MM = messageDesc.match(r2)[2];
             let DD = messageDesc.match(r2)[1];
-            if(MM.length == 1) {
+            if(MM.length === 1) {
                 MM = '0'+MM;
             }
-            if(DD.length == 1) {
+            if(DD.length === 1) {
                 DD = '0'+DD;
             }
             resolve(YYYY + '-' + MM + '-' + DD);
@@ -33,10 +33,10 @@ export function parseDate(messageDesc) {
             let YYYY = new Date().getFullYear();
             let MM = messageDesc.match(r3)[1];
             let DD = messageDesc.match(r3)[2];
-            if(MM.length == 1) {
+            if(MM.length === 1) {
                 MM = '0'+MM;
             }
-            if(DD.length == 1) {
+            if(DD.length === 1) {
                 DD = '0'+DD;
             }
             resolve(YYYY + '-' + MM + '-' + DD);
@@ -44,10 +44,10 @@ export function parseDate(messageDesc) {
             let YYYY = messageDesc.match(r4)[1];
             let MM = messageDesc.match(r4)[2];
             let DD = messageDesc.match(r4)[3];
-            if(MM.length == 1) {
+            if(MM.length === 1) {
                 MM = '0'+MM;
             }
-            if(DD.length == 1) {
+            if(DD.length === 1) {
                 DD = '0'+DD;
             }
             resolve(YYYY + '-' + MM + '-' + DD);
@@ -72,11 +72,11 @@ export function parseTime(messageDesc) {
             let HH = messageDesc.match(r1)[1];
             let MM = messageDesc.match(r1)[2];
 
-            if(HH.length == 1) {
+            if(HH.length === 1) {
                 HH = '0' + HH;
             }
 
-            if(MM.length == 1) {
+            if(MM.length === 1) {
                 MM = '0' + MM;
             }
 

@@ -61,6 +61,8 @@ function userReducer(state={user: null, fcmToken: null, userProfile: null, lastL
       if(action.fcmToken !== null || action.fcmToken !== undefined) {
         return {...state, fcmToken: action.fcmToken};
       }
+      return state;
+      break;
     default:
       return state;
   }

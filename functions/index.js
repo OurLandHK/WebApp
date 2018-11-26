@@ -68,7 +68,7 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
       updateContent = true;
     } else if(afterData === null) {
       updateContent = true;
-    } else if (afterData.lastUpdate.getTime() !== beforeData.lastUpdate.getTime()) {
+    } else if (beforeData.lastUpdate === undefined|| afterData.lastUpdate.getTime() !== beforeData.lastUpdate.getTime()) {
       console.log(`Last update ${afterData.lastUpdate} and ${beforeData.lastUpdate}`);
       updateContent = true;
     }

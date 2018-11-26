@@ -551,7 +551,6 @@ class PostMessageView extends Component {
 
   renderOpenningHtml() {
 
-    let today = this.today();
     let openningHtml = null;
     const classes = this.props.classes;
     switch(this.state.openningSelection) {
@@ -615,7 +614,6 @@ class PostMessageView extends Component {
   renderActivitiesHtml() {
 
     let today = this.today();
-    let startTime = this.startTime();
     let endDateHtml = null;
     const classes = this.props.classes;
     if(this.state.intervalSelection !== this.props.intervalOptions[0]) {
