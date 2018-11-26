@@ -59,7 +59,7 @@ app.get('**', (req, res) => {
       }
       userIndex--;
   }
-  const userid = parts[userIndex];
+  let userid = parts[userIndex];
   let bookmarkid = null;
   if(userIndex < parts.length - 1) {
     let path = parts[userIndex+1].split('?');
