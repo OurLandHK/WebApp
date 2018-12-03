@@ -11,6 +11,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
+import BookmarkList from './bookmark/BookmarkList';
 import FilterBar from './FilterBar';
 import {
   toggleLeaderBoard,
@@ -28,7 +29,7 @@ const styles = {
 class LeaderBoard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: 'current'};
+    this.state = { value: constant.publicBookmarkLabel};
     this.openPublicProfileDialog = this.openPublicProfileDialog.bind(this);
   }
 
@@ -99,6 +100,16 @@ class LeaderBoard extends React.Component {
     );
   }
 
+  renderPublicMessages() {
+    const { classes, ourland } = this.props;
+
+    return (
+      <div className={classes.container}>
+        <BookmarkList bookmarkList={ourland.bookmarkList}/>
+      </div>
+    );
+  }
+
 
   render() {
     const { user } = this.props;
@@ -109,6 +120,9 @@ class LeaderBoard extends React.Component {
       allUser = <Tab label="Admin" value="admin"/>;
     }
     switch(value) {
+      case constant.publicBookmarkLabel:
+        listHtml = this.renderPublicMessages();
+        break;
       case 'current':
         listHtml = this.renderNearby();
         break;
@@ -129,6 +143,7 @@ class LeaderBoard extends React.Component {
             onChange={this.handleChange}
             fullWidth
           >
+            <Tab label={constant.publicBookmarkLabel} value={constant.publicBookmarkLabel}/>
             <Tab label="附近排名" value="current"/>
             <Tab label="全港頭二十名" value="hktop"/>
             {allUser}
@@ -148,6 +163,7 @@ const mapStateToProps = (state, ownProps) => {
     open: state.leaderBoard.open,
     topTwenty: state.leaderBoard.topTwenty,
     user: state.user,
+    ourland: state.ourland,
   };
 }
 
