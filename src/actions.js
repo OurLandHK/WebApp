@@ -211,23 +211,25 @@ export function fetchLocation(callback=receiveLocation) {
 export function checkMessageState() {
   console.log("checkMessageState");
   return dispatch => {
-    const messaging = firebase.messaging();
-    return messaging.requestPermission().then(() => {
-      console.log("Have Permission");
-      return messaging.getToken().then((token) => {
-        console.log("FCM Token:", token);
-        return dispatch(fetchFCM(token));
-        //you probably want to send your new found FCM token to the
-        //application server so that they can send any push
-        //notification to you.
-      })
-    }).catch(error => {
-      if (error.code === "messaging/permission-blocked") {
-        console.log("Please Unblock Notification Request Manually");
-      } else {
-        console.log("Error Occurred", error);
-      }
-    });
+    if (firebase.messaging.isSupported()) {
+      const messaging = firebase.messaging();
+      return messaging.requestPermission().then(() => {
+        console.log("Have Permission");
+        return messaging.getToken().then((token) => {
+          console.log("FCM Token:", token);
+          return dispatch(fetchFCM(token));
+          //you probably want to send your new found FCM token to the
+          //application server so that they can send any push
+          //notification to you.
+        })
+      }).catch(error => {
+        if (error.code === "messaging/permission-blocked") {
+          console.log("Please Unblock Notification Request Manually");
+        } else {
+          console.log("Error Occurred", error);
+        }
+      });
+    }
   }
 }
 
