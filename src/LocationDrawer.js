@@ -90,6 +90,10 @@ class LocationDrawer extends React.Component {
         distance: this.props.filter.distance,
         locationPrefix: ''
       };
+      this.hide = false;
+      if(this.props.hide !== undefined) {
+        this.hide = this.props.hide;
+      }
       this.isUsePublicAddressBook = false;
       if(this.props.isUsePublicAddressBook === true) {
         this.isUsePublicAddressBook = true;
@@ -288,32 +292,39 @@ class LocationDrawer extends React.Component {
   render() {
       let firstItem = this.renderFirstListItem();
       const { classes } = this.props;
+      if(this.hide) {
+        return (<div className={classes.buttonContainer}>
+              {`${this.state.isUsingCurrentLocation ? constant.currentLocation + this.state.distance + '公里'
+                        : this.state.locationName}`}
+          </div>);
+      } else {
       return (
-      <div>
-          <Button
-            variant="outlined" color="primary"
-            onClick={() => {this.toggleDrawer(true)}}
-            className={classes.signButton}
-          >
-            <div className={classes.buttonContainer}>
-                {`${this.state.isUsingCurrentLocation ? constant.currentLocation + this.state.distance + '公里'
-                          : this.state.locationName}`}
-            </div>
-          </Button>
-          <Drawer anchor='bottom'
-              open={this.state.open}
-              onClose={() => {this.toggleDrawer(false)}} >
-              <div tabIndex={0}
-                  role='button'
-                  className={classes.fullList}>
-                  <List>
-                      {firstItem}
-                      <Divider />
-                      {this.renderAddressBook()}
-                  </List>
+        <div>
+            <Button
+              variant="outlined" color="primary"
+              onClick={() => {this.toggleDrawer(true)}}
+              className={classes.signButton}
+            >
+              <div className={classes.buttonContainer}>
+                  {`${this.state.isUsingCurrentLocation ? constant.currentLocation + this.state.distance + '公里'
+                            : this.state.locationName}`}
               </div>
-          </Drawer>
-      </div>);
+            </Button>
+            <Drawer anchor='bottom'
+                open={this.state.open}
+                onClose={() => {this.toggleDrawer(false)}} >
+                <div tabIndex={0}
+                    role='button'
+                    className={classes.fullList}>
+                    <List>
+                        {firstItem}
+                        <Divider />
+                        {this.renderAddressBook()}
+                    </List>
+                </div>
+            </Drawer>
+        </div>);
+      }
   }
 }
 

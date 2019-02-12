@@ -118,6 +118,10 @@ class SearchEventDialog extends React.Component {
         titleLabel: "",
         open: false,
     };
+    this.hotItemOnly = false;
+    if(this.props.hotItemOnly) {
+      this.hotItemOnly = true;
+    }
     this.successCallBack = this.successCallBack.bind(this);
     this.geoSuccessCallBack = this.geoSuccessCallBack.bind(this);
     this.streetAddressSuccessCallBack = this.streetAddressSuccessCallBack.bind(this);
@@ -290,16 +294,12 @@ class SearchEventDialog extends React.Component {
     }
     const cardImage = (
       <CardMedia
-        className={classes.media}
         image="/images/Dennis9.jpg"
         title={constant.regionEventLabel}>
         {constant.hotItemLabel}
-        <Grid container>
-          <Grid container className={classes.buttonGird}>
-            {buttonList}
-          </Grid>
+        <Grid container className={classes.buttonGird}>
+          {buttonList}
         </Grid>
-        <div className={classes.mediaCredit} />
       </CardMedia>
     );
     return cardImage;
@@ -318,17 +318,21 @@ class SearchEventDialog extends React.Component {
         `${constant.searchEventLabel} - ${this.state.titleLabel}`
       :
         `${constant.searchEventLabel} - ${this.state.streetAddress}`;
+    let controlWidget = hotItemHtml;
+    if(!this.hotItemOnly) {
+      controlWidget = <Dialog fullScreen open={open} onClose={this.handleClose} transition={Transition}  aria-labelledby="form-dialog-title">
+                          <Toolbar className={classes.dialogTitle}>
+                          <IconButton color="contrast" onClick={this.handleClose} aria-label="Close">
+                              <CloseIcon />
+                          </IconButton>
+                              {this.renderStreetAddressSearch()}
+                          </Toolbar>
+                          {hotItemHtml}
+                      </Dialog>
+    }
     return (
-        <div>
-            <Dialog fullScreen open={open} onClose={this.handleClose} transition={Transition}  aria-labelledby="form-dialog-title">
-                <Toolbar className={classes.dialogTitle}>
-                <IconButton color="contrast" onClick={this.handleClose} aria-label="Close">
-                    <CloseIcon />
-                </IconButton>
-                    {this.renderStreetAddressSearch()}
-                </Toolbar>
-                {hotItemHtml}
-            </Dialog>
+          <React.Fragment>
+            {controlWidget};
             <Dialog fullScreen onClose={this.handleRequestClose} open={this.state.open} >
                 <AppBar className={classes.appBar} >
                     <Toolbar>
@@ -340,7 +344,7 @@ class SearchEventDialog extends React.Component {
                 </AppBar>
                 {messageHtml}
             </Dialog>
-        </div>);
+          </React.Fragment>);
   }
 }
 

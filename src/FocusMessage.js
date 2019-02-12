@@ -3,13 +3,18 @@ import { withStyles } from '@material-ui/core/styles';
 import {connect} from "react-redux";
 import SingleLineMessageList from './SingleLineMessageList';
 import Typography from '@material-ui/core/Typography';
+import Card from '@material-ui/core/Card';
 import { default as dist } from './util/Distance';
 
 const styles = theme => ({
   title: {
     fontWeight: 'bold',
     textAlign: 'center',
-    margin: '20px auto 5px'
+    margin: '5px auto 5px'
+  },
+  card: {
+    textAlign: 'center',
+    boxShadow: 'none'
   },
   pos: {
     //    marginBottom: 12,
@@ -99,11 +104,13 @@ class FocusMessage extends Component {
 
         if((homeAddressDistDiff  != null  && homeAddressDistDiff < homeAddressInterestRadius) || (officeAddressDistDiff  != null  && officeAddressDistDiff < homeAddressInterestRadius) ) {
           return (
-            <div key={focusMsgIdx}>
+            <span key={focusMsgIdx} >
+              <Card className={classes.card}>
               <Typography variant="title" className={classes.title}>{focusMessages[focusMsgIdx].title}</Typography>
               <p className={classes.pos}>{focusMessages[focusMsgIdx].summary}</p>
+              </Card>
               <SingleLineMessageList ref={(messageList) => {this.messageList = messageList;}} messageIds={focusMessages[focusMsgIdx].messages}/>
-            </div>
+            </span>
           ) 
         } else {
           return null;
@@ -118,10 +125,7 @@ class FocusMessage extends Component {
         // if there are more than one hit, one of them will be selected randomly
         let focusMsgIdx = this.generateFocusMessagesIndex(focusMessageHtml.length);
 
-        focusMessage = 
-          <div className="focus-message-wrapper">
-            {focusMessageHtml[focusMsgIdx]}
-          </div>
+        focusMessage = focusMessageHtml[focusMsgIdx];
       } else {
         // no nearby focusMessage within user's addresses 
         // generating one randomly from the focus message pool
@@ -137,11 +141,14 @@ class FocusMessage extends Component {
   }
 
   render() {
-  	return (
+    return this.renderFocusMessages();
+/*  	
+    return (
       <React.Fragment>
         {this.renderFocusMessages()}
       </React.Fragment>	
-  	);
+    );
+*/    
   }
 
 };

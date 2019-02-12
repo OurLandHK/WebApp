@@ -1,12 +1,15 @@
 import { withStyles } from '@material-ui/core/styles';
 import NearbyEventDialog from './NearbyEventDialog';
+import SearchEventDialog from './SearchEventDialog';
 import MessageView from './MessageView';
 import BookmarkView from './bookmark/BookmarkView';
+import BookmarkList from './bookmark/BookmarkList';
 import {getMessage} from './MessageDB';
 import {getBookmark} from './UserProfile';
 import React, { Component } from 'react';
 import {constant} from './config/default';
 import FocusMessage from './FocusMessage';
+import Typography from '@material-ui/core/Typography';
 import {trackEvent} from  './track';
 
 import {
@@ -17,6 +20,11 @@ import {
 import {connect} from 'react-redux';
 
 const styles = () => ({
+  title: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    margin: '10px auto 5px'
+  },  
   container: {
   },
 
@@ -38,7 +46,8 @@ class Main extends Component {
         eventId: this.props.eventId,
         eventNumber: this.props.eventNumber,
         distance: this.props.distance,
-        geolocation: this.props.geolocation
+        geolocation: this.props.geolocation,
+        bookmarkList: []
       };
 
   }
@@ -53,10 +62,14 @@ class Main extends Component {
       this.init = false;
       this.refreshQueryMessage();
     }
+    if (this.props.ourland.bookmarkList !== prevState.bookmarkList) {
+      this.setState({bookmarkList: this.props.ourland.bookmarkList});
+    }
   }
 
   componentDidMount() {
     trackEvent('main', 'main');
+    this.setState({bookmarkList: this.props.ourland.bookmarkList});
   }
 
   refreshQueryMessage() {
@@ -93,9 +106,9 @@ class Main extends Component {
 
   renderMessageFrontPage() {
     let recentMessage = null;
-    const { eventNumber, distance, geolocation, queryMessage, bookmark} = this.state;
+    const { eventNumber, distance, geolocation, queryMessage, bookmark, bookmarkList} = this.state;
     const {open: openRecent} = this.props.recentMessage;
-    const { classes } = this.props;
+    const { classes, } = this.props;
     let tagStatHtml = this.renderTagStat();
 
     if (queryMessage && openRecent) {
@@ -110,17 +123,24 @@ class Main extends Component {
                         <BookmarkView bookmark={bookmark} open={openRecent} />
                       </div>;
     }
+    let ourlandBookmarkList = <React.Fragment>
+                                <Typography variant="title" className={classes.title}>{constant.publicBookmarkLabel}</Typography>
+                                <BookmarkList bookmarkList={bookmarkList} limitLength={3}/>;
+                              </React.Fragment>
     let messageList = <NearbyEventDialog
-            eventNumber={eventNumber}
-            distance={distance}
-            geolocation={geolocation}
-          />
+        eventNumber={10}
+        distance={distance}
+        geolocation={geolocation}
+        filterBar={false}
+      />
+    let hotItem = <SearchEventDialog hotItemOnly={true} />
     return (
       <div className={classes.container}>
-        {tagStatHtml}
         {recentMessage}
-        {messageList}
+        {hotItem}
         <FocusMessage/>
+        {ourlandBookmarkList}
+        {messageList}
       </div>
     );
   }
