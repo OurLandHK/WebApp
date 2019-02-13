@@ -69,6 +69,10 @@ class NearbyEventDialog extends React.Component {
     super(props);
     this.handleRequestClose = this.handleRequestClose.bind(this);
     this.onBackButtonEvent = this.onBackButtonEvent.bind(this);
+    this.filterBar = true;
+    if(this.props.filterBar !== undefined) {
+      this.filterBar = this.props.filterBar;
+    }
     this.state = {
         eventNumber: this.props.eventNumber,
         distance: this.props.distance,
@@ -142,7 +146,11 @@ class NearbyEventDialog extends React.Component {
 
     if(this.state.showList)  {
       messageHtml = this.renderMessages();
-      filterBar = <FilterBar isUsePublicAddressBook={true} filterID={constant.nearbyEventLabel}/>;
+      if(this.filterBar) {
+        filterBar = <FilterBar isUsePublicAddressBook={true} filterID={constant.nearbyEventLabel}/>;
+      } else {
+        filterBar = <FilterBar hide={true} filterID={constant.nearbyEventLabel}/>;
+      }
     } else {
       this.setState({showList: true});
       //console.log('offthe List');

@@ -125,7 +125,14 @@ class MessageView extends Component {
         className={classes.urgentEventTag}
       />
     }
-
+    return (<Paper className={classes.tileCard} onClick={() => this.handleClick()}>
+              <CardMedia className={classes.tileMedia} image={imageUrl} title={auther}/>
+              <CardContent>
+                <div noWrap={true}>{urgentEventTag} {text}</div>
+                <p className={classes.pos}>{subtitle}</p>
+              </CardContent>
+            </Paper>);    
+/*
     return (<Card className={classes.tileCard} onClick={() => this.handleClick()}>
               <CardMedia className={classes.tileMedia} image={imageUrl} title={auther}/>
               <CardContent>
@@ -133,6 +140,7 @@ class MessageView extends Component {
                 <p className={classes.pos}>{subtitle}</p>
               </CardContent>
             </Card>);
+*/            
 
   };
 

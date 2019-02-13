@@ -23,9 +23,13 @@ class FilterBar extends  Component {
     super(props);
     this.isUsePublicAddressBook = false;
     this.disableLocationDrawer = false;
+    this.hide = false;
     this.ranking = false;
     if(this.props.ranking === true) {
       this.ranking = true;
+    }
+    if(this.props.hide !== undefined) {
+      this.hide = this.props.hide;      
     }
     if(this.props.disableLocationDrawer === true) {
       this.disableLocationDrawer = true;
@@ -46,19 +50,23 @@ class FilterBar extends  Component {
 
   render() {
     const classes = this.props.classes;
-    if(this.disableLocationDrawer) {
-      return (<Toolbar className={classes.filter}>
-         <TagDrawer filterID={this.props.filterID}/> 按 <SortingDrawer filterID={this.props.filterID}/> <div flex={1}/>
-      </Toolbar>);
+    if(this.hide) {
+      return (<Toolbar className={classes.filter}><LocationDrawer hide={true} filterID={this.props.filterID}/></Toolbar>);
     } else {
-      if(this.ranking) {
+      if(this.disableLocationDrawer) {
         return (<Toolbar className={classes.filter}>
-                  <LocationDrawer isUsePublicAddressBook={true} filterID={this.props.filterID}/>
-              </Toolbar>);
+          <TagDrawer filterID={this.props.filterID}/> 按 <SortingDrawer filterID={this.props.filterID}/> <div flex={1}/>
+        </Toolbar>);
       } else {
-        return (<Toolbar className={classes.filter}>
-                  <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook} filterID={this.props.filterID}/> 的 <TagDrawer filterID={this.props.filterID}/> 按 <SortingDrawer filterID={this.props.filterID}/> <div flex={1}/>
+        if(this.ranking) {
+          return (<Toolbar className={classes.filter}>
+                    <LocationDrawer isUsePublicAddressBook={true} filterID={this.props.filterID}/>
                 </Toolbar>);
+        } else {
+          return (<Toolbar className={classes.filter}>
+                    <LocationDrawer isUsePublicAddressBook={this.isUsePublicAddressBook} filterID={this.props.filterID}/> 的 <TagDrawer filterID={this.props.filterID}/> 按 <SortingDrawer filterID={this.props.filterID}/> <div flex={1}/>
+                  </Toolbar>);
+        }
       }
     }
   }
