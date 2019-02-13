@@ -731,7 +731,7 @@ class PostMessageView extends Component {
                 </FormGroup>
     }
     let postButtonHtml =  <Button size="small" className={classes.signButton} color="primary" onClick={(evt) => this.handleRequestOpen(evt)}>
-                            +報料
+                            +{constant.postLabel}
                           </Button>;
 
     if(this.state.buttonShow) {
@@ -765,7 +765,7 @@ class PostMessageView extends Component {
                   <CloseIcon />
                 </IconButton>
                 <Typography variant="title" color="inherit" className={classes.flex}> </Typography>
-                <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>報料</Button>
+                <Button variant="raised" color="primary" onClick={() => this.onSubmit()}>{constant.postLabel}</Button>
               </DialogActions>
             </AppBar>
               <div className={classes.dialogContainer}>
@@ -876,7 +876,7 @@ class PostMessageView extends Component {
     } else {
       return (
         <div className="cta-report-wrapper">
-          <SignInButton label="請先登入方可報料"/>
+          <SignInButton label={`請先登入方可${constant.postLabel}`}/>
         </div>
       );
     }
