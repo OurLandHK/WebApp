@@ -185,8 +185,8 @@ class PublicProfile extends React.Component {
       if(this.state.userProfile.desc  != null  && this.state.userProfile.desc !== "") {
         desc = <div>{this.state.userProfile.desc}</div>
       }
-      publishMessage = <EventListDialog title="發表事件: " displayName={displayName} messageIds={this.publishMessages}/>
-      completeMessage = <EventListDialog title="完成事件: " displayName={displayName} messageIds={this.completeMessages}/>
+      publishMessage = <EventListDialog title={`${constant.postLabel}: `} displayName={displayName} messageIds={this.publishMessages}/>
+      //completeMessage = <EventListDialog title="完成事件: " displayName={displayName} messageIds={this.completeMessages}/>
       missionHtml = <MissionView user={this.state.user} userProfile={this.state.userProfile} addressList={this.state.addressBook.addresses} bookmarkList={this.state.bookmarkList} publicProfileView={true}/>
       if(this.state.userProfile.fbuid) {
         this.fbId=this.state.userProfile.fbuid;

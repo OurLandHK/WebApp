@@ -92,8 +92,8 @@ class Person extends Component {
                                 </ListItemIcon>
                                 <ListItemText primary={constant.addressBookLabel} onClick={() => this.addressDialogClick()}/>
                             </ListItem></span>);
-        publishMessage = <EventListDialog title="發表事件: " messageIds={user.userProfile.publishMessages}/>
-        completeMessage = <EventListDialog title="完成事件: " messageIds={user.userProfile.completeMessages}/>
+        publishMessage = <EventListDialog title={`${constant.postLabel}: `} messageIds={user.userProfile.publishMessages}/>
+        //completeMessage = <EventListDialog title="完成事件: " messageIds={user.userProfile.completeMessages}/>
         bookmarkHtml = <BookmarkBoard user={user}/>
         missionHtml = <MissionView user={user.user} userProfile={user.userProfile} addressList={addressBook.addresses} bookmarkList={user.bookmarkList} publicProfileView={true}/>
         if (user.userProfile  != null  & (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor)) {
