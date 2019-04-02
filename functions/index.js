@@ -19,15 +19,35 @@ const functions = require('firebase-functions');
 // Import and initialize the Firebase Admin SDK.
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
-const gcs = require('@google-cloud/storage')();
+//const gcs = require('@google-cloud/storage')();
 //const vision = require('@google-cloud/vision')();
 const exec = require('child-process-promise').exec;
 const nodemailer = require('nodemailer');
 const detailView = require('./detailView');
 const userView = require('./userView');
+
+// Constant for wall
+const fcmKey = '<Fill with you own key>';
+const messageTemplate = {
+                          click_action: "FLUTTER_NOTIFICATION_CLICK", 
+                          id: "<Topic ID>",
+                          messagelat : "",
+                          messagelong : "",
+                          status: "done"};
+const notificationTemplate = {
+                          title: '',
+                          body: ''
+                          };
+const messageOptions = {
+                            priority: 'high',
+                            timeToLive: 60 * 60 * 24
+                          };
+
+const getChaUserCollectionRef = admin.firestore().collection('getChatUsers');
+const sendMessage = admin.messaging();
+const effectiveDistance = 1;
+
 // Email Service
-
-
 const gmailEmail = 'EMAIL_ADDRESS';
 const gmailPassword = 'EMAIL_PASSWORD';
 const mailTransport = nodemailer.createTransport({
@@ -53,6 +73,92 @@ const addressEnum = {
 
 
 const APP_NAME = '我地';
+
+exports.sendFCM = functions.firestore.document('/topic/{topicId}')
+  .onWrite((change, context) => {
+    const beforeData = change.before.data();
+    const afterData = change.after.data();
+
+    let data = change.after.exists? change.after.data(): change.before.data();
+    let updateContent = false;
+    let newTopic = false;
+    let broadcast = false;
+    // check for any real update for the content
+    if(beforeData === null || beforeData === undefined) {
+      newTopic = true;
+    } else if(afterData === null) {
+      updateContent = true;
+    } else if (beforeData.lastUpdate === undefined|| afterData.lastUpdate.getTime() !== beforeData.lastUpdate.getTime()) {
+      console.log(`Last update ${afterData.lastUpdate} and ${beforeData.lastUpdate}`);
+      updateContent = true;
+    }
+    if(data.public === true) {
+      broadcast = true;
+    }
+
+    if(newTopic) {
+      let payload = messageTemplate;
+      let notification = notificationTemplate;
+      payload.id = data.id;
+      notification.title = data.topic;
+      notification.body = data.content;
+      return getChaUserCollectionRef.get().then(snapshot => {
+        var fcmTokens = [];
+        snapshot.forEach(getChaUserRef => {
+          let isSend = false;
+          let userProfile = getChaUserRef.data();
+          if(!broadcast) {
+            // Check for user' address area versus
+            if(userProfile.homeAddress !== undefined) {
+              isSend = isInsideTopic(data, userProfile.homeAddress)
+            }
+            if(isSend === false && userProfile.officeAddress !== undefined) {
+              isSend = isInsideTopic(data, userProfile.officeAddress)
+            }
+          } else {
+            isSend = true;
+          }
+          if(isSend) {
+            fcmTokens.push(userProfile.fcmToken);
+          }
+        });
+        if(fcmTokens.length != 0) {
+          let message = {notification: notification, data: payload};
+          return sendMessage.sendToDevice(fcmTokens, message, messageOptions).then(function(response) {
+            // See the MessagingDevicesResponse reference documentation for
+            // the contents of response.
+            console.log('Successfully sent message:', response);
+          })
+          .catch(function(error) {
+            console.log('Error sending message:', error);
+          });
+        }
+      }).catch(err => {
+        console.log(`Error getting document ${err}`);
+      });
+    }
+    if(data && updateContent) {
+      // search recrod for those who involved.
+    }
+    return null;
+  })
+
+function isInsideTopic(topic, userAddress) {
+  var rv = false;
+  if(topic.geobottomright.latitude === topic.geotopleft.latitude &&  topic.geobottomright.longitude === topic.geotopleft.longitude) {
+    // for the topic just create
+    if(userAddress !== undefined) {
+      var dis = distance(topic.geobottomright.longitude, topic.geobottomright.latitude, userAddress.longitude, userAddress.latitude);
+      if(dis < effectiveDistance) {
+        rv = true;
+      }
+    }
+  } else {
+    //TODO // Change the user within the box
+    
+  }
+  return rv;
+}
 
 exports.sendEmail = functions.firestore.document('/message/{messageId}')
   .onWrite((change, context) => {
