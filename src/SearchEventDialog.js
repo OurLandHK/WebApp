@@ -76,6 +76,9 @@ const styles = theme =>  ({
       border: '2px solid white',
       borderRadius: '2px',
       boxShadow: '0 0 0 3px #006eb9, 0 0 10px #aaa',
+      '&:hover': {
+        backgroundColor: '#006eb9',
+      }, 
     },
     chip: {
       margin: theme.spacing.unit / 2,
