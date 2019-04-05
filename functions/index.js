@@ -42,14 +42,47 @@ const messageOptions = {
                             priority: 'high',
                             timeToLive: 60 * 60 * 24
                           };
+const basicUserTemplate = {
+    uuid: '',
+    user: '',
+    avatarUrl: '',
+};
+const topicTemplate = {
+  id: '',
+  searchingId: '',
+  isShowGeo: true,
+  public: false,
+  lastUpdate: null,
+  created: null,
+  createdUser: null,
+  imageUrl: '',
+  lastUpdateUser: null,
+  topic: '',
+  content: '',
+  tags: ['我地.市正'],
+  geobottomright: null,
+  geotopleft: null
+} 
+
+const chatTemplate = {
+    sendMessageTime: null,
+    id: '',
+    geo: null,
+    content: '',
+    type: 0,
+    createdUser: null,
+}
 
 const getChaUserCollectionRef = admin.firestore().collection('getChatUsers');
+const chatCollectionRef = admin.firestore().collection('chat');
+const topicCollectionRef = admin.firestore().collection('topic');
 const sendMessage = admin.messaging();
 const effectiveDistance = 1;
 
 // Email Service
 const gmailEmail = 'EMAIL_ADDRESS';
 const gmailPassword = 'EMAIL_PASSWORD';
+const detailUrl = 'https://ourlandtest.firebaseapp.com/detail/';
 const mailTransport = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -88,8 +121,8 @@ exports.sendFCM = functions.firestore.document('/topic/{topicId}')
       newTopic = true;
     } else if(afterData === null) {
       updateContent = true;
-    } else if (beforeData.lastUpdate === undefined|| afterData.lastUpdate.getTime() !== beforeData.lastUpdate.getTime()) {
-      console.log(`Last update ${afterData.lastUpdate} and ${beforeData.lastUpdate}`);
+    } else if (beforeData.lastUpdate === undefined|| afterData.lastUpdate !== beforeData.lastUpdate) {
+      //console.log(`Last update ${afterData.lastUpdate} and ${beforeData.lastUpdate}`);
       updateContent = true;
     }
     if(data.public === true) {
@@ -138,10 +171,52 @@ exports.sendFCM = functions.firestore.document('/topic/{topicId}')
       });
     }
     if(data && updateContent) {
-      // search recrod for those who involved.
+      let payload = messageTemplate;
+      let notification = notificationTemplate;
+      payload.id = data.id;
+      notification.title = data.topic;
+      notification.body = data.content;
+
+      var topicId = data.id;
+      var topicCreateUserid = data.createdUser.uuid;
+      var lastUpdateUserId = data.lastUpdateUser.uuid
+      // search chat for those who involved.
+      return chatCollectionRef.doc(topicId).collection('messages').get().then(snapshot => {
+        var involveUserIds = [topicCreateUserid]; 
+        snapshot.forEach(messageRef => {
+          let createdUser = messageRef.data().createdUser;
+          //console.log(`${createdUser}`);
+          //console.log(`${createdUser.uuid}`);
+          if(!involveUserIds.includes(createdUser.uuid)) {
+            involveUserIds.push(createdUser.uuid);
+          }
+        });
+        return getChaUserProfiles(involveUserIds).then(profiles => {
+          if(profiles.length != 0) {
+            var fcmTokens = profiles.map(profile => {
+              return profile.data().fcmToken;
+            });
+            let message = {notification: notification, data: payload};
+            return sendMessage.sendToDevice(fcmTokens, message, messageOptions).then(function(response) {
+              // See the MessagingDevicesResponse reference documentation for
+              // the contents of response.
+              console.log('Successfully sent message:', response);
+            })
+            .catch(function(error) {
+              console.log('Error sending message:', error);
+            });
+          }
+        });
+      });
     }
     return null;
   })
+
+  function getChaUserProfiles(ids) {
+    return admin.firestore().getAll(
+      [].concat(ids).map(id =>  getChaUserCollectionRef.doc(id))
+    );
+  }
 
 function isInsideTopic(topic, userAddress) {
   var rv = false;
@@ -169,16 +244,64 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
     let updateContent = false;
     let newEvent = false;
     // check for any real update for the content
-    if(beforeData === null) {
+    if(beforeData === null || beforeData === undefined) {
       newEvent = true;
       updateContent = true;
     } else if(afterData === null) {
       updateContent = true;
-    } else if (beforeData.lastUpdate === undefined|| afterData.lastUpdate.getTime() !== beforeData.lastUpdate.getTime()) {
-      console.log(`Last update ${afterData.lastUpdate} and ${beforeData.lastUpdate}`);
+    } else if (beforeData.lastUpdate === undefined|| afterData.lastUpdate !== beforeData.lastUpdate) {
+      //console.log(`Last update ${afterData.lastUpdate} and ${beforeData.lastUpdate}`);
       updateContent = true;
     }
 
+    // add to GetCha Database for new event
+    if(newEvent) {
+      let indexData = topicTemplate;
+      let createdUser = basicUserTemplate;
+
+      createdUser.uuid = data.uid;
+      createdUser.user = data.name;
+      createdUser.avatarUrl = data.photoUrl;
+
+      indexData.createdUser = createdUser;
+      indexData.lastUpdateUser = createdUser;
+      indexData.id = data.key;
+      indexData.searchingId = data.key;
+      indexData.lastUpdate = data.createdAt;
+      indexData.created = data.createdAt;
+      indexData.imageUrl = data.publicImageURL;
+      indexData.topic = detailUrl + data.key;
+      indexData.content = data.text + "\n地點: " + data.streetAddress + "\n" + data.desc + "\n" + data.link;
+      indexData.geobottomright = data.geolocation;
+      indexData.geotopleft = data.geolocation;
+
+      if(data.tagfilter  != null ) {
+        for(let key in data.tagfilter) {
+          indexData.tags.push(key);
+        }
+      } 
+      let chatData = chatTemplate;
+      chatData.created = indexData.created;
+      chatData.id = indexData.id;
+      chatData.geo = indexData.geobottomright;
+      chatData.content = indexData.content;
+      chatData.createdUser = indexData.createdUser;
+      let indexReference = topicCollectionRef.doc(indexData.id);
+      let chatReference = chatCollectionRef.doc(indexData.id).collection("messages").doc(indexData.id);
+      indexReference.set(indexData).then(function() {
+        console.log("Topic successfully written!");
+        chatReference.set(chatData).then(function() {
+          console.log("Chat successfully written!");
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
+      })
+      .catch(function(error) {
+          console.error("Error writing document: ", error);
+      });
+
+    }
 
     if(data && updateContent){
       let messageLongitude = data.geolocation.longitude;
