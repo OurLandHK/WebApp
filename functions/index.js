@@ -27,7 +27,7 @@ const detailView = require('./detailView');
 const userView = require('./userView');
 
 // Constant for wall
-const fcmKey = 'key';
+const fcmKey = '<Fill with you own key>';
 const messageTemplate = {
                           click_action: "FLUTTER_NOTIFICATION_CLICK", 
                           id: "<Topic ID>",
