@@ -125,14 +125,16 @@ class Main extends Component {
     }
     let ourlandBookmarkList = <React.Fragment>
                                 <Typography variant="title" className={classes.title}>{constant.publicBookmarkLabel}</Typography>
-                                <BookmarkList bookmarkList={bookmarkList} limitLength={3}/>;
+                                <BookmarkList bookmarkList={bookmarkList} limitLength={3}/>
                               </React.Fragment>
+    /*
     let messageList = <NearbyEventDialog
         eventNumber={10}
         distance={distance}
         geolocation={geolocation}
         filterBar={false}
       />
+      */
     let hotItem = <SearchEventDialog hotItemOnly={true} />
     return (
       <div className={classes.container}>
@@ -140,7 +142,6 @@ class Main extends Component {
         {hotItem}
         <FocusMessage/>
         {ourlandBookmarkList}
-        {messageList}
       </div>
     );
   }

@@ -22,6 +22,7 @@ import {getCurrentLocation, getGeoLocationFromStreetAddress, getStreetAddressFro
 import TextField from '@material-ui/core/TextField';
 
 import {trackEvent} from './track';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
@@ -125,6 +126,10 @@ class SearchEventDialog extends React.Component {
     if(this.props.hotItemOnly) {
       this.hotItemOnly = true;
     }
+    this.searchIconOnly = false;
+    if(this.props.searchIconOnly) {
+      this.searchIconOnly = true;
+    }
     this.successCallBack = this.successCallBack.bind(this);
     this.geoSuccessCallBack = this.geoSuccessCallBack.bind(this);
     this.streetAddressSuccessCallBack = this.streetAddressSuccessCallBack.bind(this);
@@ -205,7 +210,7 @@ class SearchEventDialog extends React.Component {
 
     return (
       <React.Fragment>
-        <MyLocationIcon className={classes.searchInputIcon} onClick={() => this.handleGetLocation()} />
+        <MyLocationIcon onClick={() => this.handleGetLocation()} />
           <TextField
             autoFocus
             fullWidth
@@ -215,7 +220,7 @@ class SearchEventDialog extends React.Component {
             type="text"
             value={this.state.streetAddress} onChange={event => this.setState({ streetAddress: event.target.value, disableSumbit: true,  geolocation: null})}
           />
-          <SearchIcon disabled={disableSearch} className={classes.searchInputIcon} onClick={() => this.handleGetLocationFromStreetAddress()} />
+          <SearchIcon disabled={disableSearch} onClick={() => this.handleGetLocationFromStreetAddress()} />
       </React.Fragment>
     );
    } else {
@@ -322,20 +327,22 @@ class SearchEventDialog extends React.Component {
       :
         `${constant.searchEventLabel} - ${this.state.streetAddress}`;
     let controlWidget = hotItemHtml;
-    if(!this.hotItemOnly) {
+    if(!this.hotItemOnly && !this.searchIconOnly) {
       controlWidget = <Dialog fullScreen open={open} onClose={this.handleClose} transition={Transition}  aria-labelledby="form-dialog-title">
                           <Toolbar className={classes.dialogTitle}>
-                          <IconButton color="contrast" onClick={this.handleClose} aria-label="Close">
-                              <CloseIcon />
-                          </IconButton>
+                              <CloseIcon onClick={this.handleClose}/>
                               {this.renderStreetAddressSearch()}
                           </Toolbar>
                           {hotItemHtml}
                       </Dialog>
     }
+    if(this.searchIconOnly) {
+      controlWidget = <MyLocationIcon onClick={() => this.handleGetLocation()} />
+    }
     return (
           <React.Fragment>
-            {controlWidget};
+            <CssBaseline />
+            {controlWidget}
             <Dialog fullScreen onClose={this.handleRequestClose} open={this.state.open} >
                 <AppBar className={classes.appBar} >
                     <Toolbar>

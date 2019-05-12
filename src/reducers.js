@@ -188,9 +188,9 @@ function addressDialogReducer(state={open: false}, action) {
 
 const buttonList = [
   { label: '所有', value: null },
-  { label: '活動', value: '活動' },
   { label: '公共設施', value: '公共設施' },
-  { label: '假日診所', value: '假日診所' },
+  { label: '活動', value: '活動' },
+  { label: '義工招募', value: '義工招募' },
   { label: '寵物', value: '寵物' },
   { label: '社區匯報', value: '社區匯報' },
   { label: '社區幹事', value: '社區幹事' },
