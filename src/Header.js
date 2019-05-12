@@ -8,6 +8,7 @@ import {connect} from "react-redux";
 import {constant} from "./config/default";
 import {fetchLocation, toggleSearchEventDialog} from "./actions";
 import { withStyles } from '@material-ui/core/styles';
+import SearchEventDialog from './SearchEventDialog';
 
 const styles = theme => ({
   searchInput: {
@@ -52,6 +53,7 @@ class Header extends Component {
                 <CardMedia className={classes.cover}  image={"/images/SquareLogo.png"} onClick={() => {window.location.href = homeUrl}}/>
                 <SignInButton/>
                 <TextField id={constant.searchLabel} className={classes.searchInput} variant="outlined"  fullWidth margin="normal" value={constant.searchLabel} onClick={() => this.props.toggleSearchEventDialog(true)}/>
+                <SearchEventDialog searchIconOnly={true}/>
               </Toolbar>
             </AppBar>);
   }

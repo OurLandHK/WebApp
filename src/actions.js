@@ -174,7 +174,7 @@ export function init3rdPartyLibraries() {
   //console.log(firebaseConfig);
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
-  const settings = {/* your settings... */ timestampsInSnapshots: true};
+  const settings = {/* your settings...  timestampsInSnapshots: true*/};
   db.settings(settings);
 }
 
@@ -399,7 +399,8 @@ export function fetchGlobalSetting() {
       let tagList = Object.values(tagListObject);
       tagList.sort((i, j) => (j.count) - (i.count));
       let tagLabel = tagList.map((tag) => {return(tag.tag)});
-      dispatch(updateRegionButtoneList(tagLabel));
+      // Use Static List
+      // dispatch(updateRegionButtoneList(tagLabel));
       dispatch(fetchTagStat(tagList));
     });
   };
