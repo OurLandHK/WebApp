@@ -263,12 +263,12 @@ class CommentView extends Component {
                         </React.Fragment>
       }
     } else {
-        let approvedTimeOffset = Date.now() - approvedStatus.createdAt.toDate();
+        let approvedTimeOffset = new Date() - new Date(approvedStatus.createdAt);
         let approvedTimeOffsetString = timeOffsetStringInChinese(approvedTimeOffset);
         approvedLog ='由' + approvedStatus.name + '於 ' + approvedTimeOffsetString + ' 前 ' + approvedStatus.isConfirm;
     }
 
-    let timeOffset = Date.now() - createdAt.toDate();
+    let timeOffset = new Date() - new Date(createdAt);
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     let subtitle = '張貼於：' + timeOffsetString + '前 ' + approvedLog;
     let fbProfileImage = <Avatar src={photoUrl} onClick={() => this.handleAuthorClick()} />;
