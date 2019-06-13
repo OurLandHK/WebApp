@@ -231,8 +231,9 @@ class BookmarkView extends Component {
     renderReadonly() {
         let viewCountString = constant.viewCountLabel;
         const { bookmark, classes} = this.props;
+        
         let post = '張貼';
-        let timeOffset = Date.now() - bookmark.createdAt.toDate();
+        let timeOffset = Date.now() - Date(bookmark.createdAt);
         let timeOffsetString = timeOffsetStringInChinese(timeOffset);
         let subheader = `於:${timeOffsetString}前${post}`;
         let photoUrl = '/images/profile_placeholder.png';

@@ -223,7 +223,7 @@ class MessageView extends Component {
       isUpdate = (updateTime > lastLoginTime);
     }
     let post = '張貼';
-    timeOffset = Date.now() - m.lastUpdate.toDate();
+    timeOffset = Date.now() - Date(m.lastUpdate);
     if(m.createdAt !== m.lastUpdate) {
       post = '更新'
     }
