@@ -169,7 +169,7 @@ class MessageDetailView extends Component {
     let viewCountString = constant.viewCountLabel;
     const { message, classes } = this.props;
     let post = '張貼';
-    let timeOffset = Date.now() - message.createdAt.toDate();
+    let timeOffset = Date.now() - Date(message.createdAt);
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     let subheader = `${timeOffsetString}前${post}`;
 
@@ -222,7 +222,7 @@ class MessageDetailView extends Component {
     let endDateTimeString = '';
     if(m.start  !== null && m.start !== undefined)
     {
-      let date = m.start.toDate();
+      let date = new Date(m.start);
       if(date.getFullYear() > 1970) {
         dateTimeString = date.toLocaleDateString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });
         console.log(dateTimeString);
@@ -237,7 +237,7 @@ class MessageDetailView extends Component {
     {
       let endDate
       try {
-        endDate = m.endDate.toDate();
+        endDate = new Date(m.endDate);
       }
       catch(error) {
           endDate = null;
