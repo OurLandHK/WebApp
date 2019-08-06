@@ -49,8 +49,10 @@ const basicUserTemplate = {
 };
 const topicTemplate = {
   id: '',
+  color: 4,
   searchingId: '',
   isShowGeo: true,
+  isGlobalHide: false,
   public: false,
   lastUpdate: null,
   created: null,
@@ -61,6 +63,7 @@ const topicTemplate = {
   content: '',
   tags: ['我地.市正'],
   geobottomright: null,
+  geocenter: null,
   geotopleft: null
 } 
 
@@ -272,8 +275,15 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
       indexData.imageUrl = data.publicImageURL;
       indexData.topic = detailUrl + data.key;
       indexData.content = data.text + "\n地點: " + data.streetAddress + "\n" + data.desc + "\n" + data.link;
+      indexData.geocenter = data.geolocation;
       indexData.geobottomright = data.geolocation;
       indexData.geotopleft = data.geolocation;
+
+      indexData.geobottomright.longitude += 0.005 ;
+      indexData.geobottomright.latitude -= 0.0032;
+
+      indexData.geotopleft.longitude -= 0.005;
+      indexData.geotopleft.latitude += 0.0032;
 
       if(data.tagfilter  != null ) {
         for(let key in data.tagfilter) {
@@ -283,7 +293,7 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
       let chatData = chatTemplate;
       chatData.created = indexData.created;
       chatData.id = indexData.id;
-      chatData.geo = indexData.geobottomright;
+      chatData.geo = indexData.geocenter;
       chatData.content = indexData.content;
       chatData.createdUser = indexData.createdUser;
       let indexReference = topicCollectionRef.doc(indexData.id);
@@ -438,7 +448,7 @@ if (typeof(Number.prototype.toRad) === "undefined") {
   }
 }
 
-
+/*
 // Checks if uploaded images are flagged as Adult or Violence and if so blurs them.
 exports.blurOffensiveImages = functions.storage.object().onFinalize((object) => {
   const image = {
@@ -487,6 +497,6 @@ function blurImage(filePath) {
     return null;
   });
 }
-
+*/
 exports.detailView = detailView.detailView;
 exports.userView = userView.userView;
