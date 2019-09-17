@@ -206,10 +206,35 @@ function updateTagStat(tagStat) {
     }
 }
 
+function updateRecentMessage(messageId) {
+    let db = firebase.firestore();
+    let collectionRef = db.collection(config.globalDB);
+    let recentMessage = {id: messageId};
+    if(messageId  != null ) {
+        return collectionRef.doc(config.recentMessge).set(recentMessage).then(function(tagRef) {
+            console.log("updateRecentMessage: ", messageId);
+            return(tagRef);
+        })
+    }
+}
+
 function getTagStat() {
     let db = firebase.firestore();
     let collectionRef = db.collection(config.globalDB);
     var docRef = collectionRef.doc(config.TagStatisticKey);
+    return docRef.get().then(function(doc) {
+        if (doc.exists) {
+            return(doc.data());
+        } else {
+            return null;
+        }
+    });
+}
+
+function getRecentMessage() {
+    let db = firebase.firestore();
+    let collectionRef = db.collection(config.globalDB);
+    var docRef = collectionRef.doc(config.recentMessge);
     return docRef.get().then(function(doc) {
         if (doc.exists) {
             return(doc.data());
@@ -231,4 +256,4 @@ function updateFcmDB(fcmToken, userid) {
     })
 }
 
-export {updateFcmDB, getTagStat, dropFocusMessage, fetchFocusMessagesBaseOnGeo, addFocusMessage, getFocusMessage, updateFocusMessage, updateTagStat};
+export {getRecentMessage, updateRecentMessage, updateFcmDB, getTagStat, dropFocusMessage, fetchFocusMessagesBaseOnGeo, addFocusMessage, getFocusMessage, updateFocusMessage, updateTagStat};

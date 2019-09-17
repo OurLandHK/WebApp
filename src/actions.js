@@ -19,6 +19,7 @@ import {
   TOGGLE_PUBLIC_PROFILE_DIALOG,
   TOGGLE_ADDRESS_DIALOG,
   FETCH_GLOBAL_FOCUS_MESSAGE,
+  FETCH_GLOBAL_RECENT_MESSAGE,
   TOGGLE_NEARBYEVENT_DIALOG,
   TOGGLE_REGIONEVENT_DIALOG,
   TOGGLE_EVENTLIST_DIALOG,
@@ -39,7 +40,8 @@ import 'firebase/auth';
 import 'firebase/messaging';
 import config, {constant} from './config/default';
 import {getUserProfile, updateUserProfile, fetchBookmarkList, getAddressBook} from './UserProfile';
-import {fetchFocusMessagesBaseOnGeo, getTagStat} from './GlobalDB';
+import {fetchFocusMessagesBaseOnGeo, getTagStat, getRecentMessage} from './GlobalDB';
+import { getMessage } from './MessageDB';
 
 const currentLocationLabel = "現在位置";
 
@@ -85,6 +87,10 @@ function fetchAddressBook(address) {
 
 function fetchTagStat(tagStat) {
   return {type: FETCH_GLOBAL_TAG_STAT, tagStat: tagStat};
+}
+
+function fetchGlobalRecentMessage(recentMessage) {
+  return {type: FETCH_GLOBAL_RECENT_MESSAGE, recentMessage: recentMessage};
 }
 
 function fetchPublicAddressBook(address) {
@@ -402,6 +408,13 @@ export function fetchGlobalSetting() {
       // Use Static List
       // dispatch(updateRegionButtoneList(tagLabel));
       dispatch(fetchTagStat(tagList));
+      getRecentMessage().then((recentMessageRecord) => {
+        console.log("recentMessageRecord " + recentMessageRecord.id);
+        getMessage(recentMessageRecord.id).then((recentMessage) => {
+          console.log("recentMessage " + recentMessage.key);
+          dispatch(fetchGlobalRecentMessage(recentMessage));
+        });
+      });
     });
   };
 }

@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import config, {constant} from './config/default';
 import distance from './util/Distance';
-import {updateTagStat} from './GlobalDB';
+import {updateTagStat, updateRecentMessage} from './GlobalDB';
 
 function tagsToTagfilter(tags) {
         let rv = {};
@@ -70,7 +70,15 @@ function upgradeAllMessage() {
                 if(val) {
                     // udpate tagStat
                     let changeLastUpdate = false;
-                    let tags = tagfilterToTags(val.tagfilter);
+                    let tags = [];
+                    let change = false;
+                    if(val.tag != null) {
+                        tags = val.tag;
+                    } else {
+                        tags = tagfilterToTags(val.tagfilter);
+                        change = true;
+                        val.tag = tags;
+                    }
                     tags.map((tag) => {
                         if(tagStat[tag] === null || tagStat[tag] === undefined) {
                             tagStat[tag] = 1;
@@ -80,27 +88,6 @@ function upgradeAllMessage() {
                         return tagStat[tag];
                     });
                     // Update for data scheme
-                    let change = false;
-                    /*
-                    if(val.text.includes("遊戲室")) {
-                        if(val.tag  != null ) {
-                            change = true;
-                            if(!val.tag.includes("兒童遊戲室")) {
-                                val.tag.push("兒童遊戲室");
-                                var index = val.tag.indexOf("兒童遊樂場");
-                                if (index !== -1) val.tag.splice(index, 1);
-                            }
-                        }
-                        if(val.tagfilter  != null ) {
-                            if(!tags.includes("兒童遊戲室")) {
-                                tags.push("兒童遊戲室");
-                                var index1 = tags.indexOf("兒童遊樂場");
-                                if (index1 !== -1) tags.splice(index1, 1);                            }
-                            val.tagfilter = tagsToTagfilter(tags);
-                            change = true;
-                        }
-                    }
-                    */
                     // renew for activities
                     if(val.start) {
                         // handle for auto change latest update
@@ -205,10 +192,10 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
                         var lat = geocode.latitude;
                         var dis = distance(val.geolocation.longitude,val.geolocation.latitude,lon,lat);
                         if(dis < radius && val.hide === false) {
-                            let tags = tagfilterToTags(val.tagfilter);
+//                            let tags = tagfilterToTags(val.tagfilter);
 //                            console.log(`${val.text} ${dis} ${tags} ${val.tagfilter}`)
-                            val.tag = tags;
-                            val.tagfilter = null;
+//                            val.tag = tags;
+//                            val.tagfilter = null;
                             //console.log('message key: ' + val.key );
                             callback(val);
                         } else {
@@ -251,7 +238,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
             displayName = userProfile.displayName;
         }
     }
-    let tagfilter = tagsToTagfilter(tags);
+//    let tagfilter = tagsToTagfilter(tags);
     let gallery = [];
     if(imageUrl  != null ) {
         let galleryEntry = {imageURL: imageUrl,
@@ -268,7 +255,8 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
         photoUrl: photoUrl || '/images/profile_placeholder.png',
         geolocation: new firebase.firestore.GeoPoint(geolocation.latitude, geolocation.longitude),
         streetAddress: streetAddress,
-        tagfilter: tagfilter,
+//        tagfilter: tagfilter,
+        tag: tags,
         desc: desc,
         createdAt: new Date(now),
         lastUpdate: new Date(now),
@@ -315,7 +303,9 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
           publishMessagesCount: publishMessages.length,
         });
         console.log("Document written with ID: ", key);
-        return (key);
+        return updateRecentMessage(key).then(keyValue => {
+            return (key);
+        });
       });
     });
 };
@@ -392,12 +382,6 @@ function getMessage(uuid) {
     return getMessageRef(uuid).then(function (messageRef) {
         if(messageRef  != null ) {
             let rv = messageRef.data();
-            if(rv.tagfilter  != null ) {
-                let tags = tagfilterToTags(rv.tagfilter);
-                //console.log(`${tags} ${rv.tagfilter}`)
-                rv.tag = tags;
-                rv.tagfilter = null;
-            }
             return rv
         } else {
             return null;
@@ -425,10 +409,10 @@ function updateMessage(messageKey, messageRecord, updateTime) {
         if(updateTime) {
             messageRecord.lastUpdate = new Date(now);
         }
-        if(messageRecord.tagfilter === null && messageRecord.tag  != null ) {
-            let tagfilter = tagsToTagfilter(messageRecord.tag);
-            messageRecord.tagfilter = tagfilter;
-            messageRecord.tag = null;
+        if(messageRecord.tagfilter != null && messageRecord.tag  === null ) {
+            let tags = tagfilterToTags(messageRecord.tagfilter);
+            messageRecord.tagfilter = null;
+            messageRecord.tag = tags;
         }
         return collectionRef.doc(messageKey).set(messageRecord).then(function(messageRecordRef) {
             console.log("Document written with ID: ", messageKey);
@@ -707,7 +691,10 @@ function fetchMessagesBasedOnInterestedTags(interestedTags, geolocation, dis, la
             let val = messageRef.data();
             var disDiff = distance(val.geolocation.longitude,val.geolocation.latitude, geolocation.longitude, geolocation.latitude);
             if(dis > disDiff) {
-                let tags = tagfilterToTags(val.tagfilter);
+                let tags = [];
+                if(val.tag != null) {
+                    tags = val.tag;
+                }
                 for(var i=0; i<interestedTags.length; i++) {
                     if(tags.includes(interestedTags[i].text)){
                         callback(val);
