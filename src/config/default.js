@@ -29,6 +29,7 @@ let config = {
   TagStatisticKey: "TagStatistic",
   fcmDB: 'fcmDB', // for all fcmDB
   analyticsID: isProduction() ? "UA-124203709-1" : "UA-124203709-2",
+  recentMessge: "RecentMessage",
 };
 
 let constant = {
@@ -49,6 +50,7 @@ let constant = {
   searchEventLabel: "搜尋市區",
   regionEventLabel: "我地市區",
   recentEventLabel: "最近睇過",
+  globalRecentEventLabel: "新料",
   leaderBoardLabel: "風雲榜",
   notificationLabel: "通知",
   noTagLabel: "所有",

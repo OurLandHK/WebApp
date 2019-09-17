@@ -106,11 +106,19 @@ class Main extends Component {
 
   renderMessageFrontPage() {
     let recentMessage = null;
+    let globalRecentMessageWidget = null;
+    let globalRecentMessage = this.props.ourland.recentMessage;
     const { eventNumber, distance, geolocation, queryMessage, bookmark, bookmarkList} = this.state;
     const {open: openRecent} = this.props.recentMessage;
     const { classes, } = this.props;
     let tagStatHtml = this.renderTagStat();
 
+    if(globalRecentMessage.key != null) {
+      globalRecentMessageWidget = <React.Fragment>
+                                    <Typography variant="title" className={classes.title}>{constant.globalRecentEventLabel}</Typography>
+                                    <MessageView message={globalRecentMessage} key={globalRecentMessage.key} openDialogDefault={openRecent} />
+                                  </React.Fragment>
+    }
     if (queryMessage && openRecent) {
       let message = queryMessage;
       recentMessage = <div className="recent-event-wrapper">
@@ -140,6 +148,7 @@ class Main extends Component {
       <div className={classes.container}>
         {recentMessage}
         {hotItem}
+        {globalRecentMessageWidget}
         <FocusMessage/>
         {ourlandBookmarkList}
       </div>
