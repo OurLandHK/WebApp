@@ -169,7 +169,7 @@ class MessageDetailView extends Component {
     let viewCountString = constant.viewCountLabel;
     const { message, classes } = this.props;
     let post = '張貼';
-    let timeOffset = Date.now() - Date(message.createdAt);
+    let timeOffset = Date.now() - message.createdAt.toDate();
     let timeOffsetString = timeOffsetStringInChinese(timeOffset);
     let subheader = `${timeOffsetString}前${post}`;
 
