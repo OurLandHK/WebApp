@@ -104,7 +104,13 @@ function upgradeAllMessage() {
                             val.endDate = new Date(val.endDate);
                             endDate = val.endDate;
                         }
-                        if(endDate.getFullYear() > 1970) {
+                        let year = 0;
+                        try{
+                            year = endDate.getFullYear();
+                        } catch(error) {
+                            year = 0   
+                        }
+                        if(year > 1970) {
 
                             if(val.status === constant.statusOptions[0]) {
                                 console.log(`End ${val.endDate} > ${now}`)
@@ -171,7 +177,7 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
 
         let query = null;
         if(tag  != null ) {
-            query = collectionRef.where(`tagfilter.${tag}`, ">" , 0);
+            query = collectionRef.where("tag", "array-contains" , tag);
         } else {
             query = collectionRef.where("hide", "==", false);
             if(lastUpdate  != null ) {
