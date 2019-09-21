@@ -276,7 +276,7 @@ export function refreshUserProfile(user) {
 export function signIn() {
   return dispatch => {
     var provider = new firebase.auth.FacebookAuthProvider();
-    provider.addScope('user_friends');
+    //provider.addScope('user_friends');
     provider.addScope('user_link');
     //provider.addScope('user_managed_groups');
     //provider.addScope('user_birthday');
