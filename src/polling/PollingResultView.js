@@ -128,7 +128,7 @@ class PollingResultView extends React.Component {
 
         <Grid container className={classes.metaDataContainer} spacing={0}>
           <Grid item >
-            <div className={classes.numOfMaxPollng}>
+            <div className={classes.numOfMaxPolling}>
               {constant.numOfPollingLabel}: {polling.results.length}
             </div>
           </Grid>
