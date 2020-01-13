@@ -247,6 +247,7 @@ export function checkAuthState() {
     return auth.onAuthStateChanged((user) => {
       dispatch(fetchUser(user));
       if(user!=null) {
+        user.fbuid = user.providerData[0].uid;
         return getUserProfile(user).then((userProfile)=>{
           let lastLogin = Date.now();
           if(userProfile.lastLogin  != null ) {
