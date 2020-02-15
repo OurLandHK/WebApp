@@ -87,7 +87,7 @@ class UserList extends Component {
     const { classes } = this.props;
     let dateTimeString = '';
     if(user.lastLogin  != null ) {
-      let date = user.lastLogin.toDate();
+      let date = new Date(user.lastLogin);
       if(date.getFullYear() > 1970) {
         dateTimeString = date.toLocaleDateString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });
       }

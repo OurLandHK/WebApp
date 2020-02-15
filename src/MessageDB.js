@@ -93,7 +93,7 @@ function upgradeAllMessage() {
                         // handle for auto change latest update
                         let endDate = null;
                         try {
-                            endDate = val.endDate.toDate();
+                            endDate = Date(val.endDate);
                         }
                         catch(error) {
                             endDate = null;
@@ -104,7 +104,13 @@ function upgradeAllMessage() {
                             val.endDate = new Date(val.endDate);
                             endDate = val.endDate;
                         }
-                        if(endDate.getFullYear() > 1970) {
+                        let year = 0;
+                        try{
+                            year = endDate.getFullYear();
+                        } catch(error) {
+                            year = 0   
+                        }
+                        if(year > 1970) {
 
                             if(val.status === constant.statusOptions[0]) {
                                 console.log(`End ${val.endDate} > ${now}`)
@@ -118,12 +124,12 @@ function upgradeAllMessage() {
                         } else {
                             // single day event
                             if(val.interval === constant.intervalOptions[0] && (val.everydayOpenning === undefined || val.everydayOpenning === null) && (val.weekdaysOpennings === undefined || val.weekdaysOpennings === null)) {
-                                console.log(`Snd ${val.key} ${val.start.toDate()} > ${now}`)
-                                if(val.start.toDate() < now && val.status === constant.statusOptions[0] ) {
+                                console.log(`Snd ${val.key} ${Date(val.start)} > ${now}`)
+                                if(Date(val.start) < now && val.status === constant.statusOptions[0] ) {
                                      val.status = constant.statusOptions[1];
                                      change = true;
                                 }
-                                if(val.start.toDate() > now && val.status === constant.statusOptions[1] ) {
+                                if(Date(val.start) > now && val.status === constant.statusOptions[1] ) {
                                     val.status = constant.statusOptions[0];
                                     change = true;
                                }
@@ -171,11 +177,10 @@ function fetchMessagesBaseOnGeo(geocode, radius, numberOfMessage, lastUpdate, ta
 
         let query = null;
         if(tag  != null ) {
-            query = collectionRef.where(`tagfilter.${tag}`, ">" , 0);
+            query = collectionRef.where("tag", "array-contains" , tag);
         } else {
             query = collectionRef.where("hide", "==", false);
             if(lastUpdate  != null ) {
- //               console.log("Last Update: " + lastUpdate.toDate());
                 query = query.where("lastUpdate", ">", lastUpdate).orderBy("lastUpdate", "desc");
             } else {
                 query = query.where("geolocation", ">=", lesserGeopoint).where("geolocation", "<=", greaterGeopoint).orderBy("geolocation", "desc");

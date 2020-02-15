@@ -121,7 +121,7 @@ class PostMessageView extends Component {
       maxOfPollingOptionIndex: 6,
       pollingTitle: "",
       minPollingOptions: 2,
-      numOfMaxPollng: 1,
+      numOfMaxPolling: 1,
       pollingRange: 1,
       geolocation: null,
       streetAddress: null,
@@ -220,7 +220,7 @@ class PostMessageView extends Component {
       maxOfPollingOptionIndex: 6,
       pollingTitle: "",
       minPollingOptions: 2,
-      numOfMaxPollng: 1,
+      numOfMaxPolling: 1,
       pollingRange: 1,
       geolocation: null,
       streetAddress: null,
@@ -391,7 +391,7 @@ class PostMessageView extends Component {
 
       var polling = {
         pollingTitle: this.state.pollingTitle,
-        numOfMaxPollng: this.state.numOfMaxPollng,
+        numOfMaxPolling: this.state.numOfMaxPolling,
         pollingRange: this.state.pollingRange,
         pollingOptionValues: this.state.pollingOptionValues,
         results: []
@@ -854,7 +854,7 @@ class PostMessageView extends Component {
                   <FormGroup>
                   <TextField id="pollingTitle" label={constant.pollingTitleLabel} className={classes.textField} value={this.state.pollingTitle} onChange={event => this.setState({pollingTitle: event.target.value})}/>
                   <br/>
-                  <TextField id="numOfMaxPollng" type="number" InputProps={{ inputProps: { min: 1, max: this.state.pollingOptions.length } }} helperText={constant.numOfMaxPollngLabel} className={classes.textField} value={this.state.numOfMaxPollng} onChange={event => this.setState({numOfMaxPollng: event.target.value})}/>
+                  <TextField id="numOfMaxPolling" type="number" InputProps={{ inputProps: { min: 1, max: this.state.pollingOptions.length } }} helperText={constant.numOfMaxPollingLabel} className={classes.textField} value={this.state.numOfMaxPolling} onChange={event => this.setState({numOfMaxPolling: event.target.value})}/>
                   <br/>
                   <TextField id="pollingRange" type="number" InputProps={{ inputProps: { min: 1, max: 5 } }} helperText={constant.pollingRangeLabel} className={classes.textField} value={this.state.pollingRange} onChange={event => this.setState({pollingRange: event.target.value})}/>
                   {

@@ -128,7 +128,7 @@ class ShareDrawer extends React.Component {
       }
 
       if(message.start !== undefined && message.start  != null ) {
-        let date = message.start.toDate();
+        let date = new Date(message.start);
         if(date.getFullYear() > 1970) {
           let dateTimeString = '';
           dateTimeString = date.toLocaleDateString('zh-Hans-HK', { timeZone: 'Asia/Hong_Kong' });

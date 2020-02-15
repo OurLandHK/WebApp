@@ -10,5 +10,7 @@ node_modules
 **.swo
 *.log
 *.cache
+*copy.js
+*copy.json
 functions/detailView.template.html
 functions/userView.template.html

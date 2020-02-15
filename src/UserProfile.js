@@ -33,13 +33,19 @@ function getUserProfile(user) {
     }
     const db = firebase.firestore();
 
-
+    console.log("FBUID: " + user.fbuid);
     let collectionRef = db.collection(config.userDB);
-    let docRef = collectionRef.doc(user.uid);
+    let query = collectionRef.where('fbuid', "==", user.fbuid);
     let now = Date.now();
+/*    let docRef = collectionRef.doc(user.uid);
+    
     return docRef.get().then(function(doc) {
-        if (doc.exists) {
-            return(doc.data());
+*/
+    return query.get().then(function(querySnapshot) {       
+        if (!querySnapshot.empty) {
+            var data = querySnapshot.docs[0].data();
+            data.uid = querySnapshot.docs[0].id;
+            return(data);
         } else {
             var userRecord = {
                 displayName: user.displayName,
@@ -66,6 +72,28 @@ function getUserProfile(user) {
                 console.error("Error adding document: ", error);
                 return(null);
             });
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+        return(null);
+    });
+}
+
+function getUserProfileByID(userid) {
+    // Use firestore
+    if(userid==null) {
+        return null;
+    }
+    const db = firebase.firestore();
+    let collectionRef = db.collection(config.userDB);
+    let now = Date.now();
+    let docRef = collectionRef.doc(userid);
+    
+    return docRef.get().then(function(doc) {
+        if (doc.exists) {
+            return(doc.data());
+        } else {
+            return null;
         }
     }).catch(function(error) {
         console.log("Error getting document:", error);
@@ -500,5 +528,5 @@ function getUserProfileImage(uid) {
   });
 }
 
-export {updateUserFcm, getAddressBook, fetchAllUser, addCompleteMessage, upsertAddress, upgradeAllUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
+export {getUserProfileByID, updateUserFcm, getAddressBook, fetchAllUser, addCompleteMessage, upsertAddress, upgradeAllUser, getUserConcernMessages, getUserPublishMessages, getUserCompleteMessages, getUserProfile, addPublishMessagesKeyToUserProfile, toggleConcernMessage, isConcernMessage, updateUserProfile,
     dropBookmark, fetchBookmarkList, addBookmark, getBookmark, updateBookmark, incBookmarkViewCount, getUserProfileImage};

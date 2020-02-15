@@ -14,7 +14,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText  from '@material-ui/core/ListItemText';
 import {connect} from "react-redux";
 import { togglePublicProfileDialog } from './actions';
-import {fetchBookmarkList, getUserProfile, getAddressBook} from './UserProfile';
+import {getUserProfileByID, fetchBookmarkList, getAddressBook} from './UserProfile';
 import ShareDrawer from './ShareDrawer';
 import BookmarkList from './bookmark/BookmarkList';
 import {checkImageExists} from './util/http';
@@ -98,21 +98,20 @@ class PublicProfile extends React.Component {
     //this.loadFbLoginApi();
     if (this.props.id !== "") {
       //console.log("componentDidMount id  " + this.props.id);
-      let user = {uid: this.props.id};
-      this.fetchUserProfile(user);
+      this.fetchUserProfile(this.props.id);
     }
     if (this.props.userid  != null ) {
       //console.log("componentDidMount id  " + this.props.id);
-      let user = {uid: this.props.userid};
-      this.fetchUserProfile(user);
+      this.fetchUserProfile(this.props.userid);
     }
   }
 
-  fetchUserProfile(user) {
+  fetchUserProfile(userid) {
     this.setState({userProfile: null});
     this.publishMessages = null;
     this.completeMessages = null;
-    getUserProfile(user).then((userProfile)=>{
+    getUserProfileByID(userid).then((userProfile)=>{
+      let user = {uid: userid, fbuid: userProfile.fbuid};
       fetchBookmarkList(user).then((bookmarkList)=>{
         getAddressBook(user).then((addressBook)=>{
           this.completeMessages = userProfile.completeMessages;
@@ -143,8 +142,7 @@ class PublicProfile extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.id !== this.props.id && this.props.id !== "") {
-      var user = {uid: this.props.id};
-      this.fetchUserProfile(user);
+      this.fetchUserProfile(this.props.id);
     }
   }
 

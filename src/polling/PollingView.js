@@ -73,7 +73,7 @@ class PollingView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      numOfMaxPollng: 0,
+      numOfMaxPolling: 0,
       selectedOption: [],
     }
   }
@@ -81,15 +81,15 @@ class PollingView extends React.Component {
   componentDidMount() {
     const { polling } = this.props;
     this.setState({
-      numOfMaxPollng: polling.numOfMaxPollng
+      numOfMaxPolling: polling.numOfMaxPolling
     })
   }
 
   poll(evt, index) {
-    const { selectedOption, numOfMaxPollng } = this.state;
+    const { selectedOption, numOfMaxPolling } = this.state;
     evt.preventDefault();
 
-    let numOfPollng = numOfMaxPollng;
+    let numOfPollng = numOfMaxPolling;
     let idx = selectedOption.indexOf(index);
     if(idx < 0) {
       if(numOfPollng === 0) {
@@ -104,7 +104,7 @@ class PollingView extends React.Component {
 
     this.setState({
       selectedOption,
-      numOfMaxPollng: numOfPollng
+      numOfMaxPolling: numOfPollng
     });
   }
 
@@ -131,7 +131,7 @@ class PollingView extends React.Component {
 
   render() {
     const { classes, polling } = this.props;
-    const { numOfMaxPollng, selectedOption } = this.state;
+    const { numOfMaxPolling, selectedOption } = this.state;
 
     return (
       <Paper className={classes.root}>
@@ -145,8 +145,8 @@ class PollingView extends React.Component {
 
         <Grid container className={classes.metaDataContainer} spacing={16}>
           <Grid item >
-            <div className={classes.numOfMaxPollng}>
-              {constant.numOfMaxPollngLabel}: {numOfMaxPollng}
+            <div className={classes.numOfMaxPolling}>
+              {constant.numOfMaxPollingLabel}: {numOfMaxPolling}
             </div>
           </Grid>
           <Grid item >

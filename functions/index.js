@@ -145,10 +145,10 @@ exports.sendFCM = functions.firestore.document('/topic/{topicId}')
           let userProfile = getChaUserRef.data();
           if(!broadcast) {
             // Check for user' address area versus
-            if(userProfile.homeAddress !== undefined) {
+            if(userProfile.homeAddress !== undefined && userProfile.homeAddress !== null) {
               isSend = isInsideTopic(data, userProfile.homeAddress)
             }
-            if(isSend === false && userProfile.officeAddress !== undefined) {
+            if(isSend === false && userProfile.officeAddress !== undefined && userProfile.officeAddress !== null) {
               isSend = isInsideTopic(data, userProfile.officeAddress)
             }
           } else {
@@ -285,7 +285,9 @@ exports.sendEmail = functions.firestore.document('/message/{messageId}')
       indexData.geotopleft.longitude -= 0.005;
       indexData.geotopleft.latitude += 0.0032;
 
-      if(data.tagfilter  != null ) {
+      if(data.tag != null && data.tag.length != 0) {
+        indexData.tags = data.tag;
+      } else if(data.tagfilter  != null ) {
         for(let key in data.tagfilter) {
           indexData.tags.push(key);
         }

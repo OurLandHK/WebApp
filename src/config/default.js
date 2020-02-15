@@ -146,7 +146,7 @@ let constant = {
   addPollingOption: "新增投票選項",
   pollingOptionLabel: "投票選項",
   pollingTitleLabel: "投票標題",
-  numOfMaxPollngLabel: "用戶最多可投票次數",
+  numOfMaxPollingLabel: "用戶最多可投票次數",
   excessNumOfPollingIndex: "已超過投票選項上限",
   pollingRangeLabel: "離住宅可投票範圍",
   pollingLabel: "參與投票",

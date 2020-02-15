@@ -154,7 +154,7 @@ class MessageDialog extends React.Component {
         // 10 minutes
         let eventCreateTimeDiff = 0;
         try {
-          eventCreateTimeDiff = nowDateTime - m.createdAt.toDate();
+          eventCreateTimeDiff = nowDateTime - Date(m.createdAt);
         } catch(error) {
           eventCreateTimeDiff = nowDateTime - m.createdAt;
         };

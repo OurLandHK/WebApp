@@ -29,7 +29,7 @@ import TagDrawer from '../TagDrawer';
 import {checkImageExists} from '../util/http';
 import ReactHtmlParser from 'react-html-parser';
 import {linkify} from '../util/stringHandling';
-import { dropBookmark, addBookmark, updateBookmark, incBookmarkViewCount, getUserProfile} from '../UserProfile';
+import { getUserProfileByID, dropBookmark, addBookmark, updateBookmark, incBookmarkViewCount, getUserProfile} from '../UserProfile';
 import {
     openSnackbar,
     checkAuthState,
@@ -115,8 +115,7 @@ class BookmarkView extends Component {
 
     getUserProfile() {
         if(this.state.uid !== "") {
-            let user = {uid: this.state.uid};
-            return getUserProfile(user).then((userProfile) => {
+            return getUserProfileByID(this.state.uid).then((userProfile) => {
                 this.setState({userProfile: userProfile});
                 return;});
         } else {
@@ -231,8 +230,9 @@ class BookmarkView extends Component {
     renderReadonly() {
         let viewCountString = constant.viewCountLabel;
         const { bookmark, classes} = this.props;
+        
         let post = '張貼';
-        let timeOffset = Date.now() - bookmark.createdAt.toDate();
+        let timeOffset = new Date() - new Date(bookmark.createdAt);
         let timeOffsetString = timeOffsetStringInChinese(timeOffset);
         let subheader = `於:${timeOffsetString}前${post}`;
         let photoUrl = '/images/profile_placeholder.png';
