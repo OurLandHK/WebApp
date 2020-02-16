@@ -723,6 +723,7 @@ function updateMessageThumbnail(messageUUID, imageURL, publicImageURL, thumbnail
     });
 }
 
+/*
 function updatePollingResult(messageUUID, result) {
   return getMessage(messageUUID).then((messageRecord) => {
     let resultArray = [];
@@ -734,5 +735,5 @@ function updatePollingResult(messageUUID, result) {
     return updateMessage(messageUUID, messageRecord, true);
   });
 }
-
-export {addMessageGalleryEntry, getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags, updateMessageThumbnail, updatePollingResult};
+*/
+export {addMessageGalleryEntry, getHappyAndSad, setHappyAndSad, upgradeAllMessage, incMessageViewCount, updateCommentApproveStatus, dropMessage, fetchCommentsBaseonMessageID, addComment, fetchMessagesBaseOnGeo, addMessage, updateMessageImageURL, getMessage, updateMessage, updateMessageConcernUser, fetchReportedUrgentMessages, fetchMessagesBasedOnInterestedTags, updateMessageThumbnail};

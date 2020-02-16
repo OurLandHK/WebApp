@@ -22,6 +22,7 @@ let config = {
   userDB: 'userProfile', // Production
   focusMessageDB: 'focusMessage',
   photoDB: 'photo',
+  pollingDB: 'polling',
   MasterUID: 'mUQgwxkmPBfVA47d9lHzB482Nmp1',
   addressBook: "AddressBook",
   commentDB: "comment",

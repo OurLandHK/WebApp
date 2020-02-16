@@ -64,13 +64,12 @@ class PollingResultView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      results: {},
-      sum: 0
+      results: props.pollingResult,
     }
   }
-
+/*
   componentDidMount() {
-    const { polling } = this.props;
+    const { polling, pollingResult } = this.props;
     const results = polling.results
                   .map(obj => obj.value)
                   .reduce((a, b) => {
@@ -90,6 +89,7 @@ class PollingResultView extends React.Component {
       sum: sum
     })
   }
+*/
 
   renderResultBar(title, precentage, val) {
     const { classes } = this.props;
@@ -115,6 +115,10 @@ class PollingResultView extends React.Component {
 
   render() {
     const { classes, polling } = this.props;
+    let numOfPolling = 0;
+    if(this.state.results !== null) {
+      numOfPolling = this.state.results['total'];
+    }
 
     return (
       <Paper className={classes.root}>
@@ -129,7 +133,7 @@ class PollingResultView extends React.Component {
         <Grid container className={classes.metaDataContainer} spacing={0}>
           <Grid item >
             <div className={classes.numOfMaxPolling}>
-              {constant.numOfPollingLabel}: {polling.results.length}
+              {constant.numOfPollingLabel}: {numOfPolling}
             </div>
           </Grid>
         </Grid>
@@ -137,10 +141,12 @@ class PollingResultView extends React.Component {
         <Grid container className={classes.pollingResultContainer} spacing={0}>
           {
             polling.pollingOptionValues.map((val, idx) => {
-              if(Object.keys(this.state.results).length === 0 && this.state.results.constructor === Object) {
+              if(this.state.results === null) {
                 return this.renderResultBar(val, 0, 0);
               } else {
-                return this.renderResultBar(val, (this.state.results[idx] / this.state.sum)* 100, this.state.results[idx]);
+                let vote = this.state.results['upvote'][idx];
+                let total = this.state.results['total'];
+                return this.renderResultBar(val, (vote / total)* 100, vote);
               }
             })
           }

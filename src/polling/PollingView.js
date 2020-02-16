@@ -9,9 +9,7 @@ import { constant } from '../config/default';
 import {
   openSnackbar,
 } from '../actions';
-import {
-  updatePollingResult
-} from '../MessageDB';
+import {sendUserPollingResult} from '../service/PollingDB';
 
 const styles = theme => ({
   appBar: {
@@ -113,15 +111,11 @@ class PollingView extends React.Component {
     const { user, polling, messageUUID } = this.props;
 
     if(selectedOption.length > 0) {
-      const pollingResult = {};
+      let result = {'upvote' : []};
       for(var i=0; i<polling.pollingOptionValues.length; i++) {
-        pollingResult[i] = selectedOption.indexOf(i) < 0 ? 0 : 1
+        result['upvote'][i] = selectedOption.indexOf(i) < 0 ? 0 : 1
       }
-      let result = {
-        uid: user.user.uid,
-        value: pollingResult
-      }
-      updatePollingResult(messageUUID, result).then(() => {
+      sendUserPollingResult(messageUUID, user.user.uid, result).then(() => {
         this.props.openSnackbar(constant.submitPollingSuccessLabel, 'success');
         this.setState({showPollingResult: true});
         this.props.handlePollingDialogCloseCallback();

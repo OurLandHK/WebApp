@@ -15,7 +15,7 @@ import distance from '../util/Distance';
 import { constant, addressEnum } from '../config/default';
 import PollingView from './PollingView';
 import PollingResultView from './PollingResultView';
-import { getMessage } from '../MessageDB';
+import {getUserPollingResult, getPollingResult} from '../service/PollingDB';
 
 const styles = theme => ({
   appBar: {
@@ -47,14 +47,16 @@ class PollingDialog extends React.Component {
         open: false,
         isOutOfPollingRange: false,
         isAlreadyPolled: false,
-        disabledPolling: false,
-        polling: {}
+        disabledPolling: true,
+        polling: {},
+        pollingResult: null,
+        userPollingResult: null
       };
       this.handlePollingDialogCloseCallback = this.handlePollingDialogCloseCallback.bind(this);
   }
 
   componentDidMount() {
-    const { polling, user, addressBook, geolocation } = this.props;
+    const { polling, user, addressBook, geolocation, userPollingResult } = this.props;
     this.setState({polling})
     let outOfRange = true;
     // check for home or office address within the polling distance
@@ -74,13 +76,12 @@ class PollingDialog extends React.Component {
       };
     }
 
-    if(polling.results !== undefined && polling.results.length > 0) {
-      polling.results.find((result, index) => {
-        if(result.uid === user.user.uid) {
-          this.setState({isAlreadyPolled: true, disabledPolling: true});
-          return;
-        }
-      })
+    if(this.state.userPollingResult !== null) {
+        this.setState({isAlreadyPolled: true, disabledPolling: true});
+    }
+    this.updateResult();
+    if(user !== null && user.user !== null) {
+      this.updateUserResult();
     }
   }
 
@@ -94,14 +95,46 @@ class PollingDialog extends React.Component {
   }
 
   handlePollingDialogCloseCallback() {
+    this.updateResult();
+    this.setState({
+      open: false,
+      disabledPolling: true,
+      isAlreadyPolled: true,
+    })
+  }
+
+  updateUserResult() {
+    const { messageUUID, user } = this.props;
+    return getUserPollingResult(messageUUID, user.user.uid).then((userPollingResult) => {
+      if(userPollingResult !== null) {
+        this.setState({
+          isAlreadyPolled: true, 
+          disabledPolling: true,
+          userPollingResult: userPollingResult
+        });
+      } else {
+        console.log(`no result`)
+        if(!this.state.isOutOfPollingRange) {
+          this.setState({
+            disabledPolling: false,
+          })
+          console.log(`can vote`);
+        }
+      }
+    })
+  }
+
+  updateResult() {
+    console.log(`UpdateResult`);
     const { messageUUID } = this.props;
-    return getMessage(messageUUID).then((message) => {
-      this.setState({
-        disabledPolling: true,
-        isAlreadyPolled: true,
-        polling: message.polling,
-        open: false
-      })
+    return getPollingResult(messageUUID).then((result) => {
+      if(result !== null) {
+        this.setState({
+          pollingResult: result,
+        })
+      } else {
+        console.log(`No Result`);
+      }
     });
   }
 
@@ -126,7 +159,7 @@ class PollingDialog extends React.Component {
 
   render() {
     const { classes, messageUUID } = this.props;
-    const { polling } = this.state;
+    const { polling, pollingResult } = this.state;
     return (
       <span>
         <Paper role="button" onClick={(evt) => this.handleRequestOpen(evt)}>
@@ -154,7 +187,7 @@ class PollingDialog extends React.Component {
 
             </Toolbar>
           </AppBar>
-          { this.state.disabledPolling ? <PollingResultView polling={polling}/> : <PollingView polling={polling} messageUUID={messageUUID} handlePollingDialogCloseCallback={this.handlePollingDialogCloseCallback}/>}
+          { this.state.disabledPolling ? <PollingResultView polling={polling} pollingResult={pollingResult}/> : <PollingView polling={polling} messageUUID={messageUUID} handlePollingDialogCloseCallback={this.handlePollingDialogCloseCallback}/>}
         </Dialog>
       </span>
     );

@@ -394,7 +394,6 @@ class PostMessageView extends Component {
         numOfMaxPolling: this.state.numOfMaxPolling,
         pollingRange: this.state.pollingRange,
         pollingOptionValues: this.state.pollingOptionValues,
-        results: []
       }
 
       postMessage(this.state.key, this.props.user.user, this.props.user.userProfile, this.state.summary, tags, this.state.geolocation, this.state.streetAddress, desc,
@@ -704,7 +703,7 @@ class PostMessageView extends Component {
     let timeHtml = null;
     let urgentHtml = null;
     let pollingHtml =  null;
-    if (user.userProfile && (user.userProfile.role === RoleEnum.admin || user.userProfile.role === RoleEnum.monitor || user.userProfile.role === RoleEnum.betaUser)) {
+    if (user.userProfile) {
         pollingHtml = <FormGroup>
                         <FormControlLabel
                         label={constant.addPollingLabel}
