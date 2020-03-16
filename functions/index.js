@@ -34,6 +34,12 @@ const messageTemplate = {
                           messagelat : "",
                           messagelong : "",
                           status: "done"};
+const broadcastTemplate = {
+                            click_action: "FLUTTER_NOTIFICATION_CLICK", 
+                            bid: "<Topic ID>",
+                            messagelat : "",
+                            messagelong : "",
+                            status: "done"};                          
 const notificationTemplate = {
                           title: '',
                           body: ''
@@ -77,6 +83,7 @@ const chatTemplate = {
 }
 
 const getChaUserCollectionRef = admin.firestore().collection('getChatUsers');
+const subscribeCollectionRef = admin.firestore().collection('subscribe');
 const chatCollectionRef = admin.firestore().collection('chat');
 const topicCollectionRef = admin.firestore().collection('topic');
 const sendMessage = admin.messaging();
@@ -210,6 +217,50 @@ exports.sendFCM = functions.firestore.document('/topic/{topicId}')
             });
           }
         });
+      });
+    }
+    return null;
+  })
+
+exports.sendBroadcast = functions.firestore.document('/broadcast/{topicId}')
+  .onWrite((change, context) => {
+    const beforeData = change.before.data();
+
+    let data = change.after.exists? change.after.data(): change.before.data();
+    let newTopic = false;
+    // check for any real update for the content
+    if(beforeData === null || beforeData === undefined) {
+      newTopic = true;
+    } 
+
+    if(newTopic) {
+      let payload = broadcastTemplate;
+      let notification = notificationTemplate;
+      payload.bid = data.id;
+      notification.title = data.tags[0] + ' 有新番！';
+      notification.body = data.content;
+      return subscribeCollectionRef.get().then(snapshot => {
+        var fcmTokens = [];
+        snapshot.forEach(subscribeRef => {  
+          let subscribeRecord = subscribeRef.data();
+          let unsubscribe = subscribeRecord.unsubscribedChannels.includes(data.tags[0]);
+          if(!unsubscribe) {
+            fcmTokens.push(subscribeRecord.fcmToken);
+          }
+        });
+        if(fcmTokens.length != 0) {
+          let message = {notification: notification, data: payload};
+          return sendMessage.sendToDevice(fcmTokens, message, messageOptions).then(function(response) {
+            // See the MessagingDevicesResponse reference documentation for
+            // the contents of response.
+            console.log('Successfully sent message:', response);
+          })
+          .catch(function(error) {
+            console.log('Error sending message:', error);
+          });
+        }
+      }).catch(err => {
+        console.log(`Error getting document ${err}`);
       });
     }
     return null;
