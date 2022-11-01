@@ -6,7 +6,7 @@
   "license": "ISC",
   "dependencies": {
     "ajv": "^6.5.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-cache": "^1.0.2",
     "gulp-clean-css": "^3.9.4",
     "gulp-concat": "^2.6.1",
